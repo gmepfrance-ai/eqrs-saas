@@ -1,5 +1,5 @@
 [phases.build]
-cmds = ["npm install", "npm run build"]
+cmds = ["npm install"]
 
 [start]
 cmd = "NODE_ENV=production node dist/index.cjs"
