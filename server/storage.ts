@@ -6,6 +6,13 @@ import {
 } from "@shared/schema";
 import * as fs from "fs";
 import * as path from "path";
+import * as crypto from "crypto";
+
+function generateLicenseKey(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const segment = () => Array.from({ length: 4 }, () => chars[crypto.randomInt(chars.length)]).join("");
+  return `EQRS-${segment()}-${segment()}-${segment()}`;
+}
 
 // JSON file-based storage (works everywhere, no native modules needed)
 const DB_PATH = path.join(process.cwd(), "db.json");
@@ -148,6 +155,7 @@ export class DatabaseStorage implements IStorage {
       status: data.status || "inactive",
       plan: data.plan || null,
       currentPeriodEnd: data.currentPeriodEnd || null,
+      licenseKey: data.licenseKey || generateLicenseKey(),
       createdAt: new Date().toISOString(),
     };
     db.subscriptions.push(sub);
@@ -165,6 +173,7 @@ export class DatabaseStorage implements IStorage {
     if (data.status !== undefined) sub.status = data.status;
     if (data.plan !== undefined) sub.plan = data.plan;
     if (data.currentPeriodEnd !== undefined) sub.currentPeriodEnd = data.currentPeriodEnd;
+    if (data.licenseKey !== undefined) sub.licenseKey = data.licenseKey;
 
     db.subscriptions[idx] = sub;
     saveDB(db);
@@ -180,6 +189,7 @@ export class DatabaseStorage implements IStorage {
       existing.status = "active";
       existing.plan = plan;
       existing.currentPeriodEnd = endDate.toISOString();
+      if (!existing.licenseKey) existing.licenseKey = generateLicenseKey();
       const idx = db.subscriptions.findIndex((s) => s.id === existing.id);
       db.subscriptions[idx] = existing;
       saveDB(db);

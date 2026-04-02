@@ -25,6 +25,7 @@ export interface Subscription {
   status: string;
   plan: string | null;
   currentPeriodEnd: string | null;
+  licenseKey: string | null;
   createdAt: string;
 }
 

@@ -216,6 +216,19 @@ export default function DashboardPage() {
                     </span>
                   </div>
                 )}
+                {(subscription as any)?.licenseKey && (
+                  <div className="mt-3 pt-3 border-t border-border">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Clé d'activation</span>
+                      <span className="font-mono font-bold text-foreground bg-muted px-3 py-1 rounded text-sm tracking-wider">
+                        {(subscription as any).licenseKey}
+                      </span>
+                    </div>
+                    <p className="text-[0.65rem] text-muted-foreground mt-1">
+                      Cette clé est liée à votre poste de travail. Ne la partagez pas.
+                    </p>
+                  </div>
+                )}
               </div>
               <div className="mt-4 pt-3 border-t border-border">
                 <button
