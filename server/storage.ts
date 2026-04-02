@@ -3,46 +3,49 @@ import {
   type SafeUser,
   type Session,
   type Subscription,
-  users,
-  sessions,
-  subscriptions,
 } from "@shared/schema";
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import Database from "better-sqlite3";
-import { eq, and, lt } from "drizzle-orm";
+import * as fs from "fs";
+import * as path from "path";
 
-const sqlite = new Database("data.db");
-sqlite.pragma("journal_mode = WAL");
+// JSON file-based storage (works everywhere, no native modules needed)
+const DB_PATH = path.join(process.cwd(), "db.json");
 
-// Create tables if they don't exist
-sqlite.exec(`
-  CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email TEXT NOT NULL UNIQUE,
-    password_hash TEXT NOT NULL,
-    name TEXT NOT NULL,
-    created_at TEXT DEFAULT (datetime('now'))
-  );
-  CREATE TABLE IF NOT EXISTS sessions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    token TEXT NOT NULL UNIQUE,
-    user_id INTEGER NOT NULL REFERENCES users(id),
-    expires_at TEXT NOT NULL,
-    created_at TEXT DEFAULT (datetime('now'))
-  );
-  CREATE TABLE IF NOT EXISTS subscriptions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL REFERENCES users(id),
-    stripe_customer_id TEXT,
-    stripe_subscription_id TEXT,
-    status TEXT NOT NULL DEFAULT 'inactive',
-    plan TEXT DEFAULT 'monthly',
-    current_period_end TEXT,
-    created_at TEXT DEFAULT (datetime('now'))
-  );
-`);
+interface DBData {
+  users: User[];
+  sessions: Session[];
+  subscriptions: Subscription[];
+  nextUserId: number;
+  nextSessionId: number;
+  nextSubscriptionId: number;
+}
 
-export const db = drizzle(sqlite);
+function loadDB(): DBData {
+  try {
+    if (fs.existsSync(DB_PATH)) {
+      return JSON.parse(fs.readFileSync(DB_PATH, "utf-8"));
+    }
+  } catch (e) {
+    console.error("Error loading DB, creating new one:", e);
+  }
+  return {
+    users: [],
+    sessions: [],
+    subscriptions: [],
+    nextUserId: 1,
+    nextSessionId: 1,
+    nextSubscriptionId: 1,
+  };
+}
+
+function saveDB(data: DBData): void {
+  try {
+    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), "utf-8");
+  } catch (e) {
+    console.error("Error saving DB:", e);
+  }
+}
+
+let db = loadDB();
 
 export interface IStorage {
   // Users
@@ -69,24 +72,24 @@ export interface IStorage {
 export class DatabaseStorage implements IStorage {
   // Users
   getUser(id: number): User | undefined {
-    return db.select().from(users).where(eq(users.id, id)).get();
+    return db.users.find((u) => u.id === id);
   }
 
   getUserByEmail(email: string): User | undefined {
-    return db.select().from(users).where(eq(users.email, email)).get();
+    return db.users.find((u) => u.email === email);
   }
 
   createUser(email: string, passwordHash: string, name: string): User {
-    return db
-      .insert(users)
-      .values({
-        email,
-        passwordHash,
-        name,
-        createdAt: new Date().toISOString(),
-      })
-      .returning()
-      .get();
+    const user: User = {
+      id: db.nextUserId++,
+      email,
+      passwordHash,
+      name,
+      createdAt: new Date().toISOString(),
+    };
+    db.users.push(user);
+    saveDB(db);
+    return user;
   }
 
   toSafeUser(user: User): SafeUser {
@@ -96,108 +99,93 @@ export class DatabaseStorage implements IStorage {
 
   // Sessions
   createSession(token: string, userId: number, expiresAt: string): Session {
-    return db
-      .insert(sessions)
-      .values({
-        token,
-        userId,
-        expiresAt,
-        createdAt: new Date().toISOString(),
-      })
-      .returning()
-      .get();
+    const session: Session = {
+      id: db.nextSessionId++,
+      token,
+      userId,
+      expiresAt,
+      createdAt: new Date().toISOString(),
+    };
+    db.sessions.push(session);
+    saveDB(db);
+    return session;
   }
 
   getSessionByToken(token: string): Session | undefined {
-    return db.select().from(sessions).where(eq(sessions.token, token)).get();
+    return db.sessions.find((s) => s.token === token);
   }
 
   deleteSession(token: string): void {
-    db.delete(sessions).where(eq(sessions.token, token)).run();
+    db.sessions = db.sessions.filter((s) => s.token !== token);
+    saveDB(db);
   }
 
   deleteExpiredSessions(): void {
     const now = new Date().toISOString();
-    db.delete(sessions).where(lt(sessions.expiresAt, now)).run();
+    db.sessions = db.sessions.filter((s) => s.expiresAt > now);
+    saveDB(db);
   }
 
   // Subscriptions
   getSubscriptionByUserId(userId: number): Subscription | undefined {
-    return db
-      .select()
-      .from(subscriptions)
-      .where(eq(subscriptions.userId, userId))
-      .get();
+    return db.subscriptions.find((s) => s.userId === userId);
   }
 
   getSubscriptionByStripeCustomerId(stripeCustomerId: string): Subscription | undefined {
-    return db
-      .select()
-      .from(subscriptions)
-      .where(eq(subscriptions.stripeCustomerId, stripeCustomerId))
-      .get();
+    return db.subscriptions.find((s) => s.stripeCustomerId === stripeCustomerId);
   }
 
   getSubscriptionByStripeSubscriptionId(stripeSubscriptionId: string): Subscription | undefined {
-    return db
-      .select()
-      .from(subscriptions)
-      .where(eq(subscriptions.stripeSubscriptionId, stripeSubscriptionId))
-      .get();
+    return db.subscriptions.find((s) => s.stripeSubscriptionId === stripeSubscriptionId);
   }
 
   createSubscription(userId: number, data: Partial<Subscription>): Subscription {
-    return db
-      .insert(subscriptions)
-      .values({
-        userId,
-        stripeCustomerId: data.stripeCustomerId || null,
-        stripeSubscriptionId: data.stripeSubscriptionId || null,
-        status: data.status || "inactive",
-        plan: data.plan || null,
-        currentPeriodEnd: data.currentPeriodEnd || null,
-        createdAt: new Date().toISOString(),
-      })
-      .returning()
-      .get();
+    const sub: Subscription = {
+      id: db.nextSubscriptionId++,
+      userId,
+      stripeCustomerId: data.stripeCustomerId || null,
+      stripeSubscriptionId: data.stripeSubscriptionId || null,
+      status: data.status || "inactive",
+      plan: data.plan || null,
+      currentPeriodEnd: data.currentPeriodEnd || null,
+      createdAt: new Date().toISOString(),
+    };
+    db.subscriptions.push(sub);
+    saveDB(db);
+    return sub;
   }
 
   updateSubscription(id: number, data: Partial<Subscription>): Subscription | undefined {
-    const updateData: Record<string, any> = {};
-    if (data.stripeCustomerId !== undefined) updateData.stripeCustomerId = data.stripeCustomerId;
-    if (data.stripeSubscriptionId !== undefined) updateData.stripeSubscriptionId = data.stripeSubscriptionId;
-    if (data.status !== undefined) updateData.status = data.status;
-    if (data.plan !== undefined) updateData.plan = data.plan;
-    if (data.currentPeriodEnd !== undefined) updateData.currentPeriodEnd = data.currentPeriodEnd;
+    const idx = db.subscriptions.findIndex((s) => s.id === id);
+    if (idx === -1) return undefined;
 
-    if (Object.keys(updateData).length === 0) return this.getSubscriptionByUserId(data.userId || 0);
+    const sub = db.subscriptions[idx];
+    if (data.stripeCustomerId !== undefined) sub.stripeCustomerId = data.stripeCustomerId;
+    if (data.stripeSubscriptionId !== undefined) sub.stripeSubscriptionId = data.stripeSubscriptionId;
+    if (data.status !== undefined) sub.status = data.status;
+    if (data.plan !== undefined) sub.plan = data.plan;
+    if (data.currentPeriodEnd !== undefined) sub.currentPeriodEnd = data.currentPeriodEnd;
 
-    return db
-      .update(subscriptions)
-      .set(updateData)
-      .where(eq(subscriptions.id, id))
-      .returning()
-      .get();
+    db.subscriptions[idx] = sub;
+    saveDB(db);
+    return sub;
   }
 
   activateSubscriptionForUser(userId: number, plan: string): Subscription {
     const existing = this.getSubscriptionByUserId(userId);
     const endDate = new Date();
     endDate.setFullYear(endDate.getFullYear() + 1);
-    
+
     if (existing) {
-      return db
-        .update(subscriptions)
-        .set({
-          status: "active",
-          plan,
-          currentPeriodEnd: endDate.toISOString(),
-        })
-        .where(eq(subscriptions.id, existing.id))
-        .returning()
-        .get()!;
+      existing.status = "active";
+      existing.plan = plan;
+      existing.currentPeriodEnd = endDate.toISOString();
+      const idx = db.subscriptions.findIndex((s) => s.id === existing.id);
+      db.subscriptions[idx] = existing;
+      saveDB(db);
+      return existing;
     }
-    
+
     return this.createSubscription(userId, {
       status: "active",
       plan,
