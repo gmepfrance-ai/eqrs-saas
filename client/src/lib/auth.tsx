@@ -2,6 +2,8 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 import type { SafeUser, Subscription } from "@shared/schema";
 import { apiRequest } from "./queryClient";
 
+const API_BASE = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
+
 function getTokenFromHash(): string | null {
   const hash = window.location.hash.slice(1) || "/";
   const qIndex = hash.indexOf("?");
@@ -73,9 +75,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const login = useCallback(async (email: string, password: string) => {
-    const res = await apiRequest("POST", "/api/auth/login", { email, password });
+    const res = await fetch(`${API_BASE}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
     const data = await res.json();
-    // Update hash to include token — this triggers re-render
+    if (!res.ok) {
+      throw new Error(data.message || "Erreur de connexion");
+    }
     window.location.hash = `#/dashboard?token=${data.token}`;
     setState({
       token: data.token,
@@ -83,17 +91,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       subscription: null,
       loading: false,
     });
-    // Now fetch full user info with subscription
     await fetchMe(data.token);
   }, []);
 
   const register = useCallback(async (name: string, email: string, password: string) => {
-    const res = await apiRequest("POST", "/api/auth/register", {
-      name,
-      email,
-      password,
+    const res = await fetch(`${API_BASE}/api/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
     });
     const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || "Erreur lors de l'inscription");
+    }
     window.location.hash = `#/dashboard?token=${data.token}`;
     setState({
       token: data.token,
