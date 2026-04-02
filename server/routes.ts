@@ -119,6 +119,17 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+
+  // Health check
+  app.get("/api/health", (req: Request, res: Response) => {
+    try {
+      const testUser = storage.getUserByEmail("health@test.com");
+      res.json({ status: "ok", time: new Date().toISOString(), dbWorks: true });
+    } catch (err: any) {
+      res.status(500).json({ status: "error", error: err.message, stack: err.stack });
+    }
+  });
+
   // ── Auth Routes ────────────────────────────────────────
 
   // Register
