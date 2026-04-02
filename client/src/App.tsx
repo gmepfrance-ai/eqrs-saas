@@ -8,6 +8,7 @@ import { AuthProvider } from "@/lib/auth";
 import LandingPage from "@/pages/landing";
 import LoginPage from "@/pages/login";
 import RegisterPage from "@/pages/register";
+import ForgotPasswordPage from "@/pages/forgot-password";
 import DashboardPage from "@/pages/dashboard";
 import ToolPage from "@/pages/tool";
 import NotFound from "@/pages/not-found";
@@ -18,6 +19,7 @@ function AppRouter() {
       <Route path="/" component={LandingPage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/register" component={RegisterPage} />
+      <Route path="/forgot-password" component={ForgotPasswordPage} />
       <Route path="/dashboard" component={DashboardPage} />
       <Route path="/app" component={ToolPage} />
       <Route component={NotFound} />

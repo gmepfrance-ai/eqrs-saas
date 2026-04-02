@@ -128,6 +128,79 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
 
+  // ── Password reset codes (in-memory, expire after 15 min) ──
+  const resetCodes = new Map<string, { code: string; expiresAt: number }>();
+
+  // Forgot password - generate code
+  app.post("/api/auth/forgot-password", (req: Request, res: Response) => {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: "E-mail requis" });
+
+    const user = storage.getUserByEmail(email);
+    if (!user) {
+      // Don't reveal if email exists - still return success
+      return res.json({ message: "Si un compte existe avec cet e-mail, un code de réinitialisation a été généré." });
+    }
+
+    // Generate 6-digit code
+    const code = String(Math.floor(100000 + Math.random() * 900000));
+    resetCodes.set(email, { code, expiresAt: Date.now() + 15 * 60 * 1000 });
+
+    // Log the code (in production, this would be sent by email)
+    console.log(`[PASSWORD RESET] Code for ${email}: ${code}`);
+
+    return res.json({ 
+      message: "Si un compte existe avec cet e-mail, un code de réinitialisation a été généré.",
+      // In dev/demo mode, return the code directly (remove in production with real email)
+      _code: code
+    });
+  });
+
+  // Reset password with code
+  app.post("/api/auth/reset-password", async (req: Request, res: Response) => {
+    try {
+      const { email, code, newPassword } = req.body;
+      if (!email || !code || !newPassword) {
+        return res.status(400).json({ message: "Tous les champs sont requis" });
+      }
+      if (newPassword.length < 8) {
+        return res.status(400).json({ message: "Le mot de passe doit contenir au moins 8 caractères" });
+      }
+
+      const stored = resetCodes.get(email);
+      if (!stored || stored.code !== code || stored.expiresAt < Date.now()) {
+        return res.status(400).json({ message: "Code invalide ou expiré" });
+      }
+
+      const user = storage.getUserByEmail(email);
+      if (!user) {
+        return res.status(404).json({ message: "Utilisateur non trouvé" });
+      }
+
+      const hash = await bcrypt.hash(newPassword, 12);
+      (user as any).passwordHash = hash;
+
+      // Persist to disk
+      const fs = require("fs");
+      const dbPath = require("path").join(process.cwd(), "db.json");
+      if (fs.existsSync(dbPath)) {
+        const db = JSON.parse(fs.readFileSync(dbPath, "utf-8"));
+        const idx = db.users.findIndex((u: any) => u.email === email);
+        if (idx >= 0) {
+          db.users[idx].passwordHash = hash;
+          fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
+        }
+      }
+
+      // Remove used code
+      resetCodes.delete(email);
+
+      return res.json({ message: "Mot de passe modifié avec succès" });
+    } catch (err: any) {
+      return res.status(500).json({ message: "Erreur interne" });
+    }
+  });
+
   // Health check
   app.get("/api/health", (req: Request, res: Response) => {
     try {
