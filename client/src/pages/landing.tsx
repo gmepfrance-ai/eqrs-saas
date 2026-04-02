@@ -65,6 +65,7 @@ export default function LandingPage() {
               Voir les tarifs
             </Button>
           </div>
+          <p className="mt-4 text-sm text-white/60">14 jours d'essai gratuit — sans carte bancaire</p>
         </div>
       </section>
 
@@ -120,6 +121,10 @@ export default function LandingPage() {
             <p className="text-sm text-muted-foreground">
               Accédez à l'outil EQRS complet. Sans engagement.
             </p>
+            <div className="mt-4 inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 rounded-full px-4 py-1.5 text-sm font-medium">
+              <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
+              Essayez gratuitement pendant 14 jours avant de vous engager
+            </div>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
