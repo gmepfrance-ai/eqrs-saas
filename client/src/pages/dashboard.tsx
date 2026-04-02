@@ -54,7 +54,7 @@ export default function DashboardPage() {
     );
   }
 
-  const isActive = subscription?.status === "active";
+  const isActive = subscription?.status === "active" || subscription?.status === "trialing";
 
   async function handleCheckout(plan: string) {
     setCheckoutLoading(plan);
