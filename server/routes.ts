@@ -124,7 +124,18 @@ export async function registerRoutes(
   app.get("/api/health", (req: Request, res: Response) => {
     try {
       const testUser = storage.getUserByEmail("health@test.com");
-      res.json({ status: "ok", time: new Date().toISOString(), dbWorks: true });
+      res.json({ 
+        status: "ok", 
+        time: new Date().toISOString(), 
+        dbWorks: true,
+        stripeConfigured: isStripeConfigured,
+        hasStripeKey: !!process.env.STRIPE_SECRET_KEY,
+        stripeKeyPrefix: process.env.STRIPE_SECRET_KEY?.substring(0, 10) || "not set",
+        hasPriceMonthly: !!process.env.STRIPE_PRICE_MONTHLY,
+        hasPriceAnnual: !!process.env.STRIPE_PRICE_ANNUAL,
+        hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET,
+        port: process.env.PORT
+      });
     } catch (err: any) {
       res.status(500).json({ status: "error", error: err.message, stack: err.stack });
     }
