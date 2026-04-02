@@ -37,6 +37,8 @@ export default function ForgotPasswordPage() {
         if (data._code) {
           setCode(data._code);
           setInfo(`Votre code de réinitialisation est : ${data._code}`);
+        } else {
+          setInfo("Un code de réinitialisation a été envoyé à votre adresse e-mail. Vérifiez votre boîte de réception (et les spams).");
         }
         setStep("reset");
       }

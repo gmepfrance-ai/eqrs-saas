@@ -146,13 +146,52 @@ export async function registerRoutes(
     const code = String(Math.floor(100000 + Math.random() * 900000));
     resetCodes.set(email, { code, expiresAt: Date.now() + 15 * 60 * 1000 });
 
-    // Log the code (in production, this would be sent by email)
-    console.log(`[PASSWORD RESET] Code for ${email}: ${code}`);
+    // Send code by email
+    const gmailUser = process.env.GMAIL_USER;
+    const gmailPass = process.env.GMAIL_APP_PASSWORD;
+    
+    if (gmailUser && gmailPass) {
+      try {
+        const nodemailer = require("nodemailer");
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: { user: gmailUser, pass: gmailPass },
+        });
+        await transporter.sendMail({
+          from: `"GMEP - EQRS" <${gmailUser}>`,
+          to: email,
+          subject: "EQRS - Code de réinitialisation de mot de passe",
+          html: `
+            <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;padding:20px;">
+              <div style="background:#1a365d;color:white;padding:20px;border-radius:8px 8px 0 0;text-align:center;">
+                <h2 style="margin:0;">G.M.E.P</h2>
+                <p style="margin:4px 0 0;font-size:12px;opacity:0.8;">EQRS — Modèle Johnson & Ettinger</p>
+              </div>
+              <div style="background:#f8f9fa;padding:24px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+                <p>Bonjour,</p>
+                <p>Vous avez demandé la réinitialisation de votre mot de passe.</p>
+                <p>Votre code de vérification est :</p>
+                <div style="background:#1a365d;color:white;font-size:32px;font-family:monospace;letter-spacing:8px;text-align:center;padding:16px;border-radius:8px;margin:16px 0;">
+                  ${code}
+                </div>
+                <p style="font-size:13px;color:#64748b;">Ce code est valable 15 minutes. Si vous n'avez pas demandé cette réinitialisation, ignorez cet e-mail.</p>
+                <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+                <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2023–2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+              </div>
+            </div>
+          `,
+        });
+        console.log(`[PASSWORD RESET] Email sent to ${email}`);
+      } catch (emailErr: any) {
+        console.error(`[PASSWORD RESET] Email failed:`, emailErr.message);
+      }
+    } else {
+      console.log(`[PASSWORD RESET] Gmail not configured. Code for ${email}: ${code}`);
+    }
 
     return res.json({ 
-      message: "Si un compte existe avec cet e-mail, un code de réinitialisation a été généré.",
-      // In dev/demo mode, return the code directly (remove in production with real email)
-      _code: code
+      message: "Un code de réinitialisation a été envoyé à votre adresse e-mail.",
+      ...(!gmailUser ? { _code: code } : {})
     });
   });
 
