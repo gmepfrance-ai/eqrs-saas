@@ -447,6 +447,30 @@ export async function registerRoutes(
     }
   );
 
+  // ── Dev route: reset password ──────────
+  if (!isStripeConfigured) {
+    app.post("/api/dev/reset-password", async (req: Request, res: Response) => {
+      try {
+        const { email, newPassword, secret } = req.body;
+        if (secret !== "gmep-admin-2026") return res.status(403).json({ message: "Accès refusé" });
+        const user = storage.getUserByEmail(email);
+        if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
+        const hash = await bcrypt.hash(newPassword, 12);
+        (user as any).passwordHash = hash;
+        const fs = require("fs");
+        const dbPath = require("path").join(process.cwd(), "db.json");
+        if (fs.existsSync(dbPath)) {
+          const db = JSON.parse(fs.readFileSync(dbPath, "utf-8"));
+          const idx = db.users.findIndex((u: any) => u.email === email);
+          if (idx >= 0) { db.users[idx].passwordHash = hash; fs.writeFileSync(dbPath, JSON.stringify(db, null, 2)); }
+        }
+        return res.json({ message: "Mot de passe modifié" });
+      } catch (err: any) {
+        return res.status(500).json({ message: err.message });
+      }
+    });
+  }
+
   // ── Dev route: manually activate subscription ──────────
   if (!isStripeConfigured) {
     app.post(
