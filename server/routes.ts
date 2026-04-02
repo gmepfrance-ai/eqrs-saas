@@ -132,7 +132,7 @@ export async function registerRoutes(
   const resetCodes = new Map<string, { code: string; expiresAt: number }>();
 
   // Forgot password - generate code
-  app.post("/api/auth/forgot-password", (req: Request, res: Response) => {
+  app.post("/api/auth/forgot-password", async (req: Request, res: Response) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ message: "E-mail requis" });
 
