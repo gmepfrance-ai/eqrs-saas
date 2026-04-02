@@ -453,7 +453,7 @@ export async function registerRoutes(
       "/api/dev/activate",
       requireAuth as any,
       (req: AuthRequest, res: Response) => {
-        const plan = (req.body.plan as string) || "monthly";
+        const plan = (req.body && req.body.plan) ? req.body.plan : "monthly";
         const sub = storage.activateSubscriptionForUser(req.user!.id, plan);
         return res.json({
           message: "Abonnement activé (mode développement)",
