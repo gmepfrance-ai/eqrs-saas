@@ -334,24 +334,7 @@ export default function DashboardPage() {
               <strong className="text-foreground">Conditions :</strong> Tarif par poste de travail. Chaque abonnement donne droit à une clé d'activation unique, liée à un seul poste. Pour plusieurs postes, une licence supplémentaire est requise par poste.
             </div>
 
-            {/* Dev mode activation */}
-            <div className="mt-6 bg-card border border-dashed border-muted rounded-lg p-4 text-center">
-              <p className="text-xs text-muted-foreground mb-3">
-                Mode démonstration — Activer un abonnement de test
-              </p>
-              <Button
-                data-testid="button-dev-activate"
-                variant="outline"
-                size="sm"
-                disabled={activateLoading}
-                onClick={handleDevActivate}
-              >
-                {activateLoading ? (
-                  <Loader2 className="w-3 h-3 animate-spin mr-2" />
-                ) : null}
-                Activer l'abonnement (démo)
-              </Button>
-            </div>
+
           </div>
         )}
       </div>

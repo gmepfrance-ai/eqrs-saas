@@ -482,8 +482,8 @@ export async function registerRoutes(
     });
   }
 
-  // ── Dev route: manually activate subscription (admin only) ───
-  {
+  // ── Dev route: manually activate subscription ───
+  if (!isStripeConfigured) {
     app.post(
       "/api/dev/activate",
       requireAuth as any,
