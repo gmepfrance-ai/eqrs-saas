@@ -77,10 +77,18 @@ function requireSubscription(
   }
 
   const sub = storage.getSubscriptionByUserId(req.user.id);
-  if (!sub || sub.status !== "active") {
+  if (!sub || (sub.status !== "active" && sub.status !== "trialing")) {
     return res
       .status(403)
       .json({ message: "Abonnement actif requis pour accéder à cet outil" });
+  }
+  // Check if trial has expired
+  if (sub.status === "trialing" && sub.currentPeriodEnd) {
+    if (new Date(sub.currentPeriodEnd) < new Date()) {
+      return res
+        .status(403)
+        .json({ message: "Votre période d'essai gratuit de 14 jours est terminée. Veuillez souscrire un abonnement pour continuer." });
+    }
   }
 
   next();
@@ -171,6 +179,15 @@ export async function registerRoutes(
       const user = storage.createUser(email, passwordHash, name);
 
       // Auto-login: create session
+      // Create 14-day free trial subscription
+      const trialEnd = new Date();
+      trialEnd.setDate(trialEnd.getDate() + 14);
+      storage.createSubscription(user.id, {
+        status: "trialing",
+        plan: "trial",
+        currentPeriodEnd: trialEnd.toISOString(),
+      });
+
       const token = crypto.randomUUID();
       const expiresAt = new Date(
         Date.now() + 24 * 60 * 60 * 1000

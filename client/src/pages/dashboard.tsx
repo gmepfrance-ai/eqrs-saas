@@ -165,7 +165,13 @@ export default function DashboardPage() {
                     Outil EQRS Johnson &amp; Ettinger
                   </h3>
                   <p className="text-xs text-muted-foreground mb-4">
-                    Votre abonnement est actif. Vous pouvez accéder à l'outil de modélisation.
+                    {subscription?.status === "trialing" ? (
+                      <>
+                        <span className="text-amber-600 font-semibold">Essai gratuit</span> — Vous bénéficiez d'un accès gratuit pendant 14 jours (jusqu'au {subscription?.currentPeriodEnd ? new Date(subscription.currentPeriodEnd).toLocaleDateString("fr-FR") : ""}). Souscrivez un abonnement avant la fin de l'essai pour continuer.
+                      </>
+                    ) : (
+                      "Votre abonnement est actif. Vous pouvez accéder à l'outil de modélisation."
+                    )}
                   </p>
                   <Button
                     data-testid="button-access-tool"
@@ -201,7 +207,7 @@ export default function DashboardPage() {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Formule</span>
                   <span className="font-medium text-foreground">
-                    {subscription?.plan === "annual" ? "Annuel (2 499€/an)" : "Mensuel (245€/mois)"}
+                    {subscription?.plan === "trial" ? "Essai gratuit (14 jours)" : subscription?.plan === "annual" ? "Annuel (2 499€/an)" : "Mensuel (245€/mois)"}
                   </span>
                 </div>
                 {subscription?.currentPeriodEnd && (
@@ -230,21 +236,48 @@ export default function DashboardPage() {
                   </div>
                 )}
               </div>
-              <div className="mt-4 pt-3 border-t border-border">
-                <button
-                  data-testid="button-manage-subscription"
-                  onClick={handlePortal}
-                  disabled={portalLoading}
-                  className="text-xs text-primary hover:underline inline-flex items-center gap-1"
-                >
-                  {portalLoading ? (
-                    <Loader2 className="w-3 h-3 animate-spin" />
-                  ) : (
-                    <ExternalLink className="w-3 h-3" />
-                  )}
-                  Gérer mon abonnement
-                </button>
-              </div>
+              {subscription?.status === "trialing" ? (
+                <div className="mt-4 pt-3 border-t border-border">
+                  <p className="text-xs text-amber-600 font-medium mb-3">Passez à un abonnement payant pour continuer après l'essai :</p>
+                  <div className="flex gap-2">
+                    <Button
+                      data-testid="button-upgrade-monthly"
+                      size="sm"
+                      className="bg-[#2ecc71] hover:bg-[#27ae60] text-white text-xs"
+                      disabled={checkoutLoading}
+                      onClick={() => handleCheckout("monthly")}
+                    >
+                      Mensuel — 245€/mois
+                    </Button>
+                    <Button
+                      data-testid="button-upgrade-annual"
+                      size="sm"
+                      variant="outline"
+                      className="text-xs"
+                      disabled={checkoutLoading}
+                      onClick={() => handleCheckout("annual")}
+                    >
+                      Annuel — 2 499€/an (-15%)
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-4 pt-3 border-t border-border">
+                  <button
+                    data-testid="button-manage-subscription"
+                    onClick={handlePortal}
+                    disabled={portalLoading}
+                    className="text-xs text-primary hover:underline inline-flex items-center gap-1"
+                  >
+                    {portalLoading ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <ExternalLink className="w-3 h-3" />
+                    )}
+                    Gérer mon abonnement
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}
