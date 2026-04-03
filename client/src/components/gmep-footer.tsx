@@ -1,4 +1,8 @@
+import { useTranslation } from "@/lib/i18n";
+
 export function GmepFooter() {
+  const { t } = useTranslation();
+
   return (
     <footer
       className="text-white/85 px-4 sm:px-8 py-5 text-xs leading-relaxed flex flex-wrap gap-4 sm:gap-8 items-start mt-auto"
@@ -46,15 +50,13 @@ export function GmepFooter() {
       </div>
 
       <div className="flex-1 min-w-[250px] text-right opacity-70 text-[0.7rem] leading-relaxed">
-        © 2023–2026 G.M.E.P — Tous droits réservés.
+        © 2023–2026 G.M.E.P — {t("footer.rights")}
         <br />
-        Ce logiciel de modélisation EQRS Johnson &amp; Ettinger est la propriété
-        exclusive de la SARL G.M.E.P.
+        {t("footer.legal")}
         <br />
-        Toute reproduction, diffusion ou utilisation, même partielle, sans
-        autorisation écrite préalable est interdite.
+        {t("footer.repro")}
         <br />
-        Conception et développement : Eric Azulay — Gérant SARL G.M.E.P
+        {t("footer.conception")} : Eric Azulay — Gérant SARL G.M.E.P
       </div>
     </footer>
   );

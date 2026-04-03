@@ -3,6 +3,7 @@ import { GmepHeader } from "@/components/gmep-header";
 import { GmepFooter } from "@/components/gmep-footer";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
+import { useTranslation } from "@/lib/i18n";
 import { apiRequest } from "@/lib/queryClient";
 import {
   Loader2,
@@ -18,6 +19,7 @@ import { useEffect } from "react";
 
 export default function DashboardPage() {
   const { user, token, subscription, refreshUser, loading: authLoading } = useAuth();
+  const { t } = useTranslation();
   const [, navigate] = useLocation();
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
   const [activateLoading, setActivateLoading] = useState(false);
@@ -131,10 +133,10 @@ export default function DashboardPage() {
         {/* Welcome */}
         <div className="mb-8">
           <h2 className="text-lg font-bold text-foreground" data-testid="text-dashboard-welcome">
-            Bonjour, {user.name}
+            {t("dashboard.hello")} {user.name}
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Bienvenue dans votre espace EQRS Johnson &amp; Ettinger.
+            {t("dashboard.welcome")}
           </p>
         </div>
 
@@ -162,15 +164,20 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-sm font-semibold text-foreground mb-1">
-                    Outil EQRS Johnson &amp; Ettinger
+                    {t("dashboard.toolTitle")}
                   </h3>
                   <p className="text-xs text-muted-foreground mb-4">
                     {subscription?.status === "trialing" ? (
                       <>
-                        <span className="text-amber-600 font-semibold">Essai gratuit</span> — Vous bénéficiez d'un accès gratuit pendant 14 jours (jusqu'au {subscription?.currentPeriodEnd ? new Date(subscription.currentPeriodEnd).toLocaleDateString("fr-FR") : ""}). Souscrivez un abonnement avant la fin de l'essai pour continuer.
+                        <span className="text-amber-600 font-semibold">{t("dashboard.trial.label")}</span>{" "}
+                        — {t("dashboard.trial.desc", {
+                          date: subscription?.currentPeriodEnd
+                            ? new Date(subscription.currentPeriodEnd).toLocaleDateString("fr-FR")
+                            : "",
+                        })}
                       </>
                     ) : (
-                      "Votre abonnement est actif. Vous pouvez accéder à l'outil de modélisation."
+                      t("dashboard.active.desc")
                     )}
                   </p>
                   <Button
@@ -181,7 +188,7 @@ export default function DashboardPage() {
                     }
                   >
                     <Beaker className="w-4 h-4 mr-2" />
-                    Accéder à l'outil EQRS
+                    {t("dashboard.accessTool")}
                   </Button>
                 </div>
               </div>
@@ -191,29 +198,33 @@ export default function DashboardPage() {
             <div className="bg-card border border-card-border rounded-lg p-5 shadow-sm mt-4">
               <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                 <Settings className="w-4 h-4" />
-                Mon abonnement
+                {t("dashboard.mySubscription")}
               </h3>
               <div className="space-y-2 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Statut</span>
+                  <span className="text-muted-foreground">{t("dashboard.status")}</span>
                   <span
                     data-testid="text-subscription-status"
                     className="inline-flex items-center gap-1 font-medium text-[#2ecc71]"
                   >
                     <Check className="w-3.5 h-3.5" />
-                    Actif
+                    {t("dashboard.statusActive")}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Formule</span>
+                  <span className="text-muted-foreground">{t("dashboard.plan")}</span>
                   <span className="font-medium text-foreground">
-                    {subscription?.plan === "trial" ? "Essai gratuit (14 jours)" : subscription?.plan === "annual" ? "Annuel (2 499€/an)" : "Mensuel (245€/mois)"}
+                    {subscription?.plan === "trial"
+                      ? "Essai gratuit (14 jours)"
+                      : subscription?.plan === "annual"
+                      ? "Annuel (2 499€/an)"
+                      : "Mensuel (245€/mois)"}
                   </span>
                 </div>
                 {subscription?.currentPeriodEnd && (
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">
-                      Prochain renouvellement
+                      {t("dashboard.nextRenewal")}
                     </span>
                     <span className="font-medium text-foreground">
                       {new Date(
@@ -225,39 +236,39 @@ export default function DashboardPage() {
                 {(subscription as any)?.licenseKey && (
                   <div className="mt-3 pt-3 border-t border-border">
                     <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Clé d'activation</span>
+                      <span className="text-muted-foreground">{t("dashboard.licenseKey")}</span>
                       <span className="font-mono font-bold text-foreground bg-muted px-3 py-1 rounded text-sm tracking-wider">
                         {(subscription as any).licenseKey}
                       </span>
                     </div>
                     <p className="text-[0.65rem] text-muted-foreground mt-1">
-                      Cette clé est liée à votre poste de travail. Ne la partagez pas.
+                      {t("dashboard.licenseWarning")}
                     </p>
                   </div>
                 )}
               </div>
               {subscription?.status === "trialing" ? (
                 <div className="mt-4 pt-3 border-t border-border">
-                  <p className="text-xs text-amber-600 font-medium mb-3">Passez à un abonnement payant pour continuer après l'essai :</p>
+                  <p className="text-xs text-amber-600 font-medium mb-3">{t("dashboard.upgradePrompt")}</p>
                   <div className="flex gap-2">
                     <Button
                       data-testid="button-upgrade-monthly"
                       size="sm"
                       className="bg-[#2ecc71] hover:bg-[#27ae60] text-white text-xs"
-                      disabled={checkoutLoading}
+                      disabled={!!checkoutLoading}
                       onClick={() => handleCheckout("monthly")}
                     >
-                      Mensuel — 245€/mois
+                      {t("landing.pricing.monthly")} — 245€/{t("landing.pricing.perMonth").replace("/", "")}
                     </Button>
                     <Button
                       data-testid="button-upgrade-annual"
                       size="sm"
                       variant="outline"
                       className="text-xs"
-                      disabled={checkoutLoading}
+                      disabled={!!checkoutLoading}
                       onClick={() => handleCheckout("annual")}
                     >
-                      Annuel — 2 499€/an (-15%)
+                      {t("landing.pricing.annual")} — 2 499€/{t("landing.pricing.perYear").replace("/", "")} (-15%)
                     </Button>
                   </div>
                 </div>
@@ -274,7 +285,7 @@ export default function DashboardPage() {
                     ) : (
                       <ExternalLink className="w-3 h-3" />
                     )}
-                    Gérer mon abonnement
+                    {t("dashboard.manageSubscription")}
                   </button>
                 </div>
               )}
@@ -288,7 +299,7 @@ export default function DashboardPage() {
             <div className="bg-orange-50 border border-orange-200 rounded-md p-4 mb-6">
               <p className="text-sm text-orange-800 font-medium flex items-center gap-2">
                 <AlertCircle className="w-4 h-4" />
-                Abonnement requis pour accéder à l'outil EQRS
+                {t("dashboard.subscriptionRequired")}
               </p>
             </div>
 
@@ -296,16 +307,16 @@ export default function DashboardPage() {
               {/* Monthly */}
               <div className="bg-card border border-card-border rounded-lg p-5 shadow-sm">
                 <div className="text-xs font-medium text-muted-foreground mb-1">
-                  Mensuel
+                  {t("landing.pricing.monthly")}
                 </div>
                 <div className="flex items-baseline gap-1 mb-1">
                   <span className="text-2xl font-extrabold text-foreground">
                     245€
                   </span>
-                  <span className="text-xs text-muted-foreground">/mois</span>
+                  <span className="text-xs text-muted-foreground">{t("landing.pricing.perMonth")}</span>
                 </div>
                 <p className="text-xs text-muted-foreground mb-4">
-                  Résiliable à tout moment
+                  {t("landing.pricing.monthlyBilling")}
                 </p>
                 <Button
                   data-testid="button-checkout-monthly"
@@ -318,7 +329,7 @@ export default function DashboardPage() {
                   ) : (
                     <CreditCard className="w-4 h-4 mr-2" />
                   )}
-                  S'abonner
+                  {t("landing.pricing.subscribe")}
                 </Button>
               </div>
 
@@ -334,16 +345,16 @@ export default function DashboardPage() {
                   -15%
                 </div>
                 <div className="text-xs font-medium text-muted-foreground mb-1">
-                  Annuel
+                  {t("landing.pricing.annual")}
                 </div>
                 <div className="flex items-baseline gap-1 mb-1">
                   <span className="text-2xl font-extrabold text-foreground">
                     2 499€
                   </span>
-                  <span className="text-xs text-muted-foreground">/an</span>
+                  <span className="text-xs text-muted-foreground">{t("landing.pricing.perYear")}</span>
                 </div>
                 <p className="text-xs text-muted-foreground mb-4">
-                  Soit ~208€/mois
+                  {t("landing.pricing.annualEquiv")}
                 </p>
                 <Button
                   data-testid="button-checkout-annual"
@@ -357,17 +368,15 @@ export default function DashboardPage() {
                   ) : (
                     <CreditCard className="w-4 h-4 mr-2" />
                   )}
-                  S'abonner
+                  {t("landing.pricing.subscribe")}
                 </Button>
               </div>
             </div>
 
             {/* Conditions de licence */}
             <div className="mt-4 bg-muted/50 rounded-md p-3 text-[0.7rem] text-muted-foreground leading-relaxed">
-              <strong className="text-foreground">Conditions :</strong> Tarif par poste de travail. Chaque abonnement donne droit à une clé d'activation unique, liée à un seul poste. Pour plusieurs postes, une licence supplémentaire est requise par poste.
+              <strong className="text-foreground">Conditions :</strong> {t("dashboard.conditions")}
             </div>
-
-
           </div>
         )}
       </div>

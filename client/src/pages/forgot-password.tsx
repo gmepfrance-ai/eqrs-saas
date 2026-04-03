@@ -4,12 +4,14 @@ import { GmepFooter } from "@/components/gmep-footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useTranslation } from "@/lib/i18n";
 import { Loader2, Mail, Lock, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
 
 const API_BASE = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
 
 export default function ForgotPasswordPage() {
+  const { t } = useTranslation();
   const [step, setStep] = useState<"email" | "reset" | "done">("email");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -95,26 +97,26 @@ export default function ForgotPasswordPage() {
               <div className="text-center py-4">
                 <CheckCircle2 className="w-12 h-12 text-[#2ecc71] mx-auto mb-4" />
                 <h2 className="text-lg font-bold text-foreground mb-2">
-                  Mot de passe modifié
+                  {t("forgot.doneTitle")}
                 </h2>
                 <p className="text-xs text-muted-foreground mb-6">
-                  Votre mot de passe a été réinitialisé avec succès.
+                  {t("forgot.doneDesc")}
                 </p>
                 <Button
                   className="w-full"
                   onClick={() => (window.location.hash = "#/login")}
                 >
-                  Se connecter
+                  {t("forgot.signIn")}
                 </Button>
               </div>
             ) : step === "reset" ? (
               <>
                 <div className="text-center mb-6">
                   <h2 className="text-lg font-bold text-foreground">
-                    Nouveau mot de passe
+                    {t("forgot.newPasswordTitle")}
                   </h2>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Entrez le code reçu par e-mail et votre nouveau mot de passe
+                    {t("forgot.newPasswordSubtitle")}
                   </p>
                 </div>
 
@@ -132,7 +134,7 @@ export default function ForgotPasswordPage() {
 
                   <div className="space-y-1.5">
                     <Label htmlFor="code" className="text-xs font-medium">
-                      Code de vérification
+                      {t("forgot.verificationCode")}
                     </Label>
                     <Input
                       id="code"
@@ -148,7 +150,7 @@ export default function ForgotPasswordPage() {
 
                   <div className="space-y-1.5">
                     <Label htmlFor="new-password" className="text-xs font-medium">
-                      Nouveau mot de passe
+                      {t("forgot.newPasswordLabel")}
                     </Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -167,7 +169,7 @@ export default function ForgotPasswordPage() {
 
                   <div className="space-y-1.5">
                     <Label htmlFor="confirm-password" className="text-xs font-medium">
-                      Confirmer le mot de passe
+                      {t("forgot.confirmPassword")}
                     </Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -191,7 +193,7 @@ export default function ForgotPasswordPage() {
                     className="w-full"
                   >
                     {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                    Réinitialiser le mot de passe
+                    {t("forgot.reset")}
                   </Button>
                 </form>
               </>
@@ -199,10 +201,10 @@ export default function ForgotPasswordPage() {
               <>
                 <div className="text-center mb-6">
                   <h2 className="text-lg font-bold text-foreground">
-                    Mot de passe oublié
+                    {t("forgot.title")}
                   </h2>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Entrez votre adresse e-mail pour recevoir un code de réinitialisation
+                    {t("forgot.subtitle")}
                   </p>
                 </div>
 
@@ -215,7 +217,7 @@ export default function ForgotPasswordPage() {
 
                   <div className="space-y-1.5">
                     <Label htmlFor="email" className="text-xs font-medium">
-                      Adresse e-mail
+                      {t("forgot.email")}
                     </Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -239,7 +241,7 @@ export default function ForgotPasswordPage() {
                     className="w-full"
                   >
                     {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                    Envoyer le code
+                    {t("forgot.sendCode")}
                   </Button>
                 </form>
               </>
@@ -250,7 +252,7 @@ export default function ForgotPasswordPage() {
                 href="/login"
                 className="text-primary hover:underline"
               >
-                Retour à la connexion
+                {t("forgot.backToLogin")}
               </Link>
             </p>
           </div>

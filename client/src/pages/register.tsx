@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/lib/auth";
+import { useTranslation } from "@/lib/i18n";
 import { Loader2, Mail, Lock, User } from "lucide-react";
 import { Link } from "wouter";
 
 export default function RegisterPage() {
   const { register } = useAuth();
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,10 +64,10 @@ export default function RegisterPage() {
           <div className="bg-card border border-card-border rounded-lg p-6 shadow-sm">
             <div className="text-center mb-6">
               <h2 className="text-lg font-bold text-foreground" data-testid="text-register-title">
-                Créer un compte
+                {t("register.title")}
               </h2>
               <p className="text-xs text-muted-foreground mt-1">
-                Inscrivez-vous pour accéder à l'outil EQRS
+                {t("register.subtitle")}
               </p>
             </div>
 
@@ -81,7 +83,7 @@ export default function RegisterPage() {
 
               <div className="space-y-1.5">
                 <Label htmlFor="name" className="text-xs font-medium">
-                  Nom complet
+                  {t("register.name")}
                 </Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -100,7 +102,7 @@ export default function RegisterPage() {
 
               <div className="space-y-1.5">
                 <Label htmlFor="email" className="text-xs font-medium">
-                  Adresse e-mail
+                  {t("register.email")}
                 </Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -119,7 +121,7 @@ export default function RegisterPage() {
 
               <div className="space-y-1.5">
                 <Label htmlFor="password" className="text-xs font-medium">
-                  Mot de passe
+                  {t("register.password")}
                 </Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -127,7 +129,7 @@ export default function RegisterPage() {
                     id="password"
                     data-testid="input-password"
                     type="password"
-                    placeholder="Min. 8 caractères"
+                    placeholder={t("register.minChars")}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="pl-9 text-sm"
@@ -139,7 +141,7 @@ export default function RegisterPage() {
 
               <div className="space-y-1.5">
                 <Label htmlFor="confirm-password" className="text-xs font-medium">
-                  Confirmer le mot de passe
+                  {t("register.confirmPassword")}
                 </Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -166,18 +168,18 @@ export default function RegisterPage() {
                 {loading ? (
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
                 ) : null}
-                Créer mon compte
+                {t("register.submit")}
               </Button>
             </form>
 
             <p className="text-center text-xs text-muted-foreground mt-4">
-              Déjà un compte ?{" "}
+              {t("register.alreadyAccount")}{" "}
               <Link
                 href="/login"
                 data-testid="link-to-login"
                 className="text-primary hover:underline font-medium"
               >
-                Se connecter
+                {t("register.signIn")}
               </Link>
             </p>
           </div>

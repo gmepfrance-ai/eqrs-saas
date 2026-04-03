@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/lib/auth";
+import { useTranslation } from "@/lib/i18n";
 import { Loader2, Mail, Lock } from "lucide-react";
 import { Link } from "wouter";
 
 export default function LoginPage() {
   const { login } = useAuth();
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -50,10 +52,10 @@ export default function LoginPage() {
           <div className="bg-card border border-card-border rounded-lg p-6 shadow-sm">
             <div className="text-center mb-6">
               <h2 className="text-lg font-bold text-foreground" data-testid="text-login-title">
-                Connexion
+                {t("login.title")}
               </h2>
               <p className="text-xs text-muted-foreground mt-1">
-                Accédez à votre espace EQRS
+                {t("login.subtitle")}
               </p>
             </div>
 
@@ -69,7 +71,7 @@ export default function LoginPage() {
 
               <div className="space-y-1.5">
                 <Label htmlFor="email" className="text-xs font-medium">
-                  Adresse e-mail
+                  {t("login.email")}
                 </Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -88,7 +90,7 @@ export default function LoginPage() {
 
               <div className="space-y-1.5">
                 <Label htmlFor="password" className="text-xs font-medium">
-                  Mot de passe
+                  {t("login.password")}
                 </Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -114,7 +116,7 @@ export default function LoginPage() {
                 {loading ? (
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
                 ) : null}
-                Se connecter
+                {t("login.submit")}
               </Button>
             </form>
 
@@ -124,18 +126,18 @@ export default function LoginPage() {
                 data-testid="link-forgot-password"
                 className="text-primary hover:underline"
               >
-                Mot de passe oublié ?
+                {t("login.forgotPassword")}
               </Link>
             </p>
 
             <p className="text-center text-xs text-muted-foreground mt-2">
-              Pas encore de compte ?{" "}
+              {t("login.noAccount")}{" "}
               <Link
                 href="/register"
                 data-testid="link-to-register"
                 className="text-primary hover:underline font-medium"
               >
-                Créer un compte
+                {t("login.createAccount")}
               </Link>
             </p>
           </div>

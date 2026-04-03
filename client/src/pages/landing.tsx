@@ -1,6 +1,7 @@
 import { GmepHeader } from "@/components/gmep-header";
 import { GmepFooter } from "@/components/gmep-footer";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/lib/i18n";
 import {
   Beaker,
   Shield,
@@ -15,6 +16,8 @@ function scrollToSection(id: string) {
 }
 
 export default function LandingPage() {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <GmepHeader />
@@ -33,17 +36,15 @@ export default function LandingPage() {
         <div className="relative max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-sm mb-6">
             <Beaker className="w-4 h-4" />
-            <span>Modèle EPA J&amp;E (2004)</span>
+            <span>{t("landing.hero.badge")}</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4 leading-tight">
-            Modélisation EQRS
+            {t("landing.hero.title1")}
             <br />
-            <span className="text-[#2ecc71]">Johnson &amp; Ettinger</span>
+            <span className="text-[#2ecc71]">{t("landing.hero.title2")}</span>
           </h1>
           <p className="text-base sm:text-lg text-white/80 max-w-xl mx-auto mb-8 leading-relaxed">
-            Outil professionnel d'évaluation quantitative des risques sanitaires
-            liés à l'intrusion de vapeurs dans les bâtiments. Calculs en temps
-            réel, 74 substances, conformité réglementaire.
+            {t("landing.hero.desc")}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button
@@ -52,7 +53,7 @@ export default function LandingPage() {
               className="bg-[#2ecc71] hover:bg-[#27ae60] text-white font-semibold px-8"
               onClick={() => (window.location.hash = "#/register")}
             >
-              Commencer l'essai gratuit
+              {t("landing.hero.cta")}
               <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
             <Button
@@ -62,10 +63,10 @@ export default function LandingPage() {
               className="border-white/30 text-white hover:bg-white/10"
               onClick={() => scrollToSection("pricing")}
             >
-              Voir les tarifs
+              {t("landing.hero.seePricing")}
             </Button>
           </div>
-          <p className="mt-4 text-sm text-white/60">14 jours d'essai gratuit — sans carte bancaire</p>
+          <p className="mt-4 text-sm text-white/60">{t("landing.hero.trial")}</p>
         </div>
       </section>
 
@@ -74,34 +75,33 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-xl font-bold text-foreground mb-2">
-              Un outil complet de modélisation environnementale
+              {t("landing.features.title")}
             </h2>
             <p className="text-sm text-muted-foreground max-w-lg mx-auto">
-              Conforme aux recommandations de l'EPA et aux exigences
-              réglementaires françaises.
+              {t("landing.features.subtitle")}
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <FeatureCard
               icon={<Beaker className="w-5 h-5" />}
-              title="74 substances"
-              description="Base de données complète incluant COV, métaux, HAP et autres polluants réglementaires."
+              title={t("landing.features.substances.title")}
+              description={t("landing.features.substances.desc")}
             />
             <FeatureCard
               icon={<Zap className="w-5 h-5" />}
-              title="Calculs temps réel"
-              description="Résultats instantanés : QD, ERI, VLEP, facteur d'atténuation et concentrations intérieures."
+              title={t("landing.features.realtime.title")}
+              description={t("landing.features.realtime.desc")}
             />
             <FeatureCard
               icon={<BarChart3 className="w-5 h-5" />}
-              title="Analyse de sensibilité"
-              description="Étude paramétrique sur 8 variables clés pour évaluer l'incertitude du modèle."
+              title={t("landing.features.sensitivity.title")}
+              description={t("landing.features.sensitivity.desc")}
             />
             <FeatureCard
               icon={<Shield className="w-5 h-5" />}
-              title="Modèle J&E EPA 2004"
-              description="Implémentation fidèle du modèle Johnson & Ettinger publié par l'US EPA."
+              title={t("landing.features.model.title")}
+              description={t("landing.features.model.desc")}
             />
           </div>
         </div>
@@ -116,14 +116,14 @@ export default function LandingPage() {
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-xl font-bold text-foreground mb-2">
-              Tarifs simples et transparents
+              {t("landing.pricing.title")}
             </h2>
             <p className="text-sm text-muted-foreground">
-              Accédez à l'outil EQRS complet. Sans engagement.
+              {t("landing.pricing.subtitle")}
             </p>
             <div className="mt-4 inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 rounded-full px-4 py-1.5 text-sm font-medium">
               <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
-              Essayez gratuitement pendant 14 jours avant de vous engager
+              {t("landing.pricing.trialBadge")}
             </div>
           </div>
 
@@ -131,30 +131,30 @@ export default function LandingPage() {
             {/* Monthly */}
             <div className="bg-white rounded-lg border border-border p-6 flex flex-col shadow-sm">
               <div className="text-sm font-medium text-muted-foreground mb-1">
-                Mensuel
+                {t("landing.pricing.monthly")}
               </div>
               <div className="flex items-baseline gap-1 mb-1">
                 <span className="text-3xl font-extrabold text-foreground">
                   245€
                 </span>
-                <span className="text-sm text-muted-foreground">/mois</span>
+                <span className="text-sm text-muted-foreground">{t("landing.pricing.perMonth")}</span>
               </div>
               <p className="text-xs text-muted-foreground mb-6">
-                Facturation mensuelle, résiliable à tout moment.
+                {t("landing.pricing.monthlyBilling")}
               </p>
               <ul className="space-y-2 mb-6 flex-1">
-                <PricingItem>Accès complet à l'outil EQRS</PricingItem>
-                <PricingItem>74 substances disponibles</PricingItem>
-                <PricingItem>Licence mono-poste (1 clé d'activation)</PricingItem>
-                <PricingItem>Mises à jour incluses</PricingItem>
-                <PricingItem>Support par e-mail</PricingItem>
+                <PricingItem>{t("landing.pricing.fullAccess")}</PricingItem>
+                <PricingItem>{t("landing.pricing.substances")}</PricingItem>
+                <PricingItem>{t("landing.pricing.license")}</PricingItem>
+                <PricingItem>{t("landing.pricing.updates")}</PricingItem>
+                <PricingItem>{t("landing.pricing.emailSupport")}</PricingItem>
               </ul>
               <Button
                 data-testid="button-subscribe-monthly"
                 className="w-full bg-primary hover:bg-primary/90"
                 onClick={() => (window.location.hash = "#/register")}
               >
-                S'abonner
+                {t("landing.pricing.subscribe")}
               </Button>
             </div>
 
@@ -170,26 +170,26 @@ export default function LandingPage() {
                 className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold text-white px-3 py-0.5 rounded-full"
                 style={{ background: "#2ecc71" }}
               >
-                Économisez 15%
+                {t("landing.pricing.save15")}
               </div>
               <div className="text-sm font-medium text-muted-foreground mb-1">
-                Annuel
+                {t("landing.pricing.annual")}
               </div>
               <div className="flex items-baseline gap-1 mb-1">
                 <span className="text-3xl font-extrabold text-foreground">
                   2 499€
                 </span>
-                <span className="text-sm text-muted-foreground">/an</span>
+                <span className="text-sm text-muted-foreground">{t("landing.pricing.perYear")}</span>
               </div>
               <p className="text-xs text-muted-foreground mb-6">
-                Soit ~208€/mois. Facturation annuelle.
+                {t("landing.pricing.annualEquiv")}
               </p>
               <ul className="space-y-2 mb-6 flex-1">
-                <PricingItem>Accès complet à l'outil EQRS</PricingItem>
-                <PricingItem>74 substances disponibles</PricingItem>
-                <PricingItem>Licence mono-poste (1 clé d'activation)</PricingItem>
-                <PricingItem>Mises à jour incluses</PricingItem>
-                <PricingItem>Support prioritaire</PricingItem>
+                <PricingItem>{t("landing.pricing.fullAccess")}</PricingItem>
+                <PricingItem>{t("landing.pricing.substances")}</PricingItem>
+                <PricingItem>{t("landing.pricing.license")}</PricingItem>
+                <PricingItem>{t("landing.pricing.updates")}</PricingItem>
+                <PricingItem>{t("landing.pricing.prioritySupport")}</PricingItem>
               </ul>
               <Button
                 data-testid="button-subscribe-annual"
@@ -197,7 +197,7 @@ export default function LandingPage() {
                 style={{ background: "#2ecc71" }}
                 onClick={() => (window.location.hash = "#/register")}
               >
-                S'abonner
+                {t("landing.pricing.subscribe")}
               </Button>
             </div>
           </div>
@@ -205,14 +205,14 @@ export default function LandingPage() {
           {/* Conditions d'utilisation */}
           <div className="mt-10 max-w-2xl mx-auto">
             <div className="bg-white/80 rounded-lg border border-border p-5 text-xs text-muted-foreground leading-relaxed">
-              <h4 className="font-semibold text-foreground text-sm mb-3">Conditions de licence</h4>
+              <h4 className="font-semibold text-foreground text-sm mb-3">{t("landing.conditions.title")}</h4>
               <ul className="space-y-1.5 list-disc list-inside">
-                <li>Le tarif indiqué correspond à <strong className="text-foreground">un seul poste de travail</strong> (ordinateur unique).</li>
-                <li>Chaque abonnement donne droit à <strong className="text-foreground">une clé d'activation unique</strong>, liée à un seul poste.</li>
-                <li>La clé d'activation est strictement personnelle et incessible. Elle ne peut être partagée, transférée ou utilisée simultanément sur plusieurs postes.</li>
-                <li>Pour une utilisation sur plusieurs postes, une licence supplémentaire doit être souscrite pour chaque poste additionnel.</li>
-                <li>Toute utilisation frauduleuse (partage de clé, accès simultanés multiples) entraînera la suspension immédiate de l'abonnement sans remboursement.</li>
-                <li>Le logiciel EQRS Johnson & Ettinger est la propriété exclusive de la SARL G.M.E.P. Toute reproduction, diffusion ou rétro-ingénierie est interdite.</li>
+                <li>{t("landing.conditions.item1")}</li>
+                <li>{t("landing.conditions.item2")}</li>
+                <li>{t("landing.conditions.item3")}</li>
+                <li>{t("landing.conditions.item4")}</li>
+                <li>{t("landing.conditions.item5")}</li>
+                <li>{t("landing.conditions.item6")}</li>
               </ul>
               <p className="mt-3 text-[0.65rem] opacity-70">
                 © 2023–2026 SARL G.M.E.P — SIREN 753 097 625 — 9 rue de la Marne, 79400 Saint-Maixent-l'École

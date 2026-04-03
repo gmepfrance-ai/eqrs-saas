@@ -1,5 +1,7 @@
 import { Link } from "wouter";
 import { useAuth } from "@/lib/auth";
+import { useTranslation } from "@/lib/i18n";
+import { LanguageSelector } from "@/components/language-selector";
 
 export function GmepLogo({ size = 44 }: { size?: number }) {
   return (
@@ -54,6 +56,7 @@ export function GmepLogo({ size = 44 }: { size?: number }) {
 
 export function GmepHeader() {
   const { user, token, logout } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <header
@@ -89,14 +92,16 @@ export function GmepHeader() {
 
       <div className="hidden sm:block">
         <h1 className="text-base font-bold tracking-tight">
-          EQRS — Modèle Johnson &amp; Ettinger
+          {t("header.subtitle")}
         </h1>
         <p className="text-xs opacity-85 mt-0.5">
-          Évaluation Quantitative des Risques Sanitaires • Intrusion de vapeurs
+          {t("header.subtext")}
         </p>
       </div>
 
       <div className="ml-auto flex items-center gap-3">
+        <LanguageSelector />
+
         {user ? (
           <>
             <span className="text-xs opacity-80 hidden sm:inline">
@@ -107,7 +112,7 @@ export function GmepHeader() {
               onClick={logout}
               className="text-xs bg-white/15 hover:bg-white/25 rounded px-3 py-1.5 transition-colors"
             >
-              Déconnexion
+              {t("header.logout")}
             </button>
           </>
         ) : (
@@ -117,14 +122,14 @@ export function GmepHeader() {
               data-testid="link-login"
               className="text-xs bg-white/15 hover:bg-white/25 rounded px-3 py-1.5 transition-colors"
             >
-              Connexion
+              {t("header.login")}
             </Link>
             <Link
               href="/register"
               data-testid="link-register"
               className="text-xs bg-[#2ecc71] hover:bg-[#27ae60] text-white rounded px-3 py-1.5 transition-colors font-medium"
             >
-              Inscription
+              {t("header.register")}
             </Link>
           </>
         )}
