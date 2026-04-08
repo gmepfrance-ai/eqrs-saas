@@ -80,6 +80,28 @@ const translations = {
     "landing.conditions.item6":
       "Le logiciel EQRS Johnson & Ettinger est la propriété exclusive de la SARL G.M.E.P. Toute reproduction, diffusion ou rétro-ingénierie est interdite.",
 
+    // Demo Calculator
+    "demo_title": "Testez le modèle J&E",
+    "demo_subtitle": "Démo gratuite — 5 substances",
+    "demo_substance": "Substance",
+    "demo_soil_gas": "Concentration sol-gaz (µg/m³)",
+    "demo_groundwater": "Concentration eaux souterraines (µg/L)",
+    "demo_distance": "Distance source-dalle (m)",
+    "demo_calculate": "Calculer",
+    "demo_alpha": "Facteur d'atténuation α",
+    "demo_cindoor_sg": "Cindoor sol-gaz",
+    "demo_cindoor_gw": "Cindoor nappe",
+    "demo_qd": "QD Inhalation Adulte",
+    "demo_eri": "ERI Inhalation Adulte",
+    "demo_acceptable": "Acceptable",
+    "demo_vigilance": "Vigilance",
+    "demo_unacceptable": "Inacceptable",
+    "demo_upgrade": "Accédez aux 74 substances et aux calculs complets",
+    "demo_more_substances": "69 substances supplémentaires avec l'abonnement",
+    "demo_results": "Résultats",
+    "demo_enter_values": "Entrez des concentrations et cliquez Calculer",
+    "demo_non_volatile": "Le modèle J&E ne s'applique pas aux métaux non volatils",
+
     // Login
     "login.title": "Connexion",
     "login.subtitle": "Accédez à votre espace EQRS",
@@ -219,6 +241,28 @@ const translations = {
     "landing.conditions.item6":
       "The EQRS Johnson & Ettinger software is the exclusive property of SARL G.M.E.P. Any reproduction, distribution or reverse engineering is prohibited.",
 
+    // Demo Calculator
+    "demo_title": "Try the J&E Model",
+    "demo_subtitle": "Free demo — 5 substances",
+    "demo_substance": "Substance",
+    "demo_soil_gas": "Soil gas concentration (µg/m³)",
+    "demo_groundwater": "Groundwater concentration (µg/L)",
+    "demo_distance": "Source-to-slab distance (m)",
+    "demo_calculate": "Calculate",
+    "demo_alpha": "Attenuation factor α",
+    "demo_cindoor_sg": "Cindoor soil gas",
+    "demo_cindoor_gw": "Cindoor groundwater",
+    "demo_qd": "HQ Inhalation Adult",
+    "demo_eri": "ILCR Inhalation Adult",
+    "demo_acceptable": "Acceptable",
+    "demo_vigilance": "Monitoring",
+    "demo_unacceptable": "Unacceptable",
+    "demo_upgrade": "Access all 74 substances and full calculations",
+    "demo_more_substances": "69 additional substances with subscription",
+    "demo_results": "Results",
+    "demo_enter_values": "Enter concentrations and click Calculate",
+    "demo_non_volatile": "The J&E model does not apply to non-volatile metals",
+
     // Login
     "login.title": "Sign in",
     "login.subtitle": "Access your EQRS workspace",
@@ -356,6 +400,28 @@ const translations = {
       "Cualquier uso fraudulento (compartir clave, accesos simultáneos múltiples) resultará en la suspensión inmediata de la suscripción sin reembolso.",
     "landing.conditions.item6":
       "El software EQRS Johnson & Ettinger es propiedad exclusiva de la SARL G.M.E.P. Toda reproducción, difusión o ingeniería inversa está prohibida.",
+
+    // Demo Calculator
+    "demo_title": "Pruebe el modelo J&E",
+    "demo_subtitle": "Demo gratuita — 5 sustancias",
+    "demo_substance": "Sustancia",
+    "demo_soil_gas": "Concentración gas del suelo (µg/m³)",
+    "demo_groundwater": "Concentración aguas subterráneas (µg/L)",
+    "demo_distance": "Distancia fuente-losa (m)",
+    "demo_calculate": "Calcular",
+    "demo_alpha": "Factor de atenuación α",
+    "demo_cindoor_sg": "Cindoor gas del suelo",
+    "demo_cindoor_gw": "Cindoor aguas subterráneas",
+    "demo_qd": "CP Inhalación Adulto",
+    "demo_eri": "ERI Inhalación Adulto",
+    "demo_acceptable": "Aceptable",
+    "demo_vigilance": "Vigilancia",
+    "demo_unacceptable": "Inaceptable",
+    "demo_upgrade": "Acceda a las 74 sustancias y cálculos completos",
+    "demo_more_substances": "69 sustancias adicionales con la suscripción",
+    "demo_results": "Resultados",
+    "demo_enter_values": "Ingrese concentraciones y haga clic en Calcular",
+    "demo_non_volatile": "El modelo J&E no se aplica a los metales no volátiles",
 
     // Login
     "login.title": "Iniciar sesión",

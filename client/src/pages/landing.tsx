@@ -2,6 +2,7 @@ import { GmepHeader } from "@/components/gmep-header";
 import { GmepFooter } from "@/components/gmep-footer";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
+import { DemoCalculator } from "@/components/demo-calculator";
 import {
   Beaker,
   Shield,
@@ -104,6 +105,13 @@ export default function LandingPage() {
               description={t("landing.features.model.desc")}
             />
           </div>
+        </div>
+      </section>
+
+      {/* Interactive J&E Demo */}
+      <section className="py-16 px-4 bg-gradient-to-b from-background to-muted/30">
+        <div className="max-w-4xl mx-auto">
+          <DemoCalculator />
         </div>
       </section>
 
