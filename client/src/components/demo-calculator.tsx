@@ -131,7 +131,11 @@ function calculateJE(
 
   // Building params
   const { LB, WB, HB, ER, eta, kv, dP, mu } = DEFAULTS;
-  const Zcrack = Lcrack; // Zcrack = épaisseur dallage
+  // Zcrack (profondeur fissure pour Qsoil) est un paramètre SÉPARÉ de Lcrack (épaisseur dalle)
+  // Dans le modèle J&E, Zcrack est la profondeur sous la dalle où les fissures se forment
+  // Lcrack est l'épaisseur de la dalle (barrière diffusive)
+  // On garde Zcrack fixe à la valeur par défaut du modèle complet
+  const Zcrack = DEFAULTS.Lcrack; // 0.15 m (profondeur fissure, fixe)
 
   // Derived building values
   const AB = LB * WB;
