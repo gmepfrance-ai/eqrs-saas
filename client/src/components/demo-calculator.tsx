@@ -170,9 +170,14 @@ function calculateJE(
   let Pe_crack = 0;
   let A_param = 0;
 
-  if (Qbuilding > 0 && LT > 0 && Deff > 0 && AB > 0) {
-    A_param = (Deff * AB) / (Qbuilding * LT);
-    Pe_sol = (Qsoil * LT) / (Deff * AB);
+  // Quand LT ≤ 0 (source directement sous la dalle), on impose LT_min = 0.001 m
+  // pour éviter la division par zéro. Physiquement : plus de résistance du sol,
+  // seule la dalle atténue → α élevé (proche de 1).
+  const LT_eff = Math.max(LT, 0.001);
+
+  if (Qbuilding > 0 && Deff > 0 && AB > 0) {
+    A_param = (Deff * AB) / (Qbuilding * LT_eff);
+    Pe_sol = (Qsoil * LT_eff) / (Deff * AB);
   }
 
   if (Deff_crack > 0 && Acrack > 0) {
@@ -388,7 +393,7 @@ export function DemoCalculator() {
             </label>
             <input
               type="number"
-              min="0.1"
+              min="0"
               step="any"
               className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2"
               value={LT}
