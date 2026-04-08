@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Lock, FlaskConical, AlertTriangle } from "lucide-react";
+import { ChevronRight, Lock, FlaskConical, AlertTriangle, Settings2 } from "lucide-react";
 
 // ── Substance data ──────────────────────────────────────────────────────────
 const DEMO_SUBSTANCES: Record<
@@ -9,9 +9,9 @@ const DEMO_SUBSTANCES: Record<
   {
     Da: number;
     Dw: number;
-    H: number;
-    VTR_inhal: number;
-    ERU_inhal: number;
+    H: number;           // Henry dimensionless (H')
+    VTR_inhal: number;   // mg/m³ (seuil)
+    ERU_inhal: number;   // (µg/m³)⁻¹ (sans seuil)
     M: number;
     volatile: boolean;
   }
@@ -65,12 +65,43 @@ const DEMO_SUBSTANCES: Record<
 
 const SUBSTANCE_NAMES = Object.keys(DEMO_SUBSTANCES);
 
-// ── J&E calculation ─────────────────────────────────────────────────────────
+// ── Default building/soil parameters (same as full model BAT_DEFAULTS) ──────
+const DEFAULTS = {
+  LB: 10,           // Longueur bâtiment (m)
+  WB: 10,           // Largeur bâtiment (m)
+  HB: 2.5,          // Hauteur sous plafond (m)
+  ER: 0.45,         // Taux de renouvellement d'air (h⁻¹)
+  Lcrack: 0.15,     // Épaisseur du dallage (m)
+  eta: 0.0002,      // Fraction de fissure
+  Zcrack: 0.15,     // Profondeur fissure (m)
+  n: 0.35,          // Porosité totale du sol
+  theta_w: 0.15,    // Teneur en eau volumique
+  kv: 1e-12,        // Perméabilité du sol (m²)
+  dP: 4,            // Dépression du bâtiment (Pa)
+  mu: 1.81e-5,      // Viscosité dynamique de l'air (Pa·s)
+  LT: 2,            // Distance source-dalle (m)
+};
+
+// ── Exposure parameters (adulte, same as full model) ────────────────────────
+const EXPOSURE = {
+  P: 70,             // Poids corporel (kg)
+  ED: 30,            // Durée d'exposition (ans)
+  EF: 350,           // Fréquence d'exposition (j/an)
+  AT_seuil: 30,      // Période de moyennage seuil (ans) = ED
+  AT_sansseuil: 70,  // Période de moyennage sans seuil (ans) = vie entière
+  Fi: 0.8,           // Fraction de temps à l'intérieur
+};
+
+// ── J&E calculation (aligned with full model) ───────────────────────────────
 interface CalcResult {
   alpha: number;
+  alpha_eff: number;
   Qbuilding: number;
   Cindoor_sg: number;
   Cindoor_gw: number;
+  Cindoor_JE: number;
+  CI_seuil: number;
+  CI_sansseuil: number;
   QD_inhal: number;
   ERI_inhal: number;
   isVolatile: boolean;
@@ -78,88 +109,115 @@ interface CalcResult {
 
 function calculateJE(
   substanceName: string,
-  Csg: number,  // µg/m³ sol-gaz
-  Cgw: number,  // µg/L eaux souterraines
-  LT: number    // distance source-dalle (m)
+  Csg: number,   // µg/m³ sol-gaz
+  Cgw: number,   // µg/L eaux souterraines
+  LT: number,    // distance source-dalle (m)
+  Lcrack: number, // épaisseur dallage (m)
+  n: number,      // porosité totale
+  theta_w: number // teneur en eau volumique
 ): CalcResult {
   const substance = DEMO_SUBSTANCES[substanceName];
 
   if (!substance.volatile) {
     return {
-      alpha: 0,
-      Qbuilding: 0,
-      Cindoor_sg: 0,
-      Cindoor_gw: 0,
-      QD_inhal: 0,
-      ERI_inhal: 0,
-      isVolatile: false,
+      alpha: 0, alpha_eff: 0, Qbuilding: 0,
+      Cindoor_sg: 0, Cindoor_gw: 0, Cindoor_JE: 0,
+      CI_seuil: 0, CI_sansseuil: 0,
+      QD_inhal: 0, ERI_inhal: 0, isVolatile: false,
     };
   }
 
   const { Da, Dw, H, VTR_inhal, ERU_inhal } = substance;
 
-  // Building & soil params
-  const n = 0.35, θw = 0.15, θa = 0.20;
-  const LB = 10, WB = 10, HB = 2.5, ER = 0.45;
-  const kv = 1e-12, dP = 4, mu = 1.81e-5;
-  const Lcrack = 0.15, eta = 0.0002, Zcrack = 0.15;
+  // Building params
+  const { LB, WB, HB, ER, eta, kv, dP, mu } = DEFAULTS;
+  const Zcrack = Lcrack; // Zcrack = épaisseur dallage
 
+  // Derived building values
   const AB = LB * WB;
   const Qbuilding = (LB * WB * HB * ER) / 3600;
   const Acrack = eta * AB;
   const Xcrack = 2 * (LB + WB);
-  const rcrack = (eta * AB) / Xcrack;
+  const rcrack = Xcrack > 0 ? (eta * AB) / Xcrack : 0;
 
-  const Deff =
-    (Da * Math.pow(θa, 10 / 3)) / (n * n) +
-    (Dw * Math.pow(θw, 10 / 3)) / (n * n) / H;
+  // Porosité à l'air = porosité totale - teneur en eau
+  const theta_a = Math.max(n - theta_w, 0.01);
 
-  const Qsoil =
-    (2 * Math.PI * kv * dP * Zcrack) /
-    (mu * Math.log((2 * Zcrack) / rcrack));
+  // Step 1: Effective diffusion (Millington-Quirk)
+  let Deff = 0;
+  if (n > 0 && H > 0) {
+    Deff =
+      (Da * Math.pow(theta_a, 10 / 3)) / (n * n) +
+      (Dw * Math.pow(theta_w, 10 / 3)) / (n * n) / H;
+  }
+  const Deff_crack = Deff;
 
-  const A = (Deff * AB) / (Qbuilding * LT);
-  const Pe_sol = (Qsoil * LT) / (Deff * AB);
-  const Pe_crack = (Qsoil * Lcrack) / (Deff * Acrack);
-
-  const alpha =
-    (A * Math.exp(Pe_sol) * Pe_crack) /
-    (Math.exp(Pe_crack) - 1 + A * Math.exp(Pe_sol) * Pe_crack);
-
-  // Indoor concentrations
-  // sol-gaz: Cindoor = alpha * Csg
-  const Cindoor_sg = isFinite(alpha) ? alpha * Csg : 0;
-
-  // nappe: convert Cgw µg/L → µg/m³ in soil-gas via H (dimensionless)
-  // Cgw_sg = Cgw * 1000 * H (µg/L → µg/m³ × H)
-  const Cgw_sg = Cgw * 1000 * H; // equivalent soil-gas concentration
-  const Cindoor_gw = isFinite(alpha) ? alpha * Cgw_sg : 0;
-
-  // Total indoor (sum of contributions)
-  const Cindoor_total = Cindoor_sg + Cindoor_gw;
-
-  // Exposure factors
-  const Fi = 0.8, EF = 350, ED = 30;
-  const AT_nc = 30; // ans non-cancérigène
-  const AT_c = 70;  // ans cancérigène
-
-  // QD (Quotient de Danger) — non-cancérigène
-  const QD_inhal =
-    VTR_inhal > 0
-      ? ((Cindoor_total * Fi * (EF / 365) * ED) / AT_nc / 1000) / VTR_inhal
+  // Step 2: Qsoil (Nazaroff)
+  let Qsoil = 0;
+  if (rcrack > 0 && Zcrack > 0 && mu > 0) {
+    const ln_arg = (2 * Zcrack) / rcrack;
+    Qsoil = ln_arg > 0
+      ? (2 * Math.PI * kv * dP * Zcrack) / (mu * Math.log(ln_arg))
       : 0;
+  }
 
-  // ERI (Excès de Risque Individuel)
-  const ERI_inhal =
-    ERU_inhal > 0
-      ? ((Cindoor_total * Fi * (EF / 365) * ED) / AT_c / 1000) * ERU_inhal
-      : 0;
+  // Step 3: Péclet numbers
+  let Pe_sol = 0;
+  let Pe_crack = 0;
+  let A_param = 0;
+
+  if (Qbuilding > 0 && LT > 0 && Deff > 0 && AB > 0) {
+    A_param = (Deff * AB) / (Qbuilding * LT);
+    Pe_sol = (Qsoil * LT) / (Deff * AB);
+  }
+
+  if (Deff_crack > 0 && Acrack > 0) {
+    Pe_crack = (Qsoil * Lcrack) / (Deff_crack * Acrack);
+  }
+
+  // Step 4: Alpha (attenuation factor)
+  const expPeSol = Math.exp(Pe_sol);
+  const expPeCrack = Math.exp(Pe_crack);
+  const numerator = A_param * expPeSol * Pe_crack;
+  const denominator = (expPeCrack - 1) + A_param * expPeSol * Pe_crack;
+  const alpha = denominator !== 0 ? numerator / denominator : 0;
+
+  // No lateral dilution in demo (LH = 0 → delta = 1)
+  const delta = 1;
+  const alpha_eff = alpha * delta;
+
+  // Step 5: Indoor concentrations (same as full model)
+  // Sol-gaz: Cindoor = α_eff × Csg
+  const Cindoor_sg = isFinite(alpha_eff) ? alpha_eff * Csg : 0;
+  // Nappe: Cindoor = α_eff × H' × Ceau × 1000  (µg/L → µg/m³)
+  const Cindoor_gw = isFinite(alpha_eff) ? alpha_eff * H * Cgw * 1000 : 0;
+
+  // J&E uses MAX of the two contributions (same as full model: CairJE = max(ci.solGaz, ci.nappe))
+  const Cindoor_JE = Math.max(Cindoor_sg, Cindoor_gw);
+
+  // Step 6: Concentration d'inhalation (CI) — same as full model
+  // CI = CairJE × Fi × (EF/365) × (ED/AT)
+  const { Fi, EF, ED, AT_seuil, AT_sansseuil } = EXPOSURE;
+  const CI_seuil = Cindoor_JE * Fi * (EF / 365) * (ED / AT_seuil);       // µg/m³
+  const CI_sansseuil = Cindoor_JE * Fi * (EF / 365) * (ED / AT_sansseuil); // µg/m³
+
+  // Step 7: QD Inhalation (Quotient de Danger) — seuil
+  // QD = (CI / 1000) / VTR   (CI µg/m³ → mg/m³, VTR en mg/m³)
+  const QD_inhal = VTR_inhal > 0 ? (CI_seuil / 1000) / VTR_inhal : 0;
+
+  // Step 8: ERI Inhalation (Excès de Risque Individuel) — sans seuil
+  // ERI = CI_sansseuil × ERU_inhal   (CI en µg/m³, ERU en (µg/m³)⁻¹)
+  const ERI_inhal = ERU_inhal > 0 ? CI_sansseuil * ERU_inhal : 0;
 
   return {
     alpha: isFinite(alpha) ? alpha : 0,
+    alpha_eff: isFinite(alpha_eff) ? alpha_eff : 0,
     Qbuilding,
     Cindoor_sg,
     Cindoor_gw,
+    Cindoor_JE,
+    CI_seuil,
+    CI_sansseuil,
     QD_inhal,
     ERI_inhal,
     isVolatile: true,
@@ -207,15 +265,22 @@ export function DemoCalculator() {
   const [substance, setSubstance] = useState<string>(SUBSTANCE_NAMES[0]);
   const [Csg, setCsg] = useState<string>("0");
   const [Cgw, setCgw] = useState<string>("0");
-  const [LT, setLT] = useState<string>("2");
+  const [LT, setLT] = useState<string>(String(DEFAULTS.LT));
+  const [Lcrack, setLcrack] = useState<string>(String(DEFAULTS.Lcrack));
+  const [porosity, setPorosity] = useState<string>(String(DEFAULTS.n));
+  const [thetaW, setThetaW] = useState<string>(String(DEFAULTS.theta_w));
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [result, setResult] = useState<CalcResult | null>(null);
   const [calculated, setCalculated] = useState(false);
 
   function handleCalculate() {
     const csgVal = parseFloat(Csg) || 0;
     const cgwVal = parseFloat(Cgw) || 0;
-    const ltVal = parseFloat(LT) || 2;
-    const res = calculateJE(substance, csgVal, cgwVal, ltVal);
+    const ltVal = parseFloat(LT) || DEFAULTS.LT;
+    const lcrackVal = parseFloat(Lcrack) || DEFAULTS.Lcrack;
+    const nVal = parseFloat(porosity) || DEFAULTS.n;
+    const twVal = parseFloat(thetaW) || DEFAULTS.theta_w;
+    const res = calculateJE(substance, csgVal, cgwVal, ltVal, lcrackVal, nVal, twVal);
     setResult(res);
     setCalculated(true);
   }
@@ -265,7 +330,6 @@ export function DemoCalculator() {
             </label>
             <select
               className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1"
-              style={{ focusRingColor: "#2ecc71" } as React.CSSProperties}
               value={substance}
               onChange={(e) => {
                 setSubstance(e.target.value);
@@ -329,6 +393,72 @@ export function DemoCalculator() {
             />
           </div>
 
+          {/* Épaisseur dallage */}
+          <div>
+            <label className="block text-xs font-medium text-muted-foreground mb-1.5">
+              {t("demo_slab_thickness")}
+            </label>
+            <input
+              type="number"
+              min="0.01"
+              step="any"
+              className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2"
+              value={Lcrack}
+              onChange={(e) => setLcrack(e.target.value)}
+              placeholder="0.15"
+            />
+          </div>
+
+          {/* Toggle advanced parameters */}
+          <button
+            type="button"
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            className="flex items-center gap-1.5 text-xs font-medium transition-colors"
+            style={{ color: "#1A365D" }}
+          >
+            <Settings2 className="w-3.5 h-3.5" />
+            {t("demo_advanced_params")}
+            <span className="ml-0.5">{showAdvanced ? "▲" : "▼"}</span>
+          </button>
+
+          {showAdvanced && (
+            <div className="space-y-3 pl-2 border-l-2" style={{ borderColor: "#cbd5e1" }}>
+              {/* Porosité totale */}
+              <div>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">
+                  {t("demo_porosity")}
+                </label>
+                <input
+                  type="number"
+                  min="0.01"
+                  max="0.99"
+                  step="0.01"
+                  className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2"
+                  value={porosity}
+                  onChange={(e) => setPorosity(e.target.value)}
+                  placeholder="0.35"
+                />
+              </div>
+
+              {/* Teneur en eau */}
+              <div>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">
+                  {t("demo_water_content")}
+                </label>
+                <input
+                  type="number"
+                  min="0.01"
+                  max="0.99"
+                  step="0.01"
+                  className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2"
+                  value={thetaW}
+                  onChange={(e) => setThetaW(e.target.value)}
+                  placeholder="0.15"
+                />
+              </div>
+            </div>
+          )}
+
           {/* Calculate button */}
           <button
             onClick={handleCalculate}
@@ -382,7 +512,6 @@ export function DemoCalculator() {
               >
                 {t("demo_non_volatile")}
               </p>
-              {/* Still show ERI if applicable */}
               {substance === "Plomb" && (
                 <div className="w-full mt-2">
                   <ResultRow
@@ -396,11 +525,10 @@ export function DemoCalculator() {
                   </p>
                 </div>
               )}
-              {/* CTA */}
               <UpgradeBanner t={t} />
             </div>
           ) : result ? (
-            // Volatile substance — show results with fade-in animation
+            // Volatile substance — show results
             <div
               className="flex-1 flex flex-col gap-3"
               style={{ animation: "fadeInUp 0.35s ease both" }}
@@ -412,7 +540,7 @@ export function DemoCalculator() {
               <div className="space-y-2 flex-1">
                 <ResultRow
                   label={t("demo_alpha")}
-                  value={fmtSci(result.alpha)}
+                  value={fmtSci(result.alpha_eff)}
                   color="#1A365D"
                   badge=""
                 />

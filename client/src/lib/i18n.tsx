@@ -101,6 +101,10 @@ const translations = {
     "demo_results": "Résultats",
     "demo_enter_values": "Entrez des concentrations et cliquez Calculer",
     "demo_non_volatile": "Le modèle J&E ne s'applique pas aux métaux non volatils",
+    "demo_slab_thickness": "Épaisseur du dallage (m)",
+    "demo_advanced_params": "Paramètres avancés",
+    "demo_porosity": "Porosité totale du sol (n)",
+    "demo_water_content": "Teneur en eau volumique (θw)",
 
     // Login
     "login.title": "Connexion",
@@ -262,6 +266,10 @@ const translations = {
     "demo_results": "Results",
     "demo_enter_values": "Enter concentrations and click Calculate",
     "demo_non_volatile": "The J&E model does not apply to non-volatile metals",
+    "demo_slab_thickness": "Slab thickness (m)",
+    "demo_advanced_params": "Advanced parameters",
+    "demo_porosity": "Total soil porosity (n)",
+    "demo_water_content": "Volumetric water content (θw)",
 
     // Login
     "login.title": "Sign in",
@@ -422,6 +430,10 @@ const translations = {
     "demo_results": "Resultados",
     "demo_enter_values": "Ingrese concentraciones y haga clic en Calcular",
     "demo_non_volatile": "El modelo J&E no se aplica a los metales no volátiles",
+    "demo_slab_thickness": "Espesor de la losa (m)",
+    "demo_advanced_params": "Parámetros avanzados",
+    "demo_porosity": "Porosidad total del suelo (n)",
+    "demo_water_content": "Contenido volumétrico de agua (θw)",
 
     // Login
     "login.title": "Iniciar sesión",
