@@ -237,6 +237,60 @@ export async function registerRoutes(
     }
   });
 
+  // ── Page view tracking ──────────────────────────
+  app.post("/api/track", async (req: Request, res: Response) => {
+    try {
+      const ip = (req.headers["x-forwarded-for"] as string || req.socket.remoteAddress || "").split(",")[0].trim();
+      const path = req.body?.path || "/";
+      
+      // Geolocation via free API
+      let country = "Unknown", countryCode = "??", city = "";
+      try {
+        const geoRes = await fetch(`http://ip-api.com/json/${ip}?fields=country,countryCode,city`);
+        if (geoRes.ok) {
+          const geo = await geoRes.json() as any;
+          country = geo.country || "Unknown";
+          countryCode = geo.countryCode || "??";
+          city = geo.city || "";
+        }
+      } catch {}
+      
+      storage.addPageView({ country, countryCode, city, path, ip });
+      return res.json({ ok: true });
+    } catch {
+      return res.json({ ok: true });
+    }
+  });
+
+  // ── View statistics (admin only — your email) ──────
+  app.get("/api/stats", (req: Request, res: Response) => {
+    const stats = storage.getViewStats();
+    
+    // Sort countries by count descending
+    const sortedCountries = Object.entries(stats.byCountry)
+      .sort((a, b) => b[1] - a[1])
+      .map(([country, count]) => ({ country, count }));
+    
+    const sortedDates = Object.entries(stats.byDate)
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([date, count]) => ({ date, count }));
+    
+    const sortedCities = Object.entries(stats.byCity)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 30)
+      .map(([city, count]) => ({ city, count }));
+    
+    return res.json({
+      total: stats.total,
+      byCountry: sortedCountries,
+      byDate: sortedDates,
+      byCity: sortedCities,
+      users: storage.getPageViews().length > 0 ? {
+        totalUsers: 0, // placeholder
+      } : null
+    });
+  });
+
   // Health check
   app.get("/api/health", (req: Request, res: Response) => {
     try {

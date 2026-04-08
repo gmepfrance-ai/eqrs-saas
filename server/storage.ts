@@ -17,10 +17,20 @@ function generateLicenseKey(): string {
 // JSON file-based storage (works everywhere, no native modules needed)
 const DB_PATH = path.join(process.cwd(), "db.json");
 
+interface PageView {
+  date: string;
+  country: string;
+  countryCode: string;
+  city: string;
+  path: string;
+  ip: string;
+}
+
 interface DBData {
   users: User[];
   sessions: Session[];
   subscriptions: Subscription[];
+  pageViews: PageView[];
   nextUserId: number;
   nextSessionId: number;
   nextSubscriptionId: number;
@@ -38,6 +48,7 @@ function loadDB(): DBData {
     users: [],
     sessions: [],
     subscriptions: [],
+    pageViews: [],
     nextUserId: 1,
     nextSessionId: 1,
     nextSubscriptionId: 1,
@@ -201,6 +212,42 @@ export class DatabaseStorage implements IStorage {
       plan,
       currentPeriodEnd: endDate.toISOString(),
     });
+  }
+
+  // Page Views
+  addPageView(view: { country: string; countryCode: string; city: string; path: string; ip: string }): void {
+    if (!db.pageViews) db.pageViews = [];
+    db.pageViews.push({
+      ...view,
+      date: new Date().toISOString(),
+    });
+    // Keep only last 10000 views to avoid file growing too large
+    if (db.pageViews.length > 10000) {
+      db.pageViews = db.pageViews.slice(-10000);
+    }
+    saveDB(db);
+  }
+
+  getPageViews(): PageView[] {
+    return db.pageViews || [];
+  }
+
+  getViewStats(): { byCountry: Record<string, number>; byDate: Record<string, number>; total: number; byCity: Record<string, number> } {
+    const views = db.pageViews || [];
+    const byCountry: Record<string, number> = {};
+    const byDate: Record<string, number> = {};
+    const byCity: Record<string, number> = {};
+    
+    for (const v of views) {
+      const country = v.country || 'Inconnu';
+      byCountry[country] = (byCountry[country] || 0) + 1;
+      const date = v.date.split('T')[0];
+      byDate[date] = (byDate[date] || 0) + 1;
+      const city = v.city ? `${v.city} (${v.countryCode})` : country;
+      byCity[city] = (byCity[city] || 0) + 1;
+    }
+    
+    return { byCountry, byDate, total: views.length, byCity };
   }
 }
 
