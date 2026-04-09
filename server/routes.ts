@@ -175,7 +175,7 @@ export async function registerRoutes(
         const { Resend } = require("resend");
         const resend = new Resend(resendKey);
         await resend.emails.send({
-          from: "GMEP EQRS <onboarding@resend.dev>",
+          from: "GMEP EQRS <noreply@gmep-france.eu>",
           to: email,
           subject: "EQRS - Code de réinitialisation de mot de passe",
           html: emailHtml,
