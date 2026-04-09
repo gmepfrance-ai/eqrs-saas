@@ -61,6 +61,15 @@ a:hover{text-decoration:underline}
 .data-table th{background:#e8eef3;color:var(--blue-dark);padding:0.5rem 0.6rem;text-align:left;font-weight:600;border:1px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:2}
 .data-table td{padding:0.35rem 0.6rem;border:1px solid #e0e0db;vertical-align:middle}
 .data-table tr:hover{background:rgba(0,0,0,0.015)}
+.data-table tr.soil-row{cursor:pointer;transition:background 0.15s}
+.data-table tr.soil-row:hover{background:#dbeafe !important}
+.data-table tr.soil-row:hover td{background:transparent !important}
+.data-table tr.soil-row:active{background:#bfdbfe !important}
+.data-table tr.soil-selected{background:#d1fae5 !important;outline:2px solid #2ecc71;outline-offset:-1px}
+.data-table tr.soil-selected td{background:transparent !important}
+.data-table tr.soil-row td:first-child::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:#cbd5e1;margin-right:6px;vertical-align:middle;transition:all 0.2s}
+.data-table tr.soil-row:hover td:first-child::before{background:#3b82f6;width:8px;height:8px}
+.data-table tr.soil-selected td:first-child::before{content:'\2713';background:#2ecc71;color:#fff;width:16px;height:16px;border-radius:50%;font-size:10px;line-height:16px;text-align:center;margin-right:6px}
 .data-table .section-row{background:#e8eef3;font-weight:700;color:var(--blue-dark)}
 .data-table .section-row td{border-bottom:2px solid var(--blue);padding:0.5rem 0.6rem}
 .data-table .sum-row{background:#e8eef3;font-weight:700;border-top:2px solid var(--blue)}
@@ -1452,6 +1461,28 @@ function computedRow(label, value, unit) {
 }
 
 // --- Porosité Sols ---
+// Global soil selection function
+function selectSoil(trEl, n, tw, kv, name, details) {
+  state.bat.n = n;
+  state.bat.theta_w = tw;
+  state.bat.kv = kv;
+  state.bat.selectedSoil = name;
+  recalculate();
+  // Remove previous selection
+  document.querySelectorAll('.soil-selected').forEach(el => el.classList.remove('soil-selected'));
+  // Highlight clicked row
+  if (trEl) trEl.classList.add('soil-selected');
+  // Notification
+  const notif = document.getElementById('porosity-notif');
+  if (notif) {
+    notif.innerHTML = '\u2705 <strong>Sol \u00ab' + name + '\u00bb s\u00e9lectionn\u00e9</strong> \u2014' + details;
+    notif.style.display = 'block';
+    notif.style.opacity = '1';
+    clearTimeout(notif._t);
+    notif._t = setTimeout(() => { notif.style.opacity = '0.6'; }, 5000);
+  }
+}
+
 sheetRenderers.porosite_sols = function() {
   function classColor(c) {
     if (c === 'Très perméable') return 'background:#dbeafe;color:#1e40af;font-weight:600';
@@ -1461,6 +1492,9 @@ sheetRenderers.porosite_sols = function() {
     if (c === 'Imperméable') return 'background:#fee2e2;color:#991b1b;font-weight:600';
     return 'background:#f1f5f9;color:#475569;font-weight:600';
   }
+
+  // kept for compat
+  function applyPorosity(n_val, label) { selectSoil(null, n_val/100, state.bat.theta_w, state.bat.kv, label, ' n='+n_val+'%'); }
 
   let h = '<div class="sheet-title">Propriétés des sols non saturés — Porosité du milieu</div>';
   h += '<div class="sheet-subtitle">Valeurs de référence — Freeze &amp; Cherry (1979), Fetter (2001), Aqtesolv, Davis (1969), USGS</div>';
@@ -1495,21 +1529,7 @@ sheetRenderers.porosite_sols = function() {
       const kv_typ = row.kv_typ;
       const tw_typ = row.theta_w_typ;
       const rname = row.name;
-      h += `<tr style="cursor:pointer" onclick="(function(){
-        state.bat.n=${(ntyp/100).toFixed(4)};
-        state.bat.theta_w=${tw_typ};
-        state.bat.kv=${kv_typ};
-        state.bat.selectedSoil='${rname}';
-        recalculate();
-        const notif=document.getElementById('porosity-notif');
-        if(notif){
-          notif.textContent='Sol \u00ab${rname}\u00bb appliqu\u00e9 : n=${ntyp}%, \u03b8w=${tw_typ}, kv=${kv_typ} m\u00b2';
-          notif.style.display='inline-block';
-          notif.style.opacity='1';
-          clearTimeout(notif._t);
-          notif._t=setTimeout(()=>{notif.style.opacity='0';setTimeout(()=>{notif.style.display='none';},400);},4000);
-        }
-      })()">`;
+      h += `<tr class="soil-row" onclick="selectSoil(this,${(ntyp/100).toFixed(4)},${tw_typ},${kv_typ},'${rname.replace(/'/g,"\\'")}',' n=${ntyp}%, \u03b8w=${tw_typ}, kv=${kv_typ} m\u00b2')">`;
       h += `<td>${row.name}</td>`;
       h += `<td style="text-align:center">${row.n_min}</td>`;
       h += `<td style="text-align:center;font-weight:700;background:#f8fafc">${ntyp}</td>`;
@@ -1542,21 +1562,7 @@ sheetRenderers.porosite_sols = function() {
     const kv_typ = row.kv_typ;
     const tw_typ = row.theta_w_typ;
     const rname = row.contexte;
-    h += `<tr style="cursor:pointer" onclick="(function(){
-      state.bat.n=${(nrec/100).toFixed(4)};
-      state.bat.theta_w=${tw_typ};
-      state.bat.kv=${kv_typ};
-      state.bat.selectedSoil='${rname}';
-      recalculate();
-      const notif=document.getElementById('porosity-notif');
-      if(notif){
-        notif.textContent='Sol \u00ab${rname}\u00bb appliqu\u00e9 : n=${nrec}%, \u03b8w=${tw_typ}, kv=${kv_typ} m\u00b2';
-        notif.style.display='inline-block';
-        notif.style.opacity='1';
-        clearTimeout(notif._t);
-        notif._t=setTimeout(()=>{notif.style.opacity='0';setTimeout(()=>{notif.style.display='none';},400);},4000);
-      }
-    })()">`;
+    h += `<tr class="soil-row" onclick="selectSoil(this,${(nrec/100).toFixed(4)},${tw_typ},${kv_typ},'${rname.replace(/'/g,"\\'")}',' n=${nrec}%, \u03b8w=${tw_typ}, kv=${kv_typ} m\u00b2')">`;
     h += `<td>${row.contexte}</td>`;
     h += `<td style="text-align:center;font-weight:700">${nrec}</td>`;
     h += `<td style="text-align:center">${row.ne_rec}</td>`;
