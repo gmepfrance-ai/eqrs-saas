@@ -534,6 +534,89 @@ const PARAMS_DEFAULTS = {
 
 const SENSITIVITY_LTS = [0.5, 1, 1.5, 2, 3, 4, 5, 7, 10, 15];
 
+// ============================================================
+// POROSITY DATA
+// ============================================================
+const POROSITY_GEOLOGY = [
+  {name:'SÉDIMENTS NON CONSOLIDÉS',rows:[
+    {name:'Gravier grossier',n_min:24,n_typ:28,n_max:37,ne_min:19,ne_typ:21,ne_max:25,classification:'Très perméable',remarques:'Aquifère majeur — fort rendement spécifique'},
+    {name:'Gravier moyen',n_min:24,n_typ:32,n_max:44,ne_min:18,ne_typ:24,ne_max:28,classification:'Très perméable',remarques:'Aquifère alluvial très productif'},
+    {name:'Gravier fin',n_min:25,n_typ:34,n_max:39,ne_min:17,ne_typ:28,ne_max:32,classification:'Très perméable',remarques:'Transition gravier-sable grossier'},
+    {name:'Sable grossier',n_min:31,n_typ:39,n_max:46,ne_min:22,ne_typ:30,ne_max:35,classification:'Perméable',remarques:'Aquifère productif — nappes alluviales'},
+    {name:'Sable moyen',n_min:29,n_typ:39,n_max:49,ne_min:20,ne_typ:32,ne_max:35,classification:'Perméable',remarques:'Bon aquifère — formations dunaires'},
+    {name:'Sable fin',n_min:26,n_typ:43,n_max:53,ne_min:10,ne_typ:33,ne_max:36,classification:'Perméable',remarques:'Aquifère modéré — porosité de rétention élevée'},
+    {name:'Sable limoneux',n_min:30,n_typ:40,n_max:50,ne_min:8,ne_typ:15,ne_max:25,classification:'Semi-perméable',remarques:'Porosité efficace réduite par fraction fine'},
+    {name:'Limon (silt)',n_min:34,n_typ:46,n_max:61,ne_min:5,ne_typ:20,ne_max:25,classification:'Semi-perméable',remarques:'Capacité de rétention élevée — loess'},
+    {name:'Limon argileux',n_min:40,n_typ:47,n_max:55,ne_min:3,ne_typ:8,ne_max:15,classification:'Peu perméable',remarques:'Aquitard — drainage très lent'},
+    {name:'Argile',n_min:34,n_typ:45,n_max:57,ne_min:1,ne_typ:2,ne_max:5,classification:'Imperméable',remarques:'Aquiclude — rétention quasi-totale'},
+    {name:'Argile compacte (moraine)',n_min:30,n_typ:40,n_max:50,ne_min:0.5,ne_typ:1,ne_max:3,classification:'Imperméable',remarques:'Till glaciaire — barrière hydrogéologique'},
+    {name:'Till glaciaire silteux',n_min:30,n_typ:35,n_max:45,ne_min:3,ne_typ:6,ne_max:10,classification:'Peu perméable',remarques:'Aquitard — couverture glaciaire'},
+    {name:'Till glaciaire sableux',n_min:25,n_typ:32,n_max:40,ne_min:10,ne_typ:16,ne_max:20,classification:'Semi-perméable',remarques:'Semi-perméable — productivité variable'},
+    {name:'Till glaciaire graveleux',n_min:20,n_typ:28,n_max:35,ne_min:10,ne_typ:16,ne_max:20,classification:'Semi-perméable',remarques:'Plus drainant que till silteux'},
+    {name:'Tourbe',n_min:60,n_typ:80,n_max:92,ne_min:30,ne_typ:44,ne_max:55,classification:'Semi-perméable',remarques:'Milieu organique — forte rétention d’eau'},
+    {name:'Sable dunaire',n_min:35,n_typ:40,n_max:50,ne_min:25,ne_typ:38,ne_max:42,classification:'Perméable',remarques:'Dunes littorales — forte porosité efficace'},
+    {name:'Alluvions mixtes (sablo-gravier)',n_min:20,n_typ:30,n_max:40,ne_min:15,ne_typ:22,ne_max:30,classification:'Perméable',remarques:'Nappes alluviales — hétérogénéité variable'},
+    {name:'Remblais / sols anthropiques',n_min:20,n_typ:35,n_max:55,ne_min:5,ne_typ:15,ne_max:30,classification:'Variable',remarques:'Très variable selon composition'}
+  ]},
+  {name:'ROCHES SÉDIMENTAIRES',rows:[
+    {name:'Grès (poreux)',n_min:14,n_typ:30,n_max:49,ne_min:5,ne_typ:21,ne_max:30,classification:'Perméable',remarques:'Aquifère gréseux — porosité primaire'},
+    {name:'Grès cimenté',n_min:5,n_typ:15,n_max:25,ne_min:2,ne_typ:6,ne_max:12,classification:'Peu perméable',remarques:'Cimentation réduit porosité efficace'},
+    {name:'Siltstone (grès fin)',n_min:21,n_typ:30,n_max:41,ne_min:5,ne_typ:12,ne_max:20,classification:'Semi-perméable',remarques:'Transition grès-argile'},
+    {name:'Argilite (claystone)',n_min:41,n_typ:43,n_max:45,ne_min:1,ne_typ:3,ne_max:5,classification:'Imperméable',remarques:'Aquiclude — forte rétention capillaire'},
+    {name:'Schiste argileux (shale)',n_min:1,n_typ:6,n_max:10,ne_min:0.5,ne_typ:2,ne_max:5,classification:'Imperméable',remarques:'Très faible porosité efficace'},
+    {name:'Calcaire (matrice)',n_min:7,n_typ:15,n_max:56,ne_min:1,ne_typ:14,ne_max:25,classification:'Variable',remarques:'Très variable selon karstification'},
+    {name:'Calcaire karstifié',n_min:5,n_typ:20,n_max:50,ne_min:5,ne_typ:18,ne_max:40,classification:'Très perméable',remarques:'Conduits karstiques — forte perméabilité en grand'},
+    {name:'Craie',n_min:10,n_typ:30,n_max:40,ne_min:1,ne_typ:3,ne_max:5,classification:'Semi-perméable',remarques:'Forte porosité totale, faible porosité efficace'},
+    {name:'Dolomie',n_min:19,n_typ:25,n_max:33,ne_min:2,ne_typ:10,ne_max:20,classification:'Semi-perméable',remarques:'Porosité variable selon fracturation'},
+    {name:'Marne',n_min:5,n_typ:15,n_max:30,ne_min:0.5,ne_typ:2,ne_max:5,classification:'Peu perméable',remarques:'Aquitard — fraction argileuse dominante'},
+    {name:'Conglomérat',n_min:5,n_typ:20,n_max:35,ne_min:5,ne_typ:15,ne_max:25,classification:'Perméable',remarques:'Selon ciment et matrice'},
+    {name:'Tuf volcanique',n_min:15,n_typ:30,n_max:40,ne_min:10,ne_typ:21,ne_max:30,classification:'Semi-perméable',remarques:'Porosité primaire de dépôt'}
+  ]},
+  {name:'ROCHES CRISTALLINES ET MÉTAMORPHIQUES',rows:[
+    {name:'Granite (sain)',n_min:0.01,n_typ:0.1,n_max:2,ne_min:0.001,ne_typ:0.05,ne_max:0.1,classification:'Imperméable',remarques:'Socle non fracturé — quasi-imperméable'},
+    {name:'Granite fracturé',n_min:1,n_typ:3,n_max:10,ne_min:0.5,ne_typ:2,ne_max:5,classification:'Peu perméable',remarques:'Perméabilité en grand par fractures'},
+    {name:'Basalte (récent, vésiculaire)',n_min:5,n_typ:11,n_max:30,ne_min:3,ne_typ:8,ne_max:15,classification:'Semi-perméable',remarques:'Vésicules et tubes de lave — très variable'},
+    {name:'Basalte (ancien, compact)',n_min:0.1,n_typ:3,n_max:10,ne_min:0.01,ne_typ:1,ne_max:3,classification:'Imperméable',remarques:'Fracturation seule voie d’écoulement'},
+    {name:'Gneiss',n_min:0.1,n_typ:2,n_max:5,ne_min:0.01,ne_typ:1,ne_max:3,classification:'Imperméable',remarques:'Perméabilité limitée aux fractures'},
+    {name:'Schiste métamorphique',n_min:0.5,n_typ:4,n_max:10,ne_min:0.1,ne_typ:2,ne_max:5,classification:'Peu perméable',remarques:'Foliation favorise écoulement planaire'},
+    {name:'Quartzite',n_min:0.1,n_typ:3,n_max:8,ne_min:0.01,ne_typ:1,ne_max:3,classification:'Imperméable',remarques:'Très compact — fractures seules'},
+    {name:'Ardoise (slate)',n_min:0.1,n_typ:2,n_max:5,ne_min:0.01,ne_typ:0.5,ne_max:2,classification:'Imperméable',remarques:'Fissibilité mais porosité très faible'},
+    {name:'Serpentinite',n_min:1,n_typ:5,n_max:15,ne_min:0.5,ne_typ:2,ne_max:5,classification:'Peu perméable',remarques:'Variable selon altération'}
+  ]}
+];
+
+const POROSITY_ABAQUE = [
+  {contexte:'Plaine alluviale (graviers + sable)',n_rec:30,ne_rec:22,k_typ:'1×10⁻³',usage:'Captage AEP — nappe alluviale'},
+  {contexte:'Terrasse alluviale (sables moyens)',n_rec:39,ne_rec:32,k_typ:'5×10⁻⁴',usage:'Captage AEP — nappe de terrasse'},
+  {contexte:'Formations dunaires (sable fin-moyen)',n_rec:43,ne_rec:33,k_typ:'1×10⁻⁴',usage:'Nappe dunaire côtière'},
+  {contexte:'Limons des plateaux (loess)',n_rec:46,ne_rec:20,k_typ:'1×10⁻⁶',usage:'Drainage agricole — aquitard'},
+  {contexte:'Argiles de couverture',n_rec:45,ne_rec:2,k_typ:'1×10⁻⁹',usage:'Barrière imperméable — ISDI/ISDND'},
+  {contexte:'Calcaire karstifié (Jurassique)',n_rec:20,ne_rec:18,k_typ:'1×10⁻³',usage:'Aquifère karstique — vulnérabilité élevée'},
+  {contexte:'Craie (Sénonien, Turonien)',n_rec:30,ne_rec:3,k_typ:'5×10⁻⁵',usage:'Nappe de la Craie — forte porosité / faible ne'},
+  {contexte:'Grès des Vosges / Trias',n_rec:30,ne_rec:21,k_typ:'5×10⁻⁵',usage:'Aquifère gréseux profond'},
+  {contexte:'Marne (Toarcien, Oxfordien)',n_rec:15,ne_rec:2,k_typ:'1×10⁻⁸',usage:'Aquitard — base d’aquifère'},
+  {contexte:'Socle granitique fracturé',n_rec:3,ne_rec:2,k_typ:'1×10⁻⁶',usage:'Ressource limitée — forages profonds'},
+  {contexte:'Basalte (volcanique récent)',n_rec:11,ne_rec:8,k_typ:'1×10⁻⁵',usage:'Aquifère volcanique — Auvergne, Réunion'},
+  {contexte:'Schiste métamorphique',n_rec:4,ne_rec:2,k_typ:'1×10⁻⁷',usage:'Faibles ressources — zones de socle'},
+  {contexte:'Remblais / sols anthropiques',n_rec:35,ne_rec:15,k_typ:'Variable',usage:'Diagnostic pollution — sites ICPE'},
+  {contexte:'Till glaciaire (moraine)',n_rec:35,ne_rec:6,k_typ:'1×10⁻⁷',usage:'Couverture glaciaire — nord de l’Europe'}
+];
+
+const POROSITY_RELATIONS = [
+  {classe:'Blocs (>200 mm)',d_median:'>200',n:25,ne:23,sr:2,ratio:0.92},
+  {classe:'Cailloux (60-200 mm)',d_median:'60-200',n:30,ne:28,sr:2,ratio:0.933},
+  {classe:'Gravier grossier (20-60 mm)',d_median:'40',n:28,ne:21,sr:7,ratio:0.75},
+  {classe:'Gravier fin (2-20 mm)',d_median:'10',n:34,ne:28,sr:6,ratio:0.824},
+  {classe:'Sable très grossier (1-2 mm)',d_median:'1.5',n:36,ne:30,sr:6,ratio:0.833},
+  {classe:'Sable grossier (0.5-1 mm)',d_median:'0.75',n:39,ne:30,sr:9,ratio:0.769},
+  {classe:'Sable moyen (0.25-0.5 mm)',d_median:'0.375',n:39,ne:32,sr:7,ratio:0.821},
+  {classe:'Sable fin (0.1-0.25 mm)',d_median:'0.15',n:43,ne:33,sr:10,ratio:0.767},
+  {classe:'Sable très fin (0.05-0.1 mm)',d_median:'0.075',n:45,ne:28,sr:17,ratio:0.622},
+  {classe:'Silt grossier (0.02-0.05 mm)',d_median:'0.035',n:46,ne:20,sr:26,ratio:0.435},
+  {classe:'Silt fin (0.002-0.02 mm)',d_median:'0.01',n:50,ne:8,sr:42,ratio:0.16},
+  {classe:'Argile (<0.002 mm)',d_median:'<0.002',n:47,ne:2,sr:45,ratio:0.043}
+];
+
 
 // ============================================================
 // STATE
@@ -983,6 +1066,7 @@ const TABS = [
   {id:'concentrations', label:'Concentrations', input:true},
   {id:'proprietes', label:'Propriétés Chim.', input:false},
   {id:'batiment', label:'Bâtiment', input:true},
+  {id:'porosite_sols', label:'Porosité Sols', input:false},
   {id:'modele_je', label:'Modèle J&E', input:false},
   {id:'dje_ingestion', label:'DJE Ingestion', input:false},
   {id:'dje_inhalation', label:'DJE Inhalation', input:false},
@@ -1083,6 +1167,7 @@ sheetRenderers.sommaire = function() {
     ['concentrations','Concentrations','Saisie des concentrations mesurées (air, sol, eaux, sol-gaz)'],
     ['proprietes','Propriétés Chim.','Propriétés physico-chimiques : M, Pv, S, H, Kow, Koc, Dair, Deau'],
     ['batiment','Bâtiment','Données constructives : volumes pièces, dalle, sol, source'],
+    ['porosite_sols','Porosité Sols','Valeurs de référence de porosité par nature géologique — Freeze & Cherry, Fetter, USGS'],
     ['modele_je','Modèle J&E',"Modèle Johnson & Ettinger — facteur d'atténuation α"],
     ['dje_ingestion','DJE Ingestion',"Dose Journalière d'Exposition — voie ingestion"],
     ['dje_inhalation','DJE Inhalation',"Dose Journalière d'Exposition — voie inhalation"],
@@ -1361,6 +1446,119 @@ function paramRow(label, field, value, unit) {
 function computedRow(label, value, unit) {
   return `<div class="param-row"><label>${label}</label><span class="computed-val">${fmt(value)}</span><span class="unit">${unit}</span></div>`;
 }
+
+// --- Porosité Sols ---
+sheetRenderers.porosite_sols = function() {
+  function classColor(c) {
+    if (c === 'Très perméable') return 'background:#dbeafe;color:#1e40af;font-weight:600';
+    if (c === 'Perméable') return 'background:#dcfce7;color:#166534;font-weight:600';
+    if (c === 'Semi-perméable') return 'background:#fef9c3;color:#854d0e;font-weight:600';
+    if (c === 'Peu perméable') return 'background:#ffedd5;color:#9a3412;font-weight:600';
+    if (c === 'Imperméable') return 'background:#fee2e2;color:#991b1b;font-weight:600';
+    return 'background:#f1f5f9;color:#475569;font-weight:600';
+  }
+
+  let h = '<div class="sheet-title">Propriétés des sols non saturés — Porosité du milieu</div>';
+  h += '<div class="sheet-subtitle">Valeurs de référence — Freeze &amp; Cherry (1979), Fetter (2001), Aqtesolv, Davis (1969), USGS</div>';
+
+  // Notification banner
+  h += '<div id="porosity-notif" style="display:none;opacity:0;transition:opacity 0.4s;background:#1a5276;color:#fff;padding:0.4rem 1rem;border-radius:4px;font-size:0.82rem;margin-bottom:0.8rem"></div>';
+
+  // Legend
+  h += '<div class="legend">';
+  h += '<span class="legend-item"><span class="legend-swatch" style="background:#dbeafe;border-color:#93c5fd"></span>Très perméable</span>';
+  h += '<span class="legend-item"><span class="legend-swatch" style="background:#dcfce7;border-color:#86efac"></span>Perméable</span>';
+  h += '<span class="legend-item"><span class="legend-swatch" style="background:#fef9c3;border-color:#fde047"></span>Semi-perméable</span>';
+  h += '<span class="legend-item"><span class="legend-swatch" style="background:#ffedd5;border-color:#fdba74"></span>Peu perméable</span>';
+  h += '<span class="legend-item"><span class="legend-swatch" style="background:#fee2e2;border-color:#fca5a5"></span>Imperméable</span>';
+  h += '<span class="legend-item"><span class="legend-swatch" style="background:#f1f5f9;border-color:#cbd5e1"></span>Variable</span>';
+  h += '</div>';
+  h += '<p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.8rem">Cliquer sur une ligne pour appliquer la porosité typique au champ <strong>n</strong> du modèle (onglet Bâtiment).</p>';
+
+  // Sub-table 1 : Géologie
+  h += '<div class="table-wrap"><table class="data-table">';
+  h += '<thead><tr>';
+  h += '<th>Nature géologique</th>';
+  h += '<th style="text-align:center">n min (%)</th><th style="text-align:center;font-weight:700">n typ (%)</th><th style="text-align:center">n max (%)</th>';
+  h += '<th style="text-align:center">ne min (%)</th><th style="text-align:center;font-weight:700">ne typ (%)</th><th style="text-align:center">ne max (%)</th>';
+  h += '<th>Classification</th><th>Remarques</th>';
+  h += '</tr></thead><tbody>';
+
+  POROSITY_GEOLOGY.forEach(section => {
+    h += `<tr class="section-row"><td colspan="9">${section.name}</td></tr>`;
+    section.rows.forEach(row => {
+      const ntyp = row.n_typ;
+      h += `<tr style="cursor:pointer" onclick="(function(){state.bat.n=${(ntyp/100).toFixed(4)};recalculate();const notif=document.getElementById('porosity-notif');if(notif){notif.textContent='Porosit\u00e9 typ. ${ntyp}% appliqu\u00e9e au mod\u00e8le';notif.style.display='inline-block';notif.style.opacity='1';clearTimeout(notif._t);notif._t=setTimeout(()=>{notif.style.opacity='0';setTimeout(()=>{notif.style.display='none';},400);},2500);}})()">`;
+      h += `<td>${row.name}</td>`;
+      h += `<td style="text-align:center">${row.n_min}</td>`;
+      h += `<td style="text-align:center;font-weight:700;background:#f8fafc">${ntyp}</td>`;
+      h += `<td style="text-align:center">${row.n_max}</td>`;
+      h += `<td style="text-align:center">${row.ne_min}</td>`;
+      h += `<td style="text-align:center;font-weight:700;background:#f8fafc">${row.ne_typ}</td>`;
+      h += `<td style="text-align:center">${row.ne_max}</td>`;
+      h += `<td style="${classColor(row.classification)};padding:0.35rem 0.6rem">${row.classification}</td>`;
+      h += `<td style="font-size:0.75rem;color:var(--text-muted)">${row.remarques}</td>`;
+      h += '</tr>';
+    });
+  });
+
+  h += '</tbody></table></div>';
+
+  // Sub-table 2 : Abaque
+  h += '<div class="sheet-title" style="font-size:0.95rem;margin-top:1.5rem;margin-bottom:0.4rem">Abaque de sélection rapide</div>';
+  h += '<p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.6rem">Cliquer sur une ligne pour appliquer la porosité recommandée au modèle.</p>';
+  h += '<div class="table-wrap"><table class="data-table">';
+  h += '<thead><tr>';
+  h += '<th>Contexte géologique type</th>';
+  h += '<th style="text-align:center">n rec. (%)</th>';
+  h += '<th style="text-align:center">ne rec. (%)</th>';
+  h += '<th style="text-align:center">K typ (m/s)</th>';
+  h += '<th>Usage type</th>';
+  h += '</tr></thead><tbody>';
+
+  POROSITY_ABAQUE.forEach(row => {
+    const nrec = row.n_rec;
+    h += `<tr style="cursor:pointer" onclick="(function(){state.bat.n=${(nrec/100).toFixed(4)};recalculate();const notif=document.getElementById('porosity-notif');if(notif){notif.textContent='Porosit\u00e9 typ. ${nrec}% appliqu\u00e9e au mod\u00e8le';notif.style.display='inline-block';notif.style.opacity='1';clearTimeout(notif._t);notif._t=setTimeout(()=>{notif.style.opacity='0';setTimeout(()=>{notif.style.display='none';},400);},2500);}})()">`;
+    h += `<td>${row.contexte}</td>`;
+    h += `<td style="text-align:center;font-weight:700">${nrec}</td>`;
+    h += `<td style="text-align:center">${row.ne_rec}</td>`;
+    h += `<td style="text-align:center;font-family:monospace">${row.k_typ}</td>`;
+    h += `<td style="font-size:0.75rem;color:var(--text-muted)">${row.usage}</td>`;
+    h += '</tr>';
+  });
+
+  h += '</tbody></table></div>';
+
+  // Sub-table 3 : Relations granulométrie
+  h += '<div class="sheet-title" style="font-size:0.95rem;margin-top:1.5rem;margin-bottom:0.4rem">Relations porosité — granulométrie</div>';
+  h += '<div class="table-wrap"><table class="data-table">';
+  h += '<thead><tr>';
+  h += '<th>Classe granulométrique</th>';
+  h += '<th style="text-align:center">d médian (mm)</th>';
+  h += '<th style="text-align:center">Porosité totale (%)</th>';
+  h += '<th style="text-align:center">Porosité efficace (%)</th>';
+  h += '<th style="text-align:center">Rétention spécif. (%)</th>';
+  h += '<th style="text-align:center">Rapport ne/n</th>';
+  h += '</tr></thead><tbody>';
+
+  POROSITY_RELATIONS.forEach(row => {
+    h += '<tr>';
+    h += `<td>${row.classe}</td>`;
+    h += `<td style="text-align:center;font-family:monospace">${row.d_median}</td>`;
+    h += `<td style="text-align:center;font-weight:600">${row.n}</td>`;
+    h += `<td style="text-align:center;font-weight:600">${row.ne}</td>`;
+    h += `<td style="text-align:center">${row.sr}</td>`;
+    h += `<td style="text-align:center">${row.ratio}</td>`;
+    h += '</tr>';
+  });
+
+  h += '</tbody></table></div>';
+
+  // Footer note
+  h += '<p style="font-size:0.76rem;color:var(--text-muted);margin-top:0.8rem;font-style:italic">Les valeurs sont indicatives et doivent être adaptées au contexte local</p>';
+
+  return h;
+};
 
 // --- Modèle J&E ---
 sheetRenderers.modele_je = function() {
