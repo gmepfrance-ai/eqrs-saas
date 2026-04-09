@@ -84,13 +84,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!res.ok) {
       throw new Error(data.message || "Erreur de connexion");
     }
-    window.location.hash = `#/dashboard?token=${data.token}`;
+    // Set loading=true to prevent dashboard redirect before fetchMe completes
     setState({
       token: data.token,
       user: data.user,
       subscription: null,
-      loading: false,
+      loading: true,
     });
+    window.location.hash = `#/dashboard?token=${data.token}`;
     await fetchMe(data.token);
   }, []);
 
@@ -104,13 +105,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!res.ok) {
       throw new Error(data.message || "Erreur lors de l'inscription");
     }
-    window.location.hash = `#/dashboard?token=${data.token}`;
+    // Set loading=true to prevent dashboard redirect before fetchMe completes
     setState({
       token: data.token,
       user: data.user,
       subscription: null,
-      loading: false,
+      loading: true,
     });
+    window.location.hash = `#/dashboard?token=${data.token}`;
     await fetchMe(data.token);
   }, []);
 
