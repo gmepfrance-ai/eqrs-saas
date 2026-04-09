@@ -839,7 +839,7 @@ function computeResultatsQD() {
 
 function computeResultatsERI() {
   const res = {};
-  ['adulte', 'salarie'].forEach(receptor => {
+  ['adulte', 'enfant', 'salarie'].forEach(receptor => {
     res[receptor] = {};
     ERI_SUBSTANCES.forEach(eriName => {
       const concName = ERI_NAME_MAP[eriName] || eriName;
@@ -884,7 +884,7 @@ function computeResultatsERI() {
         eri.cutane = 0;
       }
 
-      eri.total = eri.ingestion + eri.inhalation + eri.jeInhal + eri.cutane;
+      eri.total = eri.ingestion + Math.max(eri.inhalation, eri.jeInhal) + eri.cutane;
 
       res[receptor][eriName] = eri;
     });
@@ -1646,7 +1646,8 @@ sheetRenderers.resultats_eri = function() {
 
   h += '<div class="table-wrap"><table class="data-table"><thead><tr>';
   h += '<th>Substance</th><th>ERU Oral</th><th>ERU Inhal.</th>';
-  h += '<th>ERI Ing. Ad.</th><th>ERI Inhal. Ad.</th><th>ERI J&E Inhal.</th>';
+  h += '<th>ERI Ing. Ad.</th><th>ERI Inhal. Ad.</th><th>ERI J&E Ad.</th><th>ERI Cut. Ad.</th>';
+  h += '<th>ERI Ing. Enf.</th><th>ERI Inhal. Enf.</th><th>ERI J&E Enf.</th><th>ERI Cut. Enf.</th><th>ERI Total Enf.</th>';
   h += '<th>ERI Ing. Sal.</th><th>ERI Inhal. Sal.</th>';
   h += '</tr></thead><tbody>';
 
@@ -1656,9 +1657,9 @@ sheetRenderers.resultats_eri = function() {
   });
 
   if (!hasData) {
-    h += '<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted)">Aucune donnée saisie dans les concentrations.</td></tr>';
+    h += '<tr><td colspan="14" style="text-align:center;padding:2rem;color:var(--text-muted)">Aucune donnée saisie dans les concentrations.</td></tr>';
   } else {
-    const sums = {adulte:{ing:0,inhal:0,je:0}, salarie:{ing:0,inhal:0}};
+    const sums = {adulte:{ing:0,inhal:0,je:0,cut:0}, enfant:{ing:0,inhal:0,je:0,cut:0,total:0}, salarie:{ing:0,inhal:0}};
 
     // ERI section headers from the original data
     const eriSections = [
@@ -1675,7 +1676,7 @@ sheetRenderers.resultats_eri = function() {
     ERI_SUBSTANCES.forEach(eriName => {
       // Section header
       while (sectionIdx < eriSections.length && eriSections[sectionIdx].before === eriName) {
-        h += `<tr class="section-row"><td colspan="8">${eriSections[sectionIdx].name}</td></tr>`;
+        h += `<tr class="section-row"><td colspan="14">${eriSections[sectionIdx].name}</td></tr>`;
         sectionIdx++;
       }
 
@@ -1691,30 +1692,39 @@ sheetRenderers.resultats_eri = function() {
 
       if (sObj) {
         const ea = (state.resultatsERI.adulte || {})[eriName] || {};
+        const ec = (state.resultatsERI.enfant || {})[eriName] || {};
         const es = (state.resultatsERI.salarie || {})[eriName] || {};
-        h += eriCell(ea.ingestion) + eriCell(ea.inhalation) + eriCell(ea.jeInhal);
+        h += eriCell(ea.ingestion) + eriCell(ea.inhalation) + eriCell(ea.jeInhal) + eriCell(ea.cutane);
+        h += eriCell(ec.ingestion) + eriCell(ec.inhalation) + eriCell(ec.jeInhal) + eriCell(ec.cutane) + eriCell(ec.total);
         h += eriCell(es.ingestion) + eriCell(es.inhalation);
 
         sums.adulte.ing += ea.ingestion || 0;
         sums.adulte.inhal += ea.inhalation || 0;
         sums.adulte.je += ea.jeInhal || 0;
+        sums.adulte.cut += ea.cutane || 0;
+        sums.enfant.ing += ec.ingestion || 0;
+        sums.enfant.inhal += ec.inhalation || 0;
+        sums.enfant.je += ec.jeInhal || 0;
+        sums.enfant.cut += ec.cutane || 0;
+        sums.enfant.total += ec.total || 0;
         sums.salarie.ing += es.ingestion || 0;
         sums.salarie.inhal += es.inhalation || 0;
       } else {
-        h += '<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>';
+        h += '<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>';
       }
       h += '</tr>';
     });
 
     // Sum row
     h += '<tr class="sum-row"><td colspan="3"><strong>SOMME ERI</strong></td>';
-    h += eriCell(sums.adulte.ing) + eriCell(sums.adulte.inhal) + eriCell(sums.adulte.je);
+    h += eriCell(sums.adulte.ing) + eriCell(sums.adulte.inhal) + eriCell(sums.adulte.je) + eriCell(sums.adulte.cut);
+    h += eriCell(sums.enfant.ing) + eriCell(sums.enfant.inhal) + eriCell(sums.enfant.je) + eriCell(sums.enfant.cut) + eriCell(sums.enfant.total);
     h += eriCell(sums.salarie.ing) + eriCell(sums.salarie.inhal);
     h += '</tr>';
 
     // Criteria row
     h += '<tr style="background:#f8f9fa"><td colspan="3"><strong>CRITÈRE</strong></td>';
-    h += '<td colspan="5" style="text-align:center;font-weight:500">Somme ERI &lt; 10⁻⁵ (= 0.00001)</td>';
+    h += '<td colspan="11" style="text-align:center;font-weight:500">Somme ERI &lt; 10⁻⁵ (= 0.00001)</td>';
     h += '</tr>';
   }
 
