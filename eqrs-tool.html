@@ -839,8 +839,14 @@ function computeResultatsQD() {
 
 function computeResultatsERI() {
   const res = {};
+  // ADAF = Age-Dependent Adjustment Factor (US EPA 2005, Supplemental Guidance)
+  // Enfants 2-6 ans : ADAF = 3 (susceptibilité accrue aux cancérigènes)
+  // Adultes / Salariés : ADAF = 1
+  const ADAF = { adulte: 1, enfant: 3, salarie: 1 };
+
   ['adulte', 'enfant', 'salarie'].forEach(receptor => {
     res[receptor] = {};
+    const adaf = ADAF[receptor];
     ERI_SUBSTANCES.forEach(eriName => {
       const concName = ERI_NAME_MAP[eriName] || eriName;
       const vtr = VTR_SANSSEUIL[eriName];
@@ -856,30 +862,30 @@ function computeResultatsERI() {
       const con = sObj ? state.djeContact[receptor][concName] : null;
 
       const eri = {};
-      // ERI ingestion = (DJE_sol_ss + DJE_eau_ss) × ERU_oral
+      // ERI ingestion = (DJE_sol_ss + DJE_eau_ss) × ERU_oral × ADAF
       if (vtr.eruOral && ing) {
-        eri.ingestion = (ing.djeSol_ss + ing.djeEau_ss) * vtr.eruOral;
+        eri.ingestion = (ing.djeSol_ss + ing.djeEau_ss) * vtr.eruOral * adaf;
       } else {
         eri.ingestion = 0;
       }
 
-      // ERI inhalation = CI_ss × ERU_inhal (CI in µg/m³, ERU in (µg/m³)⁻¹)
+      // ERI inhalation = CI_ss × ERU_inhal × ADAF
       if (vtr.eruInhal && inh) {
-        eri.inhalation = inh.CI_ss * vtr.eruInhal;
+        eri.inhalation = inh.CI_ss * vtr.eruInhal * adaf;
       } else {
         eri.inhalation = 0;
       }
 
-      // ERI J&E inhalation
+      // ERI J&E inhalation × ADAF
       if (vtr.eruInhal && inh) {
-        eri.jeInhal = inh.CI_JE_ss * vtr.eruInhal;
+        eri.jeInhal = inh.CI_JE_ss * vtr.eruInhal * adaf;
       } else {
         eri.jeInhal = 0;
       }
 
-      // ERI cutané (use ERU oral for now)
+      // ERI cutané × ADAF
       if (vtr.eruOral && con) {
-        eri.cutane = con.dje_ss * vtr.eruOral;
+        eri.cutane = con.dje_ss * vtr.eruOral * adaf;
       } else {
         eri.cutane = 0;
       }
