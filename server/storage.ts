@@ -97,6 +97,14 @@ export class DatabaseStorage implements IStorage {
     return db.users.find((u) => u.email === email);
   }
 
+  getUserCount(): number {
+    return db.users.length;
+  }
+
+  getAllUserEmails(): string[] {
+    return db.users.map((u) => u.email);
+  }
+
   createUser(email: string, passwordHash: string, name: string): User {
     const user: User = {
       id: db.nextUserId++,

@@ -138,9 +138,11 @@ export async function registerRoutes(
 
     const user = storage.getUserByEmail(email);
     if (!user) {
+      console.log(`[PASSWORD RESET] No user found for email: ${email}`);
       // Don't reveal if email exists - still return success
       return res.json({ message: "Si un compte existe avec cet e-mail, un code de réinitialisation a été généré." });
     }
+    console.log(`[PASSWORD RESET] User found: ${user.email} (id=${user.id})`);
 
     // Generate 6-digit code
     const code = String(Math.floor(100000 + Math.random() * 900000));
@@ -305,6 +307,10 @@ export async function registerRoutes(
         hasPriceMonthly: !!process.env.STRIPE_PRICE_MONTHLY,
         hasPriceAnnual: !!process.env.STRIPE_PRICE_ANNUAL,
         hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET,
+        hasResendKey: !!process.env.RESEND_API_KEY,
+        resendKeyPrefix: process.env.RESEND_API_KEY?.substring(0, 8) || "not set",
+        totalUsers: (storage as any).getUserCount?.() ?? "unknown",
+        userEmails: (storage as any).getAllUserEmails?.() ?? [],
         port: process.env.PORT
       });
     } catch (err: any) {
