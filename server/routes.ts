@@ -40,7 +40,7 @@ interface AuthRequest extends Request {
   user?: { id: number; email: string; name: string; createdAt: string };
 }
 
-function requireAuth(req: AuthRequest, res: Response, next: NextFunction) {
+async function requireAuth(req: AuthRequest, res: Response, next: NextFunction) {
   const token =
     (req.query.token as string) || req.headers["x-auth-token"] as string;
 
@@ -48,17 +48,17 @@ function requireAuth(req: AuthRequest, res: Response, next: NextFunction) {
     return res.status(401).json({ message: "Authentification requise" });
   }
 
-  const session = storage.getSessionByToken(token);
+  const session = await storage.getSessionByToken(token);
   if (!session) {
     return res.status(401).json({ message: "Session invalide ou expirée" });
   }
 
   if (new Date(session.expiresAt) < new Date()) {
-    storage.deleteSession(token);
+    await storage.deleteSession(token);
     return res.status(401).json({ message: "Session expirée, veuillez vous reconnecter" });
   }
 
-  const user = storage.getUser(session.userId);
+  const user = await storage.getUser(session.userId);
   if (!user) {
     return res.status(401).json({ message: "Utilisateur introuvable" });
   }
@@ -67,7 +67,7 @@ function requireAuth(req: AuthRequest, res: Response, next: NextFunction) {
   next();
 }
 
-function requireSubscription(
+async function requireSubscription(
   req: AuthRequest,
   res: Response,
   next: NextFunction
@@ -76,7 +76,7 @@ function requireSubscription(
     return res.status(401).json({ message: "Authentification requise" });
   }
 
-  const sub = storage.getSubscriptionByUserId(req.user.id);
+  const sub = await storage.getSubscriptionByUserId(req.user.id);
   if (!sub || (sub.status !== "active" && sub.status !== "trialing")) {
     return res
       .status(403)
@@ -167,7 +167,7 @@ export async function registerRoutes(
     const { email } = req.body;
     if (!email) return res.status(400).json({ message: "E-mail requis" });
 
-    const user = storage.getUserByEmail(email);
+    const user = await storage.getUserByEmail(email);
     if (!user) {
       console.log(`[PASSWORD RESET] No user found for email: ${email}`);
       // Don't reveal if email exists - still return success
@@ -218,7 +218,7 @@ export async function registerRoutes(
       return res.json({ message: "Un code de réinitialisation a été envoyé à votre adresse e-mail." });
     } else {
       console.log(`[PASSWORD RESET] Resend not configured. Code for ${email}: ${code}`);
-      return res.json({ 
+      return res.json({
         message: "Code de réinitialisation généré.",
         _code: code
       });
@@ -241,25 +241,15 @@ export async function registerRoutes(
         return res.status(400).json({ message: "Code invalide ou expiré" });
       }
 
-      const user = storage.getUserByEmail(email);
+      const user = await storage.getUserByEmail(email);
       if (!user) {
         return res.status(404).json({ message: "Utilisateur non trouvé" });
       }
 
       const hash = await bcrypt.hash(newPassword, 12);
-      (user as any).passwordHash = hash;
 
-      // Persist to disk
-      const fs = require("fs");
-      const dbPath = require("path").join(process.cwd(), "db.json");
-      if (fs.existsSync(dbPath)) {
-        const db = JSON.parse(fs.readFileSync(dbPath, "utf-8"));
-        const idx = db.users.findIndex((u: any) => u.email === email);
-        if (idx >= 0) {
-          db.users[idx].passwordHash = hash;
-          fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
-        }
-      }
+      // Update via storage (works for both JSON and PG)
+      await storage.updateUserPassword(email, hash);
 
       // Remove used code
       resetCodes.delete(email);
@@ -275,7 +265,7 @@ export async function registerRoutes(
     try {
       const ip = (req.headers["x-forwarded-for"] as string || req.socket.remoteAddress || "").split(",")[0].trim();
       const path = req.body?.path || "/";
-      
+
       // Geolocation via free API
       let country = "Unknown", countryCode = "??", city = "";
       try {
@@ -287,8 +277,8 @@ export async function registerRoutes(
           city = geo.city || "";
         }
       } catch {}
-      
-      storage.addPageView({ country, countryCode, city, path, ip });
+
+      await storage.addPageView({ country, countryCode, city, path, ip });
       return res.json({ ok: true });
     } catch {
       return res.json({ ok: true });
@@ -296,41 +286,45 @@ export async function registerRoutes(
   });
 
   // ── View statistics (admin only — your email) ──────
-  app.get("/api/stats", (req: Request, res: Response) => {
-    const stats = storage.getViewStats();
-    
+  app.get("/api/stats", async (req: Request, res: Response) => {
+    const stats = await storage.getViewStats();
+
     // Sort countries by count descending
     const sortedCountries = Object.entries(stats.byCountry)
       .sort((a, b) => b[1] - a[1])
       .map(([country, count]) => ({ country, count }));
-    
+
     const sortedDates = Object.entries(stats.byDate)
       .sort((a, b) => a[0].localeCompare(b[0]))
       .map(([date, count]) => ({ date, count }));
-    
+
     const sortedCities = Object.entries(stats.byCity)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 30)
       .map(([city, count]) => ({ city, count }));
-    
+
+    const pageViewsCount = (await storage.getPageViews()).length;
+
     return res.json({
       total: stats.total,
       byCountry: sortedCountries,
       byDate: sortedDates,
       byCity: sortedCities,
-      users: storage.getPageViews().length > 0 ? {
+      users: pageViewsCount > 0 ? {
         totalUsers: 0, // placeholder
       } : null
     });
   });
 
   // Health check
-  app.get("/api/health", (req: Request, res: Response) => {
+  app.get("/api/health", async (req: Request, res: Response) => {
     try {
-      const testUser = storage.getUserByEmail("health@test.com");
-      res.json({ 
-        status: "ok", 
-        time: new Date().toISOString(), 
+      const testUser = await storage.getUserByEmail("health@test.com");
+      const totalUsers = await storage.getUserCount();
+      const userEmails = await storage.getAllUserEmails();
+      res.json({
+        status: "ok",
+        time: new Date().toISOString(),
         dbWorks: true,
         stripeConfigured: isStripeConfigured,
         hasStripeKey: !!process.env.STRIPE_SECRET_KEY,
@@ -340,8 +334,8 @@ export async function registerRoutes(
         hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET,
         hasResendKey: !!process.env.RESEND_API_KEY,
         resendKeyPrefix: process.env.RESEND_API_KEY?.substring(0, 8) || "not set",
-        totalUsers: (storage as any).getUserCount?.() ?? "unknown",
-        userEmails: (storage as any).getAllUserEmails?.() ?? [],
+        totalUsers,
+        userEmails,
         port: process.env.PORT
       });
     } catch (err: any) {
@@ -368,7 +362,7 @@ export async function registerRoutes(
         });
       }
 
-      const existing = storage.getUserByEmail(email);
+      const existing = await storage.getUserByEmail(email);
       if (existing) {
         return res
           .status(409)
@@ -376,13 +370,12 @@ export async function registerRoutes(
       }
 
       const passwordHash = await bcrypt.hash(password, 12);
-      const user = storage.createUser(email, passwordHash, name);
+      const user = await storage.createUser(email, passwordHash, name);
 
-      // Auto-login: create session
       // Create 14-day free trial subscription
       const trialEnd = new Date();
       trialEnd.setDate(trialEnd.getDate() + 14);
-      storage.createSubscription(user.id, {
+      await storage.createSubscription(user.id, {
         status: "trialing",
         plan: "trial",
         currentPeriodEnd: trialEnd.toISOString(),
@@ -392,7 +385,7 @@ export async function registerRoutes(
       const expiresAt = new Date(
         Date.now() + 24 * 60 * 60 * 1000
       ).toISOString();
-      storage.createSession(token, user.id, expiresAt);
+      await storage.createSession(token, user.id, expiresAt);
 
       return res.json({
         token,
@@ -417,7 +410,7 @@ export async function registerRoutes(
           .json({ message: "E-mail et mot de passe requis" });
       }
 
-      const user = storage.getUserByEmail(email);
+      const user = await storage.getUserByEmail(email);
       if (!user) {
         return res
           .status(401)
@@ -432,13 +425,13 @@ export async function registerRoutes(
       }
 
       // Clean up expired sessions periodically
-      storage.deleteExpiredSessions();
+      await storage.deleteExpiredSessions();
 
       const token = crypto.randomUUID();
       const expiresAt = new Date(
         Date.now() + 24 * 60 * 60 * 1000
       ).toISOString();
-      storage.createSession(token, user.id, expiresAt);
+      await storage.createSession(token, user.id, expiresAt);
 
       return res.json({
         token,
@@ -456,8 +449,8 @@ export async function registerRoutes(
   app.get(
     "/api/auth/me",
     requireAuth as any,
-    (req: AuthRequest, res: Response) => {
-      const sub = storage.getSubscriptionByUserId(req.user!.id);
+    async (req: AuthRequest, res: Response) => {
+      const sub = await storage.getSubscriptionByUserId(req.user!.id);
       return res.json({
         user: req.user,
         subscription: sub || null,
@@ -469,11 +462,11 @@ export async function registerRoutes(
   app.post(
     "/api/auth/logout",
     requireAuth as any,
-    (req: AuthRequest, res: Response) => {
+    async (req: AuthRequest, res: Response) => {
       const token =
         (req.query.token as string) || req.headers["x-auth-token"] as string;
       if (token) {
-        storage.deleteSession(token);
+        await storage.deleteSession(token);
       }
       return res.json({ message: "Déconnexion réussie" });
     }
@@ -498,7 +491,7 @@ export async function registerRoutes(
           plan === "annual" ? STRIPE_PRICE_ANNUAL : STRIPE_PRICE_MONTHLY;
 
         // Get or create Stripe customer
-        let sub = storage.getSubscriptionByUserId(req.user!.id);
+        let sub = await storage.getSubscriptionByUserId(req.user!.id);
         let customerId = sub?.stripeCustomerId;
 
         if (!customerId) {
@@ -510,11 +503,11 @@ export async function registerRoutes(
           customerId = customer.id;
 
           if (sub) {
-            storage.updateSubscription(sub.id, {
+            await storage.updateSubscription(sub.id, {
               stripeCustomerId: customerId,
             });
           } else {
-            sub = storage.createSubscription(req.user!.id, {
+            sub = await storage.createSubscription(req.user!.id, {
               stripeCustomerId: customerId,
             });
           }
@@ -568,19 +561,19 @@ export async function registerRoutes(
         case "customer.subscription.updated": {
           const subscription = event.data.object as Stripe.Subscription;
           const customerId = subscription.customer as string;
-          const sub = storage.getSubscriptionByStripeCustomerId(customerId);
+          const sub = await storage.getSubscriptionByStripeCustomerId(customerId);
 
           if (sub) {
             const plan =
               subscription.items.data[0]?.price?.id === STRIPE_PRICE_ANNUAL
                 ? "annual"
                 : "monthly";
-            storage.updateSubscription(sub.id, {
+            await storage.updateSubscription(sub.id, {
               stripeSubscriptionId: subscription.id,
               status: subscription.status === "active" ? "active" : subscription.status,
               plan,
               currentPeriodEnd: new Date(
-                subscription.current_period_end * 1000
+                (subscription as any).current_period_end * 1000
               ).toISOString(),
             });
           }
@@ -589,11 +582,11 @@ export async function registerRoutes(
 
         case "customer.subscription.deleted": {
           const subscription = event.data.object as Stripe.Subscription;
-          const sub = storage.getSubscriptionByStripeSubscriptionId(
+          const sub = await storage.getSubscriptionByStripeSubscriptionId(
             subscription.id
           );
           if (sub) {
-            storage.updateSubscription(sub.id, { status: "canceled" });
+            await storage.updateSubscription(sub.id, { status: "canceled" });
           }
           break;
         }
@@ -601,9 +594,9 @@ export async function registerRoutes(
         case "invoice.payment_failed": {
           const invoice = event.data.object as Stripe.Invoice;
           const customerId = invoice.customer as string;
-          const sub = storage.getSubscriptionByStripeCustomerId(customerId);
+          const sub = await storage.getSubscriptionByStripeCustomerId(customerId);
           if (sub) {
-            storage.updateSubscription(sub.id, { status: "past_due" });
+            await storage.updateSubscription(sub.id, { status: "past_due" });
           }
           break;
         }
@@ -627,7 +620,7 @@ export async function registerRoutes(
       }
 
       try {
-        const sub = storage.getSubscriptionByUserId(req.user!.id);
+        const sub = await storage.getSubscriptionByUserId(req.user!.id);
         if (!sub?.stripeCustomerId) {
           return res.status(404).json({
             message: "Aucun abonnement Stripe trouvé",
@@ -681,17 +674,10 @@ export async function registerRoutes(
       try {
         const { email, newPassword, secret } = req.body;
         if (secret !== "gmep-admin-2026") return res.status(403).json({ message: "Accès refusé" });
-        const user = storage.getUserByEmail(email);
+        const user = await storage.getUserByEmail(email);
         if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
         const hash = await bcrypt.hash(newPassword, 12);
-        (user as any).passwordHash = hash;
-        const fs = require("fs");
-        const dbPath = require("path").join(process.cwd(), "db.json");
-        if (fs.existsSync(dbPath)) {
-          const db = JSON.parse(fs.readFileSync(dbPath, "utf-8"));
-          const idx = db.users.findIndex((u: any) => u.email === email);
-          if (idx >= 0) { db.users[idx].passwordHash = hash; fs.writeFileSync(dbPath, JSON.stringify(db, null, 2)); }
-        }
+        await storage.updateUserPassword(email, hash);
         return res.json({ message: "Mot de passe modifié" });
       } catch (err: any) {
         return res.status(500).json({ message: err.message });
@@ -704,9 +690,9 @@ export async function registerRoutes(
     app.post(
       "/api/dev/activate",
       requireAuth as any,
-      (req: AuthRequest, res: Response) => {
+      async (req: AuthRequest, res: Response) => {
         const plan = (req.body && req.body.plan) ? req.body.plan : "monthly";
-        const sub = storage.activateSubscriptionForUser(req.user!.id, plan);
+        const sub = await storage.activateSubscriptionForUser(req.user!.id, plan);
         return res.json({
           message: "Abonnement activé (mode développement)",
           subscription: sub,

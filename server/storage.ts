@@ -67,45 +67,53 @@ let db = loadDB();
 
 export interface IStorage {
   // Users
-  getUser(id: number): User | undefined;
-  getUserByEmail(email: string): User | undefined;
-  createUser(email: string, passwordHash: string, name: string): User;
+  getUser(id: number): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  getUserCount(): Promise<number>;
+  getAllUserEmails(): Promise<string[]>;
+  createUser(email: string, passwordHash: string, name: string): Promise<User>;
+  updateUserPassword(email: string, newPasswordHash: string): Promise<void>;
   toSafeUser(user: User): SafeUser;
 
   // Sessions
-  createSession(token: string, userId: number, expiresAt: string): Session;
-  getSessionByToken(token: string): Session | undefined;
-  deleteSession(token: string): void;
-  deleteExpiredSessions(): void;
+  createSession(token: string, userId: number, expiresAt: string): Promise<Session>;
+  getSessionByToken(token: string): Promise<Session | undefined>;
+  deleteSession(token: string): Promise<void>;
+  deleteExpiredSessions(): Promise<void>;
 
   // Subscriptions
-  getSubscriptionByUserId(userId: number): Subscription | undefined;
-  getSubscriptionByStripeCustomerId(stripeCustomerId: string): Subscription | undefined;
-  getSubscriptionByStripeSubscriptionId(stripeSubscriptionId: string): Subscription | undefined;
-  createSubscription(userId: number, data: Partial<Subscription>): Subscription;
-  updateSubscription(id: number, data: Partial<Subscription>): Subscription | undefined;
-  activateSubscriptionForUser(userId: number, plan: string): Subscription;
+  getSubscriptionByUserId(userId: number): Promise<Subscription | undefined>;
+  getSubscriptionByStripeCustomerId(stripeCustomerId: string): Promise<Subscription | undefined>;
+  getSubscriptionByStripeSubscriptionId(stripeSubscriptionId: string): Promise<Subscription | undefined>;
+  createSubscription(userId: number, data: Partial<Subscription>): Promise<Subscription>;
+  updateSubscription(id: number, data: Partial<Subscription>): Promise<Subscription | undefined>;
+  activateSubscriptionForUser(userId: number, plan: string): Promise<Subscription>;
+
+  // Page Views
+  addPageView(view: { country: string; countryCode: string; city: string; path: string; ip: string }): Promise<void>;
+  getPageViews(): Promise<PageView[]>;
+  getViewStats(): Promise<{ byCountry: Record<string, number>; byDate: Record<string, number>; total: number; byCity: Record<string, number> }>;
 }
 
 export class DatabaseStorage implements IStorage {
   // Users
-  getUser(id: number): User | undefined {
+  async getUser(id: number): Promise<User | undefined> {
     return db.users.find((u) => u.id === id);
   }
 
-  getUserByEmail(email: string): User | undefined {
+  async getUserByEmail(email: string): Promise<User | undefined> {
     return db.users.find((u) => u.email === email);
   }
 
-  getUserCount(): number {
+  async getUserCount(): Promise<number> {
     return db.users.length;
   }
 
-  getAllUserEmails(): string[] {
+  async getAllUserEmails(): Promise<string[]> {
     return db.users.map((u) => u.email);
   }
 
-  createUser(email: string, passwordHash: string, name: string): User {
+  async createUser(email: string, passwordHash: string, name: string): Promise<User> {
     const user: User = {
       id: db.nextUserId++,
       email,
@@ -118,13 +126,21 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  async updateUserPassword(email: string, newPasswordHash: string): Promise<void> {
+    const user = db.users.find((u) => u.email === email);
+    if (user) {
+      user.passwordHash = newPasswordHash;
+      saveDB(db);
+    }
+  }
+
   toSafeUser(user: User): SafeUser {
     const { passwordHash, ...safe } = user;
     return safe;
   }
 
   // Sessions
-  createSession(token: string, userId: number, expiresAt: string): Session {
+  async createSession(token: string, userId: number, expiresAt: string): Promise<Session> {
     const session: Session = {
       id: db.nextSessionId++,
       token,
@@ -137,35 +153,35 @@ export class DatabaseStorage implements IStorage {
     return session;
   }
 
-  getSessionByToken(token: string): Session | undefined {
+  async getSessionByToken(token: string): Promise<Session | undefined> {
     return db.sessions.find((s) => s.token === token);
   }
 
-  deleteSession(token: string): void {
+  async deleteSession(token: string): Promise<void> {
     db.sessions = db.sessions.filter((s) => s.token !== token);
     saveDB(db);
   }
 
-  deleteExpiredSessions(): void {
+  async deleteExpiredSessions(): Promise<void> {
     const now = new Date().toISOString();
     db.sessions = db.sessions.filter((s) => s.expiresAt > now);
     saveDB(db);
   }
 
   // Subscriptions
-  getSubscriptionByUserId(userId: number): Subscription | undefined {
+  async getSubscriptionByUserId(userId: number): Promise<Subscription | undefined> {
     return db.subscriptions.find((s) => s.userId === userId);
   }
 
-  getSubscriptionByStripeCustomerId(stripeCustomerId: string): Subscription | undefined {
+  async getSubscriptionByStripeCustomerId(stripeCustomerId: string): Promise<Subscription | undefined> {
     return db.subscriptions.find((s) => s.stripeCustomerId === stripeCustomerId);
   }
 
-  getSubscriptionByStripeSubscriptionId(stripeSubscriptionId: string): Subscription | undefined {
+  async getSubscriptionByStripeSubscriptionId(stripeSubscriptionId: string): Promise<Subscription | undefined> {
     return db.subscriptions.find((s) => s.stripeSubscriptionId === stripeSubscriptionId);
   }
 
-  createSubscription(userId: number, data: Partial<Subscription>): Subscription {
+  async createSubscription(userId: number, data: Partial<Subscription>): Promise<Subscription> {
     const sub: Subscription = {
       id: db.nextSubscriptionId++,
       userId,
@@ -182,7 +198,7 @@ export class DatabaseStorage implements IStorage {
     return sub;
   }
 
-  updateSubscription(id: number, data: Partial<Subscription>): Subscription | undefined {
+  async updateSubscription(id: number, data: Partial<Subscription>): Promise<Subscription | undefined> {
     const idx = db.subscriptions.findIndex((s) => s.id === id);
     if (idx === -1) return undefined;
 
@@ -199,8 +215,8 @@ export class DatabaseStorage implements IStorage {
     return sub;
   }
 
-  activateSubscriptionForUser(userId: number, plan: string): Subscription {
-    const existing = this.getSubscriptionByUserId(userId);
+  async activateSubscriptionForUser(userId: number, plan: string): Promise<Subscription> {
+    const existing = await this.getSubscriptionByUserId(userId);
     const endDate = new Date();
     endDate.setFullYear(endDate.getFullYear() + 1);
 
@@ -223,7 +239,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Page Views
-  addPageView(view: { country: string; countryCode: string; city: string; path: string; ip: string }): void {
+  async addPageView(view: { country: string; countryCode: string; city: string; path: string; ip: string }): Promise<void> {
     if (!db.pageViews) db.pageViews = [];
     db.pageViews.push({
       ...view,
@@ -236,27 +252,32 @@ export class DatabaseStorage implements IStorage {
     saveDB(db);
   }
 
-  getPageViews(): PageView[] {
+  async getPageViews(): Promise<PageView[]> {
     return db.pageViews || [];
   }
 
-  getViewStats(): { byCountry: Record<string, number>; byDate: Record<string, number>; total: number; byCity: Record<string, number> } {
+  async getViewStats(): Promise<{ byCountry: Record<string, number>; byDate: Record<string, number>; total: number; byCity: Record<string, number> }> {
     const views = db.pageViews || [];
     const byCountry: Record<string, number> = {};
     const byDate: Record<string, number> = {};
     const byCity: Record<string, number> = {};
-    
+
     for (const v of views) {
-      const country = v.country || 'Inconnu';
+      const country = v.country || "Inconnu";
       byCountry[country] = (byCountry[country] || 0) + 1;
-      const date = v.date.split('T')[0];
+      const date = v.date.split("T")[0];
       byDate[date] = (byDate[date] || 0) + 1;
       const city = v.city ? `${v.city} (${v.countryCode})` : country;
       byCity[city] = (byCity[city] || 0) + 1;
     }
-    
+
     return { byCountry, byDate, total: views.length, byCity };
   }
 }
 
-export const storage = new DatabaseStorage();
+// Use PostgreSQL if DATABASE_URL is set, otherwise fall back to JSON
+import { PgStorage } from "./storage-pg";
+
+export const storage: IStorage = process.env.DATABASE_URL
+  ? new PgStorage()
+  : new DatabaseStorage();
