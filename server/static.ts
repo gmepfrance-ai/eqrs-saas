@@ -10,6 +10,18 @@ export function serveStatic(app: Express) {
     );
   }
 
+  // Serve sitemap.xml and robots.txt explicitly with correct content-type
+  app.get("/sitemap.xml", (_req, res) => {
+    res.setHeader("Content-Type", "application/xml");
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.sendFile(path.resolve(distPath, "sitemap.xml"));
+  });
+
+  app.get("/robots.txt", (_req, res) => {
+    res.setHeader("Content-Type", "text/plain");
+    res.sendFile(path.resolve(distPath, "robots.txt"));
+  });
+
   // Cache JS/CSS assets for 1 year (they have content hashes in filenames)
   app.use("/assets", express.static(path.join(distPath, "assets"), {
     maxAge: "1y",
