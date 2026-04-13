@@ -85,21 +85,26 @@ export default function StatsPage() {
               Vues par pays
             </h2>
             <div className="space-y-2">
-              {stats?.byCountry?.map((c) => (
+              {stats?.byCountry?.map((c) => {
+                const pct = Math.round((c.count / (stats?.total || 1)) * 100);
+                return (
                 <div key={c.country} className="flex items-center gap-3">
-                  <span className="text-xs text-muted-foreground w-32 truncate">{c.country}</span>
+                  <span className="text-xs font-medium text-foreground w-36 truncate">{c.country}</span>
                   <div className="flex-1 bg-muted rounded-full h-5 overflow-hidden">
                     <div
-                      className="h-full rounded-full"
+                      className="h-full rounded-full flex items-center pl-2"
                       style={{
-                        width: `${Math.max(5, (c.count / maxCountry) * 100)}%`,
+                        width: `${Math.max(8, (c.count / maxCountry) * 100)}%`,
                         background: "linear-gradient(90deg, #1a5276, #2ecc71)",
+                        transition: "width 0.5s ease",
                       }}
                     />
                   </div>
-                  <span className="text-xs font-bold text-foreground w-10 text-right">{c.count}</span>
+                  <span className="text-xs font-bold text-foreground w-8 text-right">{c.count}</span>
+                  <span className="text-[10px] text-muted-foreground w-10 text-right">{pct}%</span>
                 </div>
-              ))}
+                );
+              })}
               {(!stats?.byCountry || stats.byCountry.length === 0) && (
                 <p className="text-xs text-muted-foreground text-center py-4">Aucune donnée disponible</p>
               )}
