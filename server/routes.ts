@@ -332,6 +332,8 @@ export async function registerRoutes(
         hasPriceMonthly: !!process.env.STRIPE_PRICE_MONTHLY,
         hasPriceAnnual: !!process.env.STRIPE_PRICE_ANNUAL,
         hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET,
+        hasDatabaseUrl: !!process.env.DATABASE_URL,
+        dbBackend: process.env.DATABASE_URL ? 'postgresql' : 'json',
         hasResendKey: !!process.env.RESEND_API_KEY,
         resendKeyPrefix: process.env.RESEND_API_KEY?.substring(0, 8) || "not set",
         totalUsers,
