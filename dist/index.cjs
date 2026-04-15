@@ -98,7 +98,3192 @@ Signature verification is impossible without access to the original signed mater
  If a webhook request is being forwarded by a third-party tool, ensure that the exact request body, including JSON formatting and new line style, is preserved.
 `+x+`
 `+w});let j=Math.floor((typeof y=="number"?y:Date.now())/1e3)-m.timestamp;if(h>0&&j>h)throw new me(p,l,{message:"Timestamp outside the tolerance zone"});return!0}function o(l,p){return typeof l!="string"?null:l.split(",").reduce((m,f)=>{let h=f.split("=");return h[0]==="t"&&(m.timestamp=parseInt(h[1],10)),h[0]===p&&m.signatures.push(h[1]),m},{timestamp:-1,signatures:[]})}let s=null;function u(){return s||(s=t.createDefaultCryptoProvider()),s}function c(l){if(!l)throw new M({message:"Options are required"});let p=Math.floor(l.timestamp)||Math.floor(Date.now()/1e3),m=l.scheme||n.EXPECTED_SCHEME,f=l.cryptoProvider||u(),h=`${p}.${l.payload}`;return{...l,timestamp:p,scheme:m,cryptoProvider:f,payloadString:h,generateHeaderString:b=>`t=${p},${m}=${b}`}}return e.signature=n,e}var Hs="2026-03-25.dahlia";var Yt={};mr(Yt,{Account:()=>ac,AccountLinks:()=>fb,AccountSessions:()=>hb,Accounts:()=>ac,ApplePayDomains:()=>vb,ApplicationFees:()=>bb,Apps:()=>mP,Balance:()=>gb,BalanceSettings:()=>yb,BalanceTransactions:()=>_b,Billing:()=>fP,BillingPortal:()=>hP,Charges:()=>wb,Checkout:()=>vP,Climate:()=>bP,ConfirmationTokens:()=>Sb,CountrySpecs:()=>Pb,Coupons:()=>Tb,CreditNotes:()=>jb,CustomerSessions:()=>Ob,Customers:()=>Cb,Disputes:()=>Ab,Entitlements:()=>gP,EphemeralKeys:()=>qb,Events:()=>Db,ExchangeRates:()=>Fb,FileLinks:()=>Lb,Files:()=>Ub,FinancialConnections:()=>xP,Forwarding:()=>yP,Identity:()=>kP,InvoiceItems:()=>Bb,InvoicePayments:()=>$b,InvoiceRenderingTemplates:()=>zb,Invoices:()=>Hb,Issuing:()=>_P,Mandates:()=>Vb,OAuth:()=>Kb,PaymentAttemptRecords:()=>Yb,PaymentIntents:()=>Qb,PaymentLinks:()=>Jb,PaymentMethodConfigurations:()=>Zb,PaymentMethodDomains:()=>eg,PaymentMethods:()=>tg,PaymentRecords:()=>ng,Payouts:()=>ig,Plans:()=>ag,Prices:()=>rg,Products:()=>og,PromotionCodes:()=>sg,Quotes:()=>cg,Radar:()=>wP,Refunds:()=>lg,Reporting:()=>SP,Reviews:()=>ug,SetupAttempts:()=>dg,SetupIntents:()=>pg,ShippingRates:()=>mg,Sigma:()=>EP,Sources:()=>fg,SubscriptionItems:()=>hg,SubscriptionSchedules:()=>vg,Subscriptions:()=>bg,Tax:()=>PP,TaxCodes:()=>xg,TaxIds:()=>yg,TaxRates:()=>kg,Terminal:()=>TP,TestHelpers:()=>jP,Tokens:()=>wg,Topups:()=>Sg,Transfers:()=>Eg,Treasury:()=>OP,V2:()=>CP,WebhookEndpoints:()=>Pg});function UE(t,e){for(let n in e){if(!Object.prototype.hasOwnProperty.call(e,n))continue;let i=n[0].toLowerCase()+n.substring(1),a=new e[n](t);this[i]=a}}function q(t,e){return function(n){return new UE(n,e)}}var BE=d.method,_h=d.extend({create:BE({method:"POST",fullPath:"/v2/core/account_links"})});var wh=d.method,Sh=d.extend({create:wh({method:"POST",fullPath:"/v2/core/account_tokens",requestSchema:{kind:"object",fields:{identity:{kind:"object",fields:{individual:{kind:"object",fields:{relationship:{kind:"object",fields:{percent_ownership:{kind:"decimal_string"}}}}}}}}}}),retrieve:wh({method:"GET",fullPath:"/v2/core/account_tokens/{id}"})});var rt=d.method,Eh=d.extend({retrieve:rt({method:"GET",fullPath:"/v1/financial_connections/accounts/{account}"}),list:rt({method:"GET",fullPath:"/v1/financial_connections/accounts",methodType:"list"}),disconnect:rt({method:"POST",fullPath:"/v1/financial_connections/accounts/{account}/disconnect"}),listOwners:rt({method:"GET",fullPath:"/v1/financial_connections/accounts/{account}/owners",methodType:"list"}),refresh:rt({method:"POST",fullPath:"/v1/financial_connections/accounts/{account}/refresh"}),subscribe:rt({method:"POST",fullPath:"/v1/financial_connections/accounts/{account}/subscribe"}),unsubscribe:rt({method:"POST",fullPath:"/v1/financial_connections/accounts/{account}/unsubscribe"})});var Mn=d.method,Ph=d.extend({create:Mn({method:"POST",fullPath:"/v2/core/accounts/{account_id}/persons",requestSchema:{kind:"object",fields:{relationship:{kind:"object",fields:{percent_ownership:{kind:"decimal_string"}}}}},responseSchema:{kind:"object",fields:{relationship:{kind:"object",fields:{percent_ownership:{kind:"decimal_string"}}}}}}),retrieve:Mn({method:"GET",fullPath:"/v2/core/accounts/{account_id}/persons/{id}",responseSchema:{kind:"object",fields:{relationship:{kind:"object",fields:{percent_ownership:{kind:"decimal_string"}}}}}}),update:Mn({method:"POST",fullPath:"/v2/core/accounts/{account_id}/persons/{id}",requestSchema:{kind:"object",fields:{relationship:{kind:"object",fields:{percent_ownership:{kind:"decimal_string"}}}}},responseSchema:{kind:"object",fields:{relationship:{kind:"object",fields:{percent_ownership:{kind:"decimal_string"}}}}}}),list:Mn({method:"GET",fullPath:"/v2/core/accounts/{account_id}/persons",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{relationship:{kind:"object",fields:{percent_ownership:{kind:"decimal_string"}}}}}}}}}),del:Mn({method:"DELETE",fullPath:"/v2/core/accounts/{account_id}/persons/{id}"})});var Th=d.method,jh=d.extend({create:Th({method:"POST",fullPath:"/v2/core/accounts/{account_id}/person_tokens",requestSchema:{kind:"object",fields:{relationship:{kind:"object",fields:{percent_ownership:{kind:"decimal_string"}}}}}}),retrieve:Th({method:"GET",fullPath:"/v2/core/accounts/{account_id}/person_tokens/{id}"})});var Fn=d.method,Oh=d.extend({constructor:function(...t){d.apply(this,t),this.persons=new Ph(...t),this.personTokens=new jh(...t)},create:Fn({method:"POST",fullPath:"/v2/core/accounts",requestSchema:{kind:"object",fields:{identity:{kind:"object",fields:{individual:{kind:"object",fields:{relationship:{kind:"object",fields:{percent_ownership:{kind:"decimal_string"}}}}}}}}},responseSchema:{kind:"object",fields:{identity:{kind:"object",fields:{individual:{kind:"object",fields:{relationship:{kind:"object",fields:{percent_ownership:{kind:"decimal_string"}}}}}}}}}}),retrieve:Fn({method:"GET",fullPath:"/v2/core/accounts/{id}",responseSchema:{kind:"object",fields:{identity:{kind:"object",fields:{individual:{kind:"object",fields:{relationship:{kind:"object",fields:{percent_ownership:{kind:"decimal_string"}}}}}}}}}}),update:Fn({method:"POST",fullPath:"/v2/core/accounts/{id}",requestSchema:{kind:"object",fields:{identity:{kind:"object",fields:{individual:{kind:"object",fields:{relationship:{kind:"object",fields:{percent_ownership:{kind:"decimal_string"}}}}}}}}},responseSchema:{kind:"object",fields:{identity:{kind:"object",fields:{individual:{kind:"object",fields:{relationship:{kind:"object",fields:{percent_ownership:{kind:"decimal_string"}}}}}}}}}}),list:Fn({method:"GET",fullPath:"/v2/core/accounts",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{identity:{kind:"object",fields:{individual:{kind:"object",fields:{relationship:{kind:"object",fields:{percent_ownership:{kind:"decimal_string"}}}}}}}}}}}}}),close:Fn({method:"POST",fullPath:"/v2/core/accounts/{id}/close",responseSchema:{kind:"object",fields:{identity:{kind:"object",fields:{individual:{kind:"object",fields:{relationship:{kind:"object",fields:{percent_ownership:{kind:"decimal_string"}}}}}}}}}})});var Ch=d.method,Ah=d.extend({retrieve:Ch({method:"GET",fullPath:"/v1/entitlements/active_entitlements/{id}"}),list:Ch({method:"GET",fullPath:"/v1/entitlements/active_entitlements",methodType:"list"})});var Bt=d.method,Rh=d.extend({create:Bt({method:"POST",fullPath:"/v1/billing/alerts"}),retrieve:Bt({method:"GET",fullPath:"/v1/billing/alerts/{id}"}),list:Bt({method:"GET",fullPath:"/v1/billing/alerts",methodType:"list"}),activate:Bt({method:"POST",fullPath:"/v1/billing/alerts/{id}/activate"}),archive:Bt({method:"POST",fullPath:"/v1/billing/alerts/{id}/archive"}),deactivate:Bt({method:"POST",fullPath:"/v1/billing/alerts/{id}/deactivate"})});var GE=d.method,qh=d.extend({find:GE({method:"GET",fullPath:"/v1/tax/associations/find"})});var Ln=d.method,Ih=d.extend({retrieve:Ln({method:"GET",fullPath:"/v1/issuing/authorizations/{authorization}",responseSchema:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},transactions:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}}),update:Ln({method:"POST",fullPath:"/v1/issuing/authorizations/{authorization}",responseSchema:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},transactions:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}}),list:Ln({method:"GET",fullPath:"/v1/issuing/authorizations",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},transactions:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}}}}}),approve:Ln({method:"POST",fullPath:"/v1/issuing/authorizations/{authorization}/approve",responseSchema:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},transactions:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}}),decline:Ln({method:"POST",fullPath:"/v1/issuing/authorizations/{authorization}/decline",responseSchema:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},transactions:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}})});var ot=d.method,Dh=d.extend({create:ot({method:"POST",fullPath:"/v1/test_helpers/issuing/authorizations",requestSchema:{kind:"object",fields:{fleet:{kind:"object",fields:{reported_breakdown:{kind:"object",fields:{fuel:{kind:"object",fields:{gross_amount_decimal:{kind:"decimal_string"}}},non_fuel:{kind:"object",fields:{gross_amount_decimal:{kind:"decimal_string"}}},tax:{kind:"object",fields:{local_amount_decimal:{kind:"decimal_string"},national_amount_decimal:{kind:"decimal_string"}}}}}}},fuel:{kind:"object",fields:{quantity_decimal:{kind:"decimal_string"},unit_cost_decimal:{kind:"decimal_string"}}}}},responseSchema:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},transactions:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}}),capture:ot({method:"POST",fullPath:"/v1/test_helpers/issuing/authorizations/{authorization}/capture",requestSchema:{kind:"object",fields:{purchase_details:{kind:"object",fields:{fleet:{kind:"object",fields:{reported_breakdown:{kind:"object",fields:{fuel:{kind:"object",fields:{gross_amount_decimal:{kind:"decimal_string"}}},non_fuel:{kind:"object",fields:{gross_amount_decimal:{kind:"decimal_string"}}},tax:{kind:"object",fields:{local_amount_decimal:{kind:"decimal_string"},national_amount_decimal:{kind:"decimal_string"}}}}}}},fuel:{kind:"object",fields:{quantity_decimal:{kind:"decimal_string"},unit_cost_decimal:{kind:"decimal_string"}}},receipt:{kind:"array",element:{kind:"object",fields:{quantity:{kind:"decimal_string"}}}}}}}},responseSchema:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},transactions:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}}),expire:ot({method:"POST",fullPath:"/v1/test_helpers/issuing/authorizations/{authorization}/expire",responseSchema:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},transactions:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}}),finalizeAmount:ot({method:"POST",fullPath:"/v1/test_helpers/issuing/authorizations/{authorization}/finalize_amount",requestSchema:{kind:"object",fields:{fleet:{kind:"object",fields:{reported_breakdown:{kind:"object",fields:{fuel:{kind:"object",fields:{gross_amount_decimal:{kind:"decimal_string"}}},non_fuel:{kind:"object",fields:{gross_amount_decimal:{kind:"decimal_string"}}},tax:{kind:"object",fields:{local_amount_decimal:{kind:"decimal_string"},national_amount_decimal:{kind:"decimal_string"}}}}}}},fuel:{kind:"object",fields:{quantity_decimal:{kind:"decimal_string"},unit_cost_decimal:{kind:"decimal_string"}}}}},responseSchema:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},transactions:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}}),increment:ot({method:"POST",fullPath:"/v1/test_helpers/issuing/authorizations/{authorization}/increment",responseSchema:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},transactions:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}}),respond:ot({method:"POST",fullPath:"/v1/test_helpers/issuing/authorizations/{authorization}/fraud_challenges/respond",responseSchema:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},transactions:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}}),reverse:ot({method:"POST",fullPath:"/v1/test_helpers/issuing/authorizations/{authorization}/reverse",responseSchema:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},transactions:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}})});var Vs=d.method,Mh=d.extend({create:Vs({method:"POST",fullPath:"/v1/tax/calculations"}),retrieve:Vs({method:"GET",fullPath:"/v1/tax/calculations/{calculation}"}),listLineItems:Vs({method:"GET",fullPath:"/v1/tax/calculations/{calculation}/line_items",methodType:"list"})});var Ua=d.method,Fh=d.extend({create:Ua({method:"POST",fullPath:"/v1/issuing/cardholders"}),retrieve:Ua({method:"GET",fullPath:"/v1/issuing/cardholders/{cardholder}"}),update:Ua({method:"POST",fullPath:"/v1/issuing/cardholders/{cardholder}"}),list:Ua({method:"GET",fullPath:"/v1/issuing/cardholders",methodType:"list"})});var Ba=d.method,Lh=d.extend({create:Ba({method:"POST",fullPath:"/v1/issuing/cards"}),retrieve:Ba({method:"GET",fullPath:"/v1/issuing/cards/{card}"}),update:Ba({method:"POST",fullPath:"/v1/issuing/cards/{card}"}),list:Ba({method:"GET",fullPath:"/v1/issuing/cards",methodType:"list"})});var Nn=d.method,Nh=d.extend({deliverCard:Nn({method:"POST",fullPath:"/v1/test_helpers/issuing/cards/{card}/shipping/deliver"}),failCard:Nn({method:"POST",fullPath:"/v1/test_helpers/issuing/cards/{card}/shipping/fail"}),returnCard:Nn({method:"POST",fullPath:"/v1/test_helpers/issuing/cards/{card}/shipping/return"}),shipCard:Nn({method:"POST",fullPath:"/v1/test_helpers/issuing/cards/{card}/shipping/ship"}),submitCard:Nn({method:"POST",fullPath:"/v1/test_helpers/issuing/cards/{card}/shipping/submit"})});var Ga=d.method,Uh=d.extend({create:Ga({method:"POST",fullPath:"/v1/billing_portal/configurations"}),retrieve:Ga({method:"GET",fullPath:"/v1/billing_portal/configurations/{configuration}"}),update:Ga({method:"POST",fullPath:"/v1/billing_portal/configurations/{configuration}"}),list:Ga({method:"GET",fullPath:"/v1/billing_portal/configurations",methodType:"list"})});var Un=d.method,Bh=d.extend({create:Un({method:"POST",fullPath:"/v1/terminal/configurations"}),retrieve:Un({method:"GET",fullPath:"/v1/terminal/configurations/{configuration}"}),update:Un({method:"POST",fullPath:"/v1/terminal/configurations/{configuration}"}),list:Un({method:"GET",fullPath:"/v1/terminal/configurations",methodType:"list"}),del:Un({method:"DELETE",fullPath:"/v1/terminal/configurations/{configuration}"})});var $E=d.method,Gh=d.extend({create:$E({method:"POST",fullPath:"/v1/test_helpers/confirmation_tokens"})});var zE=d.method,$h=d.extend({create:zE({method:"POST",fullPath:"/v1/terminal/connection_tokens"})});var HE=d.method,zh=d.extend({retrieve:HE({method:"GET",fullPath:"/v1/billing/credit_balance_summary"})});var Hh=d.method,Vh=d.extend({retrieve:Hh({method:"GET",fullPath:"/v1/billing/credit_balance_transactions/{id}"}),list:Hh({method:"GET",fullPath:"/v1/billing/credit_balance_transactions",methodType:"list"})});var Gt=d.method,Wh=d.extend({create:Gt({method:"POST",fullPath:"/v1/billing/credit_grants"}),retrieve:Gt({method:"GET",fullPath:"/v1/billing/credit_grants/{id}"}),update:Gt({method:"POST",fullPath:"/v1/billing/credit_grants/{id}"}),list:Gt({method:"GET",fullPath:"/v1/billing/credit_grants",methodType:"list"}),expire:Gt({method:"POST",fullPath:"/v1/billing/credit_grants/{id}/expire"}),voidGrant:Gt({method:"POST",fullPath:"/v1/billing/credit_grants/{id}/void"})});var Ws=d.method,Kh=d.extend({create:Ws({method:"POST",fullPath:"/v1/treasury/credit_reversals"}),retrieve:Ws({method:"GET",fullPath:"/v1/treasury/credit_reversals/{credit_reversal}"}),list:Ws({method:"GET",fullPath:"/v1/treasury/credit_reversals",methodType:"list"})});var VE=d.method,Xh=d.extend({fundCashBalance:VE({method:"POST",fullPath:"/v1/test_helpers/customers/{customer}/fund_cash_balance"})});var Ks=d.method,Yh=d.extend({create:Ks({method:"POST",fullPath:"/v1/treasury/debit_reversals"}),retrieve:Ks({method:"GET",fullPath:"/v1/treasury/debit_reversals/{debit_reversal}"}),list:Ks({method:"GET",fullPath:"/v1/treasury/debit_reversals",methodType:"list"})});var Bn=d.method,Qh=d.extend({create:Bn({method:"POST",fullPath:"/v1/issuing/disputes"}),retrieve:Bn({method:"GET",fullPath:"/v1/issuing/disputes/{dispute}"}),update:Bn({method:"POST",fullPath:"/v1/issuing/disputes/{dispute}"}),list:Bn({method:"GET",fullPath:"/v1/issuing/disputes",methodType:"list"}),submit:Bn({method:"POST",fullPath:"/v1/issuing/disputes/{dispute}/submit"})});var Jh=d.method,Zh=d.extend({retrieve:Jh({method:"GET",fullPath:"/v1/radar/early_fraud_warnings/{early_fraud_warning}"}),list:Jh({method:"GET",fullPath:"/v1/radar/early_fraud_warnings",methodType:"list"})});var ze=d.method,ev=d.extend({create:ze({method:"POST",fullPath:"/v2/core/event_destinations"}),retrieve:ze({method:"GET",fullPath:"/v2/core/event_destinations/{id}"}),update:ze({method:"POST",fullPath:"/v2/core/event_destinations/{id}"}),list:ze({method:"GET",fullPath:"/v2/core/event_destinations",methodType:"list"}),del:ze({method:"DELETE",fullPath:"/v2/core/event_destinations/{id}"}),disable:ze({method:"POST",fullPath:"/v2/core/event_destinations/{id}/disable"}),enable:ze({method:"POST",fullPath:"/v2/core/event_destinations/{id}/enable"}),ping:ze({method:"POST",fullPath:"/v2/core/event_destinations/{id}/ping"})});var Xs=d.method,tv=d.extend({retrieve(...t){return Xs({method:"GET",fullPath:"/v2/core/events/{id}",transformResponseData:n=>this.addFetchRelatedObjectIfNeeded(n)}).apply(this,t)},list(...t){return Xs({method:"GET",fullPath:"/v2/core/events",methodType:"list",transformResponseData:n=>({...n,data:n.data.map(this.addFetchRelatedObjectIfNeeded.bind(this))})}).apply(this,t)},addFetchRelatedObjectIfNeeded(t){return!t.related_object||!t.related_object.url?t:{...t,fetchRelatedObject:()=>Xs({method:"GET",fullPath:t.related_object.url}).apply(this,[{stripeContext:t.context,headers:{"Stripe-Request-Trigger":`event=${t.id}`}}])}}});var $a=d.method,nv=d.extend({create:$a({method:"POST",fullPath:"/v1/entitlements/features"}),retrieve:$a({method:"GET",fullPath:"/v1/entitlements/features/{id}"}),update:$a({method:"POST",fullPath:"/v1/entitlements/features/{id}"}),list:$a({method:"GET",fullPath:"/v1/entitlements/features",methodType:"list"})});var st=d.method,iv=d.extend({create:st({method:"POST",fullPath:"/v1/treasury/financial_accounts"}),retrieve:st({method:"GET",fullPath:"/v1/treasury/financial_accounts/{financial_account}"}),update:st({method:"POST",fullPath:"/v1/treasury/financial_accounts/{financial_account}"}),list:st({method:"GET",fullPath:"/v1/treasury/financial_accounts",methodType:"list"}),close:st({method:"POST",fullPath:"/v1/treasury/financial_accounts/{financial_account}/close"}),retrieveFeatures:st({method:"GET",fullPath:"/v1/treasury/financial_accounts/{financial_account}/features"}),updateFeatures:st({method:"POST",fullPath:"/v1/treasury/financial_accounts/{financial_account}/features"})});var Ys=d.method,av=d.extend({fail:Ys({method:"POST",fullPath:"/v1/test_helpers/treasury/inbound_transfers/{id}/fail"}),returnInboundTransfer:Ys({method:"POST",fullPath:"/v1/test_helpers/treasury/inbound_transfers/{id}/return"}),succeed:Ys({method:"POST",fullPath:"/v1/test_helpers/treasury/inbound_transfers/{id}/succeed"})});var za=d.method,rv=d.extend({create:za({method:"POST",fullPath:"/v1/treasury/inbound_transfers"}),retrieve:za({method:"GET",fullPath:"/v1/treasury/inbound_transfers/{id}"}),list:za({method:"GET",fullPath:"/v1/treasury/inbound_transfers",methodType:"list"}),cancel:za({method:"POST",fullPath:"/v1/treasury/inbound_transfers/{inbound_transfer}/cancel"})});var Gn=d.method,ov=d.extend({create:Gn({method:"POST",fullPath:"/v1/terminal/locations"}),retrieve:Gn({method:"GET",fullPath:"/v1/terminal/locations/{location}"}),update:Gn({method:"POST",fullPath:"/v1/terminal/locations/{location}"}),list:Gn({method:"GET",fullPath:"/v1/terminal/locations",methodType:"list"}),del:Gn({method:"DELETE",fullPath:"/v1/terminal/locations/{location}"})});var WE=d.method,sv=d.extend({create:WE({method:"POST",fullPath:"/v1/billing/meter_event_adjustments"})});var KE=d.method,cv=d.extend({create:KE({method:"POST",fullPath:"/v2/billing/meter_event_adjustments"})});var XE=d.method,lv=d.extend({create:XE({method:"POST",fullPath:"/v2/billing/meter_event_session"})});var YE=d.method,uv=d.extend({create:YE({method:"POST",fullPath:"/v2/billing/meter_event_stream",host:"meter-events.stripe.com"})});var QE=d.method,dv=d.extend({create:QE({method:"POST",fullPath:"/v1/billing/meter_events"})});var JE=d.method,pv=d.extend({create:JE({method:"POST",fullPath:"/v2/billing/meter_events"})});var ct=d.method,mv=d.extend({create:ct({method:"POST",fullPath:"/v1/billing/meters"}),retrieve:ct({method:"GET",fullPath:"/v1/billing/meters/{id}"}),update:ct({method:"POST",fullPath:"/v1/billing/meters/{id}"}),list:ct({method:"GET",fullPath:"/v1/billing/meters",methodType:"list"}),deactivate:ct({method:"POST",fullPath:"/v1/billing/meters/{id}/deactivate"}),listEventSummaries:ct({method:"GET",fullPath:"/v1/billing/meters/{id}/event_summaries",methodType:"list"}),reactivate:ct({method:"POST",fullPath:"/v1/billing/meters/{id}/reactivate"})});var ZE=d.method,fv=d.extend({create:ZE({method:"POST",fullPath:"/v1/terminal/onboarding_links"})});var $n=d.method,hv=d.extend({create:$n({method:"POST",fullPath:"/v1/climate/orders",requestSchema:{kind:"object",fields:{metric_tons:{kind:"decimal_string"}}},responseSchema:{kind:"object",fields:{metric_tons:{kind:"decimal_string"}}}}),retrieve:$n({method:"GET",fullPath:"/v1/climate/orders/{order}",responseSchema:{kind:"object",fields:{metric_tons:{kind:"decimal_string"}}}}),update:$n({method:"POST",fullPath:"/v1/climate/orders/{order}",responseSchema:{kind:"object",fields:{metric_tons:{kind:"decimal_string"}}}}),list:$n({method:"GET",fullPath:"/v1/climate/orders",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{metric_tons:{kind:"decimal_string"}}}}}}}),cancel:$n({method:"POST",fullPath:"/v1/climate/orders/{order}/cancel",responseSchema:{kind:"object",fields:{metric_tons:{kind:"decimal_string"}}}})});var Ha=d.method,vv=d.extend({update:Ha({method:"POST",fullPath:"/v1/test_helpers/treasury/outbound_payments/{id}"}),fail:Ha({method:"POST",fullPath:"/v1/test_helpers/treasury/outbound_payments/{id}/fail"}),post:Ha({method:"POST",fullPath:"/v1/test_helpers/treasury/outbound_payments/{id}/post"}),returnOutboundPayment:Ha({method:"POST",fullPath:"/v1/test_helpers/treasury/outbound_payments/{id}/return"})});var Va=d.method,bv=d.extend({create:Va({method:"POST",fullPath:"/v1/treasury/outbound_payments"}),retrieve:Va({method:"GET",fullPath:"/v1/treasury/outbound_payments/{id}"}),list:Va({method:"GET",fullPath:"/v1/treasury/outbound_payments",methodType:"list"}),cancel:Va({method:"POST",fullPath:"/v1/treasury/outbound_payments/{id}/cancel"})});var Wa=d.method,gv=d.extend({update:Wa({method:"POST",fullPath:"/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}"}),fail:Wa({method:"POST",fullPath:"/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}/fail"}),post:Wa({method:"POST",fullPath:"/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}/post"}),returnOutboundTransfer:Wa({method:"POST",fullPath:"/v1/test_helpers/treasury/outbound_transfers/{outbound_transfer}/return"})});var Ka=d.method,xv=d.extend({create:Ka({method:"POST",fullPath:"/v1/treasury/outbound_transfers"}),retrieve:Ka({method:"GET",fullPath:"/v1/treasury/outbound_transfers/{outbound_transfer}"}),list:Ka({method:"GET",fullPath:"/v1/treasury/outbound_transfers",methodType:"list"}),cancel:Ka({method:"POST",fullPath:"/v1/treasury/outbound_transfers/{outbound_transfer}/cancel"})});var eP=d.method,yv=d.extend({create:eP({method:"POST",fullPath:"/v1/radar/payment_evaluations"})});var Xa=d.method,kv=d.extend({create:Xa({method:"POST",fullPath:"/v1/issuing/personalization_designs"}),retrieve:Xa({method:"GET",fullPath:"/v1/issuing/personalization_designs/{personalization_design}"}),update:Xa({method:"POST",fullPath:"/v1/issuing/personalization_designs/{personalization_design}"}),list:Xa({method:"GET",fullPath:"/v1/issuing/personalization_designs",methodType:"list"})});var Qs=d.method,_v=d.extend({activate:Qs({method:"POST",fullPath:"/v1/test_helpers/issuing/personalization_designs/{personalization_design}/activate"}),deactivate:Qs({method:"POST",fullPath:"/v1/test_helpers/issuing/personalization_designs/{personalization_design}/deactivate"}),reject:Qs({method:"POST",fullPath:"/v1/test_helpers/issuing/personalization_designs/{personalization_design}/reject"})});var wv=d.method,Sv=d.extend({retrieve:wv({method:"GET",fullPath:"/v1/issuing/physical_bundles/{physical_bundle}"}),list:wv({method:"GET",fullPath:"/v1/issuing/physical_bundles",methodType:"list"})});var Ev=d.method,Pv=d.extend({retrieve:Ev({method:"GET",fullPath:"/v1/climate/products/{product}",responseSchema:{kind:"object",fields:{metric_tons_available:{kind:"decimal_string"}}}}),list:Ev({method:"GET",fullPath:"/v1/climate/products",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{metric_tons_available:{kind:"decimal_string"}}}}}}})});var ne=d.method,Tv=d.extend({create:ne({method:"POST",fullPath:"/v1/terminal/readers"}),retrieve:ne({method:"GET",fullPath:"/v1/terminal/readers/{reader}"}),update:ne({method:"POST",fullPath:"/v1/terminal/readers/{reader}"}),list:ne({method:"GET",fullPath:"/v1/terminal/readers",methodType:"list"}),del:ne({method:"DELETE",fullPath:"/v1/terminal/readers/{reader}"}),cancelAction:ne({method:"POST",fullPath:"/v1/terminal/readers/{reader}/cancel_action"}),collectInputs:ne({method:"POST",fullPath:"/v1/terminal/readers/{reader}/collect_inputs"}),collectPaymentMethod:ne({method:"POST",fullPath:"/v1/terminal/readers/{reader}/collect_payment_method"}),confirmPaymentIntent:ne({method:"POST",fullPath:"/v1/terminal/readers/{reader}/confirm_payment_intent"}),processPaymentIntent:ne({method:"POST",fullPath:"/v1/terminal/readers/{reader}/process_payment_intent"}),processSetupIntent:ne({method:"POST",fullPath:"/v1/terminal/readers/{reader}/process_setup_intent"}),refundPayment:ne({method:"POST",fullPath:"/v1/terminal/readers/{reader}/refund_payment"}),setReaderDisplay:ne({method:"POST",fullPath:"/v1/terminal/readers/{reader}/set_reader_display"})});var Js=d.method,jv=d.extend({presentPaymentMethod:Js({method:"POST",fullPath:"/v1/test_helpers/terminal/readers/{reader}/present_payment_method"}),succeedInputCollection:Js({method:"POST",fullPath:"/v1/test_helpers/terminal/readers/{reader}/succeed_input_collection"}),timeoutInputCollection:Js({method:"POST",fullPath:"/v1/test_helpers/terminal/readers/{reader}/timeout_input_collection"})});var tP=d.method,Ov=d.extend({create:tP({method:"POST",fullPath:"/v1/test_helpers/treasury/received_credits"})});var Cv=d.method,Av=d.extend({retrieve:Cv({method:"GET",fullPath:"/v1/treasury/received_credits/{id}"}),list:Cv({method:"GET",fullPath:"/v1/treasury/received_credits",methodType:"list"})});var nP=d.method,Rv=d.extend({create:nP({method:"POST",fullPath:"/v1/test_helpers/treasury/received_debits"})});var qv=d.method,Iv=d.extend({retrieve:qv({method:"GET",fullPath:"/v1/treasury/received_debits/{id}"}),list:qv({method:"GET",fullPath:"/v1/treasury/received_debits",methodType:"list"})});var iP=d.method,Dv=d.extend({expire:iP({method:"POST",fullPath:"/v1/test_helpers/refunds/{refund}/expire"})});var Ya=d.method,Mv=d.extend({create:Ya({method:"POST",fullPath:"/v1/tax/registrations"}),retrieve:Ya({method:"GET",fullPath:"/v1/tax/registrations/{id}"}),update:Ya({method:"POST",fullPath:"/v1/tax/registrations/{id}"}),list:Ya({method:"GET",fullPath:"/v1/tax/registrations",methodType:"list"})});var Zs=d.method,Fv=d.extend({create:Zs({method:"POST",fullPath:"/v1/reporting/report_runs"}),retrieve:Zs({method:"GET",fullPath:"/v1/reporting/report_runs/{report_run}"}),list:Zs({method:"GET",fullPath:"/v1/reporting/report_runs",methodType:"list"})});var Lv=d.method,Nv=d.extend({retrieve:Lv({method:"GET",fullPath:"/v1/reporting/report_types/{report_type}"}),list:Lv({method:"GET",fullPath:"/v1/reporting/report_types",methodType:"list"})});var ec=d.method,Uv=d.extend({create:ec({method:"POST",fullPath:"/v1/forwarding/requests"}),retrieve:ec({method:"GET",fullPath:"/v1/forwarding/requests/{id}"}),list:ec({method:"GET",fullPath:"/v1/forwarding/requests",methodType:"list"})});var Bv=d.method,Gv=d.extend({retrieve:Bv({method:"GET",fullPath:"/v1/sigma/scheduled_query_runs/{scheduled_query_run}"}),list:Bv({method:"GET",fullPath:"/v1/sigma/scheduled_query_runs",methodType:"list"})});var Qa=d.method,$v=d.extend({create:Qa({method:"POST",fullPath:"/v1/apps/secrets"}),list:Qa({method:"GET",fullPath:"/v1/apps/secrets",methodType:"list"}),deleteWhere:Qa({method:"POST",fullPath:"/v1/apps/secrets/delete"}),find:Qa({method:"GET",fullPath:"/v1/apps/secrets/find"})});var aP=d.method,zv=d.extend({create:aP({method:"POST",fullPath:"/v1/billing_portal/sessions"})});var $t=d.method,Hv=d.extend({create:$t({method:"POST",fullPath:"/v1/checkout/sessions",requestSchema:{kind:"object",fields:{line_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}},responseSchema:{kind:"object",fields:{currency_conversion:{kind:"nullable",inner:{kind:"object",fields:{fx_rate:{kind:"decimal_string"}}}},line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}),retrieve:$t({method:"GET",fullPath:"/v1/checkout/sessions/{session}",responseSchema:{kind:"object",fields:{currency_conversion:{kind:"nullable",inner:{kind:"object",fields:{fx_rate:{kind:"decimal_string"}}}},line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}),update:$t({method:"POST",fullPath:"/v1/checkout/sessions/{session}",requestSchema:{kind:"object",fields:{line_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}},responseSchema:{kind:"object",fields:{currency_conversion:{kind:"nullable",inner:{kind:"object",fields:{fx_rate:{kind:"decimal_string"}}}},line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}),list:$t({method:"GET",fullPath:"/v1/checkout/sessions",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{currency_conversion:{kind:"nullable",inner:{kind:"object",fields:{fx_rate:{kind:"decimal_string"}}}},line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}),expire:$t({method:"POST",fullPath:"/v1/checkout/sessions/{session}/expire",responseSchema:{kind:"object",fields:{currency_conversion:{kind:"nullable",inner:{kind:"object",fields:{fx_rate:{kind:"decimal_string"}}}},line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}),listLineItems:$t({method:"GET",fullPath:"/v1/checkout/sessions/{session}/line_items",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}})});var Vv=d.method,Wv=d.extend({create:Vv({method:"POST",fullPath:"/v1/financial_connections/sessions"}),retrieve:Vv({method:"GET",fullPath:"/v1/financial_connections/sessions/{session}"})});var Kv=d.method,Xv=d.extend({retrieve:Kv({method:"GET",fullPath:"/v1/tax/settings"}),update:Kv({method:"POST",fullPath:"/v1/tax/settings"})});var Yv=d.method,Qv=d.extend({retrieve:Yv({method:"GET",fullPath:"/v1/climate/suppliers/{supplier}"}),list:Yv({method:"GET",fullPath:"/v1/climate/suppliers",methodType:"list"})});var zn=d.method,Jv=d.extend({create:zn({method:"POST",fullPath:"/v1/test_helpers/test_clocks"}),retrieve:zn({method:"GET",fullPath:"/v1/test_helpers/test_clocks/{test_clock}"}),list:zn({method:"GET",fullPath:"/v1/test_helpers/test_clocks",methodType:"list"}),del:zn({method:"DELETE",fullPath:"/v1/test_helpers/test_clocks/{test_clock}"}),advance:zn({method:"POST",fullPath:"/v1/test_helpers/test_clocks/{test_clock}/advance"})});var tc=d.method,Zv=d.extend({retrieve:tc({method:"GET",fullPath:"/v1/issuing/tokens/{token}"}),update:tc({method:"POST",fullPath:"/v1/issuing/tokens/{token}"}),list:tc({method:"GET",fullPath:"/v1/issuing/tokens",methodType:"list"})});var eb=d.method,tb=d.extend({retrieve:eb({method:"GET",fullPath:"/v1/treasury/transaction_entries/{id}",responseSchema:{kind:"object",fields:{flow_details:{kind:"nullable",inner:{kind:"object",fields:{issuing_authorization:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},transactions:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}}}}}}}),list:eb({method:"GET",fullPath:"/v1/treasury/transaction_entries",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{flow_details:{kind:"nullable",inner:{kind:"object",fields:{issuing_authorization:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},transactions:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}}}}}}}}}})});var nb=d.method,ib=d.extend({retrieve:nb({method:"GET",fullPath:"/v1/financial_connections/transactions/{transaction}"}),list:nb({method:"GET",fullPath:"/v1/financial_connections/transactions",methodType:"list"})});var nc=d.method,ab=d.extend({retrieve:nc({method:"GET",fullPath:"/v1/issuing/transactions/{transaction}",responseSchema:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}),update:nc({method:"POST",fullPath:"/v1/issuing/transactions/{transaction}",responseSchema:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}),list:nc({method:"GET",fullPath:"/v1/issuing/transactions",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}})});var Ja=d.method,rb=d.extend({retrieve:Ja({method:"GET",fullPath:"/v1/tax/transactions/{transaction}"}),createFromCalculation:Ja({method:"POST",fullPath:"/v1/tax/transactions/create_from_calculation"}),createReversal:Ja({method:"POST",fullPath:"/v1/tax/transactions/create_reversal"}),listLineItems:Ja({method:"GET",fullPath:"/v1/tax/transactions/{transaction}/line_items",methodType:"list"})});var ic=d.method,ob=d.extend({createForceCapture:ic({method:"POST",fullPath:"/v1/test_helpers/issuing/transactions/create_force_capture",requestSchema:{kind:"object",fields:{purchase_details:{kind:"object",fields:{fleet:{kind:"object",fields:{reported_breakdown:{kind:"object",fields:{fuel:{kind:"object",fields:{gross_amount_decimal:{kind:"decimal_string"}}},non_fuel:{kind:"object",fields:{gross_amount_decimal:{kind:"decimal_string"}}},tax:{kind:"object",fields:{local_amount_decimal:{kind:"decimal_string"},national_amount_decimal:{kind:"decimal_string"}}}}}}},fuel:{kind:"object",fields:{quantity_decimal:{kind:"decimal_string"},unit_cost_decimal:{kind:"decimal_string"}}},receipt:{kind:"array",element:{kind:"object",fields:{quantity:{kind:"decimal_string"}}}}}}}},responseSchema:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}),createUnlinkedRefund:ic({method:"POST",fullPath:"/v1/test_helpers/issuing/transactions/create_unlinked_refund",requestSchema:{kind:"object",fields:{purchase_details:{kind:"object",fields:{fleet:{kind:"object",fields:{reported_breakdown:{kind:"object",fields:{fuel:{kind:"object",fields:{gross_amount_decimal:{kind:"decimal_string"}}},non_fuel:{kind:"object",fields:{gross_amount_decimal:{kind:"decimal_string"}}},tax:{kind:"object",fields:{local_amount_decimal:{kind:"decimal_string"},national_amount_decimal:{kind:"decimal_string"}}}}}}},fuel:{kind:"object",fields:{quantity_decimal:{kind:"decimal_string"},unit_cost_decimal:{kind:"decimal_string"}}},receipt:{kind:"array",element:{kind:"object",fields:{quantity:{kind:"decimal_string"}}}}}}}},responseSchema:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}),refund:ic({method:"POST",fullPath:"/v1/test_helpers/issuing/transactions/{transaction}/refund",responseSchema:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}})});var sb=d.method,cb=d.extend({retrieve:sb({method:"GET",fullPath:"/v1/treasury/transactions/{id}",responseSchema:{kind:"object",fields:{entries:{kind:"nullable",inner:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{flow_details:{kind:"nullable",inner:{kind:"object",fields:{issuing_authorization:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},transactions:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}}}}}}}}}}}}}),list:sb({method:"GET",fullPath:"/v1/treasury/transactions",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{entries:{kind:"nullable",inner:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{flow_details:{kind:"nullable",inner:{kind:"object",fields:{issuing_authorization:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},transactions:{kind:"array",element:{kind:"object",fields:{purchase_details:{kind:"nullable",inner:{kind:"object",fields:{fleet:{kind:"nullable",inner:{kind:"object",fields:{reported_breakdown:{kind:"nullable",inner:{kind:"object",fields:{fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},non_fuel:{kind:"nullable",inner:{kind:"object",fields:{gross_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tax:{kind:"nullable",inner:{kind:"object",fields:{local_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},national_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}},fuel:{kind:"nullable",inner:{kind:"object",fields:{quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_cost_decimal:{kind:"decimal_string"}}}}}}}}}}}}}}}}}}}}}}}}}}})});var Za=d.method,lb=d.extend({create:Za({method:"POST",fullPath:"/v1/radar/value_list_items"}),retrieve:Za({method:"GET",fullPath:"/v1/radar/value_list_items/{item}"}),list:Za({method:"GET",fullPath:"/v1/radar/value_list_items",methodType:"list"}),del:Za({method:"DELETE",fullPath:"/v1/radar/value_list_items/{item}"})});var Hn=d.method,ub=d.extend({create:Hn({method:"POST",fullPath:"/v1/radar/value_lists"}),retrieve:Hn({method:"GET",fullPath:"/v1/radar/value_lists/{value_list}"}),update:Hn({method:"POST",fullPath:"/v1/radar/value_lists/{value_list}"}),list:Hn({method:"GET",fullPath:"/v1/radar/value_lists",methodType:"list"}),del:Hn({method:"DELETE",fullPath:"/v1/radar/value_lists/{value_list}"})});var db=d.method,pb=d.extend({retrieve:db({method:"GET",fullPath:"/v1/identity/verification_reports/{report}"}),list:db({method:"GET",fullPath:"/v1/identity/verification_reports",methodType:"list"})});var zt=d.method,mb=d.extend({create:zt({method:"POST",fullPath:"/v1/identity/verification_sessions"}),retrieve:zt({method:"GET",fullPath:"/v1/identity/verification_sessions/{session}"}),update:zt({method:"POST",fullPath:"/v1/identity/verification_sessions/{session}"}),list:zt({method:"GET",fullPath:"/v1/identity/verification_sessions",methodType:"list"}),cancel:zt({method:"POST",fullPath:"/v1/identity/verification_sessions/{session}/cancel"}),redact:zt({method:"POST",fullPath:"/v1/identity/verification_sessions/{session}/redact"})});var F=d.method,ac=d.extend({create:F({method:"POST",fullPath:"/v1/accounts"}),retrieve(t,...e){return typeof t=="string"?F({method:"GET",fullPath:"/v1/accounts/{id}"}).apply(this,[t,...e]):(t==null&&[].shift.apply([t,...e]),F({method:"GET",fullPath:"/v1/account"}).apply(this,[t,...e]))},update:F({method:"POST",fullPath:"/v1/accounts/{account}"}),list:F({method:"GET",fullPath:"/v1/accounts",methodType:"list"}),del:F({method:"DELETE",fullPath:"/v1/accounts/{account}"}),createExternalAccount:F({method:"POST",fullPath:"/v1/accounts/{account}/external_accounts"}),createLoginLink:F({method:"POST",fullPath:"/v1/accounts/{account}/login_links"}),createPerson:F({method:"POST",fullPath:"/v1/accounts/{account}/persons"}),deleteExternalAccount:F({method:"DELETE",fullPath:"/v1/accounts/{account}/external_accounts/{id}"}),deletePerson:F({method:"DELETE",fullPath:"/v1/accounts/{account}/persons/{person}"}),listCapabilities:F({method:"GET",fullPath:"/v1/accounts/{account}/capabilities",methodType:"list"}),listExternalAccounts:F({method:"GET",fullPath:"/v1/accounts/{account}/external_accounts",methodType:"list"}),listPersons:F({method:"GET",fullPath:"/v1/accounts/{account}/persons",methodType:"list"}),reject:F({method:"POST",fullPath:"/v1/accounts/{account}/reject"}),retrieveCurrent:F({method:"GET",fullPath:"/v1/account"}),retrieveCapability:F({method:"GET",fullPath:"/v1/accounts/{account}/capabilities/{capability}"}),retrieveExternalAccount:F({method:"GET",fullPath:"/v1/accounts/{account}/external_accounts/{id}"}),retrievePerson:F({method:"GET",fullPath:"/v1/accounts/{account}/persons/{person}"}),updateCapability:F({method:"POST",fullPath:"/v1/accounts/{account}/capabilities/{capability}"}),updateExternalAccount:F({method:"POST",fullPath:"/v1/accounts/{account}/external_accounts/{id}"}),updatePerson:F({method:"POST",fullPath:"/v1/accounts/{account}/persons/{person}"})});var rP=d.method,fb=d.extend({create:rP({method:"POST",fullPath:"/v1/account_links"})});var oP=d.method,hb=d.extend({create:oP({method:"POST",fullPath:"/v1/account_sessions"})});var er=d.method,vb=d.extend({create:er({method:"POST",fullPath:"/v1/apple_pay/domains"}),retrieve:er({method:"GET",fullPath:"/v1/apple_pay/domains/{domain}"}),list:er({method:"GET",fullPath:"/v1/apple_pay/domains",methodType:"list"}),del:er({method:"DELETE",fullPath:"/v1/apple_pay/domains/{domain}"})});var Ht=d.method,bb=d.extend({retrieve:Ht({method:"GET",fullPath:"/v1/application_fees/{id}"}),list:Ht({method:"GET",fullPath:"/v1/application_fees",methodType:"list"}),createRefund:Ht({method:"POST",fullPath:"/v1/application_fees/{id}/refunds"}),listRefunds:Ht({method:"GET",fullPath:"/v1/application_fees/{id}/refunds",methodType:"list"}),retrieveRefund:Ht({method:"GET",fullPath:"/v1/application_fees/{fee}/refunds/{id}"}),updateRefund:Ht({method:"POST",fullPath:"/v1/application_fees/{fee}/refunds/{id}"})});var sP=d.method,gb=d.extend({retrieve:sP({method:"GET",fullPath:"/v1/balance"})});var xb=d.method,yb=d.extend({retrieve:xb({method:"GET",fullPath:"/v1/balance_settings"}),update:xb({method:"POST",fullPath:"/v1/balance_settings"})});var kb=d.method,_b=d.extend({retrieve:kb({method:"GET",fullPath:"/v1/balance_transactions/{id}"}),list:kb({method:"GET",fullPath:"/v1/balance_transactions",methodType:"list"})});var Vt=d.method,wb=d.extend({create:Vt({method:"POST",fullPath:"/v1/charges"}),retrieve:Vt({method:"GET",fullPath:"/v1/charges/{charge}"}),update:Vt({method:"POST",fullPath:"/v1/charges/{charge}"}),list:Vt({method:"GET",fullPath:"/v1/charges",methodType:"list"}),capture:Vt({method:"POST",fullPath:"/v1/charges/{charge}/capture"}),search:Vt({method:"GET",fullPath:"/v1/charges/search",methodType:"search"})});var cP=d.method,Sb=d.extend({retrieve:cP({method:"GET",fullPath:"/v1/confirmation_tokens/{confirmation_token}"})});var Eb=d.method,Pb=d.extend({retrieve:Eb({method:"GET",fullPath:"/v1/country_specs/{country}"}),list:Eb({method:"GET",fullPath:"/v1/country_specs",methodType:"list"})});var Vn=d.method,Tb=d.extend({create:Vn({method:"POST",fullPath:"/v1/coupons"}),retrieve:Vn({method:"GET",fullPath:"/v1/coupons/{coupon}"}),update:Vn({method:"POST",fullPath:"/v1/coupons/{coupon}"}),list:Vn({method:"GET",fullPath:"/v1/coupons",methodType:"list"}),del:Vn({method:"DELETE",fullPath:"/v1/coupons/{coupon}"})});var He=d.method,jb=d.extend({create:He({method:"POST",fullPath:"/v1/credit_notes",requestSchema:{kind:"object",fields:{lines:{kind:"array",element:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}},responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),retrieve:He({method:"GET",fullPath:"/v1/credit_notes/{id}",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),update:He({method:"POST",fullPath:"/v1/credit_notes/{id}",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),list:He({method:"GET",fullPath:"/v1/credit_notes",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}),listLineItems:He({method:"GET",fullPath:"/v1/credit_notes/{credit_note}/lines",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}),listPreviewLineItems:He({method:"GET",fullPath:"/v1/credit_notes/preview/lines",methodType:"list",requestSchema:{kind:"object",fields:{lines:{kind:"array",element:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}},responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}),preview:He({method:"GET",fullPath:"/v1/credit_notes/preview",requestSchema:{kind:"object",fields:{lines:{kind:"array",element:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}},responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),voidCreditNote:He({method:"POST",fullPath:"/v1/credit_notes/{id}/void",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}})});var lP=d.method,Ob=d.extend({create:lP({method:"POST",fullPath:"/v1/customer_sessions"})});var C=d.method,Cb=d.extend({create:C({method:"POST",fullPath:"/v1/customers",responseSchema:{kind:"object",fields:{subscriptions:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}),retrieve:C({method:"GET",fullPath:"/v1/customers/{customer}"}),update:C({method:"POST",fullPath:"/v1/customers/{customer}",responseSchema:{kind:"object",fields:{subscriptions:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}),list:C({method:"GET",fullPath:"/v1/customers",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{subscriptions:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}}}}),del:C({method:"DELETE",fullPath:"/v1/customers/{customer}"}),createBalanceTransaction:C({method:"POST",fullPath:"/v1/customers/{customer}/balance_transactions"}),createFundingInstructions:C({method:"POST",fullPath:"/v1/customers/{customer}/funding_instructions"}),createSource:C({method:"POST",fullPath:"/v1/customers/{customer}/sources"}),createTaxId:C({method:"POST",fullPath:"/v1/customers/{customer}/tax_ids"}),deleteDiscount:C({method:"DELETE",fullPath:"/v1/customers/{customer}/discount"}),deleteSource:C({method:"DELETE",fullPath:"/v1/customers/{customer}/sources/{id}"}),deleteTaxId:C({method:"DELETE",fullPath:"/v1/customers/{customer}/tax_ids/{id}"}),listBalanceTransactions:C({method:"GET",fullPath:"/v1/customers/{customer}/balance_transactions",methodType:"list"}),listCashBalanceTransactions:C({method:"GET",fullPath:"/v1/customers/{customer}/cash_balance_transactions",methodType:"list"}),listPaymentMethods:C({method:"GET",fullPath:"/v1/customers/{customer}/payment_methods",methodType:"list"}),listSources:C({method:"GET",fullPath:"/v1/customers/{customer}/sources",methodType:"list"}),listTaxIds:C({method:"GET",fullPath:"/v1/customers/{customer}/tax_ids",methodType:"list"}),retrieveBalanceTransaction:C({method:"GET",fullPath:"/v1/customers/{customer}/balance_transactions/{transaction}"}),retrieveCashBalance:C({method:"GET",fullPath:"/v1/customers/{customer}/cash_balance"}),retrieveCashBalanceTransaction:C({method:"GET",fullPath:"/v1/customers/{customer}/cash_balance_transactions/{transaction}"}),retrievePaymentMethod:C({method:"GET",fullPath:"/v1/customers/{customer}/payment_methods/{payment_method}"}),retrieveSource:C({method:"GET",fullPath:"/v1/customers/{customer}/sources/{id}"}),retrieveTaxId:C({method:"GET",fullPath:"/v1/customers/{customer}/tax_ids/{id}"}),search:C({method:"GET",fullPath:"/v1/customers/search",methodType:"search",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{subscriptions:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}}}}),updateBalanceTransaction:C({method:"POST",fullPath:"/v1/customers/{customer}/balance_transactions/{transaction}"}),updateCashBalance:C({method:"POST",fullPath:"/v1/customers/{customer}/cash_balance"}),updateSource:C({method:"POST",fullPath:"/v1/customers/{customer}/sources/{id}"}),verifySource:C({method:"POST",fullPath:"/v1/customers/{customer}/sources/{id}/verify"})});var tr=d.method,Ab=d.extend({retrieve:tr({method:"GET",fullPath:"/v1/disputes/{dispute}"}),update:tr({method:"POST",fullPath:"/v1/disputes/{dispute}"}),list:tr({method:"GET",fullPath:"/v1/disputes",methodType:"list"}),close:tr({method:"POST",fullPath:"/v1/disputes/{dispute}/close"})});var Rb=d.method,qb=d.extend({create:Rb({method:"POST",fullPath:"/v1/ephemeral_keys",validator:(t,e)=>{if(!e.headers||!e.headers["Stripe-Version"])throw new Error("Passing apiVersion in a separate options hash is required to create an ephemeral key. See https://stripe.com/docs/api/versioning?lang=node")}}),del:Rb({method:"DELETE",fullPath:"/v1/ephemeral_keys/{key}"})});var Ib=d.method,Db=d.extend({retrieve:Ib({method:"GET",fullPath:"/v1/events/{id}"}),list:Ib({method:"GET",fullPath:"/v1/events",methodType:"list"})});var Mb=d.method,Fb=d.extend({retrieve:Mb({method:"GET",fullPath:"/v1/exchange_rates/{rate_id}"}),list:Mb({method:"GET",fullPath:"/v1/exchange_rates",methodType:"list"})});var nr=d.method,Lb=d.extend({create:nr({method:"POST",fullPath:"/v1/file_links"}),retrieve:nr({method:"GET",fullPath:"/v1/file_links/{link}"}),update:nr({method:"POST",fullPath:"/v1/file_links/{link}"}),list:nr({method:"GET",fullPath:"/v1/file_links",methodType:"list"})});var uP=(t,e,n)=>{let i=(Math.round(Math.random()*1e16)+Math.round(Math.random()*1e16)).toString();n["Content-Type"]=`multipart/form-data; boundary=${i}`;let a=new TextEncoder,r=new Uint8Array(0),o=a.encode(`\r
-`);function s(l){let p=r,m=l instanceof Uint8Array?l:new Uint8Array(a.encode(l));r=new Uint8Array(p.length+m.length+2),r.set(p),r.set(m,p.length),r.set(o,r.length-2)}function u(l){return`"${l.replace(/"|"/g,"%22").replace(/\r\n|\r|\n/g," ")}"`}let c=uh(e);for(let l in c){if(!Object.prototype.hasOwnProperty.call(c,l))continue;let p=c[l];if(s(`--${i}`),Object.prototype.hasOwnProperty.call(p,"data")){let m=p;s(`Content-Disposition: form-data; name=${u(l)}; filename=${u(m.name||"blob")}`),s(`Content-Type: ${m.type||"application/octet-stream"}`),s(""),s(m.data)}else s(`Content-Disposition: form-data; name=${u(l)}`),s(""),s(p)}return s(`--${i}--`),r};function Nb(t,e,n,i){if(e=e||{},t!=="POST")return i(null,Ge(e));this._stripe._platformFunctions.tryBufferData(e).then(a=>{let r=uP(t,a,n);return i(null,r)}).catch(a=>i(a,null))}var rc=d.method,Ub=d.extend({create:rc({method:"POST",fullPath:"/v1/files",headers:{"Content-Type":"multipart/form-data"},host:"files.stripe.com"}),retrieve:rc({method:"GET",fullPath:"/v1/files/{file}"}),list:rc({method:"GET",fullPath:"/v1/files",methodType:"list"}),requestDataProcessor:Nb});var Wn=d.method,Bb=d.extend({create:Wn({method:"POST",fullPath:"/v1/invoiceitems",requestSchema:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}},quantity_decimal:{kind:"decimal_string"},unit_amount_decimal:{kind:"decimal_string"}}},responseSchema:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"decimal_string"}}}}),retrieve:Wn({method:"GET",fullPath:"/v1/invoiceitems/{invoiceitem}",responseSchema:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"decimal_string"}}}}),update:Wn({method:"POST",fullPath:"/v1/invoiceitems/{invoiceitem}",requestSchema:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}},quantity_decimal:{kind:"decimal_string"},unit_amount_decimal:{kind:"decimal_string"}}},responseSchema:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"decimal_string"}}}}),list:Wn({method:"GET",fullPath:"/v1/invoiceitems",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"decimal_string"}}}}}}}),del:Wn({method:"DELETE",fullPath:"/v1/invoiceitems/{invoiceitem}"})});var Gb=d.method,$b=d.extend({retrieve:Gb({method:"GET",fullPath:"/v1/invoice_payments/{invoice_payment}"}),list:Gb({method:"GET",fullPath:"/v1/invoice_payments",methodType:"list"})});var ir=d.method,zb=d.extend({retrieve:ir({method:"GET",fullPath:"/v1/invoice_rendering_templates/{template}"}),list:ir({method:"GET",fullPath:"/v1/invoice_rendering_templates",methodType:"list"}),archive:ir({method:"POST",fullPath:"/v1/invoice_rendering_templates/{template}/archive"}),unarchive:ir({method:"POST",fullPath:"/v1/invoice_rendering_templates/{template}/unarchive"})});var z=d.method,Hb=d.extend({create:z({method:"POST",fullPath:"/v1/invoices",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),retrieve:z({method:"GET",fullPath:"/v1/invoices/{invoice}",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),update:z({method:"POST",fullPath:"/v1/invoices/{invoice}",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),list:z({method:"GET",fullPath:"/v1/invoices",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}),del:z({method:"DELETE",fullPath:"/v1/invoices/{invoice}"}),addLines:z({method:"POST",fullPath:"/v1/invoices/{invoice}/add_lines",requestSchema:{kind:"object",fields:{lines:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}},quantity_decimal:{kind:"decimal_string"}}}}}},responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),attachPayment:z({method:"POST",fullPath:"/v1/invoices/{invoice}/attach_payment",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),createPreview:z({method:"POST",fullPath:"/v1/invoices/create_preview",requestSchema:{kind:"object",fields:{invoice_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}},quantity_decimal:{kind:"decimal_string"},unit_amount_decimal:{kind:"decimal_string"}}}},schedule_details:{kind:"object",fields:{phases:{kind:"array",element:{kind:"object",fields:{add_invoice_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}},items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}}}}},subscription_details:{kind:"object",fields:{items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}}}},responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),finalizeInvoice:z({method:"POST",fullPath:"/v1/invoices/{invoice}/finalize",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),listLineItems:z({method:"GET",fullPath:"/v1/invoices/{invoice}/lines",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}),markUncollectible:z({method:"POST",fullPath:"/v1/invoices/{invoice}/mark_uncollectible",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),pay:z({method:"POST",fullPath:"/v1/invoices/{invoice}/pay",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),removeLines:z({method:"POST",fullPath:"/v1/invoices/{invoice}/remove_lines",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),search:z({method:"GET",fullPath:"/v1/invoices/search",methodType:"search",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}),sendInvoice:z({method:"POST",fullPath:"/v1/invoices/{invoice}/send",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),updateLines:z({method:"POST",fullPath:"/v1/invoices/{invoice}/update_lines",requestSchema:{kind:"object",fields:{lines:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}},quantity_decimal:{kind:"decimal_string"}}}}}},responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),updateLineItem:z({method:"POST",fullPath:"/v1/invoices/{invoice}/lines/{line_item_id}",requestSchema:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}},quantity_decimal:{kind:"decimal_string"}}},responseSchema:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}),voidInvoice:z({method:"POST",fullPath:"/v1/invoices/{invoice}/void",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}})});var dP=d.method,Vb=d.extend({retrieve:dP({method:"GET",fullPath:"/v1/mandates/{mandate}"})});var Wb=d.method,oc="connect.stripe.com",Kb=d.extend({basePath:"/",authorizeUrl(t,e){t=t||{},e=e||{};let n="oauth/authorize";return e.express&&(n=`express/${n}`),t.response_type||(t.response_type="code"),t.client_id||(t.client_id=this._stripe.getClientId()),t.scope||(t.scope="read_write"),`https://${oc}/${n}?${Ge(t)}`},token:Wb({method:"POST",path:"oauth/token",host:oc}),deauthorize(t,...e){return t.client_id||(t.client_id=this._stripe.getClientId()),Wb({method:"POST",path:"oauth/deauthorize",host:oc}).apply(this,[t,...e])}});var Xb=d.method,Yb=d.extend({retrieve:Xb({method:"GET",fullPath:"/v1/payment_attempt_records/{id}"}),list:Xb({method:"GET",fullPath:"/v1/payment_attempt_records",methodType:"list"})});var le=d.method,Qb=d.extend({create:le({method:"POST",fullPath:"/v1/payment_intents"}),retrieve:le({method:"GET",fullPath:"/v1/payment_intents/{intent}"}),update:le({method:"POST",fullPath:"/v1/payment_intents/{intent}"}),list:le({method:"GET",fullPath:"/v1/payment_intents",methodType:"list"}),applyCustomerBalance:le({method:"POST",fullPath:"/v1/payment_intents/{intent}/apply_customer_balance"}),cancel:le({method:"POST",fullPath:"/v1/payment_intents/{intent}/cancel"}),capture:le({method:"POST",fullPath:"/v1/payment_intents/{intent}/capture"}),confirm:le({method:"POST",fullPath:"/v1/payment_intents/{intent}/confirm"}),incrementAuthorization:le({method:"POST",fullPath:"/v1/payment_intents/{intent}/increment_authorization"}),listAmountDetailsLineItems:le({method:"GET",fullPath:"/v1/payment_intents/{intent}/amount_details_line_items",methodType:"list"}),search:le({method:"GET",fullPath:"/v1/payment_intents/search",methodType:"search"}),verifyMicrodeposits:le({method:"POST",fullPath:"/v1/payment_intents/{intent}/verify_microdeposits"})});var Kn=d.method,Jb=d.extend({create:Kn({method:"POST",fullPath:"/v1/payment_links",requestSchema:{kind:"object",fields:{line_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}},responseSchema:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}),retrieve:Kn({method:"GET",fullPath:"/v1/payment_links/{payment_link}",responseSchema:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}),update:Kn({method:"POST",fullPath:"/v1/payment_links/{payment_link}",responseSchema:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}),list:Kn({method:"GET",fullPath:"/v1/payment_links",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}),listLineItems:Kn({method:"GET",fullPath:"/v1/payment_links/{payment_link}/line_items",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}})});var ar=d.method,Zb=d.extend({create:ar({method:"POST",fullPath:"/v1/payment_method_configurations"}),retrieve:ar({method:"GET",fullPath:"/v1/payment_method_configurations/{configuration}"}),update:ar({method:"POST",fullPath:"/v1/payment_method_configurations/{configuration}"}),list:ar({method:"GET",fullPath:"/v1/payment_method_configurations",methodType:"list"})});var Xn=d.method,eg=d.extend({create:Xn({method:"POST",fullPath:"/v1/payment_method_domains"}),retrieve:Xn({method:"GET",fullPath:"/v1/payment_method_domains/{payment_method_domain}"}),update:Xn({method:"POST",fullPath:"/v1/payment_method_domains/{payment_method_domain}"}),list:Xn({method:"GET",fullPath:"/v1/payment_method_domains",methodType:"list"}),validate:Xn({method:"POST",fullPath:"/v1/payment_method_domains/{payment_method_domain}/validate"})});var Wt=d.method,tg=d.extend({create:Wt({method:"POST",fullPath:"/v1/payment_methods"}),retrieve:Wt({method:"GET",fullPath:"/v1/payment_methods/{payment_method}"}),update:Wt({method:"POST",fullPath:"/v1/payment_methods/{payment_method}"}),list:Wt({method:"GET",fullPath:"/v1/payment_methods",methodType:"list"}),attach:Wt({method:"POST",fullPath:"/v1/payment_methods/{payment_method}/attach"}),detach:Wt({method:"POST",fullPath:"/v1/payment_methods/{payment_method}/detach"})});var Ve=d.method,ng=d.extend({retrieve:Ve({method:"GET",fullPath:"/v1/payment_records/{id}"}),reportPayment:Ve({method:"POST",fullPath:"/v1/payment_records/report_payment"}),reportPaymentAttempt:Ve({method:"POST",fullPath:"/v1/payment_records/{id}/report_payment_attempt"}),reportPaymentAttemptCanceled:Ve({method:"POST",fullPath:"/v1/payment_records/{id}/report_payment_attempt_canceled"}),reportPaymentAttemptFailed:Ve({method:"POST",fullPath:"/v1/payment_records/{id}/report_payment_attempt_failed"}),reportPaymentAttemptGuaranteed:Ve({method:"POST",fullPath:"/v1/payment_records/{id}/report_payment_attempt_guaranteed"}),reportPaymentAttemptInformational:Ve({method:"POST",fullPath:"/v1/payment_records/{id}/report_payment_attempt_informational"}),reportRefund:Ve({method:"POST",fullPath:"/v1/payment_records/{id}/report_refund"})});var Kt=d.method,ig=d.extend({create:Kt({method:"POST",fullPath:"/v1/payouts"}),retrieve:Kt({method:"GET",fullPath:"/v1/payouts/{payout}"}),update:Kt({method:"POST",fullPath:"/v1/payouts/{payout}"}),list:Kt({method:"GET",fullPath:"/v1/payouts",methodType:"list"}),cancel:Kt({method:"POST",fullPath:"/v1/payouts/{payout}/cancel"}),reverse:Kt({method:"POST",fullPath:"/v1/payouts/{payout}/reverse"})});var Yn=d.method,ag=d.extend({create:Yn({method:"POST",fullPath:"/v1/plans",requestSchema:{kind:"object",fields:{amount_decimal:{kind:"decimal_string"},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"decimal_string"},unit_amount_decimal:{kind:"decimal_string"}}}}}},responseSchema:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}),retrieve:Yn({method:"GET",fullPath:"/v1/plans/{plan}",responseSchema:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}),update:Yn({method:"POST",fullPath:"/v1/plans/{plan}",responseSchema:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}),list:Yn({method:"GET",fullPath:"/v1/plans",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}),del:Yn({method:"DELETE",fullPath:"/v1/plans/{plan}"})});var Qn=d.method,rg=d.extend({create:Qn({method:"POST",fullPath:"/v1/prices",requestSchema:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"decimal_string"},unit_amount_decimal:{kind:"decimal_string"}}}},unit_amount_decimal:{kind:"decimal_string"}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"decimal_string"},unit_amount_decimal:{kind:"decimal_string"}}}},unit_amount_decimal:{kind:"decimal_string"}}},responseSchema:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}),retrieve:Qn({method:"GET",fullPath:"/v1/prices/{price}",responseSchema:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}),update:Qn({method:"POST",fullPath:"/v1/prices/{price}",responseSchema:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}),list:Qn({method:"GET",fullPath:"/v1/prices",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}),search:Qn({method:"GET",fullPath:"/v1/prices/search",methodType:"search",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}})});var ye=d.method,og=d.extend({create:ye({method:"POST",fullPath:"/v1/products",requestSchema:{kind:"object",fields:{default_price_data:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"decimal_string"},unit_amount_decimal:{kind:"decimal_string"}}}},unit_amount_decimal:{kind:"decimal_string"}}}},unit_amount_decimal:{kind:"decimal_string"}}}}}}),retrieve:ye({method:"GET",fullPath:"/v1/products/{id}"}),update:ye({method:"POST",fullPath:"/v1/products/{id}"}),list:ye({method:"GET",fullPath:"/v1/products",methodType:"list"}),del:ye({method:"DELETE",fullPath:"/v1/products/{id}"}),createFeature:ye({method:"POST",fullPath:"/v1/products/{product}/features"}),deleteFeature:ye({method:"DELETE",fullPath:"/v1/products/{product}/features/{id}"}),listFeatures:ye({method:"GET",fullPath:"/v1/products/{product}/features",methodType:"list"}),retrieveFeature:ye({method:"GET",fullPath:"/v1/products/{product}/features/{id}"}),search:ye({method:"GET",fullPath:"/v1/products/search",methodType:"search"})});var rr=d.method,sg=d.extend({create:rr({method:"POST",fullPath:"/v1/promotion_codes"}),retrieve:rr({method:"GET",fullPath:"/v1/promotion_codes/{promotion_code}"}),update:rr({method:"POST",fullPath:"/v1/promotion_codes/{promotion_code}"}),list:rr({method:"GET",fullPath:"/v1/promotion_codes",methodType:"list"})});var ke=d.method,cg=d.extend({create:ke({method:"POST",fullPath:"/v1/quotes",requestSchema:{kind:"object",fields:{line_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}},responseSchema:{kind:"object",fields:{computed:{kind:"object",fields:{upfront:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}),retrieve:ke({method:"GET",fullPath:"/v1/quotes/{quote}",responseSchema:{kind:"object",fields:{computed:{kind:"object",fields:{upfront:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}),update:ke({method:"POST",fullPath:"/v1/quotes/{quote}",requestSchema:{kind:"object",fields:{line_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}},responseSchema:{kind:"object",fields:{computed:{kind:"object",fields:{upfront:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}),list:ke({method:"GET",fullPath:"/v1/quotes",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{computed:{kind:"object",fields:{upfront:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}}}}),accept:ke({method:"POST",fullPath:"/v1/quotes/{quote}/accept",responseSchema:{kind:"object",fields:{computed:{kind:"object",fields:{upfront:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}),cancel:ke({method:"POST",fullPath:"/v1/quotes/{quote}/cancel",responseSchema:{kind:"object",fields:{computed:{kind:"object",fields:{upfront:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}),finalizeQuote:ke({method:"POST",fullPath:"/v1/quotes/{quote}/finalize",responseSchema:{kind:"object",fields:{computed:{kind:"object",fields:{upfront:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}),listComputedUpfrontLineItems:ke({method:"GET",fullPath:"/v1/quotes/{quote}/computed_upfront_line_items",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}),listLineItems:ke({method:"GET",fullPath:"/v1/quotes/{quote}/line_items",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}),pdf:ke({method:"GET",fullPath:"/v1/quotes/{quote}/pdf",host:"files.stripe.com",streaming:!0})});var Jn=d.method,lg=d.extend({create:Jn({method:"POST",fullPath:"/v1/refunds"}),retrieve:Jn({method:"GET",fullPath:"/v1/refunds/{refund}"}),update:Jn({method:"POST",fullPath:"/v1/refunds/{refund}"}),list:Jn({method:"GET",fullPath:"/v1/refunds",methodType:"list"}),cancel:Jn({method:"POST",fullPath:"/v1/refunds/{refund}/cancel"})});var sc=d.method,ug=d.extend({retrieve:sc({method:"GET",fullPath:"/v1/reviews/{review}"}),list:sc({method:"GET",fullPath:"/v1/reviews",methodType:"list"}),approve:sc({method:"POST",fullPath:"/v1/reviews/{review}/approve"})});var pP=d.method,dg=d.extend({list:pP({method:"GET",fullPath:"/v1/setup_attempts",methodType:"list"})});var lt=d.method,pg=d.extend({create:lt({method:"POST",fullPath:"/v1/setup_intents"}),retrieve:lt({method:"GET",fullPath:"/v1/setup_intents/{intent}"}),update:lt({method:"POST",fullPath:"/v1/setup_intents/{intent}"}),list:lt({method:"GET",fullPath:"/v1/setup_intents",methodType:"list"}),cancel:lt({method:"POST",fullPath:"/v1/setup_intents/{intent}/cancel"}),confirm:lt({method:"POST",fullPath:"/v1/setup_intents/{intent}/confirm"}),verifyMicrodeposits:lt({method:"POST",fullPath:"/v1/setup_intents/{intent}/verify_microdeposits"})});var or=d.method,mg=d.extend({create:or({method:"POST",fullPath:"/v1/shipping_rates"}),retrieve:or({method:"GET",fullPath:"/v1/shipping_rates/{shipping_rate_token}"}),update:or({method:"POST",fullPath:"/v1/shipping_rates/{shipping_rate_token}"}),list:or({method:"GET",fullPath:"/v1/shipping_rates",methodType:"list"})});var Zn=d.method,fg=d.extend({create:Zn({method:"POST",fullPath:"/v1/sources"}),retrieve:Zn({method:"GET",fullPath:"/v1/sources/{source}"}),update:Zn({method:"POST",fullPath:"/v1/sources/{source}"}),listSourceTransactions:Zn({method:"GET",fullPath:"/v1/sources/{source}/source_transactions",methodType:"list"}),verify:Zn({method:"POST",fullPath:"/v1/sources/{source}/verify"})});var ei=d.method,hg=d.extend({create:ei({method:"POST",fullPath:"/v1/subscription_items",requestSchema:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}},responseSchema:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}),retrieve:ei({method:"GET",fullPath:"/v1/subscription_items/{item}",responseSchema:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}),update:ei({method:"POST",fullPath:"/v1/subscription_items/{item}",requestSchema:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}},responseSchema:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}),list:ei({method:"GET",fullPath:"/v1/subscription_items",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),del:ei({method:"DELETE",fullPath:"/v1/subscription_items/{item}"})});var Xt=d.method,vg=d.extend({create:Xt({method:"POST",fullPath:"/v1/subscription_schedules",requestSchema:{kind:"object",fields:{phases:{kind:"array",element:{kind:"object",fields:{add_invoice_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}},items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}}}}}}),retrieve:Xt({method:"GET",fullPath:"/v1/subscription_schedules/{schedule}"}),update:Xt({method:"POST",fullPath:"/v1/subscription_schedules/{schedule}",requestSchema:{kind:"object",fields:{phases:{kind:"array",element:{kind:"object",fields:{add_invoice_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}},items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}}}}}}),list:Xt({method:"GET",fullPath:"/v1/subscription_schedules",methodType:"list"}),cancel:Xt({method:"POST",fullPath:"/v1/subscription_schedules/{schedule}/cancel"}),release:Xt({method:"POST",fullPath:"/v1/subscription_schedules/{schedule}/release"})});var Ae=d.method,bg=d.extend({create:Ae({method:"POST",fullPath:"/v1/subscriptions",requestSchema:{kind:"object",fields:{add_invoice_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}},items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}},responseSchema:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}),retrieve:Ae({method:"GET",fullPath:"/v1/subscriptions/{subscription_exposed_id}",responseSchema:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}),update:Ae({method:"POST",fullPath:"/v1/subscriptions/{subscription_exposed_id}",requestSchema:{kind:"object",fields:{add_invoice_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}},items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}},responseSchema:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}),list:Ae({method:"GET",fullPath:"/v1/subscriptions",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}),cancel:Ae({method:"DELETE",fullPath:"/v1/subscriptions/{subscription_exposed_id}",responseSchema:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}),deleteDiscount:Ae({method:"DELETE",fullPath:"/v1/subscriptions/{subscription_exposed_id}/discount"}),migrate:Ae({method:"POST",fullPath:"/v1/subscriptions/{subscription}/migrate",responseSchema:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}),resume:Ae({method:"POST",fullPath:"/v1/subscriptions/{subscription}/resume",responseSchema:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}),search:Ae({method:"GET",fullPath:"/v1/subscriptions/search",methodType:"search",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}})});var gg=d.method,xg=d.extend({retrieve:gg({method:"GET",fullPath:"/v1/tax_codes/{id}"}),list:gg({method:"GET",fullPath:"/v1/tax_codes",methodType:"list"})});var sr=d.method,yg=d.extend({create:sr({method:"POST",fullPath:"/v1/tax_ids"}),retrieve:sr({method:"GET",fullPath:"/v1/tax_ids/{id}"}),list:sr({method:"GET",fullPath:"/v1/tax_ids",methodType:"list"}),del:sr({method:"DELETE",fullPath:"/v1/tax_ids/{id}"})});var cr=d.method,kg=d.extend({create:cr({method:"POST",fullPath:"/v1/tax_rates"}),retrieve:cr({method:"GET",fullPath:"/v1/tax_rates/{tax_rate}"}),update:cr({method:"POST",fullPath:"/v1/tax_rates/{tax_rate}"}),list:cr({method:"GET",fullPath:"/v1/tax_rates",methodType:"list"})});var _g=d.method,wg=d.extend({create:_g({method:"POST",fullPath:"/v1/tokens"}),retrieve:_g({method:"GET",fullPath:"/v1/tokens/{token}"})});var ti=d.method,Sg=d.extend({create:ti({method:"POST",fullPath:"/v1/topups"}),retrieve:ti({method:"GET",fullPath:"/v1/topups/{topup}"}),update:ti({method:"POST",fullPath:"/v1/topups/{topup}"}),list:ti({method:"GET",fullPath:"/v1/topups",methodType:"list"}),cancel:ti({method:"POST",fullPath:"/v1/topups/{topup}/cancel"})});var We=d.method,Eg=d.extend({create:We({method:"POST",fullPath:"/v1/transfers"}),retrieve:We({method:"GET",fullPath:"/v1/transfers/{transfer}"}),update:We({method:"POST",fullPath:"/v1/transfers/{transfer}"}),list:We({method:"GET",fullPath:"/v1/transfers",methodType:"list"}),createReversal:We({method:"POST",fullPath:"/v1/transfers/{id}/reversals"}),listReversals:We({method:"GET",fullPath:"/v1/transfers/{id}/reversals",methodType:"list"}),retrieveReversal:We({method:"GET",fullPath:"/v1/transfers/{transfer}/reversals/{id}"}),updateReversal:We({method:"POST",fullPath:"/v1/transfers/{transfer}/reversals/{id}"})});var ni=d.method,Pg=d.extend({create:ni({method:"POST",fullPath:"/v1/webhook_endpoints"}),retrieve:ni({method:"GET",fullPath:"/v1/webhook_endpoints/{webhook_endpoint}"}),update:ni({method:"POST",fullPath:"/v1/webhook_endpoints/{webhook_endpoint}"}),list:ni({method:"GET",fullPath:"/v1/webhook_endpoints",methodType:"list"}),del:ni({method:"DELETE",fullPath:"/v1/webhook_endpoints/{webhook_endpoint}"})});var mP=q("apps",{Secrets:$v}),fP=q("billing",{Alerts:Rh,CreditBalanceSummary:zh,CreditBalanceTransactions:Vh,CreditGrants:Wh,MeterEventAdjustments:sv,MeterEvents:dv,Meters:mv}),hP=q("billingPortal",{Configurations:Uh,Sessions:zv}),vP=q("checkout",{Sessions:Hv}),bP=q("climate",{Orders:hv,Products:Pv,Suppliers:Qv}),gP=q("entitlements",{ActiveEntitlements:Ah,Features:nv}),xP=q("financialConnections",{Accounts:Eh,Sessions:Wv,Transactions:ib}),yP=q("forwarding",{Requests:Uv}),kP=q("identity",{VerificationReports:pb,VerificationSessions:mb}),_P=q("issuing",{Authorizations:Ih,Cardholders:Fh,Cards:Lh,Disputes:Qh,PersonalizationDesigns:kv,PhysicalBundles:Sv,Tokens:Zv,Transactions:ab}),wP=q("radar",{EarlyFraudWarnings:Zh,PaymentEvaluations:yv,ValueListItems:lb,ValueLists:ub}),SP=q("reporting",{ReportRuns:Fv,ReportTypes:Nv}),EP=q("sigma",{ScheduledQueryRuns:Gv}),PP=q("tax",{Associations:qh,Calculations:Mh,Registrations:Mv,Settings:Xv,Transactions:rb}),TP=q("terminal",{Configurations:Bh,ConnectionTokens:$h,Locations:ov,OnboardingLinks:fv,Readers:Tv}),jP=q("testHelpers",{ConfirmationTokens:Gh,Customers:Xh,Refunds:Dv,TestClocks:Jv,Issuing:q("issuing",{Authorizations:Dh,Cards:Nh,PersonalizationDesigns:_v,Transactions:ob}),Terminal:q("terminal",{Readers:jv}),Treasury:q("treasury",{InboundTransfers:av,OutboundPayments:vv,OutboundTransfers:gv,ReceivedCredits:Ov,ReceivedDebits:Rv})}),OP=q("treasury",{CreditReversals:Kh,DebitReversals:Yh,FinancialAccounts:iv,InboundTransfers:rv,OutboundPayments:bv,OutboundTransfers:xv,ReceivedCredits:Av,ReceivedDebits:Iv,TransactionEntries:tb,Transactions:cb}),CP=q("v2",{Billing:q("billing",{MeterEventAdjustments:cv,MeterEventSession:lv,MeterEventStream:uv,MeterEvents:pv}),Core:q("core",{AccountLinks:_h,AccountTokens:Sh,Accounts:Oh,EventDestinations:ev,Events:tv})});var Tg="api.stripe.com",jg="443",Og="/v1/",Cg=Hs,Ag=8e4,Rg=5,qg=.5,AP=["name","version","url","partner_id"],Ig=["authenticator","apiVersion","typescript","maxNetworkRetries","httpAgent","httpClient","timeout","host","port","protocol","telemetry","appInfo","stripeAccount","stripeContext"],RP=t=>new Fa(t,d.MAX_BUFFERED_REQUEST_METRICS);function Dg(t,e=RP){i.PACKAGE_VERSION="21.0.1",i.API_VERSION=Hs;let n=typeof process<"u"&&process.env?ph(process.env):"";i.AI_AGENT=n,i.USER_AGENT={bindings_version:i.PACKAGE_VERSION,lang:"node",typescript:!1,...dh(),...n?{ai_agent:n}:{}},i.StripeResource=d,i.StripeContext=Dn,i.resources=Yt,i.HttpClient=K,i.HttpClientResponse=Be,i.CryptoProvider=Ue,i.webhooks=kh(t),i.Decimal=$e;function i(a,r={}){if(!(this instanceof i))return new i(a,r);let o=this._getPropsFromConfig(r);this._platformFunctions=t,Object.defineProperty(this,"_emitter",{value:this._platformFunctions.createEmitter(),enumerable:!1,configurable:!1,writable:!1}),this.VERSION=i.PACKAGE_VERSION,this.on=this._emitter.on.bind(this._emitter),this.once=this._emitter.once.bind(this._emitter),this.off=this._emitter.removeListener.bind(this._emitter);let s=o.httpAgent||null;this._api={host:o.host||Tg,port:o.port||jg,protocol:o.protocol||"https",basePath:Og,version:o.apiVersion||Cg,timeout:va("timeout",o.timeout,Ag),maxNetworkRetries:va("maxNetworkRetries",o.maxNetworkRetries,2),agent:s,httpClient:o.httpClient||(s?this._platformFunctions.createNodeHttpClient(s):this._platformFunctions.createDefaultHttpClient()),dev:!1,stripeAccount:o.stripeAccount||null,stripeContext:o.stripeContext||null};let u=o.typescript||!1;u!==i.USER_AGENT.typescript&&(i.USER_AGENT.typescript=u),o.appInfo&&this._setAppInfo(o.appInfo),this._prepResources(),this._setAuthenticator(a,o.authenticator),this.errors=Ia,this.webhooks=i.webhooks,this._prevRequestMetrics=[],this._enableTelemetry=o.telemetry!==!1,this._requestSender=e(this),this.StripeResource=i.StripeResource,this.Decimal=i.Decimal}return i.errors=Ia,i.createNodeHttpClient=t.createNodeHttpClient,i.createFetchHttpClient=t.createFetchHttpClient,i.createNodeCryptoProvider=t.createNodeCryptoProvider,i.createSubtleCryptoProvider=t.createSubtleCryptoProvider,i.prototype={_appInfo:void 0,on:null,off:null,once:null,VERSION:null,StripeResource:null,webhooks:null,errors:null,_api:null,_prevRequestMetrics:null,_emitter:null,_enableTelemetry:null,_requestSender:null,_platformFunctions:null,rawRequest(a,r,o,s){return this._requestSender._rawRequest(a,r,o,s)},_setAuthenticator(a,r){if(a&&r)throw new Error("Can't specify both apiKey and authenticator");if(!a&&!r)throw new Error("Neither apiKey nor config.authenticator provided");this._authenticator=a?pa(a):r},_setAppInfo(a){if(a&&typeof a!="object")throw new Error("AppInfo must be an object.");if(a&&!a.name)throw new Error("AppInfo.name is required");a=a||{},this._appInfo=AP.reduce((r,o)=>(typeof a[o]=="string"&&(r=r||{},r[o]=a[o]),r),{})},_setApiField(a,r){this._api[a]=r},getApiField(a){return this._api[a]},setClientId(a){this._clientId=a},getClientId(){return this._clientId},getConstant:a=>{switch(a){case"DEFAULT_HOST":return Tg;case"DEFAULT_PORT":return jg;case"DEFAULT_BASE_PATH":return Og;case"DEFAULT_API_VERSION":return Cg;case"DEFAULT_TIMEOUT":return Ag;case"MAX_NETWORK_RETRY_DELAY_SEC":return Rg;case"INITIAL_NETWORK_RETRY_DELAY_SEC":return qg}return i[a]},getMaxNetworkRetries(){return this.getApiField("maxNetworkRetries")},_setApiNumberField(a,r,o){let s=va(a,r,o);this._setApiField(a,s)},getMaxNetworkRetryDelay(){return Rg},getInitialNetworkRetryDelay(){return qg},getClientUserAgent(a){return this.getClientUserAgentSeeded(i.USER_AGENT,a)},getClientUserAgentSeeded(a,r){let o={};for(let c in a)Object.prototype.hasOwnProperty.call(a,c)&&(o[c]=encodeURIComponent(a[c]??"null"));let s=this._platformFunctions.getPlatformInfo();s&&this.getTelemetryEnabled()?o.platform=encodeURIComponent(s):delete o.platform;let u=this.getApiField("httpClient");u&&(o.httplib=encodeURIComponent(u.getClientName())),this._appInfo&&(o.application=this._appInfo),r(JSON.stringify(o))},getAppInfoAsString(){if(!this._appInfo)return"";let a=this._appInfo.name;return this._appInfo.version&&(a+=`/${this._appInfo.version}`),this._appInfo.url&&(a+=` (${this._appInfo.url})`),a},getTelemetryEnabled(){return this._enableTelemetry},_prepResources(){for(let a in Yt)Object.prototype.hasOwnProperty.call(Yt,a)&&(this[lh(a)]=new Yt[a](this))},_getPropsFromConfig(a){if(!a)return{};let r=typeof a=="string";if(!(a===Object(a)&&!Array.isArray(a))&&!r)throw new Error("Config must either be an object or a string");if(r)return{apiVersion:a};if(Object.keys(a).filter(u=>!Ig.includes(u)).length>0)throw new Error(`Config object may only contain the following: ${Ig.join(", ")}`);return a},parseEventNotification(a,r,o,s,u,c){this.webhooks.signature.verifyHeader(a,r,o,s||this.webhooks.DEFAULT_TOLERANCE,u,c);let l=a instanceof Uint8Array?JSON.parse(new TextDecoder("utf8").decode(a)):JSON.parse(a);if(l&&l.object==="event")throw new Error("You passed a webhook payload to stripe.parseEventNotification, which expects an event notification. Use stripe.webhooks.constructEvent instead.");return l.context&&(l.context=Dn.parse(l.context)),l.fetchEvent=()=>this._requestSender._rawRequest("GET",`/v2/core/events/${l.id}`,void 0,{stripeContext:l.context,headers:{"Stripe-Request-Trigger":`event=${l.id}`}},["fetch_event"]),l.fetchRelatedObject=()=>l.related_object?this._requestSender._rawRequest("GET",l.related_object.url,void 0,{stripeContext:l.context,headers:{"Stripe-Request-Trigger":`event=${l.id}`}},["fetch_related_object"]):Promise.resolve(null),l}},i}var qP=Dg(new Da),Mg=qP;var lc="";try{lc=Lg.default.readFileSync(Ng.default.resolve(process.cwd(),"eqrs-tool.html"),"utf-8")}catch(t){console.error("Warning: Could not load eqrs-tool.html",t)}var uc=process.env.STRIPE_SECRET_KEY||"sk_test_placeholder",ut=uc!=="sk_test_placeholder"&&uc.startsWith("sk_"),Ke=null;ut&&(Ke=new Mg(uc,{apiVersion:"2023-10-16"}));var IP=process.env.STRIPE_PRICE_MONTHLY||"price_monthly_placeholder",Fg=process.env.STRIPE_PRICE_ANNUAL||"price_annual_placeholder",DP=process.env.STRIPE_WEBHOOK_SECRET||"whsec_placeholder";async function Qt(t,e,n){let i=t.query.token||t.headers["x-auth-token"];if(!i)return e.status(401).json({message:"Authentification requise"});let a=await E.getSessionByToken(i);if(!a)return e.status(401).json({message:"Session invalide ou expir\xE9e"});if(new Date(a.expiresAt)<new Date)return await E.deleteSession(i),e.status(401).json({message:"Session expir\xE9e, veuillez vous reconnecter"});let r=await E.getUser(a.userId);if(!r)return e.status(401).json({message:"Utilisateur introuvable"});t.user=E.toSafeUser(r),n()}async function MP(t,e,n){if(!t.user)return e.status(401).json({message:"Authentification requise"});let i=await E.getSubscriptionByUserId(t.user.id);if(!i||i.status!=="active"&&i.status!=="trialing")return e.status(403).json({message:"Abonnement actif requis pour acc\xE9der \xE0 cet outil"});if(i.status==="trialing"&&i.currentPeriodEnd&&new Date(i.currentPeriodEnd)<new Date)return e.status(403).json({message:"Votre p\xE9riode d'essai gratuit de 14 jours est termin\xE9e. Veuillez souscrire un abonnement pour continuer."});n()}function FP(t){let e=t.replace(/<meta[^>]*content-disposition[^>]*>/gi,"");return e=e.replace("</head>",`
+`);function s(l){let p=r,m=l instanceof Uint8Array?l:new Uint8Array(a.encode(l));r=new Uint8Array(p.length+m.length+2),r.set(p),r.set(m,p.length),r.set(o,r.length-2)}function u(l){return`"${l.replace(/"|"/g,"%22").replace(/\r\n|\r|\n/g," ")}"`}let c=uh(e);for(let l in c){if(!Object.prototype.hasOwnProperty.call(c,l))continue;let p=c[l];if(s(`--${i}`),Object.prototype.hasOwnProperty.call(p,"data")){let m=p;s(`Content-Disposition: form-data; name=${u(l)}; filename=${u(m.name||"blob")}`),s(`Content-Type: ${m.type||"application/octet-stream"}`),s(""),s(m.data)}else s(`Content-Disposition: form-data; name=${u(l)}`),s(""),s(p)}return s(`--${i}--`),r};function Nb(t,e,n,i){if(e=e||{},t!=="POST")return i(null,Ge(e));this._stripe._platformFunctions.tryBufferData(e).then(a=>{let r=uP(t,a,n);return i(null,r)}).catch(a=>i(a,null))}var rc=d.method,Ub=d.extend({create:rc({method:"POST",fullPath:"/v1/files",headers:{"Content-Type":"multipart/form-data"},host:"files.stripe.com"}),retrieve:rc({method:"GET",fullPath:"/v1/files/{file}"}),list:rc({method:"GET",fullPath:"/v1/files",methodType:"list"}),requestDataProcessor:Nb});var Wn=d.method,Bb=d.extend({create:Wn({method:"POST",fullPath:"/v1/invoiceitems",requestSchema:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}},quantity_decimal:{kind:"decimal_string"},unit_amount_decimal:{kind:"decimal_string"}}},responseSchema:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"decimal_string"}}}}),retrieve:Wn({method:"GET",fullPath:"/v1/invoiceitems/{invoiceitem}",responseSchema:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"decimal_string"}}}}),update:Wn({method:"POST",fullPath:"/v1/invoiceitems/{invoiceitem}",requestSchema:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}},quantity_decimal:{kind:"decimal_string"},unit_amount_decimal:{kind:"decimal_string"}}},responseSchema:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"decimal_string"}}}}),list:Wn({method:"GET",fullPath:"/v1/invoiceitems",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"decimal_string"}}}}}}}),del:Wn({method:"DELETE",fullPath:"/v1/invoiceitems/{invoiceitem}"})});var Gb=d.method,$b=d.extend({retrieve:Gb({method:"GET",fullPath:"/v1/invoice_payments/{invoice_payment}"}),list:Gb({method:"GET",fullPath:"/v1/invoice_payments",methodType:"list"})});var ir=d.method,zb=d.extend({retrieve:ir({method:"GET",fullPath:"/v1/invoice_rendering_templates/{template}"}),list:ir({method:"GET",fullPath:"/v1/invoice_rendering_templates",methodType:"list"}),archive:ir({method:"POST",fullPath:"/v1/invoice_rendering_templates/{template}/archive"}),unarchive:ir({method:"POST",fullPath:"/v1/invoice_rendering_templates/{template}/unarchive"})});var z=d.method,Hb=d.extend({create:z({method:"POST",fullPath:"/v1/invoices",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),retrieve:z({method:"GET",fullPath:"/v1/invoices/{invoice}",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),update:z({method:"POST",fullPath:"/v1/invoices/{invoice}",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),list:z({method:"GET",fullPath:"/v1/invoices",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}),del:z({method:"DELETE",fullPath:"/v1/invoices/{invoice}"}),addLines:z({method:"POST",fullPath:"/v1/invoices/{invoice}/add_lines",requestSchema:{kind:"object",fields:{lines:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}},quantity_decimal:{kind:"decimal_string"}}}}}},responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),attachPayment:z({method:"POST",fullPath:"/v1/invoices/{invoice}/attach_payment",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),createPreview:z({method:"POST",fullPath:"/v1/invoices/create_preview",requestSchema:{kind:"object",fields:{invoice_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}},quantity_decimal:{kind:"decimal_string"},unit_amount_decimal:{kind:"decimal_string"}}}},schedule_details:{kind:"object",fields:{phases:{kind:"array",element:{kind:"object",fields:{add_invoice_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}},items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}}}}},subscription_details:{kind:"object",fields:{items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}}}},responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),finalizeInvoice:z({method:"POST",fullPath:"/v1/invoices/{invoice}/finalize",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),listLineItems:z({method:"GET",fullPath:"/v1/invoices/{invoice}/lines",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}),markUncollectible:z({method:"POST",fullPath:"/v1/invoices/{invoice}/mark_uncollectible",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),pay:z({method:"POST",fullPath:"/v1/invoices/{invoice}/pay",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),removeLines:z({method:"POST",fullPath:"/v1/invoices/{invoice}/remove_lines",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),search:z({method:"GET",fullPath:"/v1/invoices/search",methodType:"search",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}),sendInvoice:z({method:"POST",fullPath:"/v1/invoices/{invoice}/send",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),updateLines:z({method:"POST",fullPath:"/v1/invoices/{invoice}/update_lines",requestSchema:{kind:"object",fields:{lines:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}},quantity_decimal:{kind:"decimal_string"}}}}}},responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),updateLineItem:z({method:"POST",fullPath:"/v1/invoices/{invoice}/lines/{line_item_id}",requestSchema:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}},quantity_decimal:{kind:"decimal_string"}}},responseSchema:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}),voidInvoice:z({method:"POST",fullPath:"/v1/invoices/{invoice}/void",responseSchema:{kind:"object",fields:{lines:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{pricing:{kind:"nullable",inner:{kind:"object",fields:{unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},quantity_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}})});var dP=d.method,Vb=d.extend({retrieve:dP({method:"GET",fullPath:"/v1/mandates/{mandate}"})});var Wb=d.method,oc="connect.stripe.com",Kb=d.extend({basePath:"/",authorizeUrl(t,e){t=t||{},e=e||{};let n="oauth/authorize";return e.express&&(n=`express/${n}`),t.response_type||(t.response_type="code"),t.client_id||(t.client_id=this._stripe.getClientId()),t.scope||(t.scope="read_write"),`https://${oc}/${n}?${Ge(t)}`},token:Wb({method:"POST",path:"oauth/token",host:oc}),deauthorize(t,...e){return t.client_id||(t.client_id=this._stripe.getClientId()),Wb({method:"POST",path:"oauth/deauthorize",host:oc}).apply(this,[t,...e])}});var Xb=d.method,Yb=d.extend({retrieve:Xb({method:"GET",fullPath:"/v1/payment_attempt_records/{id}"}),list:Xb({method:"GET",fullPath:"/v1/payment_attempt_records",methodType:"list"})});var le=d.method,Qb=d.extend({create:le({method:"POST",fullPath:"/v1/payment_intents"}),retrieve:le({method:"GET",fullPath:"/v1/payment_intents/{intent}"}),update:le({method:"POST",fullPath:"/v1/payment_intents/{intent}"}),list:le({method:"GET",fullPath:"/v1/payment_intents",methodType:"list"}),applyCustomerBalance:le({method:"POST",fullPath:"/v1/payment_intents/{intent}/apply_customer_balance"}),cancel:le({method:"POST",fullPath:"/v1/payment_intents/{intent}/cancel"}),capture:le({method:"POST",fullPath:"/v1/payment_intents/{intent}/capture"}),confirm:le({method:"POST",fullPath:"/v1/payment_intents/{intent}/confirm"}),incrementAuthorization:le({method:"POST",fullPath:"/v1/payment_intents/{intent}/increment_authorization"}),listAmountDetailsLineItems:le({method:"GET",fullPath:"/v1/payment_intents/{intent}/amount_details_line_items",methodType:"list"}),search:le({method:"GET",fullPath:"/v1/payment_intents/search",methodType:"search"}),verifyMicrodeposits:le({method:"POST",fullPath:"/v1/payment_intents/{intent}/verify_microdeposits"})});var Kn=d.method,Jb=d.extend({create:Kn({method:"POST",fullPath:"/v1/payment_links",requestSchema:{kind:"object",fields:{line_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}},responseSchema:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}),retrieve:Kn({method:"GET",fullPath:"/v1/payment_links/{payment_link}",responseSchema:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}),update:Kn({method:"POST",fullPath:"/v1/payment_links/{payment_link}",responseSchema:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}),list:Kn({method:"GET",fullPath:"/v1/payment_links",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}),listLineItems:Kn({method:"GET",fullPath:"/v1/payment_links/{payment_link}/line_items",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}})});var ar=d.method,Zb=d.extend({create:ar({method:"POST",fullPath:"/v1/payment_method_configurations"}),retrieve:ar({method:"GET",fullPath:"/v1/payment_method_configurations/{configuration}"}),update:ar({method:"POST",fullPath:"/v1/payment_method_configurations/{configuration}"}),list:ar({method:"GET",fullPath:"/v1/payment_method_configurations",methodType:"list"})});var Xn=d.method,eg=d.extend({create:Xn({method:"POST",fullPath:"/v1/payment_method_domains"}),retrieve:Xn({method:"GET",fullPath:"/v1/payment_method_domains/{payment_method_domain}"}),update:Xn({method:"POST",fullPath:"/v1/payment_method_domains/{payment_method_domain}"}),list:Xn({method:"GET",fullPath:"/v1/payment_method_domains",methodType:"list"}),validate:Xn({method:"POST",fullPath:"/v1/payment_method_domains/{payment_method_domain}/validate"})});var Wt=d.method,tg=d.extend({create:Wt({method:"POST",fullPath:"/v1/payment_methods"}),retrieve:Wt({method:"GET",fullPath:"/v1/payment_methods/{payment_method}"}),update:Wt({method:"POST",fullPath:"/v1/payment_methods/{payment_method}"}),list:Wt({method:"GET",fullPath:"/v1/payment_methods",methodType:"list"}),attach:Wt({method:"POST",fullPath:"/v1/payment_methods/{payment_method}/attach"}),detach:Wt({method:"POST",fullPath:"/v1/payment_methods/{payment_method}/detach"})});var Ve=d.method,ng=d.extend({retrieve:Ve({method:"GET",fullPath:"/v1/payment_records/{id}"}),reportPayment:Ve({method:"POST",fullPath:"/v1/payment_records/report_payment"}),reportPaymentAttempt:Ve({method:"POST",fullPath:"/v1/payment_records/{id}/report_payment_attempt"}),reportPaymentAttemptCanceled:Ve({method:"POST",fullPath:"/v1/payment_records/{id}/report_payment_attempt_canceled"}),reportPaymentAttemptFailed:Ve({method:"POST",fullPath:"/v1/payment_records/{id}/report_payment_attempt_failed"}),reportPaymentAttemptGuaranteed:Ve({method:"POST",fullPath:"/v1/payment_records/{id}/report_payment_attempt_guaranteed"}),reportPaymentAttemptInformational:Ve({method:"POST",fullPath:"/v1/payment_records/{id}/report_payment_attempt_informational"}),reportRefund:Ve({method:"POST",fullPath:"/v1/payment_records/{id}/report_refund"})});var Kt=d.method,ig=d.extend({create:Kt({method:"POST",fullPath:"/v1/payouts"}),retrieve:Kt({method:"GET",fullPath:"/v1/payouts/{payout}"}),update:Kt({method:"POST",fullPath:"/v1/payouts/{payout}"}),list:Kt({method:"GET",fullPath:"/v1/payouts",methodType:"list"}),cancel:Kt({method:"POST",fullPath:"/v1/payouts/{payout}/cancel"}),reverse:Kt({method:"POST",fullPath:"/v1/payouts/{payout}/reverse"})});var Yn=d.method,ag=d.extend({create:Yn({method:"POST",fullPath:"/v1/plans",requestSchema:{kind:"object",fields:{amount_decimal:{kind:"decimal_string"},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"decimal_string"},unit_amount_decimal:{kind:"decimal_string"}}}}}},responseSchema:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}),retrieve:Yn({method:"GET",fullPath:"/v1/plans/{plan}",responseSchema:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}),update:Yn({method:"POST",fullPath:"/v1/plans/{plan}",responseSchema:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}),list:Yn({method:"GET",fullPath:"/v1/plans",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}),del:Yn({method:"DELETE",fullPath:"/v1/plans/{plan}"})});var Qn=d.method,rg=d.extend({create:Qn({method:"POST",fullPath:"/v1/prices",requestSchema:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"decimal_string"},unit_amount_decimal:{kind:"decimal_string"}}}},unit_amount_decimal:{kind:"decimal_string"}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"decimal_string"},unit_amount_decimal:{kind:"decimal_string"}}}},unit_amount_decimal:{kind:"decimal_string"}}},responseSchema:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}),retrieve:Qn({method:"GET",fullPath:"/v1/prices/{price}",responseSchema:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}),update:Qn({method:"POST",fullPath:"/v1/prices/{price}",responseSchema:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}),list:Qn({method:"GET",fullPath:"/v1/prices",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}),search:Qn({method:"GET",fullPath:"/v1/prices/search",methodType:"search",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}})});var ye=d.method,og=d.extend({create:ye({method:"POST",fullPath:"/v1/products",requestSchema:{kind:"object",fields:{default_price_data:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"decimal_string"},unit_amount_decimal:{kind:"decimal_string"}}}},unit_amount_decimal:{kind:"decimal_string"}}}},unit_amount_decimal:{kind:"decimal_string"}}}}}}),retrieve:ye({method:"GET",fullPath:"/v1/products/{id}"}),update:ye({method:"POST",fullPath:"/v1/products/{id}"}),list:ye({method:"GET",fullPath:"/v1/products",methodType:"list"}),del:ye({method:"DELETE",fullPath:"/v1/products/{id}"}),createFeature:ye({method:"POST",fullPath:"/v1/products/{product}/features"}),deleteFeature:ye({method:"DELETE",fullPath:"/v1/products/{product}/features/{id}"}),listFeatures:ye({method:"GET",fullPath:"/v1/products/{product}/features",methodType:"list"}),retrieveFeature:ye({method:"GET",fullPath:"/v1/products/{product}/features/{id}"}),search:ye({method:"GET",fullPath:"/v1/products/search",methodType:"search"})});var rr=d.method,sg=d.extend({create:rr({method:"POST",fullPath:"/v1/promotion_codes"}),retrieve:rr({method:"GET",fullPath:"/v1/promotion_codes/{promotion_code}"}),update:rr({method:"POST",fullPath:"/v1/promotion_codes/{promotion_code}"}),list:rr({method:"GET",fullPath:"/v1/promotion_codes",methodType:"list"})});var ke=d.method,cg=d.extend({create:ke({method:"POST",fullPath:"/v1/quotes",requestSchema:{kind:"object",fields:{line_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}},responseSchema:{kind:"object",fields:{computed:{kind:"object",fields:{upfront:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}),retrieve:ke({method:"GET",fullPath:"/v1/quotes/{quote}",responseSchema:{kind:"object",fields:{computed:{kind:"object",fields:{upfront:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}),update:ke({method:"POST",fullPath:"/v1/quotes/{quote}",requestSchema:{kind:"object",fields:{line_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}},responseSchema:{kind:"object",fields:{computed:{kind:"object",fields:{upfront:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}),list:ke({method:"GET",fullPath:"/v1/quotes",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{computed:{kind:"object",fields:{upfront:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}}}}),accept:ke({method:"POST",fullPath:"/v1/quotes/{quote}/accept",responseSchema:{kind:"object",fields:{computed:{kind:"object",fields:{upfront:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}),cancel:ke({method:"POST",fullPath:"/v1/quotes/{quote}/cancel",responseSchema:{kind:"object",fields:{computed:{kind:"object",fields:{upfront:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}),finalizeQuote:ke({method:"POST",fullPath:"/v1/quotes/{quote}/finalize",responseSchema:{kind:"object",fields:{computed:{kind:"object",fields:{upfront:{kind:"object",fields:{line_items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}}}),listComputedUpfrontLineItems:ke({method:"GET",fullPath:"/v1/quotes/{quote}/computed_upfront_line_items",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}),listLineItems:ke({method:"GET",fullPath:"/v1/quotes/{quote}/line_items",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{price:{kind:"nullable",inner:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}),pdf:ke({method:"GET",fullPath:"/v1/quotes/{quote}/pdf",host:"files.stripe.com",streaming:!0})});var Jn=d.method,lg=d.extend({create:Jn({method:"POST",fullPath:"/v1/refunds"}),retrieve:Jn({method:"GET",fullPath:"/v1/refunds/{refund}"}),update:Jn({method:"POST",fullPath:"/v1/refunds/{refund}"}),list:Jn({method:"GET",fullPath:"/v1/refunds",methodType:"list"}),cancel:Jn({method:"POST",fullPath:"/v1/refunds/{refund}/cancel"})});var sc=d.method,ug=d.extend({retrieve:sc({method:"GET",fullPath:"/v1/reviews/{review}"}),list:sc({method:"GET",fullPath:"/v1/reviews",methodType:"list"}),approve:sc({method:"POST",fullPath:"/v1/reviews/{review}/approve"})});var pP=d.method,dg=d.extend({list:pP({method:"GET",fullPath:"/v1/setup_attempts",methodType:"list"})});var lt=d.method,pg=d.extend({create:lt({method:"POST",fullPath:"/v1/setup_intents"}),retrieve:lt({method:"GET",fullPath:"/v1/setup_intents/{intent}"}),update:lt({method:"POST",fullPath:"/v1/setup_intents/{intent}"}),list:lt({method:"GET",fullPath:"/v1/setup_intents",methodType:"list"}),cancel:lt({method:"POST",fullPath:"/v1/setup_intents/{intent}/cancel"}),confirm:lt({method:"POST",fullPath:"/v1/setup_intents/{intent}/confirm"}),verifyMicrodeposits:lt({method:"POST",fullPath:"/v1/setup_intents/{intent}/verify_microdeposits"})});var or=d.method,mg=d.extend({create:or({method:"POST",fullPath:"/v1/shipping_rates"}),retrieve:or({method:"GET",fullPath:"/v1/shipping_rates/{shipping_rate_token}"}),update:or({method:"POST",fullPath:"/v1/shipping_rates/{shipping_rate_token}"}),list:or({method:"GET",fullPath:"/v1/shipping_rates",methodType:"list"})});var Zn=d.method,fg=d.extend({create:Zn({method:"POST",fullPath:"/v1/sources"}),retrieve:Zn({method:"GET",fullPath:"/v1/sources/{source}"}),update:Zn({method:"POST",fullPath:"/v1/sources/{source}"}),listSourceTransactions:Zn({method:"GET",fullPath:"/v1/sources/{source}/source_transactions",methodType:"list"}),verify:Zn({method:"POST",fullPath:"/v1/sources/{source}/verify"})});var ei=d.method,hg=d.extend({create:ei({method:"POST",fullPath:"/v1/subscription_items",requestSchema:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}},responseSchema:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}),retrieve:ei({method:"GET",fullPath:"/v1/subscription_items/{item}",responseSchema:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}),update:ei({method:"POST",fullPath:"/v1/subscription_items/{item}",requestSchema:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}},responseSchema:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}),list:ei({method:"GET",fullPath:"/v1/subscription_items",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}),del:ei({method:"DELETE",fullPath:"/v1/subscription_items/{item}"})});var Xt=d.method,vg=d.extend({create:Xt({method:"POST",fullPath:"/v1/subscription_schedules",requestSchema:{kind:"object",fields:{phases:{kind:"array",element:{kind:"object",fields:{add_invoice_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}},items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}}}}}}),retrieve:Xt({method:"GET",fullPath:"/v1/subscription_schedules/{schedule}"}),update:Xt({method:"POST",fullPath:"/v1/subscription_schedules/{schedule}",requestSchema:{kind:"object",fields:{phases:{kind:"array",element:{kind:"object",fields:{add_invoice_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}},items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}}}}}}),list:Xt({method:"GET",fullPath:"/v1/subscription_schedules",methodType:"list"}),cancel:Xt({method:"POST",fullPath:"/v1/subscription_schedules/{schedule}/cancel"}),release:Xt({method:"POST",fullPath:"/v1/subscription_schedules/{schedule}/release"})});var Ae=d.method,bg=d.extend({create:Ae({method:"POST",fullPath:"/v1/subscriptions",requestSchema:{kind:"object",fields:{add_invoice_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}},items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}},responseSchema:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}),retrieve:Ae({method:"GET",fullPath:"/v1/subscriptions/{subscription_exposed_id}",responseSchema:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}),update:Ae({method:"POST",fullPath:"/v1/subscriptions/{subscription_exposed_id}",requestSchema:{kind:"object",fields:{add_invoice_items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}},items:{kind:"array",element:{kind:"object",fields:{price_data:{kind:"object",fields:{unit_amount_decimal:{kind:"decimal_string"}}}}}}}},responseSchema:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}),list:Ae({method:"GET",fullPath:"/v1/subscriptions",methodType:"list",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}}),cancel:Ae({method:"DELETE",fullPath:"/v1/subscriptions/{subscription_exposed_id}",responseSchema:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}),deleteDiscount:Ae({method:"DELETE",fullPath:"/v1/subscriptions/{subscription_exposed_id}/discount"}),migrate:Ae({method:"POST",fullPath:"/v1/subscriptions/{subscription}/migrate",responseSchema:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}),resume:Ae({method:"POST",fullPath:"/v1/subscriptions/{subscription}/resume",responseSchema:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}),search:Ae({method:"GET",fullPath:"/v1/subscriptions/search",methodType:"search",responseSchema:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{items:{kind:"object",fields:{data:{kind:"array",element:{kind:"object",fields:{plan:{kind:"object",fields:{amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}},price:{kind:"object",fields:{currency_options:{kind:"array",element:{kind:"object",fields:{tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},tiers:{kind:"array",element:{kind:"object",fields:{flat_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}},unit_amount_decimal:{kind:"nullable",inner:{kind:"decimal_string"}}}}}}}}}}}}}}})});var gg=d.method,xg=d.extend({retrieve:gg({method:"GET",fullPath:"/v1/tax_codes/{id}"}),list:gg({method:"GET",fullPath:"/v1/tax_codes",methodType:"list"})});var sr=d.method,yg=d.extend({create:sr({method:"POST",fullPath:"/v1/tax_ids"}),retrieve:sr({method:"GET",fullPath:"/v1/tax_ids/{id}"}),list:sr({method:"GET",fullPath:"/v1/tax_ids",methodType:"list"}),del:sr({method:"DELETE",fullPath:"/v1/tax_ids/{id}"})});var cr=d.method,kg=d.extend({create:cr({method:"POST",fullPath:"/v1/tax_rates"}),retrieve:cr({method:"GET",fullPath:"/v1/tax_rates/{tax_rate}"}),update:cr({method:"POST",fullPath:"/v1/tax_rates/{tax_rate}"}),list:cr({method:"GET",fullPath:"/v1/tax_rates",methodType:"list"})});var _g=d.method,wg=d.extend({create:_g({method:"POST",fullPath:"/v1/tokens"}),retrieve:_g({method:"GET",fullPath:"/v1/tokens/{token}"})});var ti=d.method,Sg=d.extend({create:ti({method:"POST",fullPath:"/v1/topups"}),retrieve:ti({method:"GET",fullPath:"/v1/topups/{topup}"}),update:ti({method:"POST",fullPath:"/v1/topups/{topup}"}),list:ti({method:"GET",fullPath:"/v1/topups",methodType:"list"}),cancel:ti({method:"POST",fullPath:"/v1/topups/{topup}/cancel"})});var We=d.method,Eg=d.extend({create:We({method:"POST",fullPath:"/v1/transfers"}),retrieve:We({method:"GET",fullPath:"/v1/transfers/{transfer}"}),update:We({method:"POST",fullPath:"/v1/transfers/{transfer}"}),list:We({method:"GET",fullPath:"/v1/transfers",methodType:"list"}),createReversal:We({method:"POST",fullPath:"/v1/transfers/{id}/reversals"}),listReversals:We({method:"GET",fullPath:"/v1/transfers/{id}/reversals",methodType:"list"}),retrieveReversal:We({method:"GET",fullPath:"/v1/transfers/{transfer}/reversals/{id}"}),updateReversal:We({method:"POST",fullPath:"/v1/transfers/{transfer}/reversals/{id}"})});var ni=d.method,Pg=d.extend({create:ni({method:"POST",fullPath:"/v1/webhook_endpoints"}),retrieve:ni({method:"GET",fullPath:"/v1/webhook_endpoints/{webhook_endpoint}"}),update:ni({method:"POST",fullPath:"/v1/webhook_endpoints/{webhook_endpoint}"}),list:ni({method:"GET",fullPath:"/v1/webhook_endpoints",methodType:"list"}),del:ni({method:"DELETE",fullPath:"/v1/webhook_endpoints/{webhook_endpoint}"})});var mP=q("apps",{Secrets:$v}),fP=q("billing",{Alerts:Rh,CreditBalanceSummary:zh,CreditBalanceTransactions:Vh,CreditGrants:Wh,MeterEventAdjustments:sv,MeterEvents:dv,Meters:mv}),hP=q("billingPortal",{Configurations:Uh,Sessions:zv}),vP=q("checkout",{Sessions:Hv}),bP=q("climate",{Orders:hv,Products:Pv,Suppliers:Qv}),gP=q("entitlements",{ActiveEntitlements:Ah,Features:nv}),xP=q("financialConnections",{Accounts:Eh,Sessions:Wv,Transactions:ib}),yP=q("forwarding",{Requests:Uv}),kP=q("identity",{VerificationReports:pb,VerificationSessions:mb}),_P=q("issuing",{Authorizations:Ih,Cardholders:Fh,Cards:Lh,Disputes:Qh,PersonalizationDesigns:kv,PhysicalBundles:Sv,Tokens:Zv,Transactions:ab}),wP=q("radar",{EarlyFraudWarnings:Zh,PaymentEvaluations:yv,ValueListItems:lb,ValueLists:ub}),SP=q("reporting",{ReportRuns:Fv,ReportTypes:Nv}),EP=q("sigma",{ScheduledQueryRuns:Gv}),PP=q("tax",{Associations:qh,Calculations:Mh,Registrations:Mv,Settings:Xv,Transactions:rb}),TP=q("terminal",{Configurations:Bh,ConnectionTokens:$h,Locations:ov,OnboardingLinks:fv,Readers:Tv}),jP=q("testHelpers",{ConfirmationTokens:Gh,Customers:Xh,Refunds:Dv,TestClocks:Jv,Issuing:q("issuing",{Authorizations:Dh,Cards:Nh,PersonalizationDesigns:_v,Transactions:ob}),Terminal:q("terminal",{Readers:jv}),Treasury:q("treasury",{InboundTransfers:av,OutboundPayments:vv,OutboundTransfers:gv,ReceivedCredits:Ov,ReceivedDebits:Rv})}),OP=q("treasury",{CreditReversals:Kh,DebitReversals:Yh,FinancialAccounts:iv,InboundTransfers:rv,OutboundPayments:bv,OutboundTransfers:xv,ReceivedCredits:Av,ReceivedDebits:Iv,TransactionEntries:tb,Transactions:cb}),CP=q("v2",{Billing:q("billing",{MeterEventAdjustments:cv,MeterEventSession:lv,MeterEventStream:uv,MeterEvents:pv}),Core:q("core",{AccountLinks:_h,AccountTokens:Sh,Accounts:Oh,EventDestinations:ev,Events:tv})});var Tg="api.stripe.com",jg="443",Og="/v1/",Cg=Hs,Ag=8e4,Rg=5,qg=.5,AP=["name","version","url","partner_id"],Ig=["authenticator","apiVersion","typescript","maxNetworkRetries","httpAgent","httpClient","timeout","host","port","protocol","telemetry","appInfo","stripeAccount","stripeContext"],RP=t=>new Fa(t,d.MAX_BUFFERED_REQUEST_METRICS);function Dg(t,e=RP){i.PACKAGE_VERSION="21.0.1",i.API_VERSION=Hs;let n=typeof process<"u"&&process.env?ph(process.env):"";i.AI_AGENT=n,i.USER_AGENT={bindings_version:i.PACKAGE_VERSION,lang:"node",typescript:!1,...dh(),...n?{ai_agent:n}:{}},i.StripeResource=d,i.StripeContext=Dn,i.resources=Yt,i.HttpClient=K,i.HttpClientResponse=Be,i.CryptoProvider=Ue,i.webhooks=kh(t),i.Decimal=$e;function i(a,r={}){if(!(this instanceof i))return new i(a,r);let o=this._getPropsFromConfig(r);this._platformFunctions=t,Object.defineProperty(this,"_emitter",{value:this._platformFunctions.createEmitter(),enumerable:!1,configurable:!1,writable:!1}),this.VERSION=i.PACKAGE_VERSION,this.on=this._emitter.on.bind(this._emitter),this.once=this._emitter.once.bind(this._emitter),this.off=this._emitter.removeListener.bind(this._emitter);let s=o.httpAgent||null;this._api={host:o.host||Tg,port:o.port||jg,protocol:o.protocol||"https",basePath:Og,version:o.apiVersion||Cg,timeout:va("timeout",o.timeout,Ag),maxNetworkRetries:va("maxNetworkRetries",o.maxNetworkRetries,2),agent:s,httpClient:o.httpClient||(s?this._platformFunctions.createNodeHttpClient(s):this._platformFunctions.createDefaultHttpClient()),dev:!1,stripeAccount:o.stripeAccount||null,stripeContext:o.stripeContext||null};let u=o.typescript||!1;u!==i.USER_AGENT.typescript&&(i.USER_AGENT.typescript=u),o.appInfo&&this._setAppInfo(o.appInfo),this._prepResources(),this._setAuthenticator(a,o.authenticator),this.errors=Ia,this.webhooks=i.webhooks,this._prevRequestMetrics=[],this._enableTelemetry=o.telemetry!==!1,this._requestSender=e(this),this.StripeResource=i.StripeResource,this.Decimal=i.Decimal}return i.errors=Ia,i.createNodeHttpClient=t.createNodeHttpClient,i.createFetchHttpClient=t.createFetchHttpClient,i.createNodeCryptoProvider=t.createNodeCryptoProvider,i.createSubtleCryptoProvider=t.createSubtleCryptoProvider,i.prototype={_appInfo:void 0,on:null,off:null,once:null,VERSION:null,StripeResource:null,webhooks:null,errors:null,_api:null,_prevRequestMetrics:null,_emitter:null,_enableTelemetry:null,_requestSender:null,_platformFunctions:null,rawRequest(a,r,o,s){return this._requestSender._rawRequest(a,r,o,s)},_setAuthenticator(a,r){if(a&&r)throw new Error("Can't specify both apiKey and authenticator");if(!a&&!r)throw new Error("Neither apiKey nor config.authenticator provided");this._authenticator=a?pa(a):r},_setAppInfo(a){if(a&&typeof a!="object")throw new Error("AppInfo must be an object.");if(a&&!a.name)throw new Error("AppInfo.name is required");a=a||{},this._appInfo=AP.reduce((r,o)=>(typeof a[o]=="string"&&(r=r||{},r[o]=a[o]),r),{})},_setApiField(a,r){this._api[a]=r},getApiField(a){return this._api[a]},setClientId(a){this._clientId=a},getClientId(){return this._clientId},getConstant:a=>{switch(a){case"DEFAULT_HOST":return Tg;case"DEFAULT_PORT":return jg;case"DEFAULT_BASE_PATH":return Og;case"DEFAULT_API_VERSION":return Cg;case"DEFAULT_TIMEOUT":return Ag;case"MAX_NETWORK_RETRY_DELAY_SEC":return Rg;case"INITIAL_NETWORK_RETRY_DELAY_SEC":return qg}return i[a]},getMaxNetworkRetries(){return this.getApiField("maxNetworkRetries")},_setApiNumberField(a,r,o){let s=va(a,r,o);this._setApiField(a,s)},getMaxNetworkRetryDelay(){return Rg},getInitialNetworkRetryDelay(){return qg},getClientUserAgent(a){return this.getClientUserAgentSeeded(i.USER_AGENT,a)},getClientUserAgentSeeded(a,r){let o={};for(let c in a)Object.prototype.hasOwnProperty.call(a,c)&&(o[c]=encodeURIComponent(a[c]??"null"));let s=this._platformFunctions.getPlatformInfo();s&&this.getTelemetryEnabled()?o.platform=encodeURIComponent(s):delete o.platform;let u=this.getApiField("httpClient");u&&(o.httplib=encodeURIComponent(u.getClientName())),this._appInfo&&(o.application=this._appInfo),r(JSON.stringify(o))},getAppInfoAsString(){if(!this._appInfo)return"";let a=this._appInfo.name;return this._appInfo.version&&(a+=`/${this._appInfo.version}`),this._appInfo.url&&(a+=` (${this._appInfo.url})`),a},getTelemetryEnabled(){return this._enableTelemetry},_prepResources(){for(let a in Yt)Object.prototype.hasOwnProperty.call(Yt,a)&&(this[lh(a)]=new Yt[a](this))},_getPropsFromConfig(a){if(!a)return{};let r=typeof a=="string";if(!(a===Object(a)&&!Array.isArray(a))&&!r)throw new Error("Config must either be an object or a string");if(r)return{apiVersion:a};if(Object.keys(a).filter(u=>!Ig.includes(u)).length>0)throw new Error(`Config object may only contain the following: ${Ig.join(", ")}`);return a},parseEventNotification(a,r,o,s,u,c){this.webhooks.signature.verifyHeader(a,r,o,s||this.webhooks.DEFAULT_TOLERANCE,u,c);let l=a instanceof Uint8Array?JSON.parse(new TextDecoder("utf8").decode(a)):JSON.parse(a);if(l&&l.object==="event")throw new Error("You passed a webhook payload to stripe.parseEventNotification, which expects an event notification. Use stripe.webhooks.constructEvent instead.");return l.context&&(l.context=Dn.parse(l.context)),l.fetchEvent=()=>this._requestSender._rawRequest("GET",`/v2/core/events/${l.id}`,void 0,{stripeContext:l.context,headers:{"Stripe-Request-Trigger":`event=${l.id}`}},["fetch_event"]),l.fetchRelatedObject=()=>l.related_object?this._requestSender._rawRequest("GET",l.related_object.url,void 0,{stripeContext:l.context,headers:{"Stripe-Request-Trigger":`event=${l.id}`}},["fetch_related_object"]):Promise.resolve(null),l}},i}var qP=Dg(new Da),Mg=qP;var lc="";try{lc=`<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EQRS — Modèle Johnson & Ettinger</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f5f0;--surface:#fff;--border:#d4d1ca;--text:#1a1a1a;--text-muted:#6b6b66;
+  --blue:#1a5276;--blue-light:#2980b9;--blue-dark:#0e2f44;
+  --yellow:#fff2cc;--yellow-border:#d4a017;
+  --green:#c6efce;--orange:#ffeb9c;--red:#ffc7ce;
+  --green-text:#006100;--orange-text:#9c5700;--red-text:#9c0006;
+  --header-gradient:linear-gradient(135deg,#0e2f44 0%,#1a5276 50%,#2471a3 100%);
+  --radius:6px;--shadow:0 1px 3px rgba(0,0,0,0.08);
+}
+html{font-size:14px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text)}
+body{min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--blue-light);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Header */
+.header{background:var(--header-gradient);color:#fff;padding:1rem 2rem;display:flex;align-items:center;gap:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.header-logo{display:flex;align-items:center;gap:0.7rem;flex-shrink:0}
+.header-logo svg{width:44px;height:44px}
+.header-logo .logo-text{font-size:1.5rem;font-weight:800;letter-spacing:0.08em;line-height:1}
+.header-logo .logo-sub{font-size:0.52rem;letter-spacing:0.12em;opacity:0.7;text-transform:uppercase;margin-top:1px}
+.header-sep{width:1px;height:36px;background:rgba(255,255,255,0.25);flex-shrink:0}
+.header-text h1{font-size:1.25rem;font-weight:700;letter-spacing:-0.01em}
+.header-text p{font-size:0.78rem;opacity:0.85;margin-top:2px}
+.header-right{margin-left:auto;text-align:right;flex-shrink:0;font-size:0.7rem;opacity:0.65;line-height:1.5}
+
+/* Footer */
+.footer{background:var(--blue-dark);color:rgba(255,255,255,0.85);padding:1.2rem 2rem;font-size:0.75rem;line-height:1.7;display:flex;flex-wrap:wrap;gap:2rem;align-items:flex-start;margin-top:auto}
+.footer-brand{display:flex;align-items:center;gap:0.6rem}
+.footer-brand svg{width:28px;height:28px;flex-shrink:0}
+.footer-brand strong{font-size:0.9rem;letter-spacing:0.05em}
+.footer-info{flex:1;min-width:200px}
+.footer-legal{flex:1;min-width:250px;text-align:right;opacity:0.7;font-size:0.7rem;line-height:1.8}
+
+/* Tab bar */
+.tab-bar{background:#fff;border-bottom:1px solid var(--border);display:flex;overflow-x:auto;padding:0 1rem;gap:0;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.tab-bar::-webkit-scrollbar{height:4px}
+.tab-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
+.tab{padding:0.6rem 1rem;font-size:0.78rem;font-weight:500;color:var(--text-muted);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all 0.15s}
+.tab:hover{color:var(--text);background:rgba(0,0,0,0.02)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+.tab.input-tab{background:#fffbeb}
+.tab.input-tab.active{background:#fff8dc}
+
+/* Main content */
+.main{flex:1;padding:1.5rem 2rem;max-width:100%;overflow-x:auto}
+.sheet{display:none}
+.sheet.active{display:block}
+.sheet-title{font-size:1.15rem;font-weight:700;color:var(--blue-dark);margin-bottom:0.3rem}
+.sheet-subtitle{font-size:0.82rem;color:var(--text-muted);margin-bottom:1.2rem}
+
+/* Tables */
+.data-table{border-collapse:collapse;width:100%;font-size:0.78rem;margin-bottom:1rem}
+.data-table th{background:#e8eef3;color:var(--blue-dark);padding:0.5rem 0.6rem;text-align:left;font-weight:600;border:1px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:2}
+.data-table td{padding:0.35rem 0.6rem;border:1px solid #e0e0db;vertical-align:middle}
+.data-table tr:hover{background:rgba(0,0,0,0.015)}
+.data-table tr.soil-row{cursor:pointer;transition:background 0.15s}
+.data-table tr.soil-row:hover{background:#dbeafe !important}
+.data-table tr.soil-row:hover td{background:transparent !important}
+.data-table tr.soil-row:active{background:#bfdbfe !important}
+.data-table tr.soil-selected{background:#d1fae5 !important;outline:2px solid #2ecc71;outline-offset:-1px}
+.data-table tr.soil-selected td{background:transparent !important}
+.data-table tr.soil-row td:first-child::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:#cbd5e1;margin-right:6px;vertical-align:middle;transition:all 0.2s}
+.data-table tr.soil-row:hover td:first-child::before{background:#3b82f6;width:8px;height:8px}
+.data-table tr.soil-selected td:first-child::before{content:'\\2713';background:#2ecc71;color:#fff;width:16px;height:16px;border-radius:50%;font-size:10px;line-height:16px;text-align:center;margin-right:6px}
+.data-table .section-row{background:#e8eef3;font-weight:700;color:var(--blue-dark)}
+.data-table .section-row td{border-bottom:2px solid var(--blue);padding:0.5rem 0.6rem}
+.data-table .sum-row{background:#e8eef3;font-weight:700;border-top:2px solid var(--blue)}
+.data-table .sum-row td{padding:0.5rem 0.6rem}
+
+/* Editable cells */
+.data-table input[type="text"]{
+  width:100%;min-width:80px;padding:0.3rem 0.4rem;border:1px solid var(--yellow-border);
+  background:var(--yellow);border-radius:3px;font-size:0.78rem;font-family:inherit;
+  text-align:right;outline:none;transition:border-color 0.15s,box-shadow 0.15s;
+}
+.data-table input[type="text"]:focus{border-color:var(--blue-light);box-shadow:0 0 0 2px rgba(41,128,185,0.2);background:#fffef5}
+.data-table input[type="text"]::placeholder{color:#c0b080;font-style:italic}
+
+/* Value coloring */
+.val-green{background:var(--green)!important;color:var(--green-text)}
+.val-orange{background:var(--orange)!important;color:var(--orange-text)}
+.val-red{background:var(--red)!important;color:var(--red-text)}
+.val-yellow{background:var(--yellow)}
+
+/* Computed cells */
+.computed{background:#f0f4f8;font-family:'Consolas','Courier New',monospace;text-align:right;font-size:0.76rem}
+
+/* Info boxes */
+.info-box{background:#f8f9fa;border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.2rem;margin-bottom:1rem;font-size:0.82rem;line-height:1.6}
+.info-box h3{font-size:0.88rem;font-weight:600;color:var(--blue-dark);margin-bottom:0.4rem}
+.info-box code{background:#e8eef3;padding:0.1rem 0.3rem;border-radius:3px;font-size:0.78rem}
+
+/* Legend */
+.legend{display:flex;gap:1.2rem;flex-wrap:wrap;margin-bottom:1rem;font-size:0.78rem}
+.legend-item{display:flex;align-items:center;gap:0.4rem}
+.legend-swatch{width:18px;height:18px;border-radius:3px;border:1px solid var(--border)}
+
+/* Step boxes for Modèle_JE */
+.step-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.2rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.step-box h3{font-size:0.92rem;font-weight:600;color:var(--blue-dark);margin-bottom:0.6rem;display:flex;align-items:center;gap:0.5rem}
+.step-box h3 .step-num{background:var(--blue);color:#fff;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:0.72rem}
+.step-row{display:flex;align-items:center;gap:0.6rem;padding:0.3rem 0;font-size:0.82rem}
+.step-label{color:var(--text-muted);min-width:200px}
+.step-value{font-family:'Consolas',monospace;font-weight:600;min-width:120px;text-align:right}
+.step-unit{color:var(--text-muted);font-size:0.76rem;min-width:60px}
+.step-formula{color:#888;font-size:0.72rem;font-style:italic}
+
+/* Empty state */
+.empty-state{text-align:center;padding:3rem 2rem;color:var(--text-muted)}
+.empty-state svg{width:48px;height:48px;margin-bottom:0.8rem;opacity:0.4}
+.empty-state p{font-size:0.92rem}
+
+/* Parameter grid for Bâtiment */
+.param-grid{display:grid;grid-template-columns:1fr;gap:1rem;margin-bottom:1rem}
+.param-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;box-shadow:var(--shadow)}
+.param-section h3{font-size:0.88rem;font-weight:600;color:var(--blue-dark);margin-bottom:0.6rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border)}
+.param-row{display:grid;grid-template-columns:1fr 120px 70px;gap:0.4rem;align-items:center;padding:0.3rem 0;font-size:0.82rem;border-bottom:1px solid #f0f0eb}
+.param-row:last-child{border-bottom:none}
+.param-row label{color:var(--text)}
+.param-row .unit{color:var(--text-muted);font-size:0.76rem;text-align:right}
+.param-row input[type="text"]{
+  padding:0.3rem 0.4rem;border:1px solid var(--yellow-border);background:var(--yellow);
+  border-radius:3px;font-size:0.82rem;text-align:right;outline:none;width:100%;
+  font-family:inherit;transition:border-color 0.15s,box-shadow 0.15s;
+}
+.param-row input[type="text"]:focus{border-color:var(--blue-light);box-shadow:0 0 0 2px rgba(41,128,185,0.2)}
+.param-row .computed-val{
+  padding:0.3rem 0.4rem;background:#f0f4f8;border-radius:3px;font-family:'Consolas',monospace;
+  font-size:0.82rem;text-align:right;color:var(--blue-dark)
+}
+
+/* Sommaire */
+.sommaire-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem 2rem;box-shadow:var(--shadow);max-width:700px;margin:0 auto}
+.sommaire-item{display:flex;gap:1rem;padding:0.5rem 0;border-bottom:1px solid #f0f0eb;cursor:pointer;transition:background 0.1s}
+.sommaire-item:hover{background:rgba(0,0,0,0.015)}
+.sommaire-item:last-child{border-bottom:none}
+.sommaire-name{font-weight:600;color:var(--blue);min-width:160px}
+.sommaire-desc{color:var(--text-muted);font-size:0.82rem}
+
+/* Responsive */
+@media(max-width:768px){
+  .header{padding:0.8rem 1rem;flex-wrap:wrap;gap:0.6rem}
+  .header-text h1{font-size:1rem}
+  .header-right{display:none}
+  .header-sep{display:none}
+  .footer{flex-direction:column;gap:0.8rem;padding:1rem}
+  .footer-legal{text-align:left}
+  .main{padding:1rem}
+  .tab{padding:0.5rem 0.7rem;font-size:0.72rem}
+  .param-row{grid-template-columns:1fr 90px 50px}
+}
+
+/* Scrollable table wrapper */
+.table-wrap{overflow-x:auto;margin-bottom:1rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}
+.table-wrap .data-table{margin-bottom:0}
+
+/* Select dropdown styling */
+select.param-select{
+  padding:0.3rem 0.4rem;border:1px solid var(--yellow-border);background:var(--yellow);
+  border-radius:3px;font-size:0.82rem;outline:none;width:100%;font-family:inherit;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-logo">
+    <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="2" y="2" width="40" height="40" rx="6" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+      <path d="M10 32V18l4-4h5l-5 9h5l-7 9z" fill="#2ecc71" opacity="0.9"/>
+      <path d="M22 14h12M22 22h10M22 30h8" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+      <circle cx="35" cy="32" r="4" fill="none" stroke="#2ecc71" stroke-width="1.5"/>
+      <path d="M33.5 32l1 1 2-2" stroke="#2ecc71" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div>
+      <div class="logo-text">G.M.E.P</div>
+      <div class="logo-sub">Global Management of Environmental Project</div>
+    </div>
+  </div>
+  <div class="header-sep"></div>
+  <div class="header-text">
+    <h1>EQRS &mdash; Modèle Johnson &amp; Ettinger</h1>
+    <p>Évaluation Quantitative des Risques Sanitaires &bull; Intrusion de vapeurs</p>
+  </div>
+  <div class="header-right">
+    9 rue de la Marne — 79400 Saint-Maixent-l'École<br>
+    Tél. 06 07 73 72 33 &bull; gmep.france@gmail.com<br>
+    <button onclick="exportPDF()" style="margin-top:6px;padding:5px 14px;background:#2ecc71;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.8rem;font-weight:600;letter-spacing:0.02em">&#128196; Exporter PDF Professionnel</button>
+  </div>
+</div>
+
+<!-- Tab Bar -->
+<div class="tab-bar" id="tabBar"></div>
+
+<!-- Main Content -->
+<div class="main" id="mainContent"></div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const SUBSTANCES = [
+  {idx:0,row:7,name:"Benzène"},
+  {idx:1,row:8,name:"Toluène"},
+  {idx:2,row:9,name:"Éthylbenzène"},
+  {idx:3,row:10,name:"Xylènes (mélange)"},
+  {idx:4,row:11,name:"Styrène"},
+  {idx:5,row:12,name:"Cumène (isopropylbenzène)"},
+  {idx:6,row:14,name:"Naphtalène"},
+  {idx:7,row:15,name:"Acénaphtène"},
+  {idx:8,row:16,name:"Acénaphtylène"},
+  {idx:9,row:17,name:"Fluorène"},
+  {idx:10,row:18,name:"Phénanthrène"},
+  {idx:11,row:19,name:"Anthracène"},
+  {idx:12,row:20,name:"Fluoranthène"},
+  {idx:13,row:21,name:"Pyrène"},
+  {idx:14,row:22,name:"Benzo(a)anthracène"},
+  {idx:15,row:23,name:"Chrysène"},
+  {idx:16,row:24,name:"Benzo(b)fluoranthène"},
+  {idx:17,row:25,name:"Benzo(k)fluoranthène"},
+  {idx:18,row:26,name:"Benzo(a)pyrène"},
+  {idx:19,row:27,name:"Dibenz(a,h)anthracène"},
+  {idx:20,row:28,name:"Indéno(1,2,3-cd)pyrène"},
+  {idx:21,row:29,name:"Benzo(g,h,i)pérylène"},
+  {idx:22,row:31,name:"Plomb"},
+  {idx:23,row:32,name:"Arsenic inorganique"},
+  {idx:24,row:33,name:"Cadmium"},
+  {idx:25,row:34,name:"Chrome VI"},
+  {idx:26,row:35,name:"Chrome III"},
+  {idx:27,row:36,name:"Mercure inorganique"},
+  {idx:28,row:37,name:"Méthylmercure"},
+  {idx:29,row:38,name:"Nickel"},
+  {idx:30,row:39,name:"Cuivre"},
+  {idx:31,row:40,name:"Zinc"},
+  {idx:32,row:41,name:"Antimoine"},
+  {idx:33,row:42,name:"Sélénium"},
+  {idx:34,row:43,name:"Baryum"},
+  {idx:35,row:44,name:"Cobalt"},
+  {idx:36,row:45,name:"Vanadium"},
+  {idx:37,row:46,name:"Thallium"},
+  {idx:38,row:47,name:"Cyanures libres"},
+  {idx:39,row:50,name:"Trichloroéthylène (TCE)"},
+  {idx:40,row:51,name:"Tétrachloroéthylène (PCE)"},
+  {idx:41,row:52,name:"Chlorure de vinyle"},
+  {idx:42,row:53,name:"1,1-Dichloroéthylène"},
+  {idx:43,row:54,name:"cis-1,2-Dichloroéthylène"},
+  {idx:44,row:55,name:"trans-1,2-Dichloroéthylène"},
+  {idx:45,row:56,name:"1,1,1-Trichloroéthane"},
+  {idx:46,row:57,name:"1,1,2-Trichloroéthane"},
+  {idx:47,row:58,name:"Tétrachlorure de carbone"},
+  {idx:48,row:59,name:"Chloroforme"},
+  {idx:49,row:60,name:"Dichlorométhane"},
+  {idx:50,row:61,name:"1,2-Dichloroéthane"},
+  {idx:51,row:62,name:"1,2-Dichloropropane"},
+  {idx:52,row:63,name:"MTBE (méthyl tert-butyl éther)"},
+  {idx:53,row:64,name:"Acétone"},
+  {idx:54,row:65,name:"Formaldéhyde"},
+  {idx:55,row:66,name:"HCT C5-C8 aliphatiques"},
+  {idx:56,row:68,name:"HCT C9-C16 aliphatiques"},
+  {idx:57,row:69,name:"HCT C17-C35 aliphatiques"},
+  {idx:58,row:70,name:"HCT C9-C10 aromatiques"},
+  {idx:59,row:71,name:"HCT C10-C12 aromatiques"},
+  {idx:60,row:72,name:"HCT C12-C16 aromatiques"},
+  {idx:61,row:73,name:"Atrazine"},
+  {idx:62,row:75,name:"Lindane (gamma-HCH)"},
+  {idx:63,row:76,name:"DDT / DDE / DDD"},
+  {idx:64,row:77,name:"Aldrine"},
+  {idx:65,row:78,name:"Dieldrine"},
+  {idx:66,row:79,name:"HCB (hexachlorobenzène)"},
+  {idx:67,row:80,name:"Pentachlorophénol (PCP)"},
+  {idx:68,row:81,name:"PCB (Aroclor 1254)"},
+  {idx:69,row:83,name:"PCB (Aroclor 1260)"},
+  {idx:70,row:84,name:"PCB (dioxin-like, TEQ)"},
+  {idx:71,row:85,name:"PFOS"},
+  {idx:72,row:87,name:"PFOA"},
+  {idx:73,row:88,name:"PCDD/F (TEQ)"},
+];
+
+const SECTIONS = [
+  {row:6,name:"BTEX ET MONOAROMATIQUES"},
+  {row:13,name:"HAP (Hydrocarbures Aromatiques Polycycliques)"},
+  {row:30,name:"MÉTAUX ET MÉTALLOÏDES"},
+  {row:49,name:"SOLVANTS CHLORÉS"},
+  {row:63,name:"AUTRES SOLVANTS / COV"},
+  {row:67,name:"FRACTIONS HYDROCARBURES (TPHCWG)"},
+  {row:74,name:"PESTICIDES / PHYTOSANITAIRES"},
+  {row:82,name:"PCB"},
+  {row:86,name:"PFAS"},
+];
+
+const VTR_SEUIL = {
+  "Benzène": {orale:0.004,inhal:0.03,cutanee:0.004,org:"US EPA",effet:"Hématotoxicité"},
+  "Toluène": {orale:0.08,inhal:5.0,cutanee:0.08,org:"US EPA",effet:"Neurotoxicité"},
+  "Éthylbenzène": {orale:0.1,inhal:1.0,cutanee:0.1,org:"US EPA",effet:"Hépatotoxicité"},
+  "Xylènes (mélange)": {orale:0.2,inhal:0.1,cutanee:0.2,org:"US EPA / ATSDR",effet:"Neurotoxicité"},
+  "Styrène": {orale:0.2,inhal:1.0,cutanee:0.2,org:"US EPA",effet:"Neurotoxicité"},
+  "Cumène (isopropylbenzène)": {orale:0.1,inhal:0.4,cutanee:0.1,org:"US EPA",effet:"Néphrotoxicité"},
+  "Naphtalène": {orale:0.02,inhal:0.003,cutanee:0.02,org:"US EPA",effet:"Effets respiratoires"},
+  "Acénaphtène": {orale:0.06,inhal:null,cutanee:0.06,org:"US EPA",effet:"Hépatotoxicité"},
+  "Acénaphtylène": {orale:null,inhal:null,cutanee:null,org:null,effet:"Pas de VTR disponible"},
+  "Fluorène": {orale:0.04,inhal:null,cutanee:0.04,org:"US EPA",effet:"Hépatotoxicité"},
+  "Phénanthrène": {orale:null,inhal:null,cutanee:null,org:null,effet:"Pas de VTR spécifique"},
+  "Anthracène": {orale:0.3,inhal:null,cutanee:0.3,org:"US EPA",effet:null},
+  "Fluoranthène": {orale:0.04,inhal:null,cutanee:0.04,org:"US EPA",effet:"Hépatotoxicité"},
+  "Pyrène": {orale:0.03,inhal:null,cutanee:0.03,org:"US EPA",effet:"Néphrotoxicité"},
+  "Benzo(a)anthracène": {orale:null,inhal:null,cutanee:null,org:null,effet:"Cancérogène (voir ERU)"},
+  "Chrysène": {orale:null,inhal:null,cutanee:null,org:null,effet:"Cancérogène (voir ERU)"},
+  "Benzo(b)fluoranthène": {orale:null,inhal:null,cutanee:null,org:null,effet:"Cancérogène (voir ERU)"},
+  "Benzo(k)fluoranthène": {orale:null,inhal:null,cutanee:null,org:null,effet:"Cancérogène (voir ERU)"},
+  "Benzo(a)pyrène": {orale:0.0003,inhal:null,cutanee:0.0003,org:"RIVM / OEHHA",effet:"Toxicité développement"},
+  "Dibenz(a,h)anthracène": {orale:null,inhal:null,cutanee:null,org:null,effet:"Cancérogène (voir ERU)"},
+  "Indéno(1,2,3-cd)pyrène": {orale:null,inhal:null,cutanee:null,org:null,effet:"Cancérogène (voir ERU)"},
+  "Benzo(g,h,i)pérylène": {orale:null,inhal:null,cutanee:null,org:null,effet:"Pas de VTR disponible"},
+  "Plomb": {orale:0.0036,inhal:0.0005,cutanee:null,org:"EFSA / ANSES",effet:"Neurotoxicité"},
+  "Arsenic inorganique": {orale:0.0003,inhal:1.5e-05,cutanee:0.0003,org:"US EPA",effet:"Hyperkératose"},
+  "Cadmium": {orale:0.001,inhal:1e-05,cutanee:null,org:"US EPA",effet:"Néphrotoxicité (protéinurie)"},
+  "Chrome VI": {orale:0.003,inhal:3e-05,cutanee:null,org:"US EPA",effet:"Effets gastro-intestinaux"},
+  "Chrome III": {orale:1.5,inhal:null,cutanee:null,org:"US EPA",effet:null},
+  "Mercure inorganique": {orale:0.0003,inhal:0.0003,cutanee:null,org:"US EPA / OMS",effet:"Néphrotoxicité"},
+  "Méthylmercure": {orale:0.0001,inhal:null,cutanee:null,org:"US EPA",effet:"Neurotoxicité développement"},
+  "Nickel": {orale:0.02,inhal:9e-05,cutanee:null,org:"US EPA / ATSDR",effet:"Effets respiratoires"},
+  "Cuivre": {orale:0.04,inhal:null,cutanee:null,org:"US EPA",effet:"Effets gastro-intestinaux"},
+  "Zinc": {orale:0.3,inhal:null,cutanee:null,org:"US EPA",effet:"Anémie"},
+  "Antimoine": {orale:0.0004,inhal:0.0003,cutanee:null,org:"US EPA / ATSDR",effet:"Effets métaboliques"},
+  "Sélénium": {orale:0.005,inhal:null,cutanee:null,org:"US EPA",effet:"Sélénose"},
+  "Baryum": {orale:0.2,inhal:0.0005,cutanee:null,org:"US EPA",effet:"Néphropathie"},
+  "Cobalt": {orale:0.0003,inhal:0.0001,cutanee:null,org:"US EPA / ATSDR",effet:"Effets respiratoires"},
+  "Vanadium": {orale:0.005,inhal:null,cutanee:null,org:"US EPA",effet:null},
+  "Thallium": {orale:1e-05,inhal:null,cutanee:null,org:"US EPA",effet:"Alopécie / neurotoxicité"},
+  "Cyanures libres": {orale:0.02,inhal:null,cutanee:null,org:"US EPA",effet:"Effets thyroïdiens"},
+  "Trichloroéthylène (TCE)": {orale:0.0005,inhal:0.002,cutanee:0.0005,org:"US EPA IRIS",effet:"Immunotoxicité / Effet rénal"},
+  "Tétrachloroéthylène (PCE)": {orale:0.006,inhal:0.04,cutanee:0.006,org:"US EPA IRIS",effet:"Neurotoxicité (visuelle)"},
+  "Chlorure de vinyle": {orale:0.003,inhal:0.1,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
+  "1,1-Dichloroéthylène": {orale:0.05,inhal:0.2,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
+  "cis-1,2-Dichloroéthylène": {orale:0.002,inhal:null,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
+  "trans-1,2-Dichloroéthylène": {orale:0.02,inhal:null,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
+  "1,1,1-Trichloroéthane": {orale:2.0,inhal:null,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
+  "1,1,2-Trichloroéthane": {orale:0.004,inhal:null,cutanee:0.004,org:"US EPA",effet:"Hépatotoxicité"},
+  "Tétrachlorure de carbone": {orale:0.004,inhal:0.19,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
+  "Chloroforme": {orale:0.01,inhal:null,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
+  "Dichlorométhane": {orale:0.006,inhal:0.6,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
+  "1,2-Dichloroéthane": {orale:null,inhal:0.007,cutanee:null,org:"US EPA",effet:null},
+  "1,2-Dichloropropane": {orale:null,inhal:null,cutanee:null,org:null,effet:"Cancérogène (voir ERU)"},
+  "MTBE (méthyl tert-butyl éther)": {orale:null,inhal:3.0,cutanee:null,org:"US EPA",effet:"Effets rénaux"},
+  "Acétone": {orale:0.9,inhal:31.0,cutanee:null,org:"US EPA",effet:"Néphropathie"},
+  "Formaldéhyde": {orale:0.2,inhal:0.01,cutanee:null,org:"US EPA / ATSDR",effet:"Irritation respiratoire"},
+  "HCT C5-C8 aliphatiques": {orale:5.0,inhal:18.4,cutanee:null,org:"ATSDR / TPHCWG",effet:"Neurotoxicité"},
+  "HCT C9-C16 aliphatiques": {orale:0.1,inhal:1.0,cutanee:null,org:"TPHCWG",effet:"Hépatotoxicité"},
+  "HCT C17-C35 aliphatiques": {orale:2.0,inhal:null,cutanee:null,org:"TPHCWG",effet:null},
+  "HCT C9-C10 aromatiques": {orale:0.05,inhal:0.2,cutanee:null,org:"TPHCWG",effet:"Néphrotoxicité"},
+  "HCT C10-C12 aromatiques": {orale:0.05,inhal:0.2,cutanee:null,org:"TPHCWG",effet:"Néphrotoxicité"},
+  "HCT C12-C16 aromatiques": {orale:0.04,inhal:0.2,cutanee:null,org:"TPHCWG",effet:"Néphrotoxicité"},
+  "Atrazine": {orale:0.035,inhal:null,cutanee:null,org:"US EPA",effet:"Effets cardiovasculaires"},
+  "Lindane (gamma-HCH)": {orale:0.0003,inhal:null,cutanee:0.0003,org:"US EPA",effet:"Hépatotoxicité"},
+  "DDT / DDE / DDD": {orale:0.0005,inhal:null,cutanee:null,org:"US EPA / ATSDR",effet:"Hépatotoxicité"},
+  "Aldrine": {orale:3e-05,inhal:null,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
+  "Dieldrine": {orale:5e-05,inhal:null,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
+  "HCB (hexachlorobenzène)": {orale:0.0008,inhal:null,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
+  "Pentachlorophénol (PCP)": {orale:0.005,inhal:null,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
+  "PCB (Aroclor 1254)": {orale:2e-05,inhal:null,cutanee:null,org:"US EPA",effet:"Immunotoxicité"},
+  "PCB (Aroclor 1260)": {orale:2e-05,inhal:null,cutanee:null,org:"US EPA",effet:"Immunotoxicité"},
+  "PCB (dioxin-like, TEQ)": {orale:1e-09,inhal:null,cutanee:null,org:"OMS",effet:"Effets multiples"},
+  "PFOS": {orale:2e-05,inhal:null,cutanee:null,org:"EFSA / US EPA",effet:"Hépatotoxicité"},
+  "PFOA": {orale:2e-05,inhal:null,cutanee:null,org:"EFSA / US EPA",effet:"Hépatotoxicité"},
+  "PCDD/F (TEQ)": {orale:1e-09,inhal:null,cutanee:null,org:"OMS",effet:"Effets multiples"},
+};
+
+const VTR_SANSSEUIL = {
+  "Benzène": {eruOral:0.055,eruInhal:7.8e-06,org:"US EPA IRIS",cancer:"Leucémie"},
+  "Benzo(a)pyrène": {eruOral:1.0,eruInhal:0.0011,org:"US EPA / OEHHA",cancer:"Cancer cutané / poumon"},
+  "Benzo(a)anthracène": {eruOral:0.1,eruInhal:0.00011,org:"US EPA (FET=0.1×BaP)",cancer:"Cancer (FET)"},
+  "Chrysène": {eruOral:0.01,eruInhal:1.1e-05,org:"US EPA (FET=0.01×BaP)",cancer:"Cancer (FET)"},
+  "Benzo(b)fluoranthène": {eruOral:0.1,eruInhal:0.00011,org:"US EPA (FET=0.1×BaP)",cancer:"Cancer (FET)"},
+  "Benzo(k)fluoranthène": {eruOral:0.01,eruInhal:1.1e-05,org:"US EPA (FET=0.01×BaP)",cancer:"Cancer (FET)"},
+  "Dibenz(a,h)anthracène": {eruOral:1.0,eruInhal:0.0011,org:"US EPA (FET=1×BaP)",cancer:"Cancer (FET)"},
+  "Indéno(1,2,3-cd)pyrène": {eruOral:0.1,eruInhal:0.00011,org:"US EPA (FET=0.1×BaP)",cancer:"Cancer (FET)"},
+  "Naphtalène": {eruOral:null,eruInhal:3.4e-05,org:"OEHHA",cancer:"Cancer pulmonaire"},
+  "Arsenic inorganique": {eruOral:1.5,eruInhal:0.0043,org:"US EPA IRIS",cancer:"Cancer peau / poumon / vessie"},
+  "Cadmium": {eruOral:null,eruInhal:0.0018,org:"US EPA IRIS",cancer:"Cancer poumon"},
+  "Chrome VI": {eruOral:0.5,eruInhal:0.012,org:"US EPA IRIS",cancer:"Cancer gastro-intestinal / poumon"},
+  "Nickel (composés)": {eruOral:null,eruInhal:0.00026,org:"US EPA IRIS",cancer:"Cancer poumon"},
+  "Plomb": {eruOral:0.0085,eruInhal:1.2e-05,org:"US EPA / OEHHA",cancer:"Cancer rein"},
+  "Chlorure de vinyle": {eruOral:0.72,eruInhal:4.4e-06,org:"US EPA IRIS",cancer:"Angiosarcome hépatique"},
+  "Trichloroéthylène (TCE)": {eruOral:0.046,eruInhal:4.1e-06,org:"US EPA IRIS",cancer:"Cancer rénal (Charbotel 2006)"},
+  "Tétrachloroéthylène (PCE)": {eruOral:0.0021,eruInhal:2.6e-07,org:"US EPA IRIS",cancer:"Cancer foie"},
+  "Tétrachlorure de carbone": {eruOral:0.07,eruInhal:6e-06,org:"US EPA IRIS",cancer:"Cancer foie"},
+  "Chloroforme": {eruOral:0.031,eruInhal:null,org:"US EPA IRIS",cancer:"Cancer foie"},
+  "Dichlorométhane": {eruOral:0.002,eruInhal:1e-08,org:"US EPA IRIS",cancer:"Cancer foie / poumon"},
+  "1,2-Dichloroéthane": {eruOral:0.091,eruInhal:2.6e-05,org:"US EPA IRIS",cancer:"Hémangiosarcome"},
+  "1,1,2-Trichloroéthane": {eruOral:0.057,eruInhal:1.6e-05,org:"US EPA IRIS",cancer:"Cancer foie"},
+  "1,2-Dichloropropane": {eruOral:0.068,eruInhal:null,org:"US EPA IRIS",cancer:"Cancer foie"},
+  "Formaldéhyde": {eruOral:null,eruInhal:1.3e-05,org:"US EPA IRIS",cancer:"Cancer nasopharynx"},
+  "Acrylamide": {eruOral:0.83,eruInhal:0.00017,org:"US EPA IRIS",cancer:"Cancer thyroïde"},
+  "Lindane (gamma-HCH)": {eruOral:1.3,eruInhal:0.00051,org:"US EPA IRIS",cancer:"Cancer foie"},
+  "DDT / DDE / DDD": {eruOral:0.34,eruInhal:9.7e-05,org:"US EPA IRIS",cancer:"Cancer foie"},
+  "Aldrine": {eruOral:17.0,eruInhal:0.0049,org:"US EPA IRIS",cancer:"Cancer foie"},
+  "Dieldrine": {eruOral:16.0,eruInhal:0.0046,org:"US EPA IRIS",cancer:"Cancer foie"},
+  "HCB (hexachlorobenzène)": {eruOral:1.6,eruInhal:0.00046,org:"US EPA IRIS",cancer:"Cancer foie"},
+  "Pentachlorophénol (PCP)": {eruOral:0.12,eruInhal:3.4e-05,org:"US EPA IRIS",cancer:"Cancer foie"},
+  "PCB (Aroclor 1254)": {eruOral:2.0,eruInhal:0.00057,org:"US EPA IRIS",cancer:"Cancer foie"},
+  "PCB (Aroclor 1260)": {eruOral:2.0,eruInhal:0.00057,org:"US EPA IRIS",cancer:"Cancer foie"},
+};
+
+const ERI_SUBSTANCES = ["Benzène", "Benzo(a)pyrène", "Benzo(a)anthracène", "Chrysène", "Benzo(b)fluoranthène", "Benzo(k)fluoranthène", "Dibenz(a,h)anthracène", "Indéno(1,2,3-cd)pyrène", "Naphtalène", "Arsenic inorganique", "Cadmium", "Chrome VI", "Nickel (composés)", "Plomb", "Chlorure de vinyle", "Trichloroéthylène (TCE)", "Tétrachloroéthylène (PCE)", "Tétrachlorure de carbone", "Chloroforme", "Dichlorométhane", "1,2-Dichloroéthane", "1,1,2-Trichloroéthane", "1,2-Dichloropropane", "Formaldéhyde", "Acrylamide", "Lindane (gamma-HCH)", "DDT / DDE / DDD", "Aldrine", "Dieldrine", "HCB (hexachlorobenzène)", "Pentachlorophénol (PCP)", "PCB (Aroclor 1254)", "PCB (Aroclor 1260)"];
+
+const PROPRIETES = {
+  "Benzène": {M:78.11,Pv:12700.0,S:1750.0,H:0.228,logKow:2.13,Koc:59.0,Dair:8.8e-06,Deau:9.8e-10,vol:"Très volatil",Teb:80.1,Kd:0.59,cas:"71-43-2"},
+  "Toluène": {M:92.14,Pv:3790.0,S:526.0,H:0.272,logKow:2.73,Koc:182.0,Dair:8.7e-06,Deau:8.6e-10,vol:"Très volatil",Teb:110.6,Kd:1.82,cas:"108-88-3"},
+  "Éthylbenzène": {M:106.17,Pv:1270.0,S:169.0,H:0.323,logKow:3.15,Koc:363.0,Dair:7.5e-06,Deau:7.8e-10,vol:"Volatil",Teb:136.2,Kd:3.63,cas:"100-41-4"},
+  "Xylènes (mélange)": {M:106.17,Pv:1170.0,S:198.0,H:0.213,logKow:3.2,Koc:407.0,Dair:7.2e-06,Deau:7.8e-10,vol:"Volatil",Teb:139.0,Kd:4.07,cas:"1330-20-7"},
+  "Styrène": {M:104.15,Pv:880.0,S:300.0,H:0.113,logKow:2.95,Koc:912.0,Dair:7.1e-06,Deau:8e-10,vol:"Volatil",Teb:145.0,Kd:9.120000000000001,cas:"100-42-5"},
+  "Cumène (isopropylbenzène)": {M:120.19,Pv:610.0,S:50.0,H:0.48,logKow:3.66,Koc:724.0,Dair:6e-06,Deau:6.9e-10,vol:"Volatil",Teb:152.4,Kd:7.24,cas:"98-82-8"},
+  "Naphtalène": {M:128.17,Pv:10.4,S:31.0,H:0.02,logKow:3.3,Koc:1191.0,Dair:6e-06,Deau:7.5e-10,vol:"Semi-volatil",Teb:218.0,Kd:11.91,cas:"91-20-3"},
+  "Acénaphtène": {M:154.21,Pv:0.5,S:3.9,H:0.006,logKow:3.92,Koc:4898.0,Dair:4.2e-06,Deau:6.4e-10,vol:"Semi-volatil",Teb:279.0,Kd:48.980000000000004,cas:"83-32-9"},
+  "Acénaphtylène": {M:152.19,Pv:0.89,S:16.1,H:0.0047,logKow:3.94,Koc:4400.0,Dair:4.3e-06,Deau:6.5e-10,vol:"Semi-volatil",Teb:280.0,Kd:44.0,cas:"208-96-8"},
+  "Fluorène": {M:166.22,Pv:0.09,S:1.9,H:0.0038,logKow:4.18,Koc:7943.0,Dair:3.6e-06,Deau:5.6e-10,vol:"Semi-volatil",Teb:295.0,Kd:79.43,cas:"86-73-7"},
+  "Phénanthrène": {M:178.23,Pv:0.02,S:1.1,H:0.0016,logKow:4.46,Koc:14125.0,Dair:3.3e-06,Deau:5.1e-10,vol:"Semi-volatil",Teb:340.0,Kd:141.25,cas:"85-01-8"},
+  "Anthracène": {M:178.23,Pv:0.001,S:0.045,H:0.0017,logKow:4.45,Koc:14125.0,Dair:3.2e-06,Deau:5e-10,vol:"Semi-volatil",Teb:342.0,Kd:141.25,cas:"120-12-7"},
+  "Fluoranthène": {M:202.26,Pv:0.0012,S:0.26,H:0.00066,logKow:5.22,Koc:49000.0,Dair:2.7e-06,Deau:4.6e-10,vol:"Peu volatil",Teb:375.0,Kd:490.0,cas:"206-44-0"},
+  "Pyrène": {M:202.26,Pv:0.0006,S:0.13,H:0.00045,logKow:4.88,Koc:38000.0,Dair:2.7e-06,Deau:4.5e-10,vol:"Peu volatil",Teb:404.0,Kd:380.0,cas:"129-00-0"},
+  "Benzo(a)anthracène": {M:228.29,Pv:2.8e-05,S:0.011,H:0.00018,logKow:5.76,Koc:240000.0,Dair:2.4e-06,Deau:4e-10,vol:"Peu volatil",Teb:438.0,Kd:2400.0,cas:"56-55-3"},
+  "Chrysène": {M:228.29,Pv:5.7e-07,S:0.002,H:3.9e-05,logKow:5.81,Koc:200000.0,Dair:2.5e-06,Deau:4e-10,vol:"Non volatil",Teb:448.0,Kd:2000.0,cas:"218-01-9"},
+  "Benzo(b)fluoranthène": {M:252.31,Pv:6.7e-05,S:0.0015,H:4.4e-05,logKow:5.78,Koc:550000.0,Dair:2.3e-06,Deau:3.7e-10,vol:"Non volatil",Teb:481.0,Kd:5500.0,cas:"205-99-2"},
+  "Benzo(k)fluoranthène": {M:252.31,Pv:5.2e-08,S:0.0008,H:1.6e-05,logKow:6.11,Koc:590000.0,Dair:2.3e-06,Deau:3.7e-10,vol:"Non volatil",Teb:480.0,Kd:5900.0,cas:"207-08-9"},
+  "Benzo(a)pyrène": {M:252.31,Pv:7e-07,S:0.0016,H:4.6e-05,logKow:6.04,Koc:969000.0,Dair:2.3e-06,Deau:3.6e-10,vol:"Non volatil",Teb:495.0,Kd:9690.0,cas:"50-32-8"},
+  "Dibenz(a,h)anthracène": {M:278.35,Pv:3.7e-10,S:0.0005,H:5.8e-06,logKow:6.75,Koc:1700000.0,Dair:2e-06,Deau:3.3e-10,vol:"Non volatil",Teb:524.0,Kd:17000.0,cas:"53-70-3"},
+  "Indéno(1,2,3-cd)pyrène": {M:276.33,Pv:1.3e-08,S:0.00019,H:5.8e-06,logKow:6.58,Koc:1600000.0,Dair:2e-06,Deau:3.3e-10,vol:"Non volatil",Teb:536.0,Kd:16000.0,cas:"193-39-5"},
+  "Benzo(g,h,i)pérylène": {M:276.33,Pv:1.4e-08,S:0.00026,H:2.7e-06,logKow:6.63,Koc:1400000.0,Dair:2e-06,Deau:3.2e-10,vol:"Non volatil",Teb:550.0,Kd:14000.0,cas:"191-24-2"},
+  "Plomb": {M:207.2,Pv:null,S:null,H:null,logKow:null,Koc:900.0,Dair:null,Deau:null,vol:"Particulaire",Teb:1749.0,Kd:900.0,cas:"7439-92-1"},
+  "Arsenic inorganique": {M:74.92,Pv:null,S:null,H:null,logKow:null,Koc:29.0,Dair:null,Deau:null,vol:"Particulaire",Teb:614.0,Kd:29.0,cas:"7440-38-2"},
+  "Cadmium": {M:112.41,Pv:null,S:null,H:null,logKow:null,Koc:75.0,Dair:null,Deau:null,vol:"Particulaire",Teb:767.0,Kd:75.0,cas:"7440-43-9"},
+  "Chrome VI": {M:52.0,Pv:null,S:null,H:null,logKow:null,Koc:19.0,Dair:null,Deau:null,vol:"Particulaire",Teb:null,Kd:19.0,cas:"18540-29-9"},
+  "Chrome III": {M:52.0,Pv:null,S:null,H:null,logKow:null,Koc:1800000.0,Dair:null,Deau:null,vol:"Particulaire",Teb:null,Kd:1800000.0,cas:"16065-83-1"},
+  "Mercure inorganique": {M:200.59,Pv:0.26,S:0.069,H:0.47,logKow:null,Koc:52000.0,Dair:null,Deau:null,vol:"Volatil (Hg⁰)",Teb:356.7,Kd:520.0,cas:"7439-97-6"},
+  "Méthylmercure": {M:215.63,Pv:null,S:null,H:null,logKow:0.41,Koc:200.0,Dair:null,Deau:null,vol:"Particulaire",Teb:null,Kd:200.0,cas:"22967-92-6"},
+  "Nickel": {M:58.69,Pv:null,S:null,H:null,logKow:null,Koc:65.0,Dair:null,Deau:null,vol:"Particulaire",Teb:2913.0,Kd:65.0,cas:"7440-02-0"},
+  "Cuivre": {M:63.55,Pv:null,S:null,H:null,logKow:null,Koc:35.0,Dair:null,Deau:null,vol:"Particulaire",Teb:2562.0,Kd:35.0,cas:"7440-50-8"},
+  "Zinc": {M:65.38,Pv:null,S:null,H:null,logKow:null,Koc:62.0,Dair:null,Deau:null,vol:"Particulaire",Teb:907.0,Kd:62.0,cas:"7440-66-6"},
+  "Antimoine": {M:121.76,Pv:null,S:null,H:null,logKow:null,Koc:45.0,Dair:null,Deau:null,vol:"Particulaire",Teb:1587.0,Kd:45.0,cas:"7440-36-0"},
+  "Sélénium": {M:78.97,Pv:null,S:null,H:null,logKow:null,Koc:150.0,Dair:null,Deau:null,vol:"Particulaire",Teb:685.0,Kd:150.0,cas:"7782-49-2"},
+  "Baryum": {M:137.33,Pv:null,S:null,H:null,logKow:null,Koc:500.0,Dair:null,Deau:null,vol:"Particulaire",Teb:1897.0,Kd:500.0,cas:"7440-39-3"},
+  "Cobalt": {M:58.93,Pv:null,S:null,H:null,logKow:null,Koc:45.0,Dair:null,Deau:null,vol:"Particulaire",Teb:2927.0,Kd:45.0,cas:"7440-48-4"},
+  "Vanadium": {M:50.94,Pv:null,S:null,H:null,logKow:null,Koc:1000.0,Dair:null,Deau:null,vol:"Particulaire",Teb:3407.0,Kd:1000.0,cas:"7440-62-2"},
+  "Thallium": {M:204.38,Pv:null,S:null,H:null,logKow:null,Koc:71.0,Dair:null,Deau:null,vol:"Particulaire",Teb:1473.0,Kd:71.0,cas:"7440-28-0"},
+  "Cyanures libres": {M:27.03,Pv:null,S:2000000.0,H:null,logKow:null,Koc:9.9,Dair:null,Deau:null,vol:"Volatil (HCN)",Teb:25.6,Kd:0.099,cas:"57-12-5"},
+  "Trichloroéthylène (TCE)": {M:131.39,Pv:9870.0,S:1100.0,H:0.422,logKow:2.42,Koc:166.0,Dair:7.9e-06,Deau:1e-09,vol:"Très volatil",Teb:87.2,Kd:1.6600000000000001,cas:"79-01-6"},
+  "Tétrachloroéthylène (PCE)": {M:165.83,Pv:2480.0,S:200.0,H:0.754,logKow:3.4,Koc:155.0,Dair:7.2e-06,Deau:8.2e-10,vol:"Très volatil",Teb:121.1,Kd:1.55,cas:"127-18-4"},
+  "Chlorure de vinyle": {M:62.5,Pv:354000.0,S:2700.0,H:1.11,logKow:1.36,Koc:18.6,Dair:1.1e-05,Deau:1.2e-09,vol:"Très volatil (gaz)",Teb:-13.4,Kd:0.18600000000000003,cas:"75-01-4"},
+  "1,1-Dichloroéthylène": {M:96.94,Pv:80600.0,S:2420.0,H:1.07,logKow:2.13,Koc:65.0,Dair:9e-06,Deau:1e-09,vol:"Très volatil",Teb:31.7,Kd:0.65,cas:"75-35-4"},
+  "cis-1,2-Dichloroéthylène": {M:96.94,Pv:26600.0,S:3500.0,H:0.167,logKow:1.86,Koc:49.0,Dair:9e-06,Deau:1e-09,vol:"Très volatil",Teb:60.1,Kd:0.49,cas:"156-59-2"},
+  "trans-1,2-Dichloroéthylène": {M:96.94,Pv:44400.0,S:6300.0,H:0.384,logKow:2.09,Koc:59.0,Dair:9e-06,Deau:1e-09,vol:"Très volatil",Teb:47.5,Kd:0.59,cas:"156-60-5"},
+  "1,1,1-Trichloroéthane": {M:133.4,Pv:16500.0,S:1330.0,H:0.703,logKow:2.49,Koc:152.0,Dair:7.8e-06,Deau:8.8e-10,vol:"Très volatil",Teb:74.1,Kd:1.52,cas:"71-55-6"},
+  "1,1,2-Trichloroéthane": {M:133.4,Pv:3000.0,S:4420.0,H:0.037,logKow:2.18,Koc:56.0,Dair:7.8e-06,Deau:8.8e-10,vol:"Volatil",Teb:113.8,Kd:0.56,cas:"79-00-5"},
+  "Tétrachlorure de carbone": {M:153.82,Pv:15200.0,S:793.0,H:1.25,logKow:2.83,Koc:174.0,Dair:7.8e-06,Deau:8.8e-10,vol:"Très volatil",Teb:76.7,Kd:1.74,cas:"56-23-5"},
+  "Chloroforme": {M:119.38,Pv:26200.0,S:7950.0,H:0.15,logKow:1.97,Koc:57.0,Dair:8.4e-06,Deau:1e-09,vol:"Très volatil",Teb:61.2,Kd:0.5700000000000001,cas:"67-66-3"},
+  "Dichlorométhane": {M:84.93,Pv:57300.0,S:20000.0,H:0.089,logKow:1.25,Koc:10.0,Dair:1e-05,Deau:1.2e-09,vol:"Très volatil",Teb:39.6,Kd:0.1,cas:"75-09-2"},
+  "1,2-Dichloroéthane": {M:98.96,Pv:10500.0,S:8690.0,H:0.045,logKow:1.48,Koc:14.0,Dair:9.9e-06,Deau:1e-09,vol:"Très volatil",Teb:83.5,Kd:0.14,cas:"107-06-2"},
+  "1,2-Dichloropropane": {M:112.99,Pv:6890.0,S:2700.0,H:0.115,logKow:2.02,Koc:47.0,Dair:7.8e-06,Deau:8.7e-10,vol:"Volatil",Teb:96.4,Kd:0.47000000000000003,cas:"78-87-5"},
+  "MTBE (méthyl tert-butyl éther)": {M:88.15,Pv:33200.0,S:51000.0,H:0.024,logKow:1.24,Koc:11.2,Dair:8.1e-06,Deau:9.4e-10,vol:"Très volatil",Teb:55.2,Kd:0.11199999999999999,cas:"1634-04-4"},
+  "Acétone": {M:58.08,Pv:30800.0,S:1000000.0,H:0.0016,logKow:-0.24,Koc:3.4,Dair:1.1e-05,Deau:1.3e-09,vol:"Très volatil",Teb:56.2,Kd:0.034,cas:"67-64-1"},
+  "Formaldéhyde": {M:30.03,Pv:518000.0,S:400000.0,H:1.3e-05,logKow:0.35,Koc:16.0,Dair:1.5e-05,Deau:1.8e-09,vol:"Très volatil (gaz)",Teb:-19.1,Kd:0.16,cas:"50-00-0"},
+  "HCT C5-C8 aliphatiques": {M:100.0,Pv:28000.0,S:200.0,H:28.0,logKow:3.6,Koc:630.0,Dair:7e-06,Deau:7.8e-10,vol:"Très volatil",Teb:98.0,Kd:6.3,cas:"TPH-Aliph-C5C8"},
+  "HCT C9-C16 aliphatiques": {M:170.0,Pv:17.0,S:0.43,H:30.0,logKow:5.7,Koc:2000.0,Dair:4.5e-06,Deau:5.5e-10,vol:"Volatil",Teb:230.0,Kd:20.0,cas:"TPH-Aliph-C9C16"},
+  "HCT C17-C35 aliphatiques": {M:300.0,Pv:0.0001,S:0.00076,H:100.0,logKow:9.8,Koc:1000000.0,Dair:2.5e-06,Deau:3.5e-10,vol:"Non volatil",Teb:400.0,Kd:10000.0,cas:"TPH-Aliph-C17C35"},
+  "HCT C9-C10 aromatiques": {M:120.0,Pv:500.0,S:51.0,H:0.06,logKow:3.2,Koc:1300.0,Dair:5.8e-06,Deau:7e-10,vol:"Volatil",Teb:170.0,Kd:13.0,cas:"TPH-Arom-C9C10"},
+  "HCT C10-C12 aromatiques": {M:130.0,Pv:40.0,S:25.0,H:0.018,logKow:3.7,Koc:2000.0,Dair:4.8e-06,Deau:6e-10,vol:"Semi-volatil",Teb:210.0,Kd:20.0,cas:"TPH-Arom-C10C12"},
+  "HCT C12-C16 aromatiques": {M:150.0,Pv:0.5,S:5.8,H:0.004,logKow:4.3,Koc:15000.0,Dair:3.6e-06,Deau:5e-10,vol:"Semi-volatil",Teb:280.0,Kd:150.0,cas:"TPH-Arom-C12C16"},
+  "Atrazine": {M:215.68,Pv:3.9e-05,S:33.0,H:1.1e-07,logKow:2.61,Koc:100.0,Dair:3e-06,Deau:5e-10,vol:"Non volatil",Teb:312.0,Kd:1.0,cas:"1912-24-9"},
+  "Lindane (gamma-HCH)": {M:290.83,Pv:0.0056,S:7.3,H:0.00027,logKow:3.72,Koc:1080.0,Dair:2.5e-06,Deau:4.2e-10,vol:"Semi-volatil",Teb:323.0,Kd:10.8,cas:"58-89-9"},
+  "DDT / DDE / DDD": {M:354.49,Pv:2.5e-05,S:0.006,H:0.0033,logKow:6.91,Koc:680000.0,Dair:1.9e-06,Deau:3.5e-10,vol:"Non volatil",Teb:260.0,Kd:6800.0,cas:"50-29-3"},
+  "Aldrine": {M:364.91,Pv:0.0059,S:0.027,H:0.0069,logKow:6.5,Koc:49000.0,Dair:2.3e-06,Deau:3.8e-10,vol:"Semi-volatil",Teb:385.0,Kd:490.0,cas:"309-00-2"},
+  "Dieldrine": {M:380.91,Pv:0.00053,S:0.14,H:0.00019,logKow:5.4,Koc:26000.0,Dair:2.1e-06,Deau:3.5e-10,vol:"Peu volatil",Teb:385.0,Kd:260.0,cas:"60-57-1"},
+  "HCB (hexachlorobenzène)": {M:284.78,Pv:0.0023,S:0.006,H:0.054,logKow:5.73,Koc:80000.0,Dair:3.2e-06,Deau:4.5e-10,vol:"Semi-volatil",Teb:325.0,Kd:800.0,cas:"118-74-1"},
+  "Pentachlorophénol (PCP)": {M:266.34,Pv:0.016,S:14.0,H:1.1e-05,logKow:5.12,Koc:900.0,Dair:2.8e-06,Deau:4.4e-10,vol:"Peu volatil",Teb:310.0,Kd:9.0,cas:"87-86-5"},
+  "PCB (Aroclor 1254)": {M:326.4,Pv:0.011,S:0.012,H:0.013,logKow:6.47,Koc:220000.0,Dair:2e-06,Deau:3.5e-10,vol:"Semi-volatil",Teb:365.0,Kd:2200.0,cas:"11097-69-1"},
+  "PCB (Aroclor 1260)": {M:375.7,Pv:0.0045,S:0.0027,H:0.014,logKow:7.15,Koc:520000.0,Dair:1.8e-06,Deau:3.2e-10,vol:"Semi-volatil",Teb:385.0,Kd:5200.0,cas:"11096-82-5"},
+  "PCB (dioxin-like, TEQ)": {M:325.0,Pv:0.001,S:0.001,H:0.005,logKow:6.8,Koc:400000.0,Dair:2e-06,Deau:3.4e-10,vol:"Non volatil",Teb:null,Kd:4000.0,cas:"PCB-DL-TEQ"},
+  "PFOS": {M:500.13,Pv:0.0035,S:570.0,H:1.4e-05,logKow:4.49,Koc:251.0,Dair:3e-06,Deau:4e-10,vol:"Non volatil",Teb:null,Kd:2.5100000000000002,cas:"1763-23-1"},
+  "PFOA": {M:414.07,Pv:11.0,S:9500.0,H:0.00098,logKow:3.6,Koc:126.0,Dair:3.5e-06,Deau:4.5e-10,vol:"Non volatil",Teb:189.0,Kd:1.26,cas:"335-67-1"},
+  "PCDD/F (TEQ)": {M:322.0,Pv:8.5e-07,S:1.9e-05,H:0.0014,logKow:6.8,Koc:3800000.0,Dair:1.5e-06,Deau:3e-10,vol:"Non volatil",Teb:null,Kd:38000.0,cas:"PCDD-F-TEQ"},
+  "Très volatil": {M:null,Pv:null,S:null,H:null,logKow:null,Koc:null,Dair:null,Deau:null,vol:null,Teb:null,Kd:null,cas:"Pv > 1000 Pa, H > 0.05"},
+  "Volatil": {M:null,Pv:null,S:null,H:null,logKow:null,Koc:null,Dair:null,Deau:null,vol:null,Teb:null,Kd:null,cas:"Pv 100-1000 Pa, H > 0.01"},
+  "Semi-volatil": {M:null,Pv:null,S:null,H:null,logKow:null,Koc:null,Dair:null,Deau:null,vol:null,Teb:null,Kd:null,cas:"Pv 0.001-100 Pa, H 0.001-0.01"},
+  "Peu volatil": {M:null,Pv:null,S:null,H:null,logKow:null,Koc:null,Dair:null,Deau:null,vol:null,Teb:null,Kd:null,cas:"Pv < 0.001 Pa, H < 0.001"},
+  "Non volatil": {M:null,Pv:null,S:null,H:null,logKow:null,Koc:null,Dair:null,Deau:null,vol:null,Teb:null,Kd:null,cas:"Pv ≈ 0 Pa, H ≈ 0"},
+  "Particulaire": {M:null,Pv:null,S:null,H:null,logKow:null,Koc:null,Dair:null,Deau:null,vol:null,Teb:null,Kd:null,cas:"Métaux / composés inorganiques non volatils"},
+};
+
+const VLEP_DATA = {
+  "Benzène": {vlep8h:3.25,ppm:1.0,cas:"71-43-2",source:"Réglementaire (CMR)"},
+  "Toluène": {vlep8h:76.8,ppm:20.0,cas:"108-88-3",source:"Réglementaire"},
+  "Éthylbenzène": {vlep8h:88.4,ppm:20.0,cas:"100-41-4",source:"Réglementaire"},
+  "Xylènes (mélange)": {vlep8h:221.0,ppm:50.0,cas:"1330-20-7",source:"Réglementaire"},
+  "Styrène": {vlep8h:100.0,ppm:23.3,cas:"100-42-5",source:"Réglementaire"},
+  "Trichloroéthylène (TCE)": {vlep8h:54.7,ppm:10.0,cas:"79-01-6",source:"Réglementaire (CMR)"},
+  "Tétrachloroéthylène (PCE)": {vlep8h:138.0,ppm:20.0,cas:"127-18-4",source:"Réglementaire"},
+  "Chlorure de vinyle": {vlep8h:2.59,ppm:1.0,cas:"75-01-4",source:"Réglementaire (CMR)"},
+  "Dichlorométhane": {vlep8h:178.0,ppm:50.0,cas:"75-09-2",source:"Réglementaire"},
+  "Tétrachlorure de carbone": {vlep8h:6.4,ppm:1.0,cas:"56-23-5",source:"Indicative"},
+  "Chloroforme": {vlep8h:10.0,ppm:2.0,cas:"67-66-3",source:"Indicative"},
+  "1,2-Dichloroéthane": {vlep8h:8.2,ppm:2.0,cas:"107-06-2",source:"Réglementaire (CMR)"},
+  "Plomb": {vlep8h:0.1,ppm:null,cas:"7439-92-1",source:"Réglementaire"},
+  "Arsenic inorganique": {vlep8h:0.01,ppm:null,cas:"7440-38-2",source:"Réglementaire (CMR, CIRC 1)"},
+  "Cadmium": {vlep8h:0.004,ppm:null,cas:"7440-43-9",source:"Réglementaire (CMR)"},
+  "Chrome VI": {vlep8h:0.001,ppm:null,cas:"18540-29-9",source:"Réglementaire (CMR, 01/2025)"},
+  "Nickel": {vlep8h:0.01,ppm:null,cas:"7440-02-0",source:"Réglementaire (CMR composés)"},
+  "Mercure inorganique": {vlep8h:0.02,ppm:null,cas:"7439-97-6",source:"Réglementaire"},
+  "Formaldéhyde": {vlep8h:0.37,ppm:0.3,cas:"50-00-0",source:"Réglementaire (CMR)"},
+  "Naphtalène": {vlep8h:50.0,ppm:10.0,cas:"91-20-3",source:"Indicative"},
+  "Acétone": {vlep8h:1210.0,ppm:500.0,cas:"67-64-1",source:"Indicative"},
+  "Source VLEP : INRS, Base de données VLEP (https://www.inrs.fr/publications/bdd/vlep.html). Valeurs au 01/01/2025.": {vlep8h:null,ppm:null,cas:"Source VLEP : INRS, Base de données VLEP (https://www.inrs.fr/publications/bdd/vlep.html). Valeurs au 01/01/2025.",source:"Source VLEP : INRS, Base de données VLEP (https://www.inrs.fr/publications/bdd/vlep.html). Valeurs au 01/01/2025."},
+  "CMR = Cancérogène, Mutagène ou Reprotoxique. Les VLEP réglementaires sont contraignantes (Code du travail art. R4412-149).": {vlep8h:null,ppm:null,cas:"CMR = Cancérogène, Mutagène ou Reprotoxique. Les VLEP réglementaires sont contraignantes (Code du travail art. R4412-149).",source:"CMR = Cancérogène, Mutagène ou Reprotoxique. Les VLEP réglementaires sont contraignantes (Code du travail art. R4412-149)."},
+};
+
+const ERI_NAME_MAP = {
+  "Nickel (composés)": "Nickel",
+};
+
+const BAT_DEFAULTS = {
+  LB: 10, WB: 10, HB: 2.5, ER: 0.45,
+  Lcrack: 0.15, eta: 0.0002, Zcrack: 0.15,
+  n: 0.35, theta_w: 0.15, rho_b: 1.7,
+  kv: 1e-12, foc: 0.006, LT: 2, dP: 4,
+  mu: 1.81e-5, Ts: 15, LH: 0, Lsource: 1,
+  Da: 8.8e-6, Dw: 9.8e-10, Hprime: 0.228,
+  substance_select: "Benzène"
+};
+
+const PARAMS_DEFAULTS = {
+  adulte:  {P:70, ED:30, EF:350, AT_seuil:30, AT_sansseuil:70, IRs:3e-5, IRw:2, IRa:20, Scut:5700, AF:0.07, ABS:0.1, Fi:0.8},
+  enfant:  {P:15, ED:6,  EF:350, AT_seuil:6,  AT_sansseuil:70, IRs:1e-4, IRw:1, IRa:10, Scut:2800, AF:0.2,  ABS:0.1, Fi:0.8},
+  salarie: {P:70, ED:25, EF:220, AT_seuil:25, AT_sansseuil:70, IRs:5e-5, IRw:1, IRa:20, Scut:3300, AF:0.07, ABS:0.1, Fi:1.0}
+};
+
+const SENSITIVITY_LTS = [0.5, 1, 1.5, 2, 3, 4, 5, 7, 10, 15];
+
+// ============================================================
+// POROSITY DATA
+// ============================================================
+const POROSITY_GEOLOGY = [
+  {name:'SÉDIMENTS NON CONSOLIDÉS',rows:[
+    {name:'Gravier grossier',n_min:24,n_typ:28,n_max:37,ne_min:19,ne_typ:21,ne_max:25,classification:'Très perméable',remarques:'Aquifère majeur — fort rendement spécifique',kv_typ:1e-8,theta_w_typ:0.05},
+    {name:'Gravier moyen',n_min:24,n_typ:32,n_max:44,ne_min:18,ne_typ:24,ne_max:28,classification:'Très perméable',remarques:'Aquifère alluvial très productif',kv_typ:1e-8,theta_w_typ:0.06},
+    {name:'Gravier fin',n_min:25,n_typ:34,n_max:39,ne_min:17,ne_typ:28,ne_max:32,classification:'Très perméable',remarques:'Transition gravier-sable grossier',kv_typ:5e-9,theta_w_typ:0.07},
+    {name:'Sable grossier',n_min:31,n_typ:39,n_max:46,ne_min:22,ne_typ:30,ne_max:35,classification:'Perméable',remarques:'Aquifère productif — nappes alluviales',kv_typ:1e-9,theta_w_typ:0.08},
+    {name:'Sable moyen',n_min:29,n_typ:39,n_max:49,ne_min:20,ne_typ:32,ne_max:35,classification:'Perméable',remarques:'Bon aquifère — formations dunaires',kv_typ:5e-10,theta_w_typ:0.1},
+    {name:'Sable fin',n_min:26,n_typ:43,n_max:53,ne_min:10,ne_typ:33,ne_max:36,classification:'Perméable',remarques:'Aquifère modéré — porosité de rétention élevée',kv_typ:1e-10,theta_w_typ:0.15},
+    {name:'Sable limoneux',n_min:30,n_typ:40,n_max:50,ne_min:8,ne_typ:15,ne_max:25,classification:'Semi-perméable',remarques:'Porosité efficace réduite par fraction fine',kv_typ:5e-11,theta_w_typ:0.2},
+    {name:'Limon (silt)',n_min:34,n_typ:46,n_max:61,ne_min:5,ne_typ:20,ne_max:25,classification:'Semi-perméable',remarques:'Capacité de rétention élevée — loess',kv_typ:1e-11,theta_w_typ:0.25},
+    {name:'Limon argileux',n_min:40,n_typ:47,n_max:55,ne_min:3,ne_typ:8,ne_max:15,classification:'Peu perméable',remarques:'Aquitard — drainage très lent',kv_typ:5e-12,theta_w_typ:0.3},
+    {name:'Argile',n_min:34,n_typ:45,n_max:57,ne_min:1,ne_typ:2,ne_max:5,classification:'Imperméable',remarques:'Aquiclude — rétention quasi-totale',kv_typ:1e-13,theta_w_typ:0.35},
+    {name:'Argile compacte (moraine)',n_min:30,n_typ:40,n_max:50,ne_min:0.5,ne_typ:1,ne_max:3,classification:'Imperméable',remarques:'Till glaciaire — barrière hydrogéologique',kv_typ:1e-14,theta_w_typ:0.38},
+    {name:'Till glaciaire silteux',n_min:30,n_typ:35,n_max:45,ne_min:3,ne_typ:6,ne_max:10,classification:'Peu perméable',remarques:'Aquitard — couverture glaciaire',kv_typ:5e-13,theta_w_typ:0.25},
+    {name:'Till glaciaire sableux',n_min:25,n_typ:32,n_max:40,ne_min:10,ne_typ:16,ne_max:20,classification:'Semi-perméable',remarques:'Semi-perméable — productivité variable',kv_typ:1e-11,theta_w_typ:0.18},
+    {name:'Till glaciaire graveleux',n_min:20,n_typ:28,n_max:35,ne_min:10,ne_typ:16,ne_max:20,classification:'Semi-perméable',remarques:'Plus drainant que till silteux',kv_typ:5e-11,theta_w_typ:0.15},
+    {name:'Tourbe',n_min:60,n_typ:80,n_max:92,ne_min:30,ne_typ:44,ne_max:55,classification:'Semi-perméable',remarques:'Milieu organique — forte rétention d’eau',kv_typ:1e-11,theta_w_typ:0.6},
+    {name:'Sable dunaire',n_min:35,n_typ:40,n_max:50,ne_min:25,ne_typ:38,ne_max:42,classification:'Perméable',remarques:'Dunes littorales — forte porosité efficace',kv_typ:1e-10,theta_w_typ:0.08},
+    {name:'Alluvions mixtes (sablo-gravier)',n_min:20,n_typ:30,n_max:40,ne_min:15,ne_typ:22,ne_max:30,classification:'Perméable',remarques:'Nappes alluviales — hétérogénéité variable',kv_typ:5e-9,theta_w_typ:0.1},
+    {name:'Remblais / sols anthropiques',n_min:20,n_typ:35,n_max:55,ne_min:5,ne_typ:15,ne_max:30,classification:'Variable',remarques:'Très variable selon composition',kv_typ:1e-10,theta_w_typ:0.15}
+  ]},
+  {name:'ROCHES SÉDIMENTAIRES',rows:[
+    {name:'Grès (poreux)',n_min:14,n_typ:30,n_max:49,ne_min:5,ne_typ:21,ne_max:30,classification:'Perméable',remarques:'Aquifère gréseux — porosité primaire',kv_typ:5e-11,theta_w_typ:0.12},
+    {name:'Grès cimenté',n_min:5,n_typ:15,n_max:25,ne_min:2,ne_typ:6,ne_max:12,classification:'Peu perméable',remarques:'Cimentation réduit porosité efficace',kv_typ:1e-12,theta_w_typ:0.1},
+    {name:'Siltstone (grès fin)',n_min:21,n_typ:30,n_max:41,ne_min:5,ne_typ:12,ne_max:20,classification:'Semi-perméable',remarques:'Transition grès-argile',kv_typ:5e-12,theta_w_typ:0.18},
+    {name:'Argilite (claystone)',n_min:41,n_typ:43,n_max:45,ne_min:1,ne_typ:3,ne_max:5,classification:'Imperméable',remarques:'Aquiclude — forte rétention capillaire',kv_typ:1e-14,theta_w_typ:0.38},
+    {name:'Schiste argileux (shale)',n_min:1,n_typ:6,n_max:10,ne_min:0.5,ne_typ:2,ne_max:5,classification:'Imperméable',remarques:'Très faible porosité efficace',kv_typ:1e-15,theta_w_typ:0.04},
+    {name:'Calcaire (matrice)',n_min:7,n_typ:15,n_max:56,ne_min:1,ne_typ:14,ne_max:25,classification:'Variable',remarques:'Très variable selon karstification',kv_typ:1e-11,theta_w_typ:0.08},
+    {name:'Calcaire karstifié',n_min:5,n_typ:20,n_max:50,ne_min:5,ne_typ:18,ne_max:40,classification:'Très perméable',remarques:'Conduits karstiques — forte perméabilité en grand',kv_typ:1e-8,theta_w_typ:0.05},
+    {name:'Craie',n_min:10,n_typ:30,n_max:40,ne_min:1,ne_typ:3,ne_max:5,classification:'Semi-perméable',remarques:'Forte porosité totale, faible porosité efficace',kv_typ:5e-11,theta_w_typ:0.27},
+    {name:'Dolomie',n_min:19,n_typ:25,n_max:33,ne_min:2,ne_typ:10,ne_max:20,classification:'Semi-perméable',remarques:'Porosité variable selon fracturation',kv_typ:5e-12,theta_w_typ:0.1},
+    {name:'Marne',n_min:5,n_typ:15,n_max:30,ne_min:0.5,ne_typ:2,ne_max:5,classification:'Peu perméable',remarques:'Aquitard — fraction argileuse dominante',kv_typ:1e-13,theta_w_typ:0.12},
+    {name:'Conglomérat',n_min:5,n_typ:20,n_max:35,ne_min:5,ne_typ:15,ne_max:25,classification:'Perméable',remarques:'Selon ciment et matrice',kv_typ:5e-11,theta_w_typ:0.08},
+    {name:'Tuf volcanique',n_min:15,n_typ:30,n_max:40,ne_min:10,ne_typ:21,ne_max:30,classification:'Semi-perméable',remarques:'Porosité primaire de dépôt',kv_typ:1e-11,theta_w_typ:0.12}
+  ]},
+  {name:'ROCHES CRISTALLINES ET MÉTAMORPHIQUES',rows:[
+    {name:'Granite (sain)',n_min:0.01,n_typ:0.1,n_max:2,ne_min:0.001,ne_typ:0.05,ne_max:0.1,classification:'Imperméable',remarques:'Socle non fracturé — quasi-imperméable',kv_typ:1e-16,theta_w_typ:0.001},
+    {name:'Granite fracturé',n_min:1,n_typ:3,n_max:10,ne_min:0.5,ne_typ:2,ne_max:5,classification:'Peu perméable',remarques:'Perméabilité en grand par fractures',kv_typ:1e-12,theta_w_typ:0.02},
+    {name:'Basalte (récent, vésiculaire)',n_min:5,n_typ:11,n_max:30,ne_min:3,ne_typ:8,ne_max:15,classification:'Semi-perméable',remarques:'Vésicules et tubes de lave — très variable',kv_typ:1e-11,theta_w_typ:0.05},
+    {name:'Basalte (ancien, compact)',n_min:0.1,n_typ:3,n_max:10,ne_min:0.01,ne_typ:1,ne_max:3,classification:'Imperméable',remarques:'Fracturation seule voie d’écoulement',kv_typ:1e-14,theta_w_typ:0.02},
+    {name:'Gneiss',n_min:0.1,n_typ:2,n_max:5,ne_min:0.01,ne_typ:1,ne_max:3,classification:'Imperméable',remarques:'Perméabilité limitée aux fractures',kv_typ:1e-14,theta_w_typ:0.01},
+    {name:'Schiste métamorphique',n_min:0.5,n_typ:4,n_max:10,ne_min:0.1,ne_typ:2,ne_max:5,classification:'Peu perméable',remarques:'Foliation favorise écoulement planaire',kv_typ:5e-13,theta_w_typ:0.03},
+    {name:'Quartzite',n_min:0.1,n_typ:3,n_max:8,ne_min:0.01,ne_typ:1,ne_max:3,classification:'Imperméable',remarques:'Très compact — fractures seules',kv_typ:1e-14,theta_w_typ:0.01},
+    {name:'Ardoise (slate)',n_min:0.1,n_typ:2,n_max:5,ne_min:0.01,ne_typ:0.5,ne_max:2,classification:'Imperméable',remarques:'Fissibilité mais porosité très faible',kv_typ:1e-14,theta_w_typ:0.01},
+    {name:'Serpentinite',n_min:1,n_typ:5,n_max:15,ne_min:0.5,ne_typ:2,ne_max:5,classification:'Peu perméable',remarques:'Variable selon altération',kv_typ:5e-13,theta_w_typ:0.03}
+  ]}
+];
+
+const POROSITY_ABAQUE = [
+  {contexte:'Plaine alluviale (graviers + sable)',n_rec:30,ne_rec:22,k_typ:'1×10⁻³',usage:'Captage AEP — nappe alluviale',kv_typ:5e-9,theta_w_typ:0.1},
+  {contexte:'Terrasse alluviale (sables moyens)',n_rec:39,ne_rec:32,k_typ:'5×10⁻⁴',usage:'Captage AEP — nappe de terrasse',kv_typ:5e-10,theta_w_typ:0.1},
+  {contexte:'Formations dunaires (sable fin-moyen)',n_rec:43,ne_rec:33,k_typ:'1×10⁻⁴',usage:'Nappe dunaire côtière',kv_typ:1e-10,theta_w_typ:0.08},
+  {contexte:'Limons des plateaux (loess)',n_rec:46,ne_rec:20,k_typ:'1×10⁻⁶',usage:'Drainage agricole — aquitard',kv_typ:1e-11,theta_w_typ:0.25},
+  {contexte:'Argiles de couverture',n_rec:45,ne_rec:2,k_typ:'1×10⁻⁹',usage:'Barrière imperméable — ISDI/ISDND',kv_typ:1e-13,theta_w_typ:0.35},
+  {contexte:'Calcaire karstifié (Jurassique)',n_rec:20,ne_rec:18,k_typ:'1×10⁻³',usage:'Aquifère karstique — vulnérabilité élevée',kv_typ:1e-8,theta_w_typ:0.05},
+  {contexte:'Craie (Sénonien, Turonien)',n_rec:30,ne_rec:3,k_typ:'5×10⁻⁵',usage:'Nappe de la Craie — forte porosité / faible ne',kv_typ:5e-11,theta_w_typ:0.27},
+  {contexte:'Grès des Vosges / Trias',n_rec:30,ne_rec:21,k_typ:'5×10⁻⁵',usage:'Aquifère gréseux profond',kv_typ:5e-11,theta_w_typ:0.12},
+  {contexte:'Marne (Toarcien, Oxfordien)',n_rec:15,ne_rec:2,k_typ:'1×10⁻⁸',usage:'Aquitard — base d’aquifère',kv_typ:1e-13,theta_w_typ:0.12},
+  {contexte:'Socle granitique fracturé',n_rec:3,ne_rec:2,k_typ:'1×10⁻⁶',usage:'Ressource limitée — forages profonds',kv_typ:1e-12,theta_w_typ:0.02},
+  {contexte:'Basalte (volcanique récent)',n_rec:11,ne_rec:8,k_typ:'1×10⁻⁵',usage:'Aquifère volcanique — Auvergne, Réunion',kv_typ:1e-11,theta_w_typ:0.05},
+  {contexte:'Schiste métamorphique',n_rec:4,ne_rec:2,k_typ:'1×10⁻⁷',usage:'Faibles ressources — zones de socle',kv_typ:5e-13,theta_w_typ:0.03},
+  {contexte:'Remblais / sols anthropiques',n_rec:35,ne_rec:15,k_typ:'Variable',usage:'Diagnostic pollution — sites ICPE',kv_typ:1e-10,theta_w_typ:0.15},
+  {contexte:'Till glaciaire (moraine)',n_rec:35,ne_rec:6,k_typ:'1×10⁻⁷',usage:'Couverture glaciaire — nord de l’Europe',kv_typ:5e-13,theta_w_typ:0.25}
+];
+
+const POROSITY_RELATIONS = [
+  {classe:'Blocs (>200 mm)',d_median:'>200',n:25,ne:23,sr:2,ratio:0.92},
+  {classe:'Cailloux (60-200 mm)',d_median:'60-200',n:30,ne:28,sr:2,ratio:0.933},
+  {classe:'Gravier grossier (20-60 mm)',d_median:'40',n:28,ne:21,sr:7,ratio:0.75},
+  {classe:'Gravier fin (2-20 mm)',d_median:'10',n:34,ne:28,sr:6,ratio:0.824},
+  {classe:'Sable très grossier (1-2 mm)',d_median:'1.5',n:36,ne:30,sr:6,ratio:0.833},
+  {classe:'Sable grossier (0.5-1 mm)',d_median:'0.75',n:39,ne:30,sr:9,ratio:0.769},
+  {classe:'Sable moyen (0.25-0.5 mm)',d_median:'0.375',n:39,ne:32,sr:7,ratio:0.821},
+  {classe:'Sable fin (0.1-0.25 mm)',d_median:'0.15',n:43,ne:33,sr:10,ratio:0.767},
+  {classe:'Sable très fin (0.05-0.1 mm)',d_median:'0.075',n:45,ne:28,sr:17,ratio:0.622},
+  {classe:'Silt grossier (0.02-0.05 mm)',d_median:'0.035',n:46,ne:20,sr:26,ratio:0.435},
+  {classe:'Silt fin (0.002-0.02 mm)',d_median:'0.01',n:50,ne:8,sr:42,ratio:0.16},
+  {classe:'Argile (<0.002 mm)',d_median:'<0.002',n:47,ne:2,sr:45,ratio:0.043}
+];
+
+
+// ============================================================
+// STATE
+// ============================================================
+const state = {
+  concentrations: {}, // {substanceName: {air:0, airExt:0, sol:0, eau:0, solGaz:0}}
+  bat: {...BAT_DEFAULTS},
+  params: {
+    adulte: {...PARAMS_DEFAULTS.adulte},
+    enfant: {...PARAMS_DEFAULTS.enfant},
+    salarie: {...PARAMS_DEFAULTS.salarie}
+  },
+  // Computed values
+  batDerived: {},
+  modeleJE: {},
+  cindoor: {},
+  djeIng: {},
+  djeInhal: {},
+  djeContact: {},
+  resultatsQD: {},
+  resultatsERI: {},
+  vlepResults: {},
+  sensitivity: []
+};
+
+// Initialize concentrations
+SUBSTANCES.forEach(s => {
+  state.concentrations[s.name] = {air:0, airExt:0, sol:0, eau:0, solGaz:0};
+});
+
+// ============================================================
+// FORMATTING
+// ============================================================
+function fmt(v, digits) {
+  if (v === null || v === undefined || isNaN(v)) return '—';
+  if (v === 0) return '0';
+  digits = digits || 4;
+  const abs = Math.abs(v);
+  if (abs < 0.001 || abs >= 1e6) return v.toExponential(digits - 1);
+  if (abs < 1) return v.toPrecision(digits);
+  if (abs < 10) return v.toFixed(Math.max(0, digits - 1));
+  if (abs < 100) return v.toFixed(Math.max(0, digits - 2));
+  if (abs < 1000) return v.toFixed(Math.max(0, digits - 3));
+  return v.toFixed(Math.max(0, digits - 4));
+}
+
+function fmtSci(v) {
+  if (v === null || v === undefined || isNaN(v)) return '—';
+  if (v === 0) return '0';
+  return v.toExponential(3);
+}
+
+function parseNum(s) {
+  if (!s || s === '' || s === '—') return 0;
+  s = String(s).replace(',', '.').trim();
+  const v = parseFloat(s);
+  return isNaN(v) ? 0 : v;
+}
+
+// ============================================================
+// CALCULATION ENGINE
+// ============================================================
+function recalculate() {
+  computeBatDerived();
+  computeModeleJE();
+  computeCindoor();
+  computeDJEIngestion();
+  computeDJEInhalation();
+  computeDJEContact();
+  computeResultatsQD();
+  computeResultatsERI();
+  computeVLEP();
+  computeSensitivity();
+  updateActiveSheet();
+}
+
+function computeBatDerived() {
+  const b = state.bat;
+  const d = {};
+  d.AB = b.LB * b.WB;
+  d.Vroom = b.LB * b.WB * b.HB;
+  d.Qbuilding = b.LB * b.WB * b.HB * b.ER / 3600;
+  d.Acrack = b.eta * d.AB;
+  d.Xcrack = 2 * (b.LB + b.WB);
+  d.rcrack = d.Xcrack > 0 ? b.eta * d.AB / d.Xcrack : 0;
+  d.theta_a = b.n - b.theta_w;
+  state.batDerived = d;
+}
+
+function computeModeleJE() {
+  const b = state.bat;
+  const d = state.batDerived;
+  const m = {};
+
+  // Step 1: Effective diffusion (Millington-Quirk)
+  const theta_a = d.theta_a;
+  const n = b.n;
+  const Da = b.Da;
+  const Dw = b.Dw;
+  const Hprime = b.Hprime;
+
+  if (n === 0 || Hprime === 0) {
+    m.Deff = 0;
+  } else {
+    m.Deff = Da * Math.pow(theta_a, 10/3) / (n * n) + Dw * Math.pow(b.theta_w, 10/3) / (n * n) / Hprime;
+  }
+  m.Deff_crack = m.Deff;
+
+  // Step 2: Qsoil (Nazaroff)
+  const kv = b.kv;
+  const dP = b.dP;
+  const Zcrack = b.Zcrack;
+  const mu = b.mu;
+  const rcrack = d.rcrack;
+  if (rcrack > 0 && Zcrack > 0 && mu > 0) {
+    const ln_arg = 2 * Zcrack / rcrack;
+    m.Qsoil = ln_arg > 0 ? 2 * Math.PI * kv * dP * Zcrack / (mu * Math.log(ln_arg)) : 0;
+  } else {
+    m.Qsoil = 0;
+  }
+  m.Qbuilding = d.Qbuilding;
+
+  // Step 3: Alpha
+  const AB = d.AB;
+  const LT = b.LT;
+  const Lcrack = b.Lcrack;
+  const Acrack = d.Acrack;
+
+  if (m.Qbuilding > 0 && LT > 0 && m.Deff > 0 && AB > 0) {
+    m.A_param = m.Deff * AB / (m.Qbuilding * LT);
+  } else {
+    m.A_param = 0;
+  }
+
+  if (m.Qsoil > 0 && Lcrack > 0 && m.Deff_crack > 0 && Acrack > 0) {
+    m.B_param = m.Deff_crack * Acrack / (m.Qsoil * Lcrack);
+  } else {
+    m.B_param = 0;
+  }
+
+  m.C_param = m.Qbuilding > 0 ? m.Qsoil / m.Qbuilding : 0;
+
+  if (m.Deff > 0 && AB > 0) {
+    m.Pe_sol = m.Qsoil * LT / (m.Deff * AB);
+  } else {
+    m.Pe_sol = 0;
+  }
+
+  if (m.Deff_crack > 0 && Acrack > 0) {
+    m.Pe_crack = m.Qsoil * Lcrack / (m.Deff_crack * Acrack);
+  } else {
+    m.Pe_crack = 0;
+  }
+
+  // α = A × exp(Pe_sol) × Pe_crack / ((exp(Pe_crack) - 1) + A × exp(Pe_sol) × Pe_crack)
+  const expPeSol = Math.exp(m.Pe_sol);
+  const expPeCrack = Math.exp(m.Pe_crack);
+  const numerator = m.A_param * expPeSol * m.Pe_crack;
+  const denominator = (expPeCrack - 1) + m.A_param * expPeSol * m.Pe_crack;
+  m.alpha = denominator !== 0 ? numerator / denominator : 0;
+
+  // Lateral dilution
+  const LH = b.LH;
+  if (LH === 0) {
+    m.delta = 1;
+  } else {
+    const sqrtABpi = Math.sqrt(AB / Math.PI);
+    m.delta = AB / (Math.PI * Math.pow(LH + sqrtABpi, 2));
+  }
+  m.alpha_eff = m.alpha * m.delta;
+
+  state.modeleJE = m;
+}
+
+function computeCindoor() {
+  const alpha = state.modeleJE.alpha_eff || 0;
+  const Hprime = state.bat.Hprime;
+  const ci = {};
+  SUBSTANCES.forEach(s => {
+    const c = state.concentrations[s.name];
+    const solGaz = c.solGaz || 0;
+    const eau = c.eau || 0;
+    ci[s.name] = {
+      solGaz: alpha * solGaz,
+      nappe: alpha * Hprime * eau * 1000
+    };
+  });
+  state.cindoor = ci;
+}
+
+function computeDJEIngestion() {
+  const res = {};
+  ['adulte', 'enfant', 'salarie'].forEach(receptor => {
+    const p = state.params[receptor];
+    res[receptor] = {};
+    SUBSTANCES.forEach(s => {
+      const c = state.concentrations[s.name];
+      const Csol = c.sol || 0;
+      const Ceau = c.eau || 0;
+      const denom_seuil = p.P * p.AT_seuil * 365;
+      const denom_sansseuil = p.P * p.AT_sansseuil * 365;
+
+      // Check if substance has ERU (non-threshold)
+      const hasERU = VTR_SANSSEUIL[s.name] || VTR_SANSSEUIL[Object.keys(ERI_NAME_MAP).find(k => ERI_NAME_MAP[k] === s.name)];
+
+      const denom = denom_seuil > 0 ? denom_seuil : 1;
+      const denom_ss = denom_sansseuil > 0 ? denom_sansseuil : 1;
+
+      res[receptor][s.name] = {
+        djeSol: denom > 0 ? Csol * p.IRs * p.EF / denom : 0,
+        djeEau: denom > 0 ? (Ceau / 1000) * p.IRw * p.EF / denom : 0,
+        djeSol_ss: denom_ss > 0 ? Csol * p.IRs * p.EF / denom_ss : 0,
+        djeEau_ss: denom_ss > 0 ? (Ceau / 1000) * p.IRw * p.EF / denom_ss : 0,
+      };
+    });
+  });
+  state.djeIng = res;
+}
+
+function computeDJEInhalation() {
+  const res = {};
+  ['adulte', 'enfant', 'salarie'].forEach(receptor => {
+    const p = state.params[receptor];
+    res[receptor] = {};
+    SUBSTANCES.forEach(s => {
+      const c = state.concentrations[s.name];
+      const Cair = c.air || 0;
+      const ci = state.cindoor[s.name] || {solGaz:0, nappe:0};
+      const CairJE = Math.max(ci.solGaz, ci.nappe);
+
+      // CI = Cair × Fi × EF/365 × ED/AT
+      const ci_seuil = Cair * p.Fi * (p.EF / 365) * (p.ED / p.AT_seuil);
+      const ci_sansseuil = Cair * p.Fi * (p.EF / 365) * (p.ED / p.AT_sansseuil);
+      const ciJE_seuil = CairJE * p.Fi * (p.EF / 365) * (p.ED / p.AT_seuil);
+      const ciJE_sansseuil = CairJE * p.Fi * (p.EF / 365) * (p.ED / p.AT_sansseuil);
+
+      res[receptor][s.name] = {
+        Cair: Cair,
+        CI: ci_seuil,
+        CI_ss: ci_sansseuil,
+        CairJE: CairJE,
+        CI_JE: ciJE_seuil,
+        CI_JE_ss: ciJE_sansseuil,
+      };
+    });
+  });
+  state.djeInhal = res;
+}
+
+function computeDJEContact() {
+  const res = {};
+  ['adulte', 'enfant', 'salarie'].forEach(receptor => {
+    const p = state.params[receptor];
+    res[receptor] = {};
+    SUBSTANCES.forEach(s => {
+      const c = state.concentrations[s.name];
+      const Csol = c.sol || 0;
+      const denom_seuil = p.P * p.AT_seuil * 365;
+      const denom_sansseuil = p.P * p.AT_sansseuil * 365;
+      const denom = denom_seuil > 0 ? denom_seuil : 1;
+      const denom_ss = denom_sansseuil > 0 ? denom_sansseuil : 1;
+
+      res[receptor][s.name] = {
+        dje: denom > 0 ? Csol * p.Scut * p.AF * p.ABS * 1e-6 * p.EF / denom : 0,
+        dje_ss: denom_ss > 0 ? Csol * p.Scut * p.AF * p.ABS * 1e-6 * p.EF / denom_ss : 0,
+      };
+    });
+  });
+  state.djeContact = res;
+}
+
+function computeResultatsQD() {
+  const res = {};
+  ['adulte', 'enfant', 'salarie'].forEach(receptor => {
+    res[receptor] = {};
+    SUBSTANCES.forEach(s => {
+      const vtr = VTR_SEUIL[s.name];
+      if (!vtr) { res[receptor][s.name] = {}; return; }
+
+      const ing = state.djeIng[receptor][s.name];
+      const inh = state.djeInhal[receptor][s.name];
+      const con = state.djeContact[receptor][s.name];
+
+      const qd = {};
+      // Ingestion sol
+      qd.ingSol = vtr.orale ? ing.djeSol / vtr.orale : 0;
+      // Ingestion eau
+      qd.ingEau = vtr.orale ? ing.djeEau / vtr.orale : 0;
+      // Inhalation (CI in µg/m³, VTR in mg/m³ → divide CI by 1000)
+      qd.inhal = vtr.inhal ? (inh.CI / 1000) / vtr.inhal : 0;
+      // Cutané
+      qd.cutane = (vtr.cutanee || vtr.orale) ? con.dje / (vtr.cutanee || vtr.orale) : 0;
+      // J&E Inhalation
+      qd.jeInhal = vtr.inhal ? (inh.CI_JE / 1000) / vtr.inhal : 0;
+      // Total
+      qd.total = qd.ingSol + qd.ingEau + qd.inhal + qd.cutane + qd.jeInhal;
+
+      res[receptor][s.name] = qd;
+    });
+  });
+  state.resultatsQD = res;
+}
+
+function computeResultatsERI() {
+  const res = {};
+  // ADAF = Age-Dependent Adjustment Factor (US EPA 2005, Supplemental Guidance)
+  // Enfants 2-6 ans : ADAF = 3 (susceptibilité accrue aux cancérigènes)
+  // Adultes / Salariés : ADAF = 1
+  const ADAF = { adulte: 1, enfant: 3, salarie: 1 };
+
+  ['adulte', 'enfant', 'salarie'].forEach(receptor => {
+    res[receptor] = {};
+    const adaf = ADAF[receptor];
+    ERI_SUBSTANCES.forEach(eriName => {
+      const concName = ERI_NAME_MAP[eriName] || eriName;
+      const vtr = VTR_SANSSEUIL[eriName];
+      if (!vtr) return;
+
+      // Check if substance exists in concentrations
+      const sObj = SUBSTANCES.find(s => s.name === concName);
+      if (!sObj && concName !== null) return;
+
+      const p = state.params[receptor];
+      const ing = sObj ? state.djeIng[receptor][concName] : null;
+      const inh = sObj ? state.djeInhal[receptor][concName] : null;
+      const con = sObj ? state.djeContact[receptor][concName] : null;
+
+      const eri = {};
+      // ERI ingestion = (DJE_sol_ss + DJE_eau_ss) × ERU_oral × ADAF
+      if (vtr.eruOral && ing) {
+        eri.ingestion = (ing.djeSol_ss + ing.djeEau_ss) * vtr.eruOral * adaf;
+      } else {
+        eri.ingestion = 0;
+      }
+
+      // ERI inhalation = CI_ss × ERU_inhal × ADAF
+      if (vtr.eruInhal && inh) {
+        eri.inhalation = inh.CI_ss * vtr.eruInhal * adaf;
+      } else {
+        eri.inhalation = 0;
+      }
+
+      // ERI J&E inhalation × ADAF
+      if (vtr.eruInhal && inh) {
+        eri.jeInhal = inh.CI_JE_ss * vtr.eruInhal * adaf;
+      } else {
+        eri.jeInhal = 0;
+      }
+
+      // ERI cutané × ADAF
+      if (vtr.eruOral && con) {
+        eri.cutane = con.dje_ss * vtr.eruOral * adaf;
+      } else {
+        eri.cutane = 0;
+      }
+
+      eri.total = eri.ingestion + Math.max(eri.inhalation, eri.jeInhal) + eri.cutane;
+
+      res[receptor][eriName] = eri;
+    });
+  });
+  state.resultatsERI = res;
+}
+
+function computeVLEP() {
+  const res = {};
+  Object.keys(VLEP_DATA).forEach(name => {
+    const vlep = VLEP_DATA[name];
+    if (!vlep.vlep8h) return;
+    const sObj = SUBSTANCES.find(s => s.name === name);
+    if (!sObj) return;
+    const inh = state.djeInhal.salarie[name];
+    if (!inh) return;
+
+    const CI_mg = inh.CI / 1000; // µg/m³ to mg/m³
+    const ratio = vlep.vlep8h > 0 ? CI_mg / vlep.vlep8h : 0;
+    let status, cls;
+    if (ratio < 0.1) { status = '✓ Très inférieur VLEP'; cls = 'val-green'; }
+    else if (ratio < 1) { status = '⚠ Inférieur VLEP'; cls = 'val-orange'; }
+    else { status = '✗ Dépasse VLEP'; cls = 'val-red'; }
+
+    res[name] = { CI_mg, ratio, status, cls };
+  });
+  state.vlepResults = res;
+}
+
+function computeSensitivity() {
+  const b = state.bat;
+  const d = state.batDerived;
+  const res = [];
+
+  SENSITIVITY_LTS.forEach(lt => {
+    // Recompute alpha for different LT
+    const Deff = state.modeleJE.Deff;
+    const Qsoil = state.modeleJE.Qsoil;
+    const Qbuilding = d.Qbuilding;
+    const AB = d.AB;
+    const Lcrack = b.Lcrack;
+    const Acrack = d.Acrack;
+
+    let A_p = 0, Pe_sol = 0, Pe_crack = state.modeleJE.Pe_crack;
+    if (Qbuilding > 0 && lt > 0 && Deff > 0 && AB > 0) {
+      A_p = Deff * AB / (Qbuilding * lt);
+      Pe_sol = Qsoil * lt / (Deff * AB);
+    }
+
+    const expPeSol = Math.exp(Pe_sol);
+    const expPeCrack = Math.exp(Pe_crack);
+    const num = A_p * expPeSol * Pe_crack;
+    const den = (expPeCrack - 1) + A_p * expPeSol * Pe_crack;
+    let alpha = den !== 0 ? num / den : 0;
+
+    // Apply lateral dilution
+    const delta = state.modeleJE.delta || 1;
+    const alpha_eff = alpha * delta;
+
+    // Cindoor for the selected substance (use first substance with data, or benzene)
+    let csolgaz = 0, ceau = 0;
+    SUBSTANCES.forEach(s => {
+      const c = state.concentrations[s.name];
+      if (c.solGaz > csolgaz) csolgaz = c.solGaz;
+      if (c.eau > ceau) ceau = c.eau;
+    });
+    const Hprime = b.Hprime;
+    const cindoor_sg = alpha_eff * csolgaz;
+    const cindoor_nappe = alpha_eff * Hprime * ceau * 1000;
+
+    res.push({
+      LT: lt,
+      Pe_sol: Pe_sol,
+      alpha: alpha_eff,
+      cindoor_sg: cindoor_sg,
+      cindoor_nappe: cindoor_nappe
+    });
+  });
+  state.sensitivity = res;
+}
+
+// ============================================================
+// TAB SYSTEM
+// ============================================================
+const TABS = [
+  {id:'sommaire', label:'Sommaire', input:false},
+  {id:'parametres', label:'Paramètres', input:true},
+  {id:'vtr_seuil', label:'VTR Seuil', input:false},
+  {id:'vtr_sansseuil', label:'VTR Sans Seuil', input:false},
+  {id:'concentrations', label:'Concentrations', input:true},
+  {id:'proprietes', label:'Propriétés Chim.', input:false},
+  {id:'batiment', label:'Bâtiment', input:true},
+  {id:'porosite_sols', label:'Porosité Sols', input:false},
+  {id:'modele_je', label:'Modèle J&E', input:false},
+  {id:'dje_ingestion', label:'DJE Ingestion', input:false},
+  {id:'dje_inhalation', label:'DJE Inhalation', input:false},
+  {id:'dje_contact', label:'DJE Contact', input:false},
+  {id:'resultats_qd', label:'Résultats QD', input:false},
+  {id:'resultats_eri', label:'Résultats ERI', input:false},
+  {id:'vlep', label:'VLEP', input:false},
+  {id:'graphiques', label:'Graphiques J&E', input:false},
+];
+
+let activeTab = 'sommaire';
+
+function initTabs() {
+  const bar = document.getElementById('tabBar');
+  bar.innerHTML = TABS.map(t =>
+    \`<div class="tab\${t.input?' input-tab':''}\${t.id===activeTab?' active':''}" data-tab="\${t.id}">\${t.label}</div>\`
+  ).join('');
+  bar.addEventListener('click', e => {
+    const tab = e.target.closest('.tab');
+    if (!tab) return;
+    activeTab = tab.dataset.tab;
+    bar.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === activeTab));
+    renderActiveSheet();
+  });
+}
+
+function renderActiveSheet() {
+  const main = document.getElementById('mainContent');
+  const renderFn = sheetRenderers[activeTab];
+  if (renderFn) {
+    main.innerHTML = renderFn();
+    attachInputHandlers();
+  }
+}
+
+function updateActiveSheet() {
+  renderActiveSheet();
+}
+
+function attachInputHandlers() {
+  const main = document.getElementById('mainContent');
+  main.querySelectorAll('input[data-field]').forEach(inp => {
+    inp.addEventListener('change', handleInput);
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.target.blur(); } });
+  });
+  main.querySelectorAll('select[data-field]').forEach(sel => {
+    sel.addEventListener('change', handleInput);
+  });
+}
+
+function handleInput(e) {
+  const el = e.target;
+  const field = el.dataset.field;
+  const parts = field.split('.');
+
+  if (parts[0] === 'conc') {
+    const name = parts[1];
+    const key = parts[2]; // air, airExt, sol, eau, solGaz
+    state.concentrations[name][key] = parseNum(el.value);
+  } else if (parts[0] === 'bat') {
+    const key = parts[1];
+    if (key === 'substance_select') {
+      state.bat.substance_select = el.value;
+      // Update Da, Dw, Hprime from properties
+      const prop = PROPRIETES[el.value];
+      if (prop) {
+        state.bat.Da = prop.Dair || 8.8e-6;
+        state.bat.Dw = prop.Deau || 9.8e-10;
+        state.bat.Hprime = prop.H || 0.228;
+      }
+    } else {
+      state.bat[key] = parseNum(el.value);
+    }
+  } else if (parts[0] === 'params') {
+    const receptor = parts[1];
+    const key = parts[2];
+    state.params[receptor][key] = parseNum(el.value);
+  }
+
+  recalculate();
+}
+
+// ============================================================
+// SHEET RENDERERS
+// ============================================================
+const sheetRenderers = {};
+
+// --- Sommaire ---
+sheetRenderers.sommaire = function() {
+  let h = '<div class="sheet-title">Sommaire</div>';
+  h += '<div class="sheet-subtitle">ÉQRS — Modèle Johnson & Ettinger — Intrusion de vapeurs</div>';
+  h += '<div class="sommaire-card">';
+
+  const items = [
+    ['parametres','Paramètres',"Paramètres d'exposition humaine (adulte/enfant/salarié)"],
+    ['vtr_seuil','VTR Seuil','Valeurs Toxicologiques de Référence — effets à seuil'],
+    ['vtr_sansseuil','VTR Sans Seuil','Excès de Risque Unitaire — effets sans seuil (ERU)'],
+    ['concentrations','Concentrations','Saisie des concentrations mesurées (air, sol, eaux, sol-gaz)'],
+    ['proprietes','Propriétés Chim.','Propriétés physico-chimiques : M, Pv, S, H, Kow, Koc, Dair, Deau'],
+    ['batiment','Bâtiment','Données constructives : volumes pièces, dalle, sol, source'],
+    ['porosite_sols','Porosité Sols','Valeurs de référence de porosité par nature géologique — Freeze & Cherry, Fetter, USGS'],
+    ['modele_je','Modèle J&E',"Modèle Johnson & Ettinger — facteur d'atténuation α"],
+    ['dje_ingestion','DJE Ingestion',"Dose Journalière d'Exposition — voie ingestion"],
+    ['dje_inhalation','DJE Inhalation',"Dose Journalière d'Exposition — voie inhalation"],
+    ['dje_contact','DJE Contact',"Dose Journalière d'Exposition — voie cutanée"],
+    ['resultats_qd','Résultats QD','Quotients de Danger (QD) — effets à seuil'],
+    ['resultats_eri','Résultats ERI','Excès de Risque Individuel (ERI) — effets sans seuil'],
+    ['vlep','VLEP',"Comparaison aux Valeurs Limites d'Exposition Professionnelle"],
+    ['graphiques','Graphiques J&E','Analyse de sensibilité — variation de α avec la distance'],
+  ];
+
+  items.forEach(([id,label,desc]) => {
+    h += \`<div class="sommaire-item" onclick="document.querySelector('[data-tab=\${id}]').click()">\`;
+    h += \`<span class="sommaire-name">\${label}</span>\`;
+    h += \`<span class="sommaire-desc">\${desc}</span>\`;
+    h += '</div>';
+  });
+
+  h += '</div>';
+  h += '<div style="margin-top:1.2rem;padding:0.8rem;background:#f0f9f4;border:1px solid #2ecc71;border-radius:6px;display:flex;align-items:center;gap:1rem">';
+  h += '<button onclick="exportPDF()" style="padding:8px 20px;background:#2ecc71;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;font-weight:600;letter-spacing:0.02em" >&#128196; Exporter Rapport PDF Professionnel</button>';
+  h += '<span style="font-size:0.8rem;color:#666">Génère un rapport multi-pages : page de garde, paramètres, concentrations, résultats J&E, QD, ERI, graphiques, synthèse, mentions légales</span>';
+  h += '</div>';
+  h += '<div class="legend" style="margin-top:1.5rem">';
+  h += '<div class="legend-item"><div class="legend-swatch" style="background:var(--yellow)"></div> Cellules à remplir</div>';
+  h += '<div class="legend-item"><div class="legend-swatch" style="background:#f0f4f8"></div> Calculs automatiques</div>';
+  h += '<div class="legend-item"><div class="legend-swatch" style="background:var(--green)"></div> Résultat acceptable</div>';
+  h += '<div class="legend-item"><div class="legend-swatch" style="background:var(--orange)"></div> Vigilance</div>';
+  h += '<div class="legend-item"><div class="legend-swatch" style="background:var(--red)"></div> Inacceptable</div>';
+  h += '</div>';
+  return h;
+};
+
+// --- Concentrations ---
+sheetRenderers.concentrations = function() {
+  let h = '<div class="sheet-title">Concentrations mesurées</div>';
+  h += '<div class="sheet-subtitle">Remplir les cellules jaunes avec les concentrations mesurées dans les différents milieux.</div>';
+  h += '<div class="table-wrap"><table class="data-table"><thead><tr>';
+  h += '<th style="min-width:200px">Substance</th>';
+  h += '<th>Air intérieur (µg/m³)</th>';
+  h += '<th>Air extérieur (µg/m³)</th>';
+  h += '<th>Sol / Poussières (mg/kg MS)</th>';
+  h += '<th>Eaux sout. (µg/L)</th>';
+  h += '<th>Sol-gaz (µg/m³)</th>';
+  h += '</tr></thead><tbody>';
+
+  let si = 0;
+  SUBSTANCES.forEach((s, i) => {
+    // Insert section headers
+    while (si < SECTIONS.length && SECTIONS[si].row <= s.row) {
+      h += \`<tr class="section-row"><td colspan="6">\${SECTIONS[si].name}</td></tr>\`;
+      si++;
+    }
+    const c = state.concentrations[s.name];
+    h += '<tr>';
+    h += \`<td style="font-weight:500">\${s.name}</td>\`;
+    ['air','airExt','sol','eau','solGaz'].forEach(key => {
+      const val = c[key] || '';
+      const display = val ? String(val) : '';
+      h += \`<td><input type="text" data-field="conc.\${s.name}.\${key}" value="\${display}" placeholder="0"></td>\`;
+    });
+    h += '</tr>';
+  });
+
+  h += '</tbody></table></div>';
+  return h;
+};
+
+// --- Paramètres ---
+sheetRenderers.parametres = function() {
+  let h = '<div class="sheet-title">Paramètres d\\'exposition humaine</div>';
+  h += '<div class="sheet-subtitle">Valeurs par défaut selon les recommandations INERIS / SPF. Modifiables.</div>';
+  h += '<div class="table-wrap"><table class="data-table"><thead><tr>';
+  h += '<th style="min-width:250px">Paramètre</th><th>Adulte</th><th>Enfant (2-6 ans)</th><th>Salarié</th><th>Unité</th>';
+  h += '</tr></thead><tbody>';
+
+  const rows = [
+    ['P', 'Poids corporel (P)', 'kg'],
+    ['ED', "Durée d'exposition (ED)", 'années'],
+    ['EF', "Fréquence d'exposition (EF)", 'j/an'],
+    ['AT_seuil', 'Temps moyennage (AT) — seuil', 'années'],
+    ['AT_sansseuil', 'Temps moyennage (AT) — sans seuil', 'années'],
+    ['IRs', 'Quantité sol ingéré (IRs)', 'kg/j'],
+    ['IRw', 'Quantité eau ingérée (IRw)', 'L/j'],
+    ['IRa', 'Volume air inhalé (IRa)', 'm³/j'],
+    ['Scut', 'Surface cutanée exposée (Scut)', 'cm²'],
+    ['AF', 'Facteur adhérence sol (AF)', 'mg/cm²'],
+    ['ABS', 'Fraction absorption cutanée (ABS)', '—'],
+    ['Fi', 'Fraction temps intérieur (Fi)', '—'],
+  ];
+
+  rows.forEach(([key, label, unit]) => {
+    h += '<tr>';
+    h += \`<td style="font-weight:500">\${label}</td>\`;
+    ['adulte','enfant','salarie'].forEach(r => {
+      const val = state.params[r][key];
+      const display = val !== undefined ? String(val) : '';
+      h += \`<td><input type="text" data-field="params.\${r}.\${key}" value="\${display}"></td>\`;
+    });
+    h += \`<td style="color:var(--text-muted)">\${unit}</td>\`;
+    h += '</tr>';
+  });
+
+  h += '</tbody></table></div>';
+  return h;
+};
+
+// --- VTR Seuil ---
+sheetRenderers.vtr_seuil = function() {
+  let h = '<div class="sheet-title">Valeurs Toxicologiques de Référence — Effets à seuil</div>';
+  h += '<div class="sheet-subtitle">Données de référence (non modifiables)</div>';
+  h += '<div class="table-wrap"><table class="data-table"><thead><tr>';
+  h += '<th>Substance</th><th>VTR Orale (mg/kg/j)</th><th>VTR Inhal. (mg/m³)</th><th>VTR Cutanée (mg/kg/j)</th><th>Organisme</th><th>Effet critique</th>';
+  h += '</tr></thead><tbody>';
+
+  let si = 0;
+  SUBSTANCES.forEach(s => {
+    while (si < SECTIONS.length && SECTIONS[si].row <= s.row) {
+      h += \`<tr class="section-row"><td colspan="6">\${SECTIONS[si].name}</td></tr>\`;
+      si++;
+    }
+    const v = VTR_SEUIL[s.name];
+    h += '<tr>';
+    h += \`<td style="font-weight:500">\${s.name}</td>\`;
+    if (v) {
+      h += \`<td class="computed">\${v.orale !== null ? fmt(v.orale) : '—'}</td>\`;
+      h += \`<td class="computed">\${v.inhal !== null ? fmt(v.inhal) : '—'}</td>\`;
+      h += \`<td class="computed">\${v.cutanee !== null ? fmt(v.cutanee) : '—'}</td>\`;
+      h += \`<td>\${v.org || '—'}</td>\`;
+      h += \`<td>\${v.effet || '—'}</td>\`;
+    } else {
+      h += '<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>';
+    }
+    h += '</tr>';
+  });
+
+  h += '</tbody></table></div>';
+  return h;
+};
+
+// --- VTR Sans Seuil ---
+sheetRenderers.vtr_sansseuil = function() {
+  let h = '<div class="sheet-title">Excès de Risque Unitaire (ERU) — Effets sans seuil</div>';
+  h += '<div class="sheet-subtitle">Substances cancérogènes — Données de référence (non modifiables)</div>';
+  h += '<div class="table-wrap"><table class="data-table"><thead><tr>';
+  h += '<th>Substance</th><th>ERU Oral ((mg/kg/j)⁻¹)</th><th>ERU Inhal. ((µg/m³)⁻¹)</th><th>Organisme</th><th>Type de cancer</th>';
+  h += '</tr></thead><tbody>';
+
+  ERI_SUBSTANCES.forEach(name => {
+    const v = VTR_SANSSEUIL[name];
+    if (!v) return;
+    h += '<tr>';
+    h += \`<td style="font-weight:500">\${name}</td>\`;
+    h += \`<td class="computed">\${v.eruOral !== null ? fmtSci(v.eruOral) : '—'}</td>\`;
+    h += \`<td class="computed">\${v.eruInhal !== null ? fmtSci(v.eruInhal) : '—'}</td>\`;
+    h += \`<td>\${v.org || '—'}</td>\`;
+    h += \`<td>\${v.cancer || '—'}</td>\`;
+    h += '</tr>';
+  });
+
+  h += '</tbody></table></div>';
+  return h;
+};
+
+// --- Propriétés Chimiques ---
+sheetRenderers.proprietes = function() {
+  let h = '<div class="sheet-title">Propriétés physico-chimiques</div>';
+  h += '<div class="sheet-subtitle">Sources : US EPA RSL, INERIS. Kd = Koc × foc (calculé automatiquement).</div>';
+  h += '<div class="table-wrap"><table class="data-table"><thead><tr>';
+  h += '<th>Substance</th><th>CAS</th><th>M (g/mol)</th><th>Pv (Pa)</th><th>S (mg/L)</th>';
+  h += '<th>H (adim.)</th><th>log Kow</th><th>Koc (L/kg)</th><th>Dair (m²/s)</th><th>Deau (m²/s)</th>';
+  h += '<th>Kd (L/kg)</th>';
+  h += '</tr></thead><tbody>';
+
+  let si = 0;
+  SUBSTANCES.forEach(s => {
+    while (si < SECTIONS.length && SECTIONS[si].row <= s.row) {
+      h += \`<tr class="section-row"><td colspan="11">\${SECTIONS[si].name}</td></tr>\`;
+      si++;
+    }
+    const p = PROPRIETES[s.name];
+    h += '<tr>';
+    h += \`<td style="font-weight:500">\${s.name}</td>\`;
+    if (p) {
+      h += \`<td>\${p.cas || '—'}</td>\`;
+      h += \`<td class="computed">\${p.M !== null ? fmt(p.M) : '—'}</td>\`;
+      h += \`<td class="computed">\${p.Pv !== null ? fmtSci(p.Pv) : '—'}</td>\`;
+      h += \`<td class="computed">\${p.S !== null ? fmt(p.S) : '—'}</td>\`;
+      h += \`<td class="computed">\${p.H !== null ? fmtSci(p.H) : '—'}</td>\`;
+      h += \`<td class="computed">\${p.logKow !== null ? fmt(p.logKow) : '—'}</td>\`;
+      h += \`<td class="computed">\${p.Koc !== null ? fmt(p.Koc) : '—'}</td>\`;
+      h += \`<td class="computed">\${p.Dair !== null ? fmtSci(p.Dair) : '—'}</td>\`;
+      h += \`<td class="computed">\${p.Deau !== null ? fmtSci(p.Deau) : '—'}</td>\`;
+      // Kd = Koc × foc
+      const kd = (p.Koc !== null) ? p.Koc * state.bat.foc : null;
+      h += \`<td class="computed">\${kd !== null ? fmtSci(kd) : '—'}</td>\`;
+    } else {
+      h += '<td>—</td>'.repeat(10);
+    }
+    h += '</tr>';
+  });
+
+  h += '</tbody></table></div>';
+  return h;
+};
+
+// --- Bâtiment ---
+sheetRenderers.batiment = function() {
+  const b = state.bat;
+  const d = state.batDerived;
+
+  let h = '<div class="sheet-title">Données constructives du bâtiment et du sol</div>';
+  h += '<div class="sheet-subtitle">Paramètres pour le modèle Johnson & Ettinger (2004)</div>';
+
+  h += '<div class="param-grid">';
+
+  // Caractéristiques du bâtiment
+  h += '<div class="param-section"><h3>Caractéristiques du bâtiment</h3>';
+  h += paramRow('Longueur du bâtiment (LB)', 'bat.LB', b.LB, 'm');
+  h += paramRow('Largeur du bâtiment (WB)', 'bat.WB', b.WB, 'm');
+  h += paramRow('Hauteur sous plafond (HB)', 'bat.HB', b.HB, 'm');
+  h += computedRow('Surface au sol (AB)', d.AB, 'm²');
+  h += computedRow('Volume de la pièce (Vroom)', d.Vroom, 'm³');
+  h += paramRow("Taux renouvellement d'air (ER)", 'bat.ER', b.ER, 'h⁻¹');
+  h += computedRow('Débit ventilation (Qbuilding)', d.Qbuilding, 'm³/s');
+  h += '</div>';
+
+  // Dalle / Fondation
+  h += '<div class="param-section"><h3>Dalle / Fondation</h3>';
+  h += paramRow('Épaisseur de la dalle (Lcrack)', 'bat.Lcrack', b.Lcrack, 'm');
+  h += paramRow('Ratio de fissuration (η)', 'bat.eta', b.eta, '—');
+  h += computedRow('Surface totale fissures (Acrack)', d.Acrack, 'm²');
+  h += computedRow('Périmètre fissure (Xcrack)', d.Xcrack, 'm');
+  h += computedRow('Rayon équivalent fissure (rcrack)', d.rcrack, 'm');
+  h += paramRow('Profondeur fissure (Zcrack)', 'bat.Zcrack', b.Zcrack, 'm');
+  h += '</div>';
+
+  // Propriétés du sol
+  h += '<div class="param-section"><h3>Propriétés du sol (zone non saturée)</h3>';
+  h += paramRow('Porosité totale (n)', 'bat.n', b.n, 'm³/m³');
+  h += paramRow('Teneur en eau (θw)', 'bat.theta_w', b.theta_w, 'm³/m³');
+  h += computedRow("Porosité à l'air (θa)", d.theta_a, 'm³/m³');
+  h += paramRow('Masse volumique sèche (ρb)', 'bat.rho_b', b.rho_b, 'g/cm³');
+  h += paramRow('Perméabilité intrinsèque (kv)', 'bat.kv', b.kv, 'm²');
+  h += paramRow('Fraction carbone organique (foc)', 'bat.foc', b.foc, 'kg/kg');
+  h += paramRow('Distance source → dalle (LT)', 'bat.LT', b.LT, 'm');
+  h += paramRow('Pression différentielle (ΔP)', 'bat.dP', b.dP, 'Pa');
+  h += paramRow("Viscosité dynamique air (μ)", 'bat.mu', b.mu, 'Pa·s');
+  h += paramRow('Température du sol (Ts)', 'bat.Ts', b.Ts, '°C');
+  h += \`<div class="param-row" style="background:#f0f9ff;border-left:3px solid #3b82f6;padding-left:0.6rem">\`
+      + \`<label style="color:#1e40af;font-style:italic">Sol sélectionné</label>\`
+      + \`<span class="computed-val" style="color:#1e40af;font-style:italic">\${b.selectedSoil || '— Aucun sol sélectionné (valeurs par défaut)'}</span>\`
+      + \`<span class="unit">—</span></div>\`;
+  h += '</div>';
+
+  // Source de pollution
+  h += '<div class="param-section"><h3>Caractéristiques de la source de pollution</h3>';
+  h += paramRow('Distance horizontale source → bâtiment (LH)', 'bat.LH', b.LH, 'm');
+  h += paramRow('Épaisseur lentille pollution (Lsource)', 'bat.Lsource', b.Lsource, 'm');
+  h += '</div>';
+
+  // Propriétés chimiques du contaminant sélectionné
+  h += '<div class="param-section"><h3>Propriétés chimiques du contaminant pilote</h3>';
+  h += '<div class="param-row"><label>Substance sélectionnée</label>';
+  h += \`<select class="param-select" data-field="bat.substance_select">\`;
+  SUBSTANCES.forEach(s => {
+    const sel = s.name === b.substance_select ? ' selected' : '';
+    h += \`<option value="\${s.name}"\${sel}>\${s.name}</option>\`;
+  });
+  h += '</select><span class="unit">—</span></div>';
+  h += paramRow("Diffusivité dans l'air (Da)", 'bat.Da', b.Da, 'm²/s');
+  h += paramRow("Diffusivité dans l'eau (Dw)", 'bat.Dw', b.Dw, 'm²/s');
+  h += paramRow("Constante de Henry (H')", 'bat.Hprime', b.Hprime, '—');
+  h += '</div>';
+
+  h += '</div>';
+  return h;
+};
+
+function paramRow(label, field, value, unit) {
+  const display = value !== undefined && value !== null ? String(value) : '';
+  return \`<div class="param-row"><label>\${label}</label><input type="text" data-field="\${field}" value="\${display}"><span class="unit">\${unit}</span></div>\`;
+}
+
+function computedRow(label, value, unit) {
+  return \`<div class="param-row"><label>\${label}</label><span class="computed-val">\${fmt(value)}</span><span class="unit">\${unit}</span></div>\`;
+}
+
+// --- Porosité Sols ---
+// Global soil selection function
+function selectSoil(trEl, n, tw, kv, name, details) {
+  state.bat.n = n;
+  state.bat.theta_w = tw;
+  state.bat.kv = kv;
+  state.bat.selectedSoil = name;
+  recalculate();
+  // Remove previous selection
+  document.querySelectorAll('.soil-selected').forEach(el => el.classList.remove('soil-selected'));
+  // Highlight clicked row
+  if (trEl) trEl.classList.add('soil-selected');
+  // Notification
+  const notif = document.getElementById('porosity-notif');
+  if (notif) {
+    notif.innerHTML = '\\u2705 <strong>Sol \\u00ab' + name + '\\u00bb s\\u00e9lectionn\\u00e9</strong> \\u2014' + details;
+    notif.style.display = 'block';
+    notif.style.opacity = '1';
+    clearTimeout(notif._t);
+    notif._t = setTimeout(() => { notif.style.opacity = '0.6'; }, 5000);
+  }
+}
+
+sheetRenderers.porosite_sols = function() {
+  function classColor(c) {
+    if (c === 'Très perméable') return 'background:#dbeafe;color:#1e40af;font-weight:600';
+    if (c === 'Perméable') return 'background:#dcfce7;color:#166534;font-weight:600';
+    if (c === 'Semi-perméable') return 'background:#fef9c3;color:#854d0e;font-weight:600';
+    if (c === 'Peu perméable') return 'background:#ffedd5;color:#9a3412;font-weight:600';
+    if (c === 'Imperméable') return 'background:#fee2e2;color:#991b1b;font-weight:600';
+    return 'background:#f1f5f9;color:#475569;font-weight:600';
+  }
+
+  // kept for compat
+  function applyPorosity(n_val, label) { selectSoil(null, n_val/100, state.bat.theta_w, state.bat.kv, label, ' n='+n_val+'%'); }
+
+  let h = '<div class="sheet-title">Propriétés des sols non saturés — Porosité du milieu</div>';
+  h += '<div class="sheet-subtitle">Valeurs de référence — Freeze &amp; Cherry (1979), Fetter (2001), Aqtesolv, Davis (1969), USGS</div>';
+
+  // Notification banner
+  h += '<div id="porosity-notif" style="display:none;opacity:0;transition:opacity 0.4s;background:#1a5276;color:#fff;padding:0.4rem 1rem;border-radius:4px;font-size:0.82rem;margin-bottom:0.8rem"></div>';
+
+  // Legend
+  h += '<div class="legend">';
+  h += '<span class="legend-item"><span class="legend-swatch" style="background:#dbeafe;border-color:#93c5fd"></span>Très perméable</span>';
+  h += '<span class="legend-item"><span class="legend-swatch" style="background:#dcfce7;border-color:#86efac"></span>Perméable</span>';
+  h += '<span class="legend-item"><span class="legend-swatch" style="background:#fef9c3;border-color:#fde047"></span>Semi-perméable</span>';
+  h += '<span class="legend-item"><span class="legend-swatch" style="background:#ffedd5;border-color:#fdba74"></span>Peu perméable</span>';
+  h += '<span class="legend-item"><span class="legend-swatch" style="background:#fee2e2;border-color:#fca5a5"></span>Imperméable</span>';
+  h += '<span class="legend-item"><span class="legend-swatch" style="background:#f1f5f9;border-color:#cbd5e1"></span>Variable</span>';
+  h += '</div>';
+  h += '<p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.8rem">Cliquer sur une ligne pour appliquer la porosité typique <strong>n</strong>, la teneur en eau volumique <strong>θw</strong> et la perméabilité intrinsèque <strong>kv</strong> au modèle (onglet Bâtiment).</p>';
+
+  // Sub-table 1 : Géologie
+  h += '<div class="table-wrap"><table class="data-table">';
+  h += '<thead><tr>';
+  h += '<th>Nature géologique</th>';
+  h += '<th style="text-align:center">n min (%)</th><th style="text-align:center;font-weight:700">n typ (%)</th><th style="text-align:center">n max (%)</th>';
+  h += '<th style="text-align:center">ne min (%)</th><th style="text-align:center;font-weight:700">ne typ (%)</th><th style="text-align:center">ne max (%)</th>';
+  h += '<th>Classification</th><th>Remarques</th>';
+  h += '</tr></thead><tbody>';
+
+  POROSITY_GEOLOGY.forEach(section => {
+    h += \`<tr class="section-row"><td colspan="9">\${section.name}</td></tr>\`;
+    section.rows.forEach(row => {
+      const ntyp = row.n_typ;
+      const kv_typ = row.kv_typ;
+      const tw_typ = row.theta_w_typ;
+      const rname = row.name;
+      h += \`<tr class="soil-row" onclick="selectSoil(this,\${(ntyp/100).toFixed(4)},\${tw_typ},\${kv_typ},'\${rname.replace(/'/g,"\\\\'")}',' n=\${ntyp}%, \\u03b8w=\${tw_typ}, kv=\${kv_typ} m\\u00b2')">\`;
+      h += \`<td>\${row.name}</td>\`;
+      h += \`<td style="text-align:center">\${row.n_min}</td>\`;
+      h += \`<td style="text-align:center;font-weight:700;background:#f8fafc">\${ntyp}</td>\`;
+      h += \`<td style="text-align:center">\${row.n_max}</td>\`;
+      h += \`<td style="text-align:center">\${row.ne_min}</td>\`;
+      h += \`<td style="text-align:center;font-weight:700;background:#f8fafc">\${row.ne_typ}</td>\`;
+      h += \`<td style="text-align:center">\${row.ne_max}</td>\`;
+      h += \`<td style="\${classColor(row.classification)};padding:0.35rem 0.6rem">\${row.classification}</td>\`;
+      h += \`<td style="font-size:0.75rem;color:var(--text-muted)">\${row.remarques}</td>\`;
+      h += '</tr>';
+    });
+  });
+
+  h += '</tbody></table></div>';
+
+  // Sub-table 2 : Abaque
+  h += '<div class="sheet-title" style="font-size:0.95rem;margin-top:1.5rem;margin-bottom:0.4rem">Abaque de sélection rapide</div>';
+  h += '<p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.6rem">Cliquer sur une ligne pour appliquer la porosité recommandée, θw et kv au modèle.</p>';
+  h += '<div class="table-wrap"><table class="data-table">';
+  h += '<thead><tr>';
+  h += '<th>Contexte géologique type</th>';
+  h += '<th style="text-align:center">n rec. (%)</th>';
+  h += '<th style="text-align:center">ne rec. (%)</th>';
+  h += '<th style="text-align:center">K typ (m/s)</th>';
+  h += '<th>Usage type</th>';
+  h += '</tr></thead><tbody>';
+
+  POROSITY_ABAQUE.forEach(row => {
+    const nrec = row.n_rec;
+    const kv_typ = row.kv_typ;
+    const tw_typ = row.theta_w_typ;
+    const rname = row.contexte;
+    h += \`<tr class="soil-row" onclick="selectSoil(this,\${(nrec/100).toFixed(4)},\${tw_typ},\${kv_typ},'\${rname.replace(/'/g,"\\\\'")}',' n=\${nrec}%, \\u03b8w=\${tw_typ}, kv=\${kv_typ} m\\u00b2')">\`;
+    h += \`<td>\${row.contexte}</td>\`;
+    h += \`<td style="text-align:center;font-weight:700">\${nrec}</td>\`;
+    h += \`<td style="text-align:center">\${row.ne_rec}</td>\`;
+    h += \`<td style="text-align:center;font-family:monospace">\${row.k_typ}</td>\`;
+    h += \`<td style="font-size:0.75rem;color:var(--text-muted)">\${row.usage}</td>\`;
+    h += '</tr>';
+  });
+
+  h += '</tbody></table></div>';
+
+  // Sub-table 3 : Relations granulométrie
+  h += '<div class="sheet-title" style="font-size:0.95rem;margin-top:1.5rem;margin-bottom:0.4rem">Relations porosité — granulométrie</div>';
+  h += '<div class="table-wrap"><table class="data-table">';
+  h += '<thead><tr>';
+  h += '<th>Classe granulométrique</th>';
+  h += '<th style="text-align:center">d médian (mm)</th>';
+  h += '<th style="text-align:center">Porosité totale (%)</th>';
+  h += '<th style="text-align:center">Porosité efficace (%)</th>';
+  h += '<th style="text-align:center">Rétention spécif. (%)</th>';
+  h += '<th style="text-align:center">Rapport ne/n</th>';
+  h += '</tr></thead><tbody>';
+
+  POROSITY_RELATIONS.forEach(row => {
+    h += '<tr>';
+    h += \`<td>\${row.classe}</td>\`;
+    h += \`<td style="text-align:center;font-family:monospace">\${row.d_median}</td>\`;
+    h += \`<td style="text-align:center;font-weight:600">\${row.n}</td>\`;
+    h += \`<td style="text-align:center;font-weight:600">\${row.ne}</td>\`;
+    h += \`<td style="text-align:center">\${row.sr}</td>\`;
+    h += \`<td style="text-align:center">\${row.ratio}</td>\`;
+    h += '</tr>';
+  });
+
+  h += '</tbody></table></div>';
+
+  // Footer note
+  h += '<p style="font-size:0.76rem;color:var(--text-muted);margin-top:0.8rem;font-style:italic">Les valeurs sont indicatives et doivent être adaptées au contexte local</p>';
+
+  return h;
+};
+
+// --- Modèle J&E ---
+sheetRenderers.modele_je = function() {
+  const m = state.modeleJE;
+  let h = '<div class="sheet-title">Modèle Johnson & Ettinger</div>';
+  h += '<div class="sheet-subtitle">Calcul du facteur d\\'atténuation α — Référence : Johnson & Ettinger (1991), EPA (2004)</div>';
+
+  // Step 1
+  h += '<div class="step-box"><h3><span class="step-num">1</span> Coefficient de diffusion effectif</h3>';
+  h += stepRow("θa (porosité à l'air)", state.batDerived.theta_a, 'm³/m³', 'n - θw');
+  h += stepRow('Deff sol', m.Deff, 'm²/s', 'Da×θa^(10/3)/n² + Dw×θw^(10/3)/n²/H\\'');
+  h += stepRow('Deff fissure', m.Deff_crack, 'm²/s', '= Deff sol');
+  h += '</div>';
+
+  // Step 2
+  h += '<div class="step-box"><h3><span class="step-num">2</span> Débit de gaz du sol</h3>';
+  h += stepRow('Qsoil', m.Qsoil, 'm³/s', '2π×kv×ΔP×Zcrack / (μ×ln(2Zcrack/rcrack))');
+  h += stepRow('Qbuilding', m.Qbuilding, 'm³/s', 'LB×WB×HB×ER / 3600');
+  h += '</div>';
+
+  // Step 3
+  h += '<div class="step-box"><h3><span class="step-num">3</span> Facteur d\\'atténuation α</h3>';
+  h += stepRow('A = Deff×AB / (Qbuilding×LT)', m.A_param, '—');
+  h += stepRow('B = Dcrack×Acrack / (Qsoil×Lcrack)', m.B_param, '—');
+  h += stepRow('C = Qsoil / Qbuilding', m.C_param, '—');
+  h += stepRow('Pe_sol', m.Pe_sol, '—', 'Qsoil×LT / (Deff×AB)');
+  h += stepRow('Pe_crack', m.Pe_crack, '—', 'Qsoil×Lcrack / (Deff×Acrack)');
+  h += stepRow('α (FACTEUR D\\'ATTÉNUATION)', m.alpha, '—', 'A×exp(Pe_sol)×Pe_crack / ((exp(Pe_crack)-1) + A×exp(Pe_sol)×Pe_crack)');
+  h += stepRow('δ (dilution latérale)', m.delta, '—', 'IF(LH=0, 1, AB/(π×(LH+√(AB/π))²))');
+  h += \`<div class="step-row" style="background:#e8f5e9;padding:0.5rem;border-radius:4px;margin-top:0.3rem">\`;
+  h += \`<span class="step-label" style="font-weight:700;color:#1a5276">α_eff (atténuation effective)</span>\`;
+  h += \`<span class="step-value" style="font-size:1rem;color:#1a5276">\${fmtSci(m.alpha_eff)}</span>\`;
+  h += \`<span class="step-unit">—</span>\`;
+  h += \`<span class="step-formula">α × δ</span>\`;
+  h += '</div>';
+  h += '</div>';
+
+  // Cindoor table
+  h += '<div class="step-box"><h3><span class="step-num">4</span> Concentration intérieure estimée (Cindoor)</h3>';
+  h += '<p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:0.6rem">α unique appliqué à toutes les substances (contaminant pilote : ' + state.bat.substance_select + ')</p>';
+
+  const hasData = SUBSTANCES.some(s => {
+    const c = state.concentrations[s.name];
+    return c.solGaz > 0 || c.eau > 0;
+  });
+
+  if (!hasData) {
+    h += '<div class="empty-state"><p>Aucune donnée saisie dans les concentrations sol-gaz ou eaux souterraines.</p></div>';
+  } else {
+    h += '<table class="data-table"><thead><tr>';
+    h += '<th>Substance</th><th>Csol-gaz (µg/m³)</th><th>Cnappe (µg/L)</th><th>α (J&E)</th><th>Cindoor sol-gaz (µg/m³)</th><th>Cindoor nappe (µg/m³)</th>';
+    h += '</tr></thead><tbody>';
+    SUBSTANCES.forEach(s => {
+      const c = state.concentrations[s.name];
+      if (c.solGaz === 0 && c.eau === 0) return;
+      const ci = state.cindoor[s.name];
+      h += '<tr>';
+      h += \`<td style="font-weight:500">\${s.name}</td>\`;
+      h += \`<td class="computed">\${fmt(c.solGaz)}</td>\`;
+      h += \`<td class="computed">\${fmt(c.eau)}</td>\`;
+      h += \`<td class="computed">\${fmtSci(m.alpha_eff)}</td>\`;
+      h += \`<td class="computed">\${fmtSci(ci.solGaz)}</td>\`;
+      h += \`<td class="computed">\${fmtSci(ci.nappe)}</td>\`;
+      h += '</tr>';
+    });
+    h += '</tbody></table>';
+  }
+  h += '</div>';
+
+  return h;
+};
+
+function stepRow(label, value, unit, formula) {
+  let h = '<div class="step-row">';
+  h += \`<span class="step-label">\${label}</span>\`;
+  h += \`<span class="step-value">\${fmtSci(value)}</span>\`;
+  h += \`<span class="step-unit">\${unit}</span>\`;
+  if (formula) h += \`<span class="step-formula">\${formula}</span>\`;
+  h += '</div>';
+  return h;
+}
+
+// --- DJE Ingestion ---
+sheetRenderers.dje_ingestion = function() {
+  let h = '<div class="sheet-title">Dose Journalière d\\'Exposition — Ingestion</div>';
+  h += '<div class="sheet-subtitle">DJE = (Ci × Qi × EF) / (P × AT × 365)</div>';
+  h += djeTable('ingestion');
+  return h;
+};
+
+function djeTable(type) {
+  let h = '<div class="table-wrap"><table class="data-table"><thead><tr>';
+  h += '<th>Substance</th>';
+
+  if (type === 'ingestion') {
+    h += '<th>Csol (mg/kg)</th><th>Ceau (µg/L)</th>';
+    h += '<th>DJE sol Ad.</th><th>DJE sol Enf.</th>';
+    h += '<th>DJE eau Ad.</th><th>DJE eau Enf.</th>';
+    h += '<th>DJE sol Sal.</th><th>DJE eau Sal.</th>';
+  } else if (type === 'inhalation') {
+    h += '<th>Cair int. (µg/m³)</th>';
+    h += '<th>CI Adulte (µg/m³)</th><th>CI Enfant (µg/m³)</th>';
+    h += '<th>Cair J&E (µg/m³)</th>';
+    h += '<th>CI Salarié (µg/m³)</th>';
+  } else if (type === 'contact') {
+    h += '<th>Csol (mg/kg)</th>';
+    h += '<th>DJE cutané Ad.</th><th>DJE cutané Enf.</th><th>DJE cutané Sal.</th>';
+  }
+  h += '</tr></thead><tbody>';
+
+  const hasData = SUBSTANCES.some(s => {
+    const c = state.concentrations[s.name];
+    return c.air > 0 || c.sol > 0 || c.eau > 0 || c.solGaz > 0;
+  });
+
+  if (!hasData) {
+    const cols = type === 'ingestion' ? 9 : type === 'inhalation' ? 6 : 5;
+    h += \`<tr><td colspan="\${cols}" style="text-align:center;padding:2rem;color:var(--text-muted)">Aucune donnée saisie dans les concentrations.</td></tr>\`;
+  } else {
+    let si = 0;
+    SUBSTANCES.forEach(s => {
+      while (si < SECTIONS.length && SECTIONS[si].row <= s.row) {
+        const cols = type === 'ingestion' ? 9 : type === 'inhalation' ? 6 : 5;
+        h += \`<tr class="section-row"><td colspan="\${cols}">\${SECTIONS[si].name}</td></tr>\`;
+        si++;
+      }
+
+      const c = state.concentrations[s.name];
+      if (c.air === 0 && c.sol === 0 && c.eau === 0 && c.solGaz === 0) return;
+
+      h += '<tr>';
+      h += \`<td style="font-weight:500">\${s.name}</td>\`;
+
+      if (type === 'ingestion') {
+        h += \`<td class="computed">\${fmt(c.sol)}</td>\`;
+        h += \`<td class="computed">\${fmt(c.eau)}</td>\`;
+        const ia = state.djeIng.adulte[s.name];
+        const ie = state.djeIng.enfant[s.name];
+        const is_ = state.djeIng.salarie[s.name];
+        h += \`<td class="computed">\${fmtSci(ia.djeSol)}</td>\`;
+        h += \`<td class="computed">\${fmtSci(ie.djeSol)}</td>\`;
+        h += \`<td class="computed">\${fmtSci(ia.djeEau)}</td>\`;
+        h += \`<td class="computed">\${fmtSci(ie.djeEau)}</td>\`;
+        h += \`<td class="computed">\${fmtSci(is_.djeSol)}</td>\`;
+        h += \`<td class="computed">\${fmtSci(is_.djeEau)}</td>\`;
+      } else if (type === 'inhalation') {
+        const ia = state.djeInhal.adulte[s.name];
+        const ie = state.djeInhal.enfant[s.name];
+        const is_ = state.djeInhal.salarie[s.name];
+        h += \`<td class="computed">\${fmt(c.air)}</td>\`;
+        h += \`<td class="computed">\${fmtSci(ia.CI)}</td>\`;
+        h += \`<td class="computed">\${fmtSci(ie.CI)}</td>\`;
+        h += \`<td class="computed">\${fmtSci(ia.CairJE)}</td>\`;
+        h += \`<td class="computed">\${fmtSci(is_.CI)}</td>\`;
+      } else if (type === 'contact') {
+        const ca = state.djeContact.adulte[s.name];
+        const ce = state.djeContact.enfant[s.name];
+        const cs = state.djeContact.salarie[s.name];
+        h += \`<td class="computed">\${fmt(c.sol)}</td>\`;
+        h += \`<td class="computed">\${fmtSci(ca.dje)}</td>\`;
+        h += \`<td class="computed">\${fmtSci(ce.dje)}</td>\`;
+        h += \`<td class="computed">\${fmtSci(cs.dje)}</td>\`;
+      }
+      h += '</tr>';
+    });
+  }
+
+  h += '</tbody></table></div>';
+  return h;
+}
+
+// --- DJE Inhalation ---
+sheetRenderers.dje_inhalation = function() {
+  let h = '<div class="sheet-title">Dose Journalière d\\'Exposition — Inhalation</div>';
+  h += '<div class="sheet-subtitle">CI = Cair × Fi × EF/365 × ED/AT</div>';
+  h += djeTable('inhalation');
+  return h;
+};
+
+// --- DJE Contact ---
+sheetRenderers.dje_contact = function() {
+  let h = '<div class="sheet-title">Dose Journalière d\\'Exposition — Contact cutané</div>';
+  h += '<div class="sheet-subtitle">DJE = (Csol × Scut × AF × ABS × 10⁻⁶ × EF) / (P × AT × 365)</div>';
+  h += djeTable('contact');
+  return h;
+};
+
+// --- Résultats QD ---
+sheetRenderers.resultats_qd = function() {
+  let h = '<div class="sheet-title">Quotients de Danger (QD) — Effets à seuil</div>';
+  h += '<div class="sheet-subtitle">QD = DJE / VTR — Critère : QD &lt; 1 par substance et par somme</div>';
+  h += '<div class="legend">';
+  h += '<div class="legend-item"><div class="legend-swatch" style="background:var(--green)"></div> QD &lt; 1 (acceptable)</div>';
+  h += '<div class="legend-item"><div class="legend-swatch" style="background:var(--red)"></div> QD ≥ 1 (inacceptable)</div>';
+  h += '</div>';
+
+  h += '<div class="table-wrap"><table class="data-table"><thead><tr>';
+  h += '<th>Substance</th><th>VTR Orale</th><th>VTR Inhal.</th>';
+  h += '<th>QD Ing. Sol Ad.</th><th>QD Ing. Sol Enf.</th>';
+  h += '<th>QD Ing. Eau Ad.</th><th>QD Ing. Eau Enf.</th>';
+  h += '<th>QD Inhal. Ad.</th><th>QD Inhal. Enf.</th>';
+  h += '<th>QD Cutané Ad.</th>';
+  h += '<th>QD Ing. Sol Sal.</th><th>QD Ing. Eau Sal.</th>';
+  h += '<th>QD Inhal. Sal.</th><th>QD Cutané Sal.</th>';
+  h += '<th>QD J&E Inhal. Ad.</th><th>QD J&E Inhal. Enf.</th><th>QD J&E Inhal. Sal.</th>';
+  h += '</tr></thead><tbody>';
+
+  const hasData = SUBSTANCES.some(s => {
+    const c = state.concentrations[s.name];
+    return c.air > 0 || c.sol > 0 || c.eau > 0 || c.solGaz > 0;
+  });
+
+  if (!hasData) {
+    h += '<tr><td colspan="17" style="text-align:center;padding:2rem;color:var(--text-muted)">Aucune donnée saisie dans les concentrations.</td></tr>';
+  } else {
+    const sums = {};
+    ['adulte','enfant','salarie'].forEach(r => { sums[r] = {ingSol:0,ingEau:0,inhal:0,cutane:0,jeInhal:0}; });
+
+    let si = 0;
+    SUBSTANCES.forEach(s => {
+      while (si < SECTIONS.length && SECTIONS[si].row <= s.row) {
+        h += \`<tr class="section-row"><td colspan="17">\${SECTIONS[si].name}</td></tr>\`;
+        si++;
+      }
+
+      const c = state.concentrations[s.name];
+      if (c.air === 0 && c.sol === 0 && c.eau === 0 && c.solGaz === 0) return;
+
+      const vtr = VTR_SEUIL[s.name];
+      const qa = state.resultatsQD.adulte[s.name] || {};
+      const qe = state.resultatsQD.enfant[s.name] || {};
+      const qs = state.resultatsQD.salarie[s.name] || {};
+
+      h += '<tr>';
+      h += \`<td style="font-weight:500">\${s.name}</td>\`;
+      h += \`<td class="computed">\${vtr && vtr.orale ? fmt(vtr.orale) : '—'}</td>\`;
+      h += \`<td class="computed">\${vtr && vtr.inhal ? fmt(vtr.inhal) : '—'}</td>\`;
+      h += qdCell(qa.ingSol) + qdCell(qe.ingSol);
+      h += qdCell(qa.ingEau) + qdCell(qe.ingEau);
+      h += qdCell(qa.inhal) + qdCell(qe.inhal);
+      h += qdCell(qa.cutane);
+      h += qdCell(qs.ingSol) + qdCell(qs.ingEau);
+      h += qdCell(qs.inhal) + qdCell(qs.cutane);
+      h += qdCell(qa.jeInhal) + qdCell(qe.jeInhal) + qdCell(qs.jeInhal);
+
+      ['adulte','enfant','salarie'].forEach(r => {
+        const q = r === 'adulte' ? qa : r === 'enfant' ? qe : qs;
+        sums[r].ingSol += q.ingSol || 0;
+        sums[r].ingEau += q.ingEau || 0;
+        sums[r].inhal += q.inhal || 0;
+        sums[r].cutane += q.cutane || 0;
+        sums[r].jeInhal += q.jeInhal || 0;
+      });
+
+      h += '</tr>';
+    });
+
+    // Sum row
+    h += '<tr class="sum-row"><td colspan="3"><strong>SOMME QD</strong></td>';
+    h += qdCell(sums.adulte.ingSol) + qdCell(sums.enfant.ingSol);
+    h += qdCell(sums.adulte.ingEau) + qdCell(sums.enfant.ingEau);
+    h += qdCell(sums.adulte.inhal) + qdCell(sums.enfant.inhal);
+    h += qdCell(sums.adulte.cutane);
+    h += qdCell(sums.salarie.ingSol) + qdCell(sums.salarie.ingEau);
+    h += qdCell(sums.salarie.inhal) + qdCell(sums.salarie.cutane);
+    h += qdCell(sums.adulte.jeInhal) + qdCell(sums.enfant.jeInhal) + qdCell(sums.salarie.jeInhal);
+    h += '</tr>';
+  }
+
+  h += '</tbody></table></div>';
+  return h;
+};
+
+function qdCell(v) {
+  if (v === undefined || v === null || isNaN(v) || v === 0) return '<td class="computed">0</td>';
+  let cls = v >= 1 ? 'val-red' : 'val-green';
+  return \`<td class="computed \${cls}">\${fmtSci(v)}</td>\`;
+}
+
+// --- Résultats ERI ---
+sheetRenderers.resultats_eri = function() {
+  let h = '<div class="sheet-title">Excès de Risque Individuel (ERI) — Effets sans seuil</div>';
+  h += '<div class="sheet-subtitle">ERI = DJE × ERU — Critère : Somme ERI &lt; 10⁻⁵</div>';
+  h += '<div class="legend">';
+  h += '<div class="legend-item"><div class="legend-swatch" style="background:var(--green)"></div> ERI &lt; 10⁻⁶ (acceptable)</div>';
+  h += '<div class="legend-item"><div class="legend-swatch" style="background:var(--orange)"></div> 10⁻⁶ ≤ ERI &lt; 10⁻⁵ (vigilance)</div>';
+  h += '<div class="legend-item"><div class="legend-swatch" style="background:var(--red)"></div> ERI ≥ 10⁻⁵ (inacceptable)</div>';
+  h += '</div>';
+
+  h += '<div class="table-wrap"><table class="data-table"><thead><tr>';
+  h += '<th>Substance</th><th>ERU Oral</th><th>ERU Inhal.</th>';
+  h += '<th>ERI Ing. Ad.</th><th>ERI Inhal. Ad.</th><th>ERI J&E Ad.</th><th>ERI Cut. Ad.</th>';
+  h += '<th>ERI Ing. Enf.</th><th>ERI Inhal. Enf.</th><th>ERI J&E Enf.</th><th>ERI Cut. Enf.</th><th>ERI Total Enf.</th>';
+  h += '<th>ERI Ing. Sal.</th><th>ERI Inhal. Sal.</th>';
+  h += '</tr></thead><tbody>';
+
+  const hasData = SUBSTANCES.some(s => {
+    const c = state.concentrations[s.name];
+    return c.air > 0 || c.sol > 0 || c.eau > 0 || c.solGaz > 0;
+  });
+
+  if (!hasData) {
+    h += '<tr><td colspan="14" style="text-align:center;padding:2rem;color:var(--text-muted)">Aucune donnée saisie dans les concentrations.</td></tr>';
+  } else {
+    const sums = {adulte:{ing:0,inhal:0,je:0,cut:0}, enfant:{ing:0,inhal:0,je:0,cut:0,total:0}, salarie:{ing:0,inhal:0}};
+
+    // ERI section headers from the original data
+    const eriSections = [
+      {before: 'Benzène', name: 'BTEX'},
+      {before: 'Benzo(a)pyrène', name: 'HAP'},
+      {before: 'Arsenic inorganique', name: 'MÉTAUX ET MÉTALLOÏDES'},
+      {before: 'Chlorure de vinyle', name: 'SOLVANTS CHLORÉS'},
+      {before: 'Formaldéhyde', name: 'AUTRES'},
+      {before: 'Lindane (gamma-HCH)', name: 'PESTICIDES'},
+      {before: 'PCB (Aroclor 1254)', name: 'PCB'},
+    ];
+    let sectionIdx = 0;
+
+    ERI_SUBSTANCES.forEach(eriName => {
+      // Section header
+      while (sectionIdx < eriSections.length && eriSections[sectionIdx].before === eriName) {
+        h += \`<tr class="section-row"><td colspan="14">\${eriSections[sectionIdx].name}</td></tr>\`;
+        sectionIdx++;
+      }
+
+      const vtr = VTR_SANSSEUIL[eriName];
+      if (!vtr) return;
+      const concName = ERI_NAME_MAP[eriName] || eriName;
+      const sObj = SUBSTANCES.find(s => s.name === concName);
+
+      h += '<tr>';
+      h += \`<td style="font-weight:500">\${eriName}</td>\`;
+      h += \`<td class="computed">\${vtr.eruOral !== null ? fmtSci(vtr.eruOral) : '—'}</td>\`;
+      h += \`<td class="computed">\${vtr.eruInhal !== null ? fmtSci(vtr.eruInhal) : '—'}</td>\`;
+
+      if (sObj) {
+        const ea = (state.resultatsERI.adulte || {})[eriName] || {};
+        const ec = (state.resultatsERI.enfant || {})[eriName] || {};
+        const es = (state.resultatsERI.salarie || {})[eriName] || {};
+        h += eriCell(ea.ingestion) + eriCell(ea.inhalation) + eriCell(ea.jeInhal) + eriCell(ea.cutane);
+        h += eriCell(ec.ingestion) + eriCell(ec.inhalation) + eriCell(ec.jeInhal) + eriCell(ec.cutane) + eriCell(ec.total);
+        h += eriCell(es.ingestion) + eriCell(es.inhalation);
+
+        sums.adulte.ing += ea.ingestion || 0;
+        sums.adulte.inhal += ea.inhalation || 0;
+        sums.adulte.je += ea.jeInhal || 0;
+        sums.adulte.cut += ea.cutane || 0;
+        sums.enfant.ing += ec.ingestion || 0;
+        sums.enfant.inhal += ec.inhalation || 0;
+        sums.enfant.je += ec.jeInhal || 0;
+        sums.enfant.cut += ec.cutane || 0;
+        sums.enfant.total += ec.total || 0;
+        sums.salarie.ing += es.ingestion || 0;
+        sums.salarie.inhal += es.inhalation || 0;
+      } else {
+        h += '<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>';
+      }
+      h += '</tr>';
+    });
+
+    // Sum row
+    h += '<tr class="sum-row"><td colspan="3"><strong>SOMME ERI</strong></td>';
+    h += eriCell(sums.adulte.ing) + eriCell(sums.adulte.inhal) + eriCell(sums.adulte.je) + eriCell(sums.adulte.cut);
+    h += eriCell(sums.enfant.ing) + eriCell(sums.enfant.inhal) + eriCell(sums.enfant.je) + eriCell(sums.enfant.cut) + eriCell(sums.enfant.total);
+    h += eriCell(sums.salarie.ing) + eriCell(sums.salarie.inhal);
+    h += '</tr>';
+
+    // Criteria row
+    h += '<tr style="background:#f8f9fa"><td colspan="3"><strong>CRITÈRE</strong></td>';
+    h += '<td colspan="11" style="text-align:center;font-weight:500">Somme ERI &lt; 10⁻⁵ (= 0.00001)</td>';
+    h += '</tr>';
+  }
+
+  h += '</tbody></table></div>';
+  return h;
+};
+
+function eriCell(v) {
+  if (v === undefined || v === null || isNaN(v) || v === 0) return '<td class="computed">0</td>';
+  let cls = '';
+  if (v >= 1e-5) cls = 'val-red';
+  else if (v >= 1e-6) cls = 'val-orange';
+  else cls = 'val-green';
+  return \`<td class="computed \${cls}">\${fmtSci(v)}</td>\`;
+}
+
+// --- VLEP ---
+sheetRenderers.vlep = function() {
+  let h = '<div class="sheet-title">Comparaison aux VLEP (Valeurs Limites d\\'Exposition Professionnelle)</div>';
+  h += '<div class="sheet-subtitle">Source : INRS — Code du travail. Scénario salarié uniquement.</div>';
+
+  h += '<div class="table-wrap"><table class="data-table"><thead><tr>';
+  h += '<th>Substance</th><th>CAS</th><th>VLEP-8h (mg/m³)</th><th>VLEP-8h (ppm)</th>';
+  h += '<th>CI Salarié (mg/m³)</th><th>Ratio CI/VLEP</th><th>Statut</th>';
+  h += '</tr></thead><tbody>';
+
+  Object.keys(VLEP_DATA).forEach(name => {
+    const vlep = VLEP_DATA[name];
+    const res = state.vlepResults[name] || {};
+    h += '<tr>';
+    h += \`<td style="font-weight:500">\${name}</td>\`;
+    h += \`<td>\${vlep.cas || '—'}</td>\`;
+    h += \`<td class="computed">\${vlep.vlep8h !== null ? fmt(vlep.vlep8h) : '—'}</td>\`;
+    h += \`<td class="computed">\${vlep.ppm !== null ? fmt(vlep.ppm) : '—'}</td>\`;
+    h += \`<td class="computed">\${res.CI_mg !== undefined ? fmtSci(res.CI_mg) : '0'}</td>\`;
+    h += \`<td class="computed">\${res.ratio !== undefined ? fmtSci(res.ratio) : '0'}</td>\`;
+    h += \`<td class="\${res.cls || 'val-green'}">\${res.status || '✓ Très inférieur VLEP'}</td>\`;
+    h += '</tr>';
+  });
+
+  h += '</tbody></table></div>';
+  return h;
+};
+
+// --- Graphiques J&E ---
+sheetRenderers.graphiques = function() {
+  let h = '<div class="sheet-title">Analyse de sensibilité — Modèle J&E</div>';
+  h += '<div class="sheet-subtitle">Variation du facteur d\\'atténuation α en fonction de la distance source → dalle (LT)</div>';
+
+  h += '<div class="table-wrap"><table class="data-table"><thead><tr>';
+  h += '<th>Distance LT (m)</th><th>Pe_sol</th><th>α (J&E)</th>';
+  h += '<th>Cindoor sol-gaz (µg/m³)</th><th>Cindoor nappe (µg/m³)</th>';
+  h += '</tr></thead><tbody>';
+
+  state.sensitivity.forEach(row => {
+    const isCurrent = Math.abs(row.LT - state.bat.LT) < 0.01;
+    h += \`<tr\${isCurrent ? ' style="background:#e8f5e9;font-weight:600"' : ''}>\`;
+    h += \`<td class="computed">\${row.LT}</td>\`;
+    h += \`<td class="computed">\${fmtSci(row.Pe_sol)}</td>\`;
+    h += \`<td class="computed">\${fmtSci(row.alpha)}</td>\`;
+    h += \`<td class="computed">\${fmtSci(row.cindoor_sg)}</td>\`;
+    h += \`<td class="computed">\${fmtSci(row.cindoor_nappe)}</td>\`;
+    h += '</tr>';
+  });
+
+  h += '</tbody></table></div>';
+
+  // Simple bar chart using CSS
+  h += '<div class="step-box"><h3>Graphique : α en fonction de LT</h3>';
+  const maxAlpha = Math.max(...state.sensitivity.map(r => r.alpha));
+  h += '<div style="display:flex;align-items:flex-end;gap:4px;height:180px;padding:1rem 0">';
+  state.sensitivity.forEach(row => {
+    const pct = maxAlpha > 0 ? (row.alpha / maxAlpha) * 100 : 0;
+    const isCurrent = Math.abs(row.LT - state.bat.LT) < 0.01;
+    h += \`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%">\`;
+    h += \`<div style="font-size:0.65rem;color:var(--text-muted);margin-bottom:2px">\${fmtSci(row.alpha)}</div>\`;
+    h += \`<div style="width:100%;max-width:40px;height:\${pct}%;background:\${isCurrent?'var(--blue)':'#a3cce9'};border-radius:3px 3px 0 0;min-height:2px;transition:height 0.3s"></div>\`;
+    h += \`<div style="font-size:0.7rem;margin-top:4px;font-weight:\${isCurrent?'700':'400'}">\${row.LT}m</div>\`;
+    h += '</div>';
+  });
+  h += '</div></div>';
+
+  return h;
+};
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  computeBatDerived();
+  computeModeleJE();
+  computeCindoor();
+  computeDJEIngestion();
+  computeDJEInhalation();
+  computeDJEContact();
+  computeResultatsQD();
+  computeResultatsERI();
+  computeVLEP();
+  computeSensitivity();
+  initTabs();
+  renderActiveSheet();
+}
+
+// ============================================================
+// EXPORT PDF PROFESSIONNEL — G.M.E.P — Johnson & Ettinger
+// Version 2.0 — Rapport multi-pages format Maisons-Alfort
+// ============================================================
+
+function exportPDF() {
+  const { jsPDF } = window.jspdf;
+
+  // ── Collect site info ──
+  
+  
+  const now       = new Date();
+  const dateEtude = now.toLocaleDateString('fr-FR', {day:'2-digit', month:'2-digit', year:'numeric'});
+  const timeStr   = now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+
+  // ── Colours ──
+  const BLUE   = [26, 54, 93];
+  const BLUE2  = [41, 82, 143];
+  const GREEN  = [46, 204, 113];
+  const ORANGE = [230, 126, 34];
+  const RED    = [231, 76, 60];
+  const GRAY   = [80, 80, 80];
+  const LGRAY  = [245, 247, 250];
+
+  // ── Local helpers (avoid collision with global fmt/fmtSci/parseNum) ──
+  function _f(v, digits) {
+    if (v === null || v === undefined || isNaN(v)) return '—';
+    if (v === 0) return '0';
+    digits = digits || 4;
+    const abs = Math.abs(v);
+    if (abs < 0.001 || abs >= 1e6) return v.toExponential(digits - 1);
+    if (abs < 1) return v.toPrecision(digits);
+    if (abs < 10) return v.toFixed(Math.max(0, digits - 1));
+    if (abs < 100) return v.toFixed(Math.max(0, digits - 2));
+    if (abs < 1000) return v.toFixed(Math.max(0, digits - 3));
+    return v.toFixed(Math.max(0, digits - 4));
+  }
+  function _s(v) {
+    if (v === null || v === undefined || isNaN(v)) return '—';
+    if (v === 0) return '0';
+    return v.toExponential(3);
+  }
+  function _p(s) {
+    if (!s || s === '' || s === '—') return 0;
+    s = String(s).replace(',', '.').trim();
+    const v = parseFloat(s);
+    return isNaN(v) ? 0 : v;
+  }
+
+  // ── Page counters ──
+  let pageNum = 0;
+
+  // ── Header/Footer helpers ──
+  function addLandscapeHeader(doc, title) {
+    const W = doc.internal.pageSize.getWidth();
+    doc.setFillColor(...BLUE);
+    doc.rect(0, 0, W, 16, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('G.M.E.P — ÉQRS Johnson & Ettinger', 10, 7);
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'normal');
+    doc.text(title, 10, 13);
+    doc.text(dateEtude + ' ' + timeStr, W - 10, 7, {align:'right'});
+    if (siteName || commune) {
+      doc.text([siteName, commune].filter(Boolean).join(' — '), W - 10, 13, {align:'right'});
+    }
+    doc.setTextColor(0, 0, 0);
+    return 21;
+  }
+
+  function addPortraitHeader(doc, title) {
+    const W = doc.internal.pageSize.getWidth();
+    doc.setFillColor(...BLUE);
+    doc.rect(0, 0, W, 16, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('G.M.E.P — ÉQRS Johnson & Ettinger', 10, 7);
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'normal');
+    doc.text(title, 10, 13);
+    doc.text(dateEtude, W - 10, 7, {align:'right'});
+    doc.setTextColor(0, 0, 0);
+    return 21;
+  }
+
+  function addFooter(doc, num) {
+    const W = doc.internal.pageSize.getWidth();
+    const H = doc.internal.pageSize.getHeight();
+    doc.setFontSize(6);
+    doc.setTextColor(130, 130, 130);
+    doc.text('(c) 2023-2026 SARL G.M.E.P — Tous droits reserves. Conception : Eric Azulay — www.gmep-france.eu', 10, H - 4);
+    doc.text('Page ' + num, W - 10, H - 4, {align:'right'});
+    doc.setTextColor(0, 0, 0);
+  }
+
+  function secTitle(doc, y, label, W, margin) {
+    doc.setFillColor(...BLUE2);
+    doc.rect(margin, y, W - 2*margin, 6, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.text(label, margin + 2, y + 4.2);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('helvetica', 'normal');
+    return y + 8;
+  }
+
+  // ── Bar chart helper (pure jsPDF) ──
+  // seriesData: [{label:string, bars:[{color:[r,g,b], value:number}]}]
+  // threshold1/2: horizontal reference lines (or null)
+  // logScale: bool — use log10 scale for ERI
+  function drawBarChart(doc, x, y, w, h, seriesData, threshold1, threshold2, title, logScale) {
+    const chartX = x + 30;
+    const chartY = y + 10;
+    const chartW = w - 36;
+    const chartH = h - 18;
+
+    // Title
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0,0,0);
+    doc.text(title, x + w/2, y + 6, {align:'center'});
+    doc.setFont('helvetica', 'normal');
+
+    // Axes
+    doc.setDrawColor(100, 100, 100);
+    doc.setLineWidth(0.3);
+    doc.line(chartX, chartY, chartX, chartY + chartH);
+    doc.line(chartX, chartY + chartH, chartX + chartW, chartY + chartH);
+
+    if (!seriesData || seriesData.length === 0) {
+      doc.setFontSize(6);
+      doc.setTextColor(150,150,150);
+      doc.text('(Aucune donnee)', chartX + chartW/2, chartY + chartH/2, {align:'center'});
+      doc.setTextColor(0,0,0);
+      return;
+    }
+
+    // Max value for scaling
+    let maxVal = 0;
+    seriesData.forEach(s => s.bars.forEach(b => { if (b.value > maxVal) maxVal = b.value; }));
+    if (threshold1 && threshold1 > maxVal) maxVal = threshold1 * 1.5;
+    if (threshold2 && threshold2 > maxVal) maxVal = threshold2 * 1.5;
+    if (maxVal === 0) maxVal = 1;
+
+    function scaleY(val) {
+      if (logScale) {
+        if (val <= 0) return 0;
+        const logMin = Math.log10(Math.max(maxVal * 1e-5, 1e-12));
+        const logMax = Math.log10(maxVal * 2);
+        const logVal = Math.log10(val);
+        return Math.max(0, Math.min(1, (logVal - logMin) / (logMax - logMin)));
+      } else {
+        return Math.min(1, val / maxVal);
+      }
+    }
+
+    // Gridlines + Y axis labels
+    const nTicks = 5;
+    doc.setFontSize(4.5);
+    doc.setTextColor(...GRAY);
+    for (let i = 0; i <= nTicks; i++) {
+      const frac = i / nTicks;
+      const yPos = chartY + chartH - frac * chartH;
+      let tickVal;
+      if (logScale) {
+        const logMin = Math.log10(Math.max(maxVal * 1e-5, 1e-12));
+        const logMax = Math.log10(maxVal * 2);
+        tickVal = Math.pow(10, logMin + frac * (logMax - logMin));
+      } else {
+        tickVal = frac * maxVal;
+      }
+      doc.text(_s(tickVal), chartX - 1, yPos + 1, {align:'right'});
+      doc.setDrawColor(220, 220, 220);
+      doc.setLineWidth(0.1);
+      doc.line(chartX, yPos, chartX + chartW, yPos);
+    }
+
+    // Bars
+    const nGroups = seriesData.length;
+    const groupW = chartW / nGroups;
+    const nBars = seriesData[0].bars.length;
+    const barW = Math.min(groupW * 0.7 / nBars, 7);
+    const groupPad = (groupW - barW * nBars) / 2;
+
+    seriesData.forEach((series, gi) => {
+      const gx = chartX + gi * groupW + groupPad;
+      series.bars.forEach((bar, bi) => {
+        const bx = gx + bi * barW;
+        const bh = scaleY(bar.value) * chartH;
+        if (bh > 0.2) {
+          doc.setFillColor(...bar.color);
+          doc.rect(bx, chartY + chartH - bh, barW * 0.88, bh, 'F');
+        }
+      });
+      // X label
+      const shortLabel = series.label.length > 13 ? series.label.substring(0, 12) + '.' : series.label;
+      doc.setFontSize(4.5);
+      doc.setTextColor(...GRAY);
+      doc.text(shortLabel, gx + groupW/2 - groupPad, chartY + chartH + 3.5, {align:'center'});
+    });
+
+    // Threshold lines
+    doc.setLineDash([1.5, 1], 0);
+    if (threshold1 !== null && threshold1 !== undefined) {
+      const ty = chartY + chartH - scaleY(threshold1) * chartH;
+      if (ty >= chartY - 1 && ty <= chartY + chartH + 1) {
+        doc.setDrawColor(...RED);
+        doc.setLineWidth(0.6);
+        doc.line(chartX, ty, chartX + chartW, ty);
+        doc.setFontSize(5.5);
+        doc.setTextColor(...RED);
+        doc.text(_s(threshold1), chartX + chartW + 1, ty + 1);
+      }
+    }
+    if (threshold2 !== null && threshold2 !== undefined) {
+      const ty = chartY + chartH - scaleY(threshold2) * chartH;
+      if (ty >= chartY - 1 && ty <= chartY + chartH + 1) {
+        doc.setDrawColor(...ORANGE);
+        doc.setLineWidth(0.5);
+        doc.line(chartX, ty, chartX + chartW, ty);
+        doc.setFontSize(5.5);
+        doc.setTextColor(...ORANGE);
+        doc.text(_s(threshold2), chartX + chartW + 1, ty + 1);
+      }
+    }
+    doc.setLineDash([], 0);
+
+    // Legend
+    const legendItems = [
+      {label: 'Adulte',  color: [31, 97, 141]},
+      {label: 'Enfant',  color: [211, 84, 0]},
+      {label: 'Salarie', color: [39, 174, 96]},
+    ];
+    let lx = chartX;
+    const ly = chartY + chartH + 9;
+    legendItems.forEach(li => {
+      doc.setFillColor(...li.color);
+      doc.rect(lx, ly - 2.5, 3, 3, 'F');
+      doc.setFontSize(5.5);
+      doc.setTextColor(...GRAY);
+      doc.text(li.label, lx + 4, ly);
+      lx += 22;
+    });
+    doc.setTextColor(0,0,0);
+  }
+
+  // ========================================================
+  // PAGE 1 — PAGE DE GARDE (Portrait)
+  // ========================================================
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  pageNum++;
+  const PW = doc.internal.pageSize.getWidth();
+  const PH = doc.internal.pageSize.getHeight();
+
+  // Full blue header band
+  doc.setFillColor(...BLUE);
+  doc.rect(0, 0, PW, 52, 'F');
+
+  // Logo + company name
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(26);
+  doc.setFont('helvetica', 'bold');
+  doc.text('G.M.E.P', PW/2, 22, {align:'center'});
+  doc.setFontSize(8.5);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Global Management of Environmental Project', PW/2, 29, {align:'center'});
+  doc.setFontSize(7);
+  doc.text('SARL — SIREN 753 097 625 — 9 rue de la Marne, 79400 Saint-Maixent-l\\'Ecole', PW/2, 34, {align:'center'});
+  doc.text('Tel. 06 07 73 72 33 — gmep.france@gmail.com — www.gmep-france.eu', PW/2, 39, {align:'center'});
+
+  // Green accent line
+  doc.setDrawColor(46, 204, 113);
+  doc.setLineWidth(1.5);
+  doc.line(18, 44, PW - 18, 44);
+
+  doc.setFontSize(7.5);
+  doc.setFont('helvetica', 'bold');
+  doc.text('RAPPORT D\\'EVALUATION QUANTITATIVE DES RISQUES SANITAIRES', PW/2, 49, {align:'center'});
+
+  doc.setTextColor(0, 0, 0);
+
+  // Main title block
+  let y = 72;
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...BLUE);
+  doc.text('EVALUATION QUANTITATIVE', PW/2, y, {align:'center'});
+  doc.text('DES RISQUES SANITAIRES', PW/2, y + 10, {align:'center'});
+
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(...GRAY);
+  doc.text('Modele Johnson & Ettinger (EPA 2004)', PW/2, y + 19, {align:'center'});
+  doc.text('Intrusion de vapeurs — Voies sol-gaz et nappe', PW/2, y + 25, {align:'center'});
+
+  doc.setDrawColor(200, 200, 200);
+  doc.setLineWidth(0.4);
+  doc.line(18, y + 31, PW - 18, y + 31);
+
+  // Site info block
+  y += 39;
+  if (siteName || commune) {
+    doc.setFillColor(...LGRAY);
+    doc.rect(18, y - 4, PW - 36, 30, 'F');
+    doc.setDrawColor(...BLUE);
+    doc.setLineWidth(0.3);
+    doc.rect(18, y - 4, PW - 36, 30, 'S');
+
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...BLUE);
+    doc.text('IDENTIFICATION DU SITE', 23, y + 2);
+
+    if (siteName) {
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(0,0,0);
+      doc.text(siteName, PW/2, y + 12, {align:'center'});
+    }
+    if (commune) {
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(...GRAY);
+      doc.text('Commune : ' + commune, PW/2, y + (siteName ? 20 : 12), {align:'center'});
+    }
+    doc.setTextColor(0,0,0);
+    y += 36;
+  }
+
+  // Metadata table
+  doc.setFillColor(240, 244, 248);
+  doc.rect(18, y, PW - 36, 40, 'F');
+  doc.setDrawColor(180, 190, 210);
+  doc.setLineWidth(0.25);
+  doc.rect(18, y, PW - 36, 40, 'S');
+
+  const metaItems = [
+    ['Date de l\\'etude',        dateEtude],
+    ['Heure de generation',     timeStr],
+    ['Outil de calcul',         'EQRS J&E — SARL G.M.E.P v2.0'],
+    ['Methode',                 'Johnson & Ettinger (EPA 2004)'],
+    ['Recepteurs',              'Adulte resident., Enfant (2-6 ans), Salarie'],
+  ];
+  doc.setFontSize(7.5);
+  metaItems.forEach((item, i) => {
+    const ry = y + 5 + i * 7;
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...BLUE);
+    doc.text(item[0] + ' :', 25, ry);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(0,0,0);
+    doc.text(item[1], 97, ry);
+  });
+
+  y += 50;
+
+  // Notice
+  doc.setFontSize(6.5);
+  doc.setTextColor(130, 130, 130);
+  doc.setFont('helvetica', 'italic');
+  [
+    'Ce rapport a ete genere automatiquement par le logiciel EQRS Johnson & Ettinger de la SARL G.M.E.P.',
+    'Les resultats sont donnes a titre indicatif et doivent etre interpretes par un expert qualifie.',
+    'La SARL G.M.E.P decline toute responsabilite en cas d\\'utilisation inappropriee de ce document.',
+  ].forEach((line, i) => {
+    doc.text(line, PW/2, y + i * 5, {align:'center'});
+  });
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(0,0,0);
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 2 — PARAMETRES (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  let W = doc.internal.pageSize.getWidth();
+  const margin = 10;
+  y = addLandscapeHeader(doc, 'Parametres d\\'exposition humaine et donnees constructives batiment/sol');
+
+  y = secTitle(doc, y, 'PARAMETRES D\\'EXPOSITION HUMAINE', W, margin);
+
+  const pa = state.params?.adulte  || {};
+  const pe = state.params?.enfant  || {};
+  const ps = state.params?.salarie || {};
+
+  doc.autoTable({
+    startY: y,
+    head: [['Parametre', 'Adulte resident.', 'Enfant (2-6 ans)', 'Salarie', 'Unite']],
+    body: [
+      ['Poids corporel (P)',               _f(pa.P||70),              _f(pe.P||15),             _f(ps.P||70),             'kg'],
+      ['Duree exposition (ED)',             _f(pa.ED||30),             _f(pe.ED||6),             _f(ps.ED||25),            'ans'],
+      ['Frequence exposition (EF)',         _f(pa.EF||350),            _f(pe.EF||350),           _f(ps.EF||220),           'j/an'],
+      ['Temps de moyennage seuil (AT)',     _f(pa.AT_seuil||30),       _f(pe.AT_seuil||6),       _f(ps.AT_seuil||25),      'ans'],
+      ['Temps moyennage ss-seuil (AT)',     _f(pa.AT_sansseuil||70),   _f(pe.AT_sansseuil||70),  _f(ps.AT_sansseuil||70),  'ans'],
+      ['Debit ingestion sol (IRs)',         _s(pa.IRs||3e-5),          _s(pe.IRs||1e-4),         _s(ps.IRs||5e-5),         'kg/j'],
+      ['Debit ingestion eau (IRw)',         _f(pa.IRw||2),             _f(pe.IRw||1),            _f(ps.IRw||1),            'L/j'],
+      ['Debit respiratoire (IRa)',          _f(pa.IRa||20),            _f(pe.IRa||10),           _f(ps.IRa||20),           'm3/j'],
+      ['Surface cutanee exposee (Scut)',    _f(pa.Scut||5700),         _f(pe.Scut||2800),        _f(ps.Scut||3300),        'cm2'],
+      ['Facteur adherence (AF)',            _f(pa.AF||0.07),           _f(pe.AF||0.2),           _f(ps.AF||0.07),          'mg/cm2'],
+      ['Absorption cutanee (ABS)',          _f(pa.ABS||0.1),           _f(pe.ABS||0.1),          _f(ps.ABS||0.1),          '-'],
+      ['Fraction temps interieur (Fi)',     _f(pa.Fi||0.8),            _f(pe.Fi||0.8),           _f(ps.Fi||1.0),           '-'],
+    ],
+    theme: 'grid',
+    styles: { fontSize: 6.5, cellPadding: 1.3 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 6.5 },
+    margin: { left: margin, right: W/2 + 2 },
+    tableWidth: W/2 - margin - 2,
+  });
+
+  // Bat params right column — reset y to top
+  const bat  = state.bat        || {};
+  const batD = state.batDerived || {};
+  y = secTitle(doc, 21, 'DONNEES CONSTRUCTIVES BATIMENT ET SOL', W, W/2 + 2);
+
+  doc.autoTable({
+    startY: y,
+    head: [['Parametre batiment / sol', 'Valeur', 'Unite']],
+    body: [
+      ['Longueur batiment (LB)',      _f(bat.LB||10),      'm'],
+      ['Largeur batiment (WB)',       _f(bat.WB||10),      'm'],
+      ['Hauteur sous plafond (HB)',   _f(bat.HB||2.5),     'm'],
+      ['Surface batiment (AB)',       _f(batD.AB || (bat.LB||10)*(bat.WB||10)), 'm2'],
+      ['Volume piece (Vroom)',        _f(batD.Vroom || (bat.LB||10)*(bat.WB||10)*(bat.HB||2.5)), 'm3'],
+      ['Taux renouv. air (ER)',       _f(bat.ER||0.45),    '1/h'],
+      ['Epaisseur dallage (Lcrack)', _f(bat.Lcrack||0.15),'m'],
+      ['Fraction fissure (eta)',      _s(bat.eta||2e-4),   '-'],
+      ['Porosite totale (n)',         _f(bat.n||0.35),     '-'],
+      ['Teneur eau sol (theta_w)',    _f(bat.theta_w||0.15),'-'],
+      ['Porosite air (theta_a)',      _f(batD.theta_a||(bat.n||0.35)-(bat.theta_w||0.15)),'-'],
+      ['Permeabilite sol (kv)',       _s(bat.kv||1e-12),   'm2'],
+      ['Depression batiment (dP)',    _f(bat.dP||4),       'Pa'],
+      ['Distance source-dalle (LT)', _f(bat.LT||2),       'm'],
+      ['Fraction org. carbone (foc)',_f(bat.foc||0.006),  '-'],
+      ['Substance contaminant pilote',bat.substance_select||'Benzene', ''],
+      ['Da (diffusivite air)',        _s(bat.Da||8.8e-6),  'm2/s'],
+      ['Dw (diffusivite eau)',        _s(bat.Dw||9.8e-10), 'm2/s'],
+      ['H\\' (constante Henry)',       _f(bat.Hprime||0.228),'-'],
+    ],
+    theme: 'grid',
+    styles: { fontSize: 6.5, cellPadding: 1.3 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 6.5 },
+    margin: { left: W/2 + 2, right: margin },
+    tableWidth: W/2 - margin - 2,
+  });
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 3 — CONCENTRATIONS MESUREES (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  W = doc.internal.pageSize.getWidth();
+  y = addLandscapeHeader(doc, 'Concentrations mesurees dans les milieux');
+  y = secTitle(doc, y, 'CONCENTRATIONS MESUREES — MILIEUX ENVIRONNEMENTAUX', W, margin);
+
+  const concRows = [];
+  SUBSTANCES.forEach(s => {
+    const c = state.concentrations[s.name] || {};
+    const airInt = _p(c.air);
+    const airExt = _p(c.airExt);
+    const sol    = _p(c.sol);
+    const eau    = _p(c.eau);
+    const solGaz = _p(c.solGaz);
+    if (airInt || airExt || sol || eau || solGaz) {
+      concRows.push([
+        s.name,
+        airInt  ? _s(airInt)  : '—',
+        airExt  ? _s(airExt)  : '—',
+        sol     ? _s(sol)     : '—',
+        eau     ? _s(eau)     : '—',
+        solGaz  ? _s(solGaz)  : '—',
+      ]);
+    }
+  });
+  if (concRows.length === 0) concRows.push(['(Aucune concentration saisie)', '—', '—', '—', '—', '—']);
+
+  doc.autoTable({
+    startY: y,
+    head: [['Substance', 'Air interieur\\n(ug/m3)', 'Air exterieur\\n(ug/m3)', 'Sol / Poussieres\\n(mg/kg MS)', 'Eaux souterraines\\n(ug/L)', 'Sol-gaz\\n(ug/m3)']],
+    body: concRows,
+    theme: 'grid',
+    styles: { fontSize: 7, cellPadding: 1.5 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 7 },
+    margin: { left: margin, right: margin },
+    didParseCell: function(data) {
+      if (data.section === 'body' && data.column.index > 0 && data.cell.raw !== '—') {
+        data.cell.styles.textColor = [180, 50, 20];
+        data.cell.styles.fontStyle = 'bold';
+      }
+    }
+  });
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 4 — RESULTATS J&E INTERMEDIAIRES (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  W = doc.internal.pageSize.getWidth();
+  y = addLandscapeHeader(doc, 'Resultats intermediaires — Modele Johnson & Ettinger');
+
+  const mje  = state.modeleJE  || {};
+  const batDer = state.batDerived || {};
+  const b    = state.bat        || {};
+  const cindoor = state.cindoor || {};
+
+  y = secTitle(doc, y, 'PARAMETRES GLOBAUX DU MODELE J&E', W, margin);
+
+  doc.autoTable({
+    startY: y,
+    head: [['Parametre', 'Valeur calculee', 'Unite']],
+    body: [
+      ['Deff (diffusivite effective sol)',      _s(mje.Deff||0),        'm2/s'],
+      ['Qsoil (debit volumique sol-batiment)', _s(mje.Qsoil||0),       'm3/s'],
+      ['Qbuilding (debit ventilation)',        _s(batDer.Qbuilding||0),'m3/s'],
+      ['alpha_eff (facteur attenuation moyen)',_s(mje.alpha_eff||0),   '-'],
+      ['Pe_sol (facteur penetration sol-gaz)', _s(mje.Pe_sol||0),      '-'],
+      ['Pe_crack (facteur penetration fissu)', _s(mje.Pe_crack||0),    '-'],
+      ['delta (ratio H/Lcrack)',               _f(mje.delta||0),       '-'],
+    ],
+    theme: 'grid',
+    styles: { fontSize: 7, cellPadding: 1.3 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 7 },
+    margin: { left: margin, right: W/2 + 2 },
+    tableWidth: W/2 - margin - 2,
+  });
+
+  // Cindoor table right column
+  y = secTitle(doc, 21, 'CONCENTRATIONS INTERIEURES (Cindoor)', W, W/2 + 2);
+  const cindoorRows = [];
+  SUBSTANCES.forEach(s => {
+    const ci = cindoor[s.name];
+    if (ci && (ci.solGaz > 0 || ci.nappe > 0)) {
+      cindoorRows.push([s.name, _s(ci.solGaz||0), _s(ci.nappe||0), _s(Math.max(ci.solGaz||0, ci.nappe||0))]);
+    }
+  });
+  if (cindoorRows.length === 0) cindoorRows.push(['(Aucune donnee)', '—', '—', '—']);
+
+  doc.autoTable({
+    startY: y + 8,
+    head: [['Substance', 'Cindoor SG\\n(ug/m3)', 'Cindoor Nappe\\n(ug/m3)', 'Cindoor max\\n(ug/m3)']],
+    body: cindoorRows,
+    theme: 'grid',
+    styles: { fontSize: 7, cellPadding: 1.3 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 7 },
+    margin: { left: W/2 + 2, right: margin },
+    tableWidth: W/2 - margin - 2,
+    didParseCell: function(data) {
+      if (data.section === 'body' && data.column.index === 3) {
+        const val = parseFloat(data.cell.raw);
+        if (!isNaN(val) && val > 0) { data.cell.styles.textColor = [180,80,0]; data.cell.styles.fontStyle = 'bold'; }
+      }
+    }
+  });
+
+  // Per-substance J&E intermediate results
+  const jeY2 = Math.max(doc.lastAutoTable.finalY + 4, 120);
+  y = secTitle(doc, jeY2, 'RESULTATS INTERMEDIAIRES J&E PAR SUBSTANCE (Deff, Qsoil, alpha, Pe)', W, margin);
+
+  const jeRows = [];
+  SUBSTANCES.forEach(s => {
+    const je = mje[s.name];
+    const ci = cindoor[s.name];
+    if (je && (je.alpha > 0 || (ci && (ci.solGaz > 0 || ci.nappe > 0)))) {
+      jeRows.push([
+        s.name, _s(je.Deff||0), _s(je.Qsoil||0), _s(je.alpha||0),
+        _s(je.Pe_sol||0), _s(je.Pe_crack||0),
+        ci ? _s(ci.solGaz||0) : '—', ci ? _s(ci.nappe||0) : '—',
+      ]);
+    }
+  });
+  if (jeRows.length === 0) jeRows.push(['(Aucune substance)', '—','—','—','—','—','—','—']);
+
+  doc.autoTable({
+    startY: y,
+    head: [['Substance', 'Deff (m2/s)', 'Qsoil (m3/s)', 'Alpha (a)', 'Pe sol', 'Pe crack', 'Cindoor SG\\n(ug/m3)', 'Cindoor Nappe\\n(ug/m3)']],
+    body: jeRows,
+    theme: 'grid',
+    styles: { fontSize: 6.5, cellPadding: 1.2 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 6.5 },
+    margin: { left: margin, right: margin },
+  });
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 5 — VTR (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  W = doc.internal.pageSize.getWidth();
+  y = addLandscapeHeader(doc, 'Valeurs Toxicologiques de Reference (VTR) utilisees');
+
+  y = secTitle(doc, y, 'VTR EFFETS A SEUIL — References ANSES / ECHA / US EPA', W, margin);
+
+  // Use global VTR_SEUIL (available in scope)
+  const vtrSeuilRows = [];
+  SUBSTANCES.forEach(s => {
+    const vtr = VTR_SEUIL[s.name];
+    if (vtr && (vtr.orale || vtr.inhal)) {
+      vtrSeuilRows.push([
+        s.name,
+        vtr.orale  ? _f(vtr.orale)  : '—',
+        vtr.inhal  ? _f(vtr.inhal)  : '—',
+        vtr.org    || '—',
+        vtr.effet  || '—',
+      ]);
+    }
+  });
+  if (vtrSeuilRows.length === 0) vtrSeuilRows.push(['(Aucune VTR seuil)', '—', '—', '—', '—']);
+
+  doc.autoTable({
+    startY: y,
+    head: [['Substance', 'VTR orale\\n(mg/kg/j)', 'VTR inhal.\\n(mg/m3)', 'Organisme', 'Effet critique']],
+    body: vtrSeuilRows,
+    theme: 'grid',
+    styles: { fontSize: 6.5, cellPadding: 1.2 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 6.5 },
+    margin: { left: margin, right: W/2 + 2 },
+    tableWidth: W/2 - margin - 2,
+  });
+
+  y = secTitle(doc, 21, 'VTR EFFETS SANS SEUIL — ERU (Exces de Risque Unitaire)', W, W/2 + 2);
+
+  const vtrSSRows = [];
+  ERI_SUBSTANCES.forEach(eriName => {
+    const vtr = VTR_SANSSEUIL[eriName];
+    if (vtr) {
+      vtrSSRows.push([
+        eriName,
+        vtr.eruOral  !== null ? _s(vtr.eruOral)  : '—',
+        vtr.eruInhal !== null ? _s(vtr.eruInhal) : '—',
+        vtr.org || '—',
+      ]);
+    }
+  });
+  if (vtrSSRows.length === 0) vtrSSRows.push(['(Aucune ERU)', '—', '—', '—']);
+
+  doc.autoTable({
+    startY: y + 8,
+    head: [['Substance', 'ERU oral\\n((mg/kg/j)^-1)', 'ERU inhal.\\n((ug/m3)^-1)', 'Organisme']],
+    body: vtrSSRows,
+    theme: 'grid',
+    styles: { fontSize: 6, cellPadding: 1.1 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 6 },
+    margin: { left: W/2 + 2, right: margin },
+    tableWidth: W/2 - margin - 2,
+  });
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 6 — RESULTATS QD (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  W = doc.internal.pageSize.getWidth();
+  y = addLandscapeHeader(doc, 'Resultats — Quotients de Danger (QD) — Effets a seuil');
+  y = secTitle(doc, y, 'QUOTIENTS DE DANGER PAR SUBSTANCE ET RECEPTEUR', W, margin);
+
+  // state.resultatsQD = { adulte:{substanceName:{ingSol,ingEau,inhal,cutane,jeInhal,total}}, enfant:{...}, salarie:{...} }
+  const rqd_ad  = (state.resultatsQD || {}).adulte  || {};
+  const rqd_enf = (state.resultatsQD || {}).enfant  || {};
+  const rqd_sal = (state.resultatsQD || {}).salarie || {};
+
+  const qdRows = [];
+  const qdChartData = [];
+  let sumQD_ad = 0, sumQD_enf = 0, sumQD_sal = 0;
+
+  SUBSTANCES.forEach(s => {
+    const qa = rqd_ad[s.name]  || {};
+    const qe = rqd_enf[s.name] || {};
+    const qs = rqd_sal[s.name] || {};
+    const vtr = VTR_SEUIL[s.name] || {};
+
+    const qd_ad_total  = qa.total  || 0;
+    const qd_enf_total = qe.total  || 0;
+    const qd_sal_total = qs.total  || 0;
+
+    if (qd_ad_total > 0 || qd_enf_total > 0 || qd_sal_total > 0) {
+      qdRows.push([
+        s.name,
+        vtr.orale ? _f(vtr.orale) : '—',
+        vtr.inhal ? _f(vtr.inhal) : '—',
+        qa.ingSol  ? _s(qa.ingSol)  : '—',
+        qa.ingEau  ? _s(qa.ingEau)  : '—',
+        qa.inhal   ? _s(qa.inhal)   : '—',
+        qa.jeInhal ? _s(qa.jeInhal) : '—',
+        qa.cutane  ? _s(qa.cutane)  : '—',
+        qd_ad_total  ? _s(qd_ad_total)  : '—',
+        qd_enf_total ? _s(qd_enf_total) : '—',
+        qd_sal_total ? _s(qd_sal_total) : '—',
+      ]);
+      sumQD_ad  += qd_ad_total;
+      sumQD_enf += qd_enf_total;
+      sumQD_sal += qd_sal_total;
+
+      qdChartData.push({
+        label: s.name,
+        bars: [
+          {color: [31, 97,141],  value: qd_ad_total},
+          {color: [211,84,0],    value: qd_enf_total},
+          {color: [39, 174, 96], value: qd_sal_total},
+        ]
+      });
+    }
+  });
+  if (qdRows.length === 0) qdRows.push(['(Aucun resultat QD)', '—','—','—','—','—','—','—','—','—','—']);
+
+  doc.autoTable({
+    startY: y,
+    head: [[
+      'Substance', 'VTR Oral', 'VTR Inh.',
+      'QD Ing.Sol\\nAdulte', 'QD Ing.Eau\\nAdulte', 'QD Inhal.\\nAdulte', 'QD J&E\\nAdulte', 'QD Cut.\\nAdulte',
+      'QD Total\\nAdulte', 'QD Total\\nEnfant', 'QD Total\\nSalarie'
+    ]],
+    body: qdRows,
+    theme: 'grid',
+    styles: { fontSize: 6, cellPadding: 1.1 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 6 },
+    margin: { left: margin, right: margin },
+    didParseCell: function(data) {
+      if (data.section === 'body' && [8,9,10].includes(data.column.index)) {
+        const val = parseFloat(data.cell.raw);
+        if (!isNaN(val)) {
+          if (val >= 1) { data.cell.styles.textColor = RED;   data.cell.styles.fontStyle = 'bold'; }
+          else if (val > 0) { data.cell.styles.textColor = GREEN; }
+        }
+      }
+    }
+  });
+
+  let qdSumY = doc.lastAutoTable.finalY + 4;
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  [[sumQD_ad,'Adulte'],[sumQD_enf,'Enfant'],[sumQD_sal,'Salarie']].forEach(([val,label], i) => {
+    doc.setTextColor(...(val >= 1 ? RED : GREEN));
+    doc.text(
+      'Somme QD ' + label + ' = ' + _s(val) + (val >= 1 ? '  > 1 — INACCEPTABLE' : '  < 1 — Acceptable'),
+      margin, qdSumY + i * 5
+    );
+  });
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(0,0,0);
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 7 — GRAPHIQUE QD (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  W = doc.internal.pageSize.getWidth();
+  let H7 = doc.internal.pageSize.getHeight();
+  y = addLandscapeHeader(doc, 'Graphique — Quotients de Danger par substance et recepteur');
+  y = secTitle(doc, y, 'QUOTIENTS DE DANGER (QD) — REPRESENTATION GRAPHIQUE', W, margin);
+
+  drawBarChart(
+    doc, margin, y, W - 2*margin, H7 - y - 18,
+    qdChartData, 1, null,
+    'Quotients de Danger (QD) par substance — Adulte (bleu), Enfant (orange), Salarie (vert) — seuil QD=1 (rouge)',
+    false
+  );
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 8 — RESULTATS ERI (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  W = doc.internal.pageSize.getWidth();
+  y = addLandscapeHeader(doc, 'Resultats — Exces de Risque Individuel (ERI) — Effets sans seuil');
+  y = secTitle(doc, y, 'EXCES DE RISQUE INDIVIDUEL PAR SUBSTANCE ET RECEPTEUR', W, margin);
+
+  // state.resultatsERI = { adulte:{eriName:{ingestion,inhalation,jeInhal,cutane,total}}, enfant:{...}, salarie:{...} }
+  const reri_ad  = (state.resultatsERI || {}).adulte  || {};
+  const reri_enf = (state.resultatsERI || {}).enfant  || {};
+  const reri_sal = (state.resultatsERI || {}).salarie || {};
+
+  const eriRows = [];
+  const eriChartData = [];
+  let sumERI_ad = 0, sumERI_enf = 0, sumERI_sal = 0;
+
+  ERI_SUBSTANCES.forEach(eriName => {
+    const vtr = VTR_SANSSEUIL[eriName];
+    if (!vtr) return;
+    const concName = ERI_NAME_MAP[eriName] || eriName;
+    const sObj = SUBSTANCES.find(s => s.name === concName);
+    if (!sObj) return;
+
+    const ea = reri_ad[eriName]  || {};
+    const ec = reri_enf[eriName] || {};
+    const es = reri_sal[eriName] || {};
+    const hasNZ = (ea.total || ec.total || ea.ingestion || ec.ingestion || es.ingestion || es.inhalation);
+
+    if (hasNZ) {
+      eriRows.push([
+        eriName,
+        vtr.eruOral  !== null ? _s(vtr.eruOral)  : '—',
+        vtr.eruInhal !== null ? _s(vtr.eruInhal) : '—',
+        _s(ea.ingestion  || 0), _s(ea.inhalation || 0), _s(ea.jeInhal  || 0), _s(ea.cutane || 0), _s(ea.total || 0),
+        _s(ec.ingestion  || 0), _s(ec.inhalation || 0), _s(ec.jeInhal  || 0), _s(ec.cutane || 0), _s(ec.total || 0),
+        _s(es.ingestion  || 0), _s(es.inhalation || 0),
+      ]);
+      sumERI_ad  += ea.total || 0;
+      sumERI_enf += ec.total || 0;
+      sumERI_sal += (es.ingestion || 0) + (es.inhalation || 0);
+
+      if ((ea.total || 0) > 0 || (ec.total || 0) > 0) {
+        eriChartData.push({
+          label: eriName,
+          bars: [
+            {color: [31,97,141],  value: ea.total || 0},
+            {color: [211,84,0],   value: ec.total || 0},
+            {color: [39,174,96],  value: (es.ingestion||0)+(es.inhalation||0)},
+          ]
+        });
+      }
+    }
+  });
+  if (eriRows.length === 0) eriRows.push(['(Aucun resultat ERI)', '—','—','—','—','—','—','—','—','—','—','—','—','—','—']);
+
+  doc.autoTable({
+    startY: y,
+    head: [[
+      'Substance', 'ERU Oral', 'ERU Inh.',
+      'ERI Ing. Ad.', 'ERI Inh. Ad.', 'ERI J&E Ad.', 'ERI Cut. Ad.', 'ERI Tot. Ad.',
+      'ERI Ing. Enf.', 'ERI Inh. Enf.', 'ERI J&E Enf.', 'ERI Cut. Enf.', 'ERI Tot. Enf.',
+      'ERI Ing. Sal.', 'ERI Inh. Sal.'
+    ]],
+    body: eriRows,
+    theme: 'grid',
+    styles: { fontSize: 5.3, cellPadding: 1.0 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 5.3 },
+    margin: { left: margin, right: margin },
+    didParseCell: function(data) {
+      if (data.section === 'body' && (data.column.index === 7 || data.column.index === 12)) {
+        const val = parseFloat(data.cell.raw);
+        if (!isNaN(val) && val > 0) {
+          if (val >= 1e-5) { data.cell.styles.textColor = RED;    data.cell.styles.fontStyle = 'bold'; }
+          else if (val >= 1e-6) { data.cell.styles.textColor = ORANGE; data.cell.styles.fontStyle = 'bold'; }
+          else { data.cell.styles.textColor = GREEN; }
+        }
+      }
+    }
+  });
+
+  let eriSumY = doc.lastAutoTable.finalY + 4;
+  doc.setFontSize(7.5);
+  doc.setFont('helvetica', 'bold');
+  [[sumERI_ad,'Adulte'],[sumERI_enf,'Enfant'],[sumERI_sal,'Salarie']].forEach(([val,label], i) => {
+    const col = val >= 1e-5 ? RED : val >= 1e-6 ? ORANGE : GREEN;
+    doc.setTextColor(...col);
+    const concl = val >= 1e-5 ? ' > 10^-5 — INACCEPTABLE' : val >= 1e-6 ? ' > 10^-6 — Vigilance' : ' < 10^-6 — Acceptable';
+    doc.text('Somme ERI ' + label + ' = ' + _s(val) + concl, margin, eriSumY + i * 5);
+  });
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(0,0,0);
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 9 — GRAPHIQUE ERI (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  W = doc.internal.pageSize.getWidth();
+  let H9 = doc.internal.pageSize.getHeight();
+  y = addLandscapeHeader(doc, 'Graphique — Exces de Risque Individuel par substance et recepteur');
+  y = secTitle(doc, y, 'ERI — REPRESENTATION GRAPHIQUE (ECHELLE LOGARITHMIQUE)', W, margin);
+
+  drawBarChart(
+    doc, margin, y, W - 2*margin, H9 - y - 18,
+    eriChartData, 1e-5, 1e-6,
+    'Exces de Risque Individuel (ERI) — Adulte (bleu), Enfant (orange) — Echelle logarithmique',
+    true
+  );
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 10 — SYNTHESE (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  W = doc.internal.pageSize.getWidth();
+  y = addLandscapeHeader(doc, 'Synthese des resultats — Tableau recapitulatif');
+  y = secTitle(doc, y, 'TABLEAU DE SYNTHESE — QD ET ERI MAXIMAUX PAR SUBSTANCE', W, margin);
+
+  const synthRows = [];
+  const allSubstNames = new Set();
+  SUBSTANCES.forEach(s => { if ((rqd_ad[s.name]||{}).total > 0 || (rqd_enf[s.name]||{}).total > 0 || (rqd_sal[s.name]||{}).total > 0) allSubstNames.add(s.name); });
+  ERI_SUBSTANCES.forEach(n => { if ((reri_ad[n]||{}).total > 0 || (reri_enf[n]||{}).total > 0) allSubstNames.add(n); });
+
+  allSubstNames.forEach(name => {
+    const qa = rqd_ad[name]  || {};
+    const qe = rqd_enf[name] || {};
+    const qs = rqd_sal[name] || {};
+    const ea = reri_ad[name]  || {};
+    const ec = reri_enf[name] || {};
+    const es = reri_sal[name] || {};
+
+    const qd_max  = Math.max(qa.total||0, qe.total||0, qs.total||0);
+    const eri_max = Math.max(ea.total||0, ec.total||0, (es.ingestion||0)+(es.inhalation||0));
+
+    if (qd_max > 0 || eri_max > 0) {
+      let cQD = '—', cERI = '—', cGlobal = '—';
+      if (qd_max >= 1) cQD = 'Inacceptable';
+      else if (qd_max > 0) cQD = 'Acceptable';
+      if (eri_max >= 1e-5) cERI = 'Inacceptable';
+      else if (eri_max >= 1e-6) cERI = 'Vigilance';
+      else if (eri_max > 0) cERI = 'Acceptable';
+      if (cQD === 'Inacceptable' || cERI === 'Inacceptable') cGlobal = 'Inacceptable';
+      else if (cERI === 'Vigilance') cGlobal = 'Vigilance';
+      else if (cQD === 'Acceptable' || cERI === 'Acceptable') cGlobal = 'Acceptable';
+
+      synthRows.push([
+        name,
+        qd_max > 0 ? _s(qa.total||0) : '—',
+        qd_max > 0 ? _s(qe.total||0) : '—',
+        qd_max > 0 ? _s(qs.total||0) : '—',
+        eri_max > 0 ? _s(ea.total||0) : '—',
+        eri_max > 0 ? _s(ec.total||0) : '—',
+        cQD, cERI, cGlobal,
+      ]);
+    }
+  });
+  if (synthRows.length === 0) synthRows.push(['(Aucun resultat)', '—','—','—','—','—','—','—','—']);
+
+  doc.autoTable({
+    startY: y,
+    head: [[
+      'Substance',
+      'QD Total\\nAdulte', 'QD Total\\nEnfant', 'QD Total\\nSalarie',
+      'ERI Total\\nAdulte', 'ERI Total\\nEnfant',
+      'Conclusion QD', 'Conclusion ERI', 'CONCLUSION'
+    ]],
+    body: synthRows,
+    theme: 'grid',
+    styles: { fontSize: 6.5, cellPadding: 1.3 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 6.5 },
+    margin: { left: margin, right: margin },
+    didParseCell: function(data) {
+      if (data.section === 'body' && [6,7,8].includes(data.column.index)) {
+        const v = data.cell.raw;
+        if (v === 'Inacceptable') { data.cell.styles.textColor = RED;    data.cell.styles.fontStyle = 'bold'; }
+        else if (v === 'Vigilance')   { data.cell.styles.textColor = ORANGE; data.cell.styles.fontStyle = 'bold'; }
+        else if (v === 'Acceptable')  { data.cell.styles.textColor = GREEN; }
+      }
+    }
+  });
+
+  // Global conclusion banner
+  const allQD_max  = Math.max(sumQD_ad,  sumQD_enf,  sumQD_sal);
+  const allERI_max = Math.max(sumERI_ad, sumERI_enf, sumERI_sal);
+  let globalConcl = 'ACCEPTABLE';
+  let globalColor = GREEN;
+  if (allQD_max >= 1 || allERI_max >= 1e-5) { globalConcl = 'INACCEPTABLE';     globalColor = RED;    }
+  else if (allERI_max >= 1e-6)              { globalConcl = 'VIGILANCE REQUISE'; globalColor = ORANGE; }
+
+  const bannerY = doc.lastAutoTable.finalY + 5;
+  doc.setFillColor(...globalColor);
+  doc.rect(margin, bannerY, W - 2*margin, 10, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.text('CONCLUSION GLOBALE : ' + globalConcl, W/2, bannerY + 6.5, {align:'center'});
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(0,0,0);
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 11 — MENTIONS LEGALES (Portrait)
+  // ========================================================
+  doc.addPage('a4', 'portrait');
+  pageNum++;
+  const PW11 = doc.internal.pageSize.getWidth();
+  const PH11 = doc.internal.pageSize.getHeight();
+  y = addPortraitHeader(doc, 'Mentions legales et avertissements');
+  y = secTitle(doc, y, 'MENTIONS LEGALES', PW11, 15);
+
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...BLUE);
+  doc.text('SARL G.M.E.P — Global Management of Environmental Project', PW11/2, y + 7, {align:'center'});
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(0,0,0);
+
+  const legalBlocks = [
+    { title: 'Coordonnees', lines: [
+        'SARL G.M.E.P — SIREN 753 097 625 — Code APE 7112B',
+        '9 rue de la Marne, 79400 Saint-Maixent-l\\'Ecole',
+        'Tel. 06 07 73 72 33 — gmep.france@gmail.com — www.gmep-france.eu',
+        'Gerant : Eric Azulay',
+    ]},
+    { title: 'Propriete intellectuelle', lines: [
+        'Ce rapport a ete genere par le logiciel EQRS Johnson & Ettinger, propriete exclusive de la SARL G.M.E.P.',
+        'Toute reproduction, diffusion, communication au public ou utilisation de ce rapport, meme partielle,',
+        'sans autorisation ecrite prealable de la SARL G.M.E.P est strictement interdite.',
+        '(c) 2023-2026 SARL G.M.E.P — Tous droits reserves.',
+    ]},
+    { title: 'Avertissement et limites d\\'utilisation', lines: [
+        'Ce rapport est fourni a titre indicatif uniquement. Les resultats de l\\'evaluation quantitative des',
+        'risques sanitaires dependent de la qualite et de la representativite des donnees saisies par l\\'utilisateur.',
+        'La SARL G.M.E.P ne peut etre tenue responsable des erreurs ou omissions dans les donnees saisies,',
+        'ni des consequences decoulant de l\\'utilisation ou de l\\'interpretation de ce rapport.',
+        'Ces resultats doivent etre interpretes par un expert qualifie en evaluation des risques sanitaires.',
+    ]},
+    { title: 'Methode de calcul', lines: [
+        'Le modele Johnson & Ettinger (J&E, EPA 2004) est utilise pour estimer le facteur d\\'attenuation (alpha)',
+        'permettant de calculer les concentrations interieures (Cindoor) a partir des concentrations en sol-gaz',
+        'ou en nappe phreatique. Ce modele est recommande par l\\'ANSES et le ministere en charge de l\\'ecologie',
+        'pour les evaluations de risques liees a l\\'intrusion de vapeurs (VPIA).',
+        'Les valeurs de reference (VTR, ERU) proviennent des bases de donnees ANSES, INERIS, ECHA et US EPA.',
+    ]},
+    { title: 'References reglementaires', lines: [
+        '— Guide ANSES "Evaluation de l\\'exposition par inhalation des populations" (2011)',
+        '— Circulaire DGPR du 8 fevrier 2007 relative aux sites et sols pollues',
+        '— Norme NF ISO 11074 : terminologie relative a la qualite des sols',
+        '— EPA 2004 : Johnson & Ettinger Model for Subsurface Vapor Intrusion into Buildings',
+        '— INERIS : Recommandations pour l\\'EQRS — DRC-13-136881-12756A (2013)',
+    ]},
+  ];
+
+  let ly = y + 14;
+  legalBlocks.forEach(block => {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...BLUE2);
+    doc.text(block.title, 15, ly);
+    ly += 5;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(50, 50, 50);
+    block.lines.forEach(line => { doc.text(line, 18, ly); ly += 4.5; });
+    ly += 3;
+  });
+
+  // Bottom seal
+  doc.setFillColor(...BLUE);
+  doc.rect(0, PH11 - 22, PW11, 22, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(7);
+  doc.setFont('helvetica', 'bold');
+  doc.text('(c) 2023-2026 SARL G.M.E.P — Tous droits reserves', PW11/2, PH11 - 14, {align:'center'});
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(6.5);
+  doc.text('Conception et developpement : Eric Azulay — Gerant SARL G.M.E.P', PW11/2, PH11 - 9, {align:'center'});
+  doc.text('www.gmep-france.eu — gmep.france@gmail.com — Tel. 06 07 73 72 33', PW11/2, PH11 - 4, {align:'center'});
+  doc.setTextColor(0,0,0);
+
+  // Final footer is already rendered by bottom seal — skip addFooter on this page or add it anyway
+  // addFooter(doc, pageNum);  // Skip — bottom seal covers footer area
+
+  // ── Save ──
+  const sitePart = siteName ? '_' + siteName.replace(/[^a-zA-Z0-9]/g, '-') : '';
+  const filePart = commune ? '_' + commune.replace(/[^a-zA-Z0-9]/g, '-') : '';
+  doc.save('Rapport_EQRS_GMEP' + sitePart + filePart + '_' + dateEtude.replace(/\\//g, '-') + '.pdf');
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+<!-- Footer -->
+<div class="footer">
+  <div class="footer-brand">
+    <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="26" height="26" rx="4" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+      <path d="M6 21V12l3-3h3l-3 6h3l-5 6z" fill="#2ecc71" opacity="0.8"/>
+      <path d="M14 9h8M14 15h6M14 21h5" stroke="#fff" stroke-width="1.3" stroke-linecap="round" opacity="0.5"/>
+    </svg>
+    <strong>G.M.E.P</strong>
+  </div>
+  <div class="footer-info">
+    SARL G.M.E.P &mdash; Global Management of Environmental Project<br>
+    9 rue de la Marne, 79400 Saint-Maixent-l'École &bull; SIREN 753 097 625<br>
+    Tél. 06 07 73 72 33 &bull; gmep.france@gmail.com &bull; www.gmep-france.com
+  </div>
+  <div class="footer-legal">
+    &copy; 2023&ndash;2026 G.M.E.P — Tous droits réservés.<br>
+    Ce logiciel de modélisation EQRS Johnson &amp; Ettinger est la propriété exclusive de la SARL G.M.E.P.<br>
+    Toute reproduction, diffusion ou utilisation, même partielle, sans autorisation écrite préalable est interdite.<br>
+    Conception et développement : Eric Azulay — Gérant SARL G.M.E.P
+  </div>
+</div>
+
+
+<!-- jsPDF loaded async so it doesn't block app initialization -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" defer></script>
+</body>
+</html>
+`}catch(t){console.error("Warning: Could not load eqrs-tool.html",t)}var uc=process.env.STRIPE_SECRET_KEY||"sk_test_placeholder",ut=uc!=="sk_test_placeholder"&&uc.startsWith("sk_"),Ke=null;ut&&(Ke=new Mg(uc,{apiVersion:"2023-10-16"}));var IP=process.env.STRIPE_PRICE_MONTHLY||"price_monthly_placeholder",Fg=process.env.STRIPE_PRICE_ANNUAL||"price_annual_placeholder",DP=process.env.STRIPE_WEBHOOK_SECRET||"whsec_placeholder";async function Qt(t,e,n){let i=t.query.token||t.headers["x-auth-token"];if(!i)return e.status(401).json({message:"Authentification requise"});let a=await E.getSessionByToken(i);if(!a)return e.status(401).json({message:"Session invalide ou expir\xE9e"});if(new Date(a.expiresAt)<new Date)return await E.deleteSession(i),e.status(401).json({message:"Session expir\xE9e, veuillez vous reconnecter"});let r=await E.getUser(a.userId);if(!r)return e.status(401).json({message:"Utilisateur introuvable"});t.user=E.toSafeUser(r),n()}async function MP(t,e,n){if(!t.user)return e.status(401).json({message:"Authentification requise"});let i=await E.getSubscriptionByUserId(t.user.id);if(!i||i.status!=="active"&&i.status!=="trialing")return e.status(403).json({message:"Abonnement actif requis pour acc\xE9der \xE0 cet outil"});if(i.status==="trialing"&&i.currentPeriodEnd&&new Date(i.currentPeriodEnd)<new Date)return e.status(403).json({message:"Votre p\xE9riode d'essai gratuit de 14 jours est termin\xE9e. Veuillez souscrire un abonnement pour continuer."});n()}function FP(t){let e=t.replace(/<meta[^>]*content-disposition[^>]*>/gi,"");return e=e.replace("</head>",`
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
