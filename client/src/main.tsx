@@ -7,4 +7,5 @@ if (!window.location.hash) {
 }
 
 createRoot(document.getElementById("root")!).render(<App />);
-// cache-bust 1776258647
+
+// v1776258670
