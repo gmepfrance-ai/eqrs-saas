@@ -2092,11 +2092,8 @@ function exportPDF() {
   const { jsPDF } = window.jspdf;
 
   // ── Collect site info ──
-  let siteName = prompt("Nom du site (optionnel) :", "") || "";
-  let commune  = prompt("Commune :", "") || "";
-  if (siteName === null) siteName = "";
-  if (commune  === null) commune  = "";
-
+  
+  
   const now       = new Date();
   const dateEtude = now.toLocaleDateString('fr-FR', {day:'2-digit', month:'2-digit', year:'numeric'});
   const timeStr   = now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
