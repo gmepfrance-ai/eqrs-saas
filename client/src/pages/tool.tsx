@@ -19,9 +19,8 @@ export default function ToolPage() {
       navigate("/login");
       return;
     }
-    // Use src URL instead of srcDoc to allow external scripts and PDF export
-    setToolUrl(`/api/tool?token=${token}`);
-    setLoading(false);
+    // Redirect directly to the tool page — avoids all iframe/sandbox/CSP issues
+    window.location.href = `/api/tool?token=${token}`;
   }, [token, user, authLoading, navigate]);
 
   // Anti-copy on wrapper
@@ -90,42 +89,13 @@ export default function ToolPage() {
     );
   }
 
+  // Fallback loading screen (redirect should happen before this renders)
   return (
-    <div className="h-screen w-screen flex flex-col overflow-hidden bg-[#f5f5f0]">
-      {/* Minimal toolbar */}
-      <div
-        className="flex items-center justify-between px-4 py-2 border-b flex-shrink-0"
-        style={{
-          background: "linear-gradient(135deg, #0e2f44 0%, #1a5276 100%)",
-          borderColor: "rgba(255,255,255,0.1)",
-        }}
-      >
-        <button
-          data-testid="button-back-to-dashboard"
-          onClick={() =>
-            (window.location.hash = `#/dashboard?token=${token}`)
-          }
-          className="text-white/80 hover:text-white text-xs flex items-center gap-1.5 transition-colors"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          Tableau de bord
-        </button>
-        <div className="text-white/60 text-[0.65rem]">
-          EQRS — Johnson &amp; Ettinger • G.M.E.P
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="text-center">
+        <Loader2 className="w-10 h-10 animate-spin text-primary mx-auto mb-4" />
+        <p className="text-sm text-muted-foreground">Chargement de l'outil EQRS...</p>
       </div>
-
-      {/* Tool iframe */}
-      {toolUrl && (
-        <iframe
-          ref={iframeRef}
-          data-testid="iframe-eqrs-tool"
-          src={toolUrl}
-          className="flex-1 w-full border-0"
-          title="Outil EQRS Johnson & Ettinger"
-          allow="downloads"
-        />
-      )}
     </div>
   );
 }
