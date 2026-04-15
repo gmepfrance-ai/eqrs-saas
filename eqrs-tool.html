@@ -169,6 +169,8 @@ select.param-select{
   cursor:pointer;
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
 
@@ -194,7 +196,8 @@ select.param-select{
   </div>
   <div class="header-right">
     9 rue de la Marne — 79400 Saint-Maixent-l'École<br>
-    Tél. 06 07 73 72 33 &bull; gmep.france@gmail.com
+    Tél. 06 07 73 72 33 &bull; gmep.france@gmail.com<br>
+    <button onclick="exportPDF()" style="margin-top:6px;padding:5px 14px;background:#2ecc71;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.8rem;font-weight:600;letter-spacing:0.02em" onmouseover="this.style.background='#27ae60'" onmouseout="this.style.background='#2ecc71'">&#128196; Exporter PDF Professionnel</button>
   </div>
 </div>
 
@@ -1195,6 +1198,10 @@ sheetRenderers.sommaire = function() {
   });
 
   h += '</div>';
+  h += '<div style="margin-top:1.2rem;padding:0.8rem;background:#f0f9f4;border:1px solid #2ecc71;border-radius:6px;display:flex;align-items:center;gap:1rem">';
+  h += '<button onclick="exportPDF()" style="padding:8px 20px;background:#2ecc71;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;font-weight:600;letter-spacing:0.02em" onmouseover="this.style.background='#27ae60'" onmouseout="this.style.background='#2ecc71'">&#128196; Exporter Rapport PDF Professionnel</button>';
+  h += '<span style="font-size:0.8rem;color:#666">Génère un rapport multi-pages : page de garde, paramètres, concentrations, résultats J&E, QD, ERI, graphiques, synthèse, mentions légales</span>';
+  h += '</div>';
   h += '<div class="legend" style="margin-top:1.5rem">';
   h += '<div class="legend-item"><div class="legend-swatch" style="background:var(--yellow)"></div> Cellules à remplir</div>';
   h += '<div class="legend-item"><div class="legend-swatch" style="background:#f0f4f8"></div> Calculs automatiques</div>';
@@ -2074,6 +2081,1079 @@ function init() {
   computeSensitivity();
   initTabs();
   renderActiveSheet();
+}
+
+// ============================================================
+// EXPORT PDF PROFESSIONNEL — G.M.E.P — Johnson & Ettinger
+// Version 2.0 — Rapport multi-pages format Maisons-Alfort
+// ============================================================
+
+function exportPDF() {
+  const { jsPDF } = window.jspdf;
+
+  // ── Collect site info ──
+  let siteName = prompt("Nom du site (optionnel) :", "") || "";
+  let commune  = prompt("Commune :", "") || "";
+  if (siteName === null) siteName = "";
+  if (commune  === null) commune  = "";
+
+  const now       = new Date();
+  const dateEtude = now.toLocaleDateString('fr-FR', {day:'2-digit', month:'2-digit', year:'numeric'});
+  const timeStr   = now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+
+  // ── Colours ──
+  const BLUE   = [26, 54, 93];
+  const BLUE2  = [41, 82, 143];
+  const GREEN  = [46, 204, 113];
+  const ORANGE = [230, 126, 34];
+  const RED    = [231, 76, 60];
+  const GRAY   = [80, 80, 80];
+  const LGRAY  = [245, 247, 250];
+
+  // ── Local helpers (avoid collision with global fmt/fmtSci/parseNum) ──
+  function _f(v, digits) {
+    if (v === null || v === undefined || isNaN(v)) return '—';
+    if (v === 0) return '0';
+    digits = digits || 4;
+    const abs = Math.abs(v);
+    if (abs < 0.001 || abs >= 1e6) return v.toExponential(digits - 1);
+    if (abs < 1) return v.toPrecision(digits);
+    if (abs < 10) return v.toFixed(Math.max(0, digits - 1));
+    if (abs < 100) return v.toFixed(Math.max(0, digits - 2));
+    if (abs < 1000) return v.toFixed(Math.max(0, digits - 3));
+    return v.toFixed(Math.max(0, digits - 4));
+  }
+  function _s(v) {
+    if (v === null || v === undefined || isNaN(v)) return '—';
+    if (v === 0) return '0';
+    return v.toExponential(3);
+  }
+  function _p(s) {
+    if (!s || s === '' || s === '—') return 0;
+    s = String(s).replace(',', '.').trim();
+    const v = parseFloat(s);
+    return isNaN(v) ? 0 : v;
+  }
+
+  // ── Page counters ──
+  let pageNum = 0;
+
+  // ── Header/Footer helpers ──
+  function addLandscapeHeader(doc, title) {
+    const W = doc.internal.pageSize.getWidth();
+    doc.setFillColor(...BLUE);
+    doc.rect(0, 0, W, 16, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('G.M.E.P — ÉQRS Johnson & Ettinger', 10, 7);
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'normal');
+    doc.text(title, 10, 13);
+    doc.text(dateEtude + ' ' + timeStr, W - 10, 7, {align:'right'});
+    if (siteName || commune) {
+      doc.text([siteName, commune].filter(Boolean).join(' — '), W - 10, 13, {align:'right'});
+    }
+    doc.setTextColor(0, 0, 0);
+    return 21;
+  }
+
+  function addPortraitHeader(doc, title) {
+    const W = doc.internal.pageSize.getWidth();
+    doc.setFillColor(...BLUE);
+    doc.rect(0, 0, W, 16, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('G.M.E.P — ÉQRS Johnson & Ettinger', 10, 7);
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'normal');
+    doc.text(title, 10, 13);
+    doc.text(dateEtude, W - 10, 7, {align:'right'});
+    doc.setTextColor(0, 0, 0);
+    return 21;
+  }
+
+  function addFooter(doc, num) {
+    const W = doc.internal.pageSize.getWidth();
+    const H = doc.internal.pageSize.getHeight();
+    doc.setFontSize(6);
+    doc.setTextColor(130, 130, 130);
+    doc.text('(c) 2023-2026 SARL G.M.E.P — Tous droits reserves. Conception : Eric Azulay — www.gmep-france.eu', 10, H - 4);
+    doc.text('Page ' + num, W - 10, H - 4, {align:'right'});
+    doc.setTextColor(0, 0, 0);
+  }
+
+  function secTitle(doc, y, label, W, margin) {
+    doc.setFillColor(...BLUE2);
+    doc.rect(margin, y, W - 2*margin, 6, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.text(label, margin + 2, y + 4.2);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('helvetica', 'normal');
+    return y + 8;
+  }
+
+  // ── Bar chart helper (pure jsPDF) ──
+  // seriesData: [{label:string, bars:[{color:[r,g,b], value:number}]}]
+  // threshold1/2: horizontal reference lines (or null)
+  // logScale: bool — use log10 scale for ERI
+  function drawBarChart(doc, x, y, w, h, seriesData, threshold1, threshold2, title, logScale) {
+    const chartX = x + 30;
+    const chartY = y + 10;
+    const chartW = w - 36;
+    const chartH = h - 18;
+
+    // Title
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0,0,0);
+    doc.text(title, x + w/2, y + 6, {align:'center'});
+    doc.setFont('helvetica', 'normal');
+
+    // Axes
+    doc.setDrawColor(100, 100, 100);
+    doc.setLineWidth(0.3);
+    doc.line(chartX, chartY, chartX, chartY + chartH);
+    doc.line(chartX, chartY + chartH, chartX + chartW, chartY + chartH);
+
+    if (!seriesData || seriesData.length === 0) {
+      doc.setFontSize(6);
+      doc.setTextColor(150,150,150);
+      doc.text('(Aucune donnee)', chartX + chartW/2, chartY + chartH/2, {align:'center'});
+      doc.setTextColor(0,0,0);
+      return;
+    }
+
+    // Max value for scaling
+    let maxVal = 0;
+    seriesData.forEach(s => s.bars.forEach(b => { if (b.value > maxVal) maxVal = b.value; }));
+    if (threshold1 && threshold1 > maxVal) maxVal = threshold1 * 1.5;
+    if (threshold2 && threshold2 > maxVal) maxVal = threshold2 * 1.5;
+    if (maxVal === 0) maxVal = 1;
+
+    function scaleY(val) {
+      if (logScale) {
+        if (val <= 0) return 0;
+        const logMin = Math.log10(Math.max(maxVal * 1e-5, 1e-12));
+        const logMax = Math.log10(maxVal * 2);
+        const logVal = Math.log10(val);
+        return Math.max(0, Math.min(1, (logVal - logMin) / (logMax - logMin)));
+      } else {
+        return Math.min(1, val / maxVal);
+      }
+    }
+
+    // Gridlines + Y axis labels
+    const nTicks = 5;
+    doc.setFontSize(4.5);
+    doc.setTextColor(...GRAY);
+    for (let i = 0; i <= nTicks; i++) {
+      const frac = i / nTicks;
+      const yPos = chartY + chartH - frac * chartH;
+      let tickVal;
+      if (logScale) {
+        const logMin = Math.log10(Math.max(maxVal * 1e-5, 1e-12));
+        const logMax = Math.log10(maxVal * 2);
+        tickVal = Math.pow(10, logMin + frac * (logMax - logMin));
+      } else {
+        tickVal = frac * maxVal;
+      }
+      doc.text(_s(tickVal), chartX - 1, yPos + 1, {align:'right'});
+      doc.setDrawColor(220, 220, 220);
+      doc.setLineWidth(0.1);
+      doc.line(chartX, yPos, chartX + chartW, yPos);
+    }
+
+    // Bars
+    const nGroups = seriesData.length;
+    const groupW = chartW / nGroups;
+    const nBars = seriesData[0].bars.length;
+    const barW = Math.min(groupW * 0.7 / nBars, 7);
+    const groupPad = (groupW - barW * nBars) / 2;
+
+    seriesData.forEach((series, gi) => {
+      const gx = chartX + gi * groupW + groupPad;
+      series.bars.forEach((bar, bi) => {
+        const bx = gx + bi * barW;
+        const bh = scaleY(bar.value) * chartH;
+        if (bh > 0.2) {
+          doc.setFillColor(...bar.color);
+          doc.rect(bx, chartY + chartH - bh, barW * 0.88, bh, 'F');
+        }
+      });
+      // X label
+      const shortLabel = series.label.length > 13 ? series.label.substring(0, 12) + '.' : series.label;
+      doc.setFontSize(4.5);
+      doc.setTextColor(...GRAY);
+      doc.text(shortLabel, gx + groupW/2 - groupPad, chartY + chartH + 3.5, {align:'center'});
+    });
+
+    // Threshold lines
+    doc.setLineDash([1.5, 1], 0);
+    if (threshold1 !== null && threshold1 !== undefined) {
+      const ty = chartY + chartH - scaleY(threshold1) * chartH;
+      if (ty >= chartY - 1 && ty <= chartY + chartH + 1) {
+        doc.setDrawColor(...RED);
+        doc.setLineWidth(0.6);
+        doc.line(chartX, ty, chartX + chartW, ty);
+        doc.setFontSize(5.5);
+        doc.setTextColor(...RED);
+        doc.text(_s(threshold1), chartX + chartW + 1, ty + 1);
+      }
+    }
+    if (threshold2 !== null && threshold2 !== undefined) {
+      const ty = chartY + chartH - scaleY(threshold2) * chartH;
+      if (ty >= chartY - 1 && ty <= chartY + chartH + 1) {
+        doc.setDrawColor(...ORANGE);
+        doc.setLineWidth(0.5);
+        doc.line(chartX, ty, chartX + chartW, ty);
+        doc.setFontSize(5.5);
+        doc.setTextColor(...ORANGE);
+        doc.text(_s(threshold2), chartX + chartW + 1, ty + 1);
+      }
+    }
+    doc.setLineDash([], 0);
+
+    // Legend
+    const legendItems = [
+      {label: 'Adulte',  color: [31, 97, 141]},
+      {label: 'Enfant',  color: [211, 84, 0]},
+      {label: 'Salarie', color: [39, 174, 96]},
+    ];
+    let lx = chartX;
+    const ly = chartY + chartH + 9;
+    legendItems.forEach(li => {
+      doc.setFillColor(...li.color);
+      doc.rect(lx, ly - 2.5, 3, 3, 'F');
+      doc.setFontSize(5.5);
+      doc.setTextColor(...GRAY);
+      doc.text(li.label, lx + 4, ly);
+      lx += 22;
+    });
+    doc.setTextColor(0,0,0);
+  }
+
+  // ========================================================
+  // PAGE 1 — PAGE DE GARDE (Portrait)
+  // ========================================================
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  pageNum++;
+  const PW = doc.internal.pageSize.getWidth();
+  const PH = doc.internal.pageSize.getHeight();
+
+  // Full blue header band
+  doc.setFillColor(...BLUE);
+  doc.rect(0, 0, PW, 52, 'F');
+
+  // Logo + company name
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(26);
+  doc.setFont('helvetica', 'bold');
+  doc.text('G.M.E.P', PW/2, 22, {align:'center'});
+  doc.setFontSize(8.5);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Global Management of Environmental Project', PW/2, 29, {align:'center'});
+  doc.setFontSize(7);
+  doc.text('SARL — SIREN 753 097 625 — 9 rue de la Marne, 79400 Saint-Maixent-l\'Ecole', PW/2, 34, {align:'center'});
+  doc.text('Tel. 06 07 73 72 33 — gmep.france@gmail.com — www.gmep-france.eu', PW/2, 39, {align:'center'});
+
+  // Green accent line
+  doc.setDrawColor(46, 204, 113);
+  doc.setLineWidth(1.5);
+  doc.line(18, 44, PW - 18, 44);
+
+  doc.setFontSize(7.5);
+  doc.setFont('helvetica', 'bold');
+  doc.text('RAPPORT D\'EVALUATION QUANTITATIVE DES RISQUES SANITAIRES', PW/2, 49, {align:'center'});
+
+  doc.setTextColor(0, 0, 0);
+
+  // Main title block
+  let y = 72;
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...BLUE);
+  doc.text('EVALUATION QUANTITATIVE', PW/2, y, {align:'center'});
+  doc.text('DES RISQUES SANITAIRES', PW/2, y + 10, {align:'center'});
+
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(...GRAY);
+  doc.text('Modele Johnson & Ettinger (EPA 2004)', PW/2, y + 19, {align:'center'});
+  doc.text('Intrusion de vapeurs — Voies sol-gaz et nappe', PW/2, y + 25, {align:'center'});
+
+  doc.setDrawColor(200, 200, 200);
+  doc.setLineWidth(0.4);
+  doc.line(18, y + 31, PW - 18, y + 31);
+
+  // Site info block
+  y += 39;
+  if (siteName || commune) {
+    doc.setFillColor(...LGRAY);
+    doc.rect(18, y - 4, PW - 36, 30, 'F');
+    doc.setDrawColor(...BLUE);
+    doc.setLineWidth(0.3);
+    doc.rect(18, y - 4, PW - 36, 30, 'S');
+
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...BLUE);
+    doc.text('IDENTIFICATION DU SITE', 23, y + 2);
+
+    if (siteName) {
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(0,0,0);
+      doc.text(siteName, PW/2, y + 12, {align:'center'});
+    }
+    if (commune) {
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(...GRAY);
+      doc.text('Commune : ' + commune, PW/2, y + (siteName ? 20 : 12), {align:'center'});
+    }
+    doc.setTextColor(0,0,0);
+    y += 36;
+  }
+
+  // Metadata table
+  doc.setFillColor(240, 244, 248);
+  doc.rect(18, y, PW - 36, 40, 'F');
+  doc.setDrawColor(180, 190, 210);
+  doc.setLineWidth(0.25);
+  doc.rect(18, y, PW - 36, 40, 'S');
+
+  const metaItems = [
+    ['Date de l\'etude',        dateEtude],
+    ['Heure de generation',     timeStr],
+    ['Outil de calcul',         'EQRS J&E — SARL G.M.E.P v2.0'],
+    ['Methode',                 'Johnson & Ettinger (EPA 2004)'],
+    ['Recepteurs',              'Adulte resident., Enfant (2-6 ans), Salarie'],
+  ];
+  doc.setFontSize(7.5);
+  metaItems.forEach((item, i) => {
+    const ry = y + 5 + i * 7;
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...BLUE);
+    doc.text(item[0] + ' :', 25, ry);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(0,0,0);
+    doc.text(item[1], 97, ry);
+  });
+
+  y += 50;
+
+  // Notice
+  doc.setFontSize(6.5);
+  doc.setTextColor(130, 130, 130);
+  doc.setFont('helvetica', 'italic');
+  [
+    'Ce rapport a ete genere automatiquement par le logiciel EQRS Johnson & Ettinger de la SARL G.M.E.P.',
+    'Les resultats sont donnes a titre indicatif et doivent etre interpretes par un expert qualifie.',
+    'La SARL G.M.E.P decline toute responsabilite en cas d\'utilisation inappropriee de ce document.',
+  ].forEach((line, i) => {
+    doc.text(line, PW/2, y + i * 5, {align:'center'});
+  });
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(0,0,0);
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 2 — PARAMETRES (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  let W = doc.internal.pageSize.getWidth();
+  const margin = 10;
+  y = addLandscapeHeader(doc, 'Parametres d\'exposition humaine et donnees constructives batiment/sol');
+
+  y = secTitle(doc, y, 'PARAMETRES D\'EXPOSITION HUMAINE', W, margin);
+
+  const pa = state.params?.adulte  || {};
+  const pe = state.params?.enfant  || {};
+  const ps = state.params?.salarie || {};
+
+  doc.autoTable({
+    startY: y,
+    head: [['Parametre', 'Adulte resident.', 'Enfant (2-6 ans)', 'Salarie', 'Unite']],
+    body: [
+      ['Poids corporel (P)',               _f(pa.P||70),              _f(pe.P||15),             _f(ps.P||70),             'kg'],
+      ['Duree exposition (ED)',             _f(pa.ED||30),             _f(pe.ED||6),             _f(ps.ED||25),            'ans'],
+      ['Frequence exposition (EF)',         _f(pa.EF||350),            _f(pe.EF||350),           _f(ps.EF||220),           'j/an'],
+      ['Temps de moyennage seuil (AT)',     _f(pa.AT_seuil||30),       _f(pe.AT_seuil||6),       _f(ps.AT_seuil||25),      'ans'],
+      ['Temps moyennage ss-seuil (AT)',     _f(pa.AT_sansseuil||70),   _f(pe.AT_sansseuil||70),  _f(ps.AT_sansseuil||70),  'ans'],
+      ['Debit ingestion sol (IRs)',         _s(pa.IRs||3e-5),          _s(pe.IRs||1e-4),         _s(ps.IRs||5e-5),         'kg/j'],
+      ['Debit ingestion eau (IRw)',         _f(pa.IRw||2),             _f(pe.IRw||1),            _f(ps.IRw||1),            'L/j'],
+      ['Debit respiratoire (IRa)',          _f(pa.IRa||20),            _f(pe.IRa||10),           _f(ps.IRa||20),           'm3/j'],
+      ['Surface cutanee exposee (Scut)',    _f(pa.Scut||5700),         _f(pe.Scut||2800),        _f(ps.Scut||3300),        'cm2'],
+      ['Facteur adherence (AF)',            _f(pa.AF||0.07),           _f(pe.AF||0.2),           _f(ps.AF||0.07),          'mg/cm2'],
+      ['Absorption cutanee (ABS)',          _f(pa.ABS||0.1),           _f(pe.ABS||0.1),          _f(ps.ABS||0.1),          '-'],
+      ['Fraction temps interieur (Fi)',     _f(pa.Fi||0.8),            _f(pe.Fi||0.8),           _f(ps.Fi||1.0),           '-'],
+    ],
+    theme: 'grid',
+    styles: { fontSize: 6.5, cellPadding: 1.3 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 6.5 },
+    margin: { left: margin, right: W/2 + 2 },
+    tableWidth: W/2 - margin - 2,
+  });
+
+  // Bat params right column — reset y to top
+  const bat  = state.bat        || {};
+  const batD = state.batDerived || {};
+  y = secTitle(doc, 21, 'DONNEES CONSTRUCTIVES BATIMENT ET SOL', W, W/2 + 2);
+
+  doc.autoTable({
+    startY: y,
+    head: [['Parametre batiment / sol', 'Valeur', 'Unite']],
+    body: [
+      ['Longueur batiment (LB)',      _f(bat.LB||10),      'm'],
+      ['Largeur batiment (WB)',       _f(bat.WB||10),      'm'],
+      ['Hauteur sous plafond (HB)',   _f(bat.HB||2.5),     'm'],
+      ['Surface batiment (AB)',       _f(batD.AB || (bat.LB||10)*(bat.WB||10)), 'm2'],
+      ['Volume piece (Vroom)',        _f(batD.Vroom || (bat.LB||10)*(bat.WB||10)*(bat.HB||2.5)), 'm3'],
+      ['Taux renouv. air (ER)',       _f(bat.ER||0.45),    '1/h'],
+      ['Epaisseur dallage (Lcrack)', _f(bat.Lcrack||0.15),'m'],
+      ['Fraction fissure (eta)',      _s(bat.eta||2e-4),   '-'],
+      ['Porosite totale (n)',         _f(bat.n||0.35),     '-'],
+      ['Teneur eau sol (theta_w)',    _f(bat.theta_w||0.15),'-'],
+      ['Porosite air (theta_a)',      _f(batD.theta_a||(bat.n||0.35)-(bat.theta_w||0.15)),'-'],
+      ['Permeabilite sol (kv)',       _s(bat.kv||1e-12),   'm2'],
+      ['Depression batiment (dP)',    _f(bat.dP||4),       'Pa'],
+      ['Distance source-dalle (LT)', _f(bat.LT||2),       'm'],
+      ['Fraction org. carbone (foc)',_f(bat.foc||0.006),  '-'],
+      ['Substance contaminant pilote',bat.substance_select||'Benzene', ''],
+      ['Da (diffusivite air)',        _s(bat.Da||8.8e-6),  'm2/s'],
+      ['Dw (diffusivite eau)',        _s(bat.Dw||9.8e-10), 'm2/s'],
+      ['H\' (constante Henry)',       _f(bat.Hprime||0.228),'-'],
+    ],
+    theme: 'grid',
+    styles: { fontSize: 6.5, cellPadding: 1.3 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 6.5 },
+    margin: { left: W/2 + 2, right: margin },
+    tableWidth: W/2 - margin - 2,
+  });
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 3 — CONCENTRATIONS MESUREES (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  W = doc.internal.pageSize.getWidth();
+  y = addLandscapeHeader(doc, 'Concentrations mesurees dans les milieux');
+  y = secTitle(doc, y, 'CONCENTRATIONS MESUREES — MILIEUX ENVIRONNEMENTAUX', W, margin);
+
+  const concRows = [];
+  SUBSTANCES.forEach(s => {
+    const c = state.concentrations[s.name] || {};
+    const airInt = _p(c.air);
+    const airExt = _p(c.airExt);
+    const sol    = _p(c.sol);
+    const eau    = _p(c.eau);
+    const solGaz = _p(c.solGaz);
+    if (airInt || airExt || sol || eau || solGaz) {
+      concRows.push([
+        s.name,
+        airInt  ? _s(airInt)  : '—',
+        airExt  ? _s(airExt)  : '—',
+        sol     ? _s(sol)     : '—',
+        eau     ? _s(eau)     : '—',
+        solGaz  ? _s(solGaz)  : '—',
+      ]);
+    }
+  });
+  if (concRows.length === 0) concRows.push(['(Aucune concentration saisie)', '—', '—', '—', '—', '—']);
+
+  doc.autoTable({
+    startY: y,
+    head: [['Substance', 'Air interieur\n(ug/m3)', 'Air exterieur\n(ug/m3)', 'Sol / Poussieres\n(mg/kg MS)', 'Eaux souterraines\n(ug/L)', 'Sol-gaz\n(ug/m3)']],
+    body: concRows,
+    theme: 'grid',
+    styles: { fontSize: 7, cellPadding: 1.5 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 7 },
+    margin: { left: margin, right: margin },
+    didParseCell: function(data) {
+      if (data.section === 'body' && data.column.index > 0 && data.cell.raw !== '—') {
+        data.cell.styles.textColor = [180, 50, 20];
+        data.cell.styles.fontStyle = 'bold';
+      }
+    }
+  });
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 4 — RESULTATS J&E INTERMEDIAIRES (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  W = doc.internal.pageSize.getWidth();
+  y = addLandscapeHeader(doc, 'Resultats intermediaires — Modele Johnson & Ettinger');
+
+  const mje  = state.modeleJE  || {};
+  const batDer = state.batDerived || {};
+  const b    = state.bat        || {};
+  const cindoor = state.cindoor || {};
+
+  y = secTitle(doc, y, 'PARAMETRES GLOBAUX DU MODELE J&E', W, margin);
+
+  doc.autoTable({
+    startY: y,
+    head: [['Parametre', 'Valeur calculee', 'Unite']],
+    body: [
+      ['Deff (diffusivite effective sol)',      _s(mje.Deff||0),        'm2/s'],
+      ['Qsoil (debit volumique sol-batiment)', _s(mje.Qsoil||0),       'm3/s'],
+      ['Qbuilding (debit ventilation)',        _s(batDer.Qbuilding||0),'m3/s'],
+      ['alpha_eff (facteur attenuation moyen)',_s(mje.alpha_eff||0),   '-'],
+      ['Pe_sol (facteur penetration sol-gaz)', _s(mje.Pe_sol||0),      '-'],
+      ['Pe_crack (facteur penetration fissu)', _s(mje.Pe_crack||0),    '-'],
+      ['delta (ratio H/Lcrack)',               _f(mje.delta||0),       '-'],
+    ],
+    theme: 'grid',
+    styles: { fontSize: 7, cellPadding: 1.3 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 7 },
+    margin: { left: margin, right: W/2 + 2 },
+    tableWidth: W/2 - margin - 2,
+  });
+
+  // Cindoor table right column
+  y = secTitle(doc, 21, 'CONCENTRATIONS INTERIEURES (Cindoor)', W, W/2 + 2);
+  const cindoorRows = [];
+  SUBSTANCES.forEach(s => {
+    const ci = cindoor[s.name];
+    if (ci && (ci.solGaz > 0 || ci.nappe > 0)) {
+      cindoorRows.push([s.name, _s(ci.solGaz||0), _s(ci.nappe||0), _s(Math.max(ci.solGaz||0, ci.nappe||0))]);
+    }
+  });
+  if (cindoorRows.length === 0) cindoorRows.push(['(Aucune donnee)', '—', '—', '—']);
+
+  doc.autoTable({
+    startY: y + 8,
+    head: [['Substance', 'Cindoor SG\n(ug/m3)', 'Cindoor Nappe\n(ug/m3)', 'Cindoor max\n(ug/m3)']],
+    body: cindoorRows,
+    theme: 'grid',
+    styles: { fontSize: 7, cellPadding: 1.3 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 7 },
+    margin: { left: W/2 + 2, right: margin },
+    tableWidth: W/2 - margin - 2,
+    didParseCell: function(data) {
+      if (data.section === 'body' && data.column.index === 3) {
+        const val = parseFloat(data.cell.raw);
+        if (!isNaN(val) && val > 0) { data.cell.styles.textColor = [180,80,0]; data.cell.styles.fontStyle = 'bold'; }
+      }
+    }
+  });
+
+  // Per-substance J&E intermediate results
+  const jeY2 = Math.max(doc.lastAutoTable.finalY + 4, 120);
+  y = secTitle(doc, jeY2, 'RESULTATS INTERMEDIAIRES J&E PAR SUBSTANCE (Deff, Qsoil, alpha, Pe)', W, margin);
+
+  const jeRows = [];
+  SUBSTANCES.forEach(s => {
+    const je = mje[s.name];
+    const ci = cindoor[s.name];
+    if (je && (je.alpha > 0 || (ci && (ci.solGaz > 0 || ci.nappe > 0)))) {
+      jeRows.push([
+        s.name, _s(je.Deff||0), _s(je.Qsoil||0), _s(je.alpha||0),
+        _s(je.Pe_sol||0), _s(je.Pe_crack||0),
+        ci ? _s(ci.solGaz||0) : '—', ci ? _s(ci.nappe||0) : '—',
+      ]);
+    }
+  });
+  if (jeRows.length === 0) jeRows.push(['(Aucune substance)', '—','—','—','—','—','—','—']);
+
+  doc.autoTable({
+    startY: y,
+    head: [['Substance', 'Deff (m2/s)', 'Qsoil (m3/s)', 'Alpha (a)', 'Pe sol', 'Pe crack', 'Cindoor SG\n(ug/m3)', 'Cindoor Nappe\n(ug/m3)']],
+    body: jeRows,
+    theme: 'grid',
+    styles: { fontSize: 6.5, cellPadding: 1.2 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 6.5 },
+    margin: { left: margin, right: margin },
+  });
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 5 — VTR (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  W = doc.internal.pageSize.getWidth();
+  y = addLandscapeHeader(doc, 'Valeurs Toxicologiques de Reference (VTR) utilisees');
+
+  y = secTitle(doc, y, 'VTR EFFETS A SEUIL — References ANSES / ECHA / US EPA', W, margin);
+
+  // Use global VTR_SEUIL (available in scope)
+  const vtrSeuilRows = [];
+  SUBSTANCES.forEach(s => {
+    const vtr = VTR_SEUIL[s.name];
+    if (vtr && (vtr.orale || vtr.inhal)) {
+      vtrSeuilRows.push([
+        s.name,
+        vtr.orale  ? _f(vtr.orale)  : '—',
+        vtr.inhal  ? _f(vtr.inhal)  : '—',
+        vtr.org    || '—',
+        vtr.effet  || '—',
+      ]);
+    }
+  });
+  if (vtrSeuilRows.length === 0) vtrSeuilRows.push(['(Aucune VTR seuil)', '—', '—', '—', '—']);
+
+  doc.autoTable({
+    startY: y,
+    head: [['Substance', 'VTR orale\n(mg/kg/j)', 'VTR inhal.\n(mg/m3)', 'Organisme', 'Effet critique']],
+    body: vtrSeuilRows,
+    theme: 'grid',
+    styles: { fontSize: 6.5, cellPadding: 1.2 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 6.5 },
+    margin: { left: margin, right: W/2 + 2 },
+    tableWidth: W/2 - margin - 2,
+  });
+
+  y = secTitle(doc, 21, 'VTR EFFETS SANS SEUIL — ERU (Exces de Risque Unitaire)', W, W/2 + 2);
+
+  const vtrSSRows = [];
+  ERI_SUBSTANCES.forEach(eriName => {
+    const vtr = VTR_SANSSEUIL[eriName];
+    if (vtr) {
+      vtrSSRows.push([
+        eriName,
+        vtr.eruOral  !== null ? _s(vtr.eruOral)  : '—',
+        vtr.eruInhal !== null ? _s(vtr.eruInhal) : '—',
+        vtr.org || '—',
+      ]);
+    }
+  });
+  if (vtrSSRows.length === 0) vtrSSRows.push(['(Aucune ERU)', '—', '—', '—']);
+
+  doc.autoTable({
+    startY: y + 8,
+    head: [['Substance', 'ERU oral\n((mg/kg/j)^-1)', 'ERU inhal.\n((ug/m3)^-1)', 'Organisme']],
+    body: vtrSSRows,
+    theme: 'grid',
+    styles: { fontSize: 6, cellPadding: 1.1 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 6 },
+    margin: { left: W/2 + 2, right: margin },
+    tableWidth: W/2 - margin - 2,
+  });
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 6 — RESULTATS QD (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  W = doc.internal.pageSize.getWidth();
+  y = addLandscapeHeader(doc, 'Resultats — Quotients de Danger (QD) — Effets a seuil');
+  y = secTitle(doc, y, 'QUOTIENTS DE DANGER PAR SUBSTANCE ET RECEPTEUR', W, margin);
+
+  // state.resultatsQD = { adulte:{substanceName:{ingSol,ingEau,inhal,cutane,jeInhal,total}}, enfant:{...}, salarie:{...} }
+  const rqd_ad  = (state.resultatsQD || {}).adulte  || {};
+  const rqd_enf = (state.resultatsQD || {}).enfant  || {};
+  const rqd_sal = (state.resultatsQD || {}).salarie || {};
+
+  const qdRows = [];
+  const qdChartData = [];
+  let sumQD_ad = 0, sumQD_enf = 0, sumQD_sal = 0;
+
+  SUBSTANCES.forEach(s => {
+    const qa = rqd_ad[s.name]  || {};
+    const qe = rqd_enf[s.name] || {};
+    const qs = rqd_sal[s.name] || {};
+    const vtr = VTR_SEUIL[s.name] || {};
+
+    const qd_ad_total  = qa.total  || 0;
+    const qd_enf_total = qe.total  || 0;
+    const qd_sal_total = qs.total  || 0;
+
+    if (qd_ad_total > 0 || qd_enf_total > 0 || qd_sal_total > 0) {
+      qdRows.push([
+        s.name,
+        vtr.orale ? _f(vtr.orale) : '—',
+        vtr.inhal ? _f(vtr.inhal) : '—',
+        qa.ingSol  ? _s(qa.ingSol)  : '—',
+        qa.ingEau  ? _s(qa.ingEau)  : '—',
+        qa.inhal   ? _s(qa.inhal)   : '—',
+        qa.jeInhal ? _s(qa.jeInhal) : '—',
+        qa.cutane  ? _s(qa.cutane)  : '—',
+        qd_ad_total  ? _s(qd_ad_total)  : '—',
+        qd_enf_total ? _s(qd_enf_total) : '—',
+        qd_sal_total ? _s(qd_sal_total) : '—',
+      ]);
+      sumQD_ad  += qd_ad_total;
+      sumQD_enf += qd_enf_total;
+      sumQD_sal += qd_sal_total;
+
+      qdChartData.push({
+        label: s.name,
+        bars: [
+          {color: [31, 97,141],  value: qd_ad_total},
+          {color: [211,84,0],    value: qd_enf_total},
+          {color: [39, 174, 96], value: qd_sal_total},
+        ]
+      });
+    }
+  });
+  if (qdRows.length === 0) qdRows.push(['(Aucun resultat QD)', '—','—','—','—','—','—','—','—','—','—']);
+
+  doc.autoTable({
+    startY: y,
+    head: [[
+      'Substance', 'VTR Oral', 'VTR Inh.',
+      'QD Ing.Sol\nAdulte', 'QD Ing.Eau\nAdulte', 'QD Inhal.\nAdulte', 'QD J&E\nAdulte', 'QD Cut.\nAdulte',
+      'QD Total\nAdulte', 'QD Total\nEnfant', 'QD Total\nSalarie'
+    ]],
+    body: qdRows,
+    theme: 'grid',
+    styles: { fontSize: 6, cellPadding: 1.1 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 6 },
+    margin: { left: margin, right: margin },
+    didParseCell: function(data) {
+      if (data.section === 'body' && [8,9,10].includes(data.column.index)) {
+        const val = parseFloat(data.cell.raw);
+        if (!isNaN(val)) {
+          if (val >= 1) { data.cell.styles.textColor = RED;   data.cell.styles.fontStyle = 'bold'; }
+          else if (val > 0) { data.cell.styles.textColor = GREEN; }
+        }
+      }
+    }
+  });
+
+  let qdSumY = doc.lastAutoTable.finalY + 4;
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  [[sumQD_ad,'Adulte'],[sumQD_enf,'Enfant'],[sumQD_sal,'Salarie']].forEach(([val,label], i) => {
+    doc.setTextColor(...(val >= 1 ? RED : GREEN));
+    doc.text(
+      'Somme QD ' + label + ' = ' + _s(val) + (val >= 1 ? '  > 1 — INACCEPTABLE' : '  < 1 — Acceptable'),
+      margin, qdSumY + i * 5
+    );
+  });
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(0,0,0);
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 7 — GRAPHIQUE QD (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  W = doc.internal.pageSize.getWidth();
+  let H7 = doc.internal.pageSize.getHeight();
+  y = addLandscapeHeader(doc, 'Graphique — Quotients de Danger par substance et recepteur');
+  y = secTitle(doc, y, 'QUOTIENTS DE DANGER (QD) — REPRESENTATION GRAPHIQUE', W, margin);
+
+  drawBarChart(
+    doc, margin, y, W - 2*margin, H7 - y - 18,
+    qdChartData, 1, null,
+    'Quotients de Danger (QD) par substance — Adulte (bleu), Enfant (orange), Salarie (vert) — seuil QD=1 (rouge)',
+    false
+  );
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 8 — RESULTATS ERI (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  W = doc.internal.pageSize.getWidth();
+  y = addLandscapeHeader(doc, 'Resultats — Exces de Risque Individuel (ERI) — Effets sans seuil');
+  y = secTitle(doc, y, 'EXCES DE RISQUE INDIVIDUEL PAR SUBSTANCE ET RECEPTEUR', W, margin);
+
+  // state.resultatsERI = { adulte:{eriName:{ingestion,inhalation,jeInhal,cutane,total}}, enfant:{...}, salarie:{...} }
+  const reri_ad  = (state.resultatsERI || {}).adulte  || {};
+  const reri_enf = (state.resultatsERI || {}).enfant  || {};
+  const reri_sal = (state.resultatsERI || {}).salarie || {};
+
+  const eriRows = [];
+  const eriChartData = [];
+  let sumERI_ad = 0, sumERI_enf = 0, sumERI_sal = 0;
+
+  ERI_SUBSTANCES.forEach(eriName => {
+    const vtr = VTR_SANSSEUIL[eriName];
+    if (!vtr) return;
+    const concName = ERI_NAME_MAP[eriName] || eriName;
+    const sObj = SUBSTANCES.find(s => s.name === concName);
+    if (!sObj) return;
+
+    const ea = reri_ad[eriName]  || {};
+    const ec = reri_enf[eriName] || {};
+    const es = reri_sal[eriName] || {};
+    const hasNZ = (ea.total || ec.total || ea.ingestion || ec.ingestion || es.ingestion || es.inhalation);
+
+    if (hasNZ) {
+      eriRows.push([
+        eriName,
+        vtr.eruOral  !== null ? _s(vtr.eruOral)  : '—',
+        vtr.eruInhal !== null ? _s(vtr.eruInhal) : '—',
+        _s(ea.ingestion  || 0), _s(ea.inhalation || 0), _s(ea.jeInhal  || 0), _s(ea.cutane || 0), _s(ea.total || 0),
+        _s(ec.ingestion  || 0), _s(ec.inhalation || 0), _s(ec.jeInhal  || 0), _s(ec.cutane || 0), _s(ec.total || 0),
+        _s(es.ingestion  || 0), _s(es.inhalation || 0),
+      ]);
+      sumERI_ad  += ea.total || 0;
+      sumERI_enf += ec.total || 0;
+      sumERI_sal += (es.ingestion || 0) + (es.inhalation || 0);
+
+      if ((ea.total || 0) > 0 || (ec.total || 0) > 0) {
+        eriChartData.push({
+          label: eriName,
+          bars: [
+            {color: [31,97,141],  value: ea.total || 0},
+            {color: [211,84,0],   value: ec.total || 0},
+            {color: [39,174,96],  value: (es.ingestion||0)+(es.inhalation||0)},
+          ]
+        });
+      }
+    }
+  });
+  if (eriRows.length === 0) eriRows.push(['(Aucun resultat ERI)', '—','—','—','—','—','—','—','—','—','—','—','—','—','—']);
+
+  doc.autoTable({
+    startY: y,
+    head: [[
+      'Substance', 'ERU Oral', 'ERU Inh.',
+      'ERI Ing. Ad.', 'ERI Inh. Ad.', 'ERI J&E Ad.', 'ERI Cut. Ad.', 'ERI Tot. Ad.',
+      'ERI Ing. Enf.', 'ERI Inh. Enf.', 'ERI J&E Enf.', 'ERI Cut. Enf.', 'ERI Tot. Enf.',
+      'ERI Ing. Sal.', 'ERI Inh. Sal.'
+    ]],
+    body: eriRows,
+    theme: 'grid',
+    styles: { fontSize: 5.3, cellPadding: 1.0 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 5.3 },
+    margin: { left: margin, right: margin },
+    didParseCell: function(data) {
+      if (data.section === 'body' && (data.column.index === 7 || data.column.index === 12)) {
+        const val = parseFloat(data.cell.raw);
+        if (!isNaN(val) && val > 0) {
+          if (val >= 1e-5) { data.cell.styles.textColor = RED;    data.cell.styles.fontStyle = 'bold'; }
+          else if (val >= 1e-6) { data.cell.styles.textColor = ORANGE; data.cell.styles.fontStyle = 'bold'; }
+          else { data.cell.styles.textColor = GREEN; }
+        }
+      }
+    }
+  });
+
+  let eriSumY = doc.lastAutoTable.finalY + 4;
+  doc.setFontSize(7.5);
+  doc.setFont('helvetica', 'bold');
+  [[sumERI_ad,'Adulte'],[sumERI_enf,'Enfant'],[sumERI_sal,'Salarie']].forEach(([val,label], i) => {
+    const col = val >= 1e-5 ? RED : val >= 1e-6 ? ORANGE : GREEN;
+    doc.setTextColor(...col);
+    const concl = val >= 1e-5 ? ' > 10^-5 — INACCEPTABLE' : val >= 1e-6 ? ' > 10^-6 — Vigilance' : ' < 10^-6 — Acceptable';
+    doc.text('Somme ERI ' + label + ' = ' + _s(val) + concl, margin, eriSumY + i * 5);
+  });
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(0,0,0);
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 9 — GRAPHIQUE ERI (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  W = doc.internal.pageSize.getWidth();
+  let H9 = doc.internal.pageSize.getHeight();
+  y = addLandscapeHeader(doc, 'Graphique — Exces de Risque Individuel par substance et recepteur');
+  y = secTitle(doc, y, 'ERI — REPRESENTATION GRAPHIQUE (ECHELLE LOGARITHMIQUE)', W, margin);
+
+  drawBarChart(
+    doc, margin, y, W - 2*margin, H9 - y - 18,
+    eriChartData, 1e-5, 1e-6,
+    'Exces de Risque Individuel (ERI) — Adulte (bleu), Enfant (orange) — Echelle logarithmique',
+    true
+  );
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 10 — SYNTHESE (Landscape)
+  // ========================================================
+  doc.addPage('a4', 'landscape');
+  pageNum++;
+  W = doc.internal.pageSize.getWidth();
+  y = addLandscapeHeader(doc, 'Synthese des resultats — Tableau recapitulatif');
+  y = secTitle(doc, y, 'TABLEAU DE SYNTHESE — QD ET ERI MAXIMAUX PAR SUBSTANCE', W, margin);
+
+  const synthRows = [];
+  const allSubstNames = new Set();
+  SUBSTANCES.forEach(s => { if ((rqd_ad[s.name]||{}).total > 0 || (rqd_enf[s.name]||{}).total > 0 || (rqd_sal[s.name]||{}).total > 0) allSubstNames.add(s.name); });
+  ERI_SUBSTANCES.forEach(n => { if ((reri_ad[n]||{}).total > 0 || (reri_enf[n]||{}).total > 0) allSubstNames.add(n); });
+
+  allSubstNames.forEach(name => {
+    const qa = rqd_ad[name]  || {};
+    const qe = rqd_enf[name] || {};
+    const qs = rqd_sal[name] || {};
+    const ea = reri_ad[name]  || {};
+    const ec = reri_enf[name] || {};
+    const es = reri_sal[name] || {};
+
+    const qd_max  = Math.max(qa.total||0, qe.total||0, qs.total||0);
+    const eri_max = Math.max(ea.total||0, ec.total||0, (es.ingestion||0)+(es.inhalation||0));
+
+    if (qd_max > 0 || eri_max > 0) {
+      let cQD = '—', cERI = '—', cGlobal = '—';
+      if (qd_max >= 1) cQD = 'Inacceptable';
+      else if (qd_max > 0) cQD = 'Acceptable';
+      if (eri_max >= 1e-5) cERI = 'Inacceptable';
+      else if (eri_max >= 1e-6) cERI = 'Vigilance';
+      else if (eri_max > 0) cERI = 'Acceptable';
+      if (cQD === 'Inacceptable' || cERI === 'Inacceptable') cGlobal = 'Inacceptable';
+      else if (cERI === 'Vigilance') cGlobal = 'Vigilance';
+      else if (cQD === 'Acceptable' || cERI === 'Acceptable') cGlobal = 'Acceptable';
+
+      synthRows.push([
+        name,
+        qd_max > 0 ? _s(qa.total||0) : '—',
+        qd_max > 0 ? _s(qe.total||0) : '—',
+        qd_max > 0 ? _s(qs.total||0) : '—',
+        eri_max > 0 ? _s(ea.total||0) : '—',
+        eri_max > 0 ? _s(ec.total||0) : '—',
+        cQD, cERI, cGlobal,
+      ]);
+    }
+  });
+  if (synthRows.length === 0) synthRows.push(['(Aucun resultat)', '—','—','—','—','—','—','—','—']);
+
+  doc.autoTable({
+    startY: y,
+    head: [[
+      'Substance',
+      'QD Total\nAdulte', 'QD Total\nEnfant', 'QD Total\nSalarie',
+      'ERI Total\nAdulte', 'ERI Total\nEnfant',
+      'Conclusion QD', 'Conclusion ERI', 'CONCLUSION'
+    ]],
+    body: synthRows,
+    theme: 'grid',
+    styles: { fontSize: 6.5, cellPadding: 1.3 },
+    headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 6.5 },
+    margin: { left: margin, right: margin },
+    didParseCell: function(data) {
+      if (data.section === 'body' && [6,7,8].includes(data.column.index)) {
+        const v = data.cell.raw;
+        if (v === 'Inacceptable') { data.cell.styles.textColor = RED;    data.cell.styles.fontStyle = 'bold'; }
+        else if (v === 'Vigilance')   { data.cell.styles.textColor = ORANGE; data.cell.styles.fontStyle = 'bold'; }
+        else if (v === 'Acceptable')  { data.cell.styles.textColor = GREEN; }
+      }
+    }
+  });
+
+  // Global conclusion banner
+  const allQD_max  = Math.max(sumQD_ad,  sumQD_enf,  sumQD_sal);
+  const allERI_max = Math.max(sumERI_ad, sumERI_enf, sumERI_sal);
+  let globalConcl = 'ACCEPTABLE';
+  let globalColor = GREEN;
+  if (allQD_max >= 1 || allERI_max >= 1e-5) { globalConcl = 'INACCEPTABLE';     globalColor = RED;    }
+  else if (allERI_max >= 1e-6)              { globalConcl = 'VIGILANCE REQUISE'; globalColor = ORANGE; }
+
+  const bannerY = doc.lastAutoTable.finalY + 5;
+  doc.setFillColor(...globalColor);
+  doc.rect(margin, bannerY, W - 2*margin, 10, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.text('CONCLUSION GLOBALE : ' + globalConcl, W/2, bannerY + 6.5, {align:'center'});
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(0,0,0);
+
+  addFooter(doc, pageNum);
+
+  // ========================================================
+  // PAGE 11 — MENTIONS LEGALES (Portrait)
+  // ========================================================
+  doc.addPage('a4', 'portrait');
+  pageNum++;
+  const PW11 = doc.internal.pageSize.getWidth();
+  const PH11 = doc.internal.pageSize.getHeight();
+  y = addPortraitHeader(doc, 'Mentions legales et avertissements');
+  y = secTitle(doc, y, 'MENTIONS LEGALES', PW11, 15);
+
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...BLUE);
+  doc.text('SARL G.M.E.P — Global Management of Environmental Project', PW11/2, y + 7, {align:'center'});
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(0,0,0);
+
+  const legalBlocks = [
+    { title: 'Coordonnees', lines: [
+        'SARL G.M.E.P — SIREN 753 097 625 — Code APE 7112B',
+        '9 rue de la Marne, 79400 Saint-Maixent-l\'Ecole',
+        'Tel. 06 07 73 72 33 — gmep.france@gmail.com — www.gmep-france.eu',
+        'Gerant : Eric Azulay',
+    ]},
+    { title: 'Propriete intellectuelle', lines: [
+        'Ce rapport a ete genere par le logiciel EQRS Johnson & Ettinger, propriete exclusive de la SARL G.M.E.P.',
+        'Toute reproduction, diffusion, communication au public ou utilisation de ce rapport, meme partielle,',
+        'sans autorisation ecrite prealable de la SARL G.M.E.P est strictement interdite.',
+        '(c) 2023-2026 SARL G.M.E.P — Tous droits reserves.',
+    ]},
+    { title: 'Avertissement et limites d\'utilisation', lines: [
+        'Ce rapport est fourni a titre indicatif uniquement. Les resultats de l\'evaluation quantitative des',
+        'risques sanitaires dependent de la qualite et de la representativite des donnees saisies par l\'utilisateur.',
+        'La SARL G.M.E.P ne peut etre tenue responsable des erreurs ou omissions dans les donnees saisies,',
+        'ni des consequences decoulant de l\'utilisation ou de l\'interpretation de ce rapport.',
+        'Ces resultats doivent etre interpretes par un expert qualifie en evaluation des risques sanitaires.',
+    ]},
+    { title: 'Methode de calcul', lines: [
+        'Le modele Johnson & Ettinger (J&E, EPA 2004) est utilise pour estimer le facteur d\'attenuation (alpha)',
+        'permettant de calculer les concentrations interieures (Cindoor) a partir des concentrations en sol-gaz',
+        'ou en nappe phreatique. Ce modele est recommande par l\'ANSES et le ministere en charge de l\'ecologie',
+        'pour les evaluations de risques liees a l\'intrusion de vapeurs (VPIA).',
+        'Les valeurs de reference (VTR, ERU) proviennent des bases de donnees ANSES, INERIS, ECHA et US EPA.',
+    ]},
+    { title: 'References reglementaires', lines: [
+        '— Guide ANSES "Evaluation de l\'exposition par inhalation des populations" (2011)',
+        '— Circulaire DGPR du 8 fevrier 2007 relative aux sites et sols pollues',
+        '— Norme NF ISO 11074 : terminologie relative a la qualite des sols',
+        '— EPA 2004 : Johnson & Ettinger Model for Subsurface Vapor Intrusion into Buildings',
+        '— INERIS : Recommandations pour l\'EQRS — DRC-13-136881-12756A (2013)',
+    ]},
+  ];
+
+  let ly = y + 14;
+  legalBlocks.forEach(block => {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...BLUE2);
+    doc.text(block.title, 15, ly);
+    ly += 5;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(50, 50, 50);
+    block.lines.forEach(line => { doc.text(line, 18, ly); ly += 4.5; });
+    ly += 3;
+  });
+
+  // Bottom seal
+  doc.setFillColor(...BLUE);
+  doc.rect(0, PH11 - 22, PW11, 22, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(7);
+  doc.setFont('helvetica', 'bold');
+  doc.text('(c) 2023-2026 SARL G.M.E.P — Tous droits reserves', PW11/2, PH11 - 14, {align:'center'});
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(6.5);
+  doc.text('Conception et developpement : Eric Azulay — Gerant SARL G.M.E.P', PW11/2, PH11 - 9, {align:'center'});
+  doc.text('www.gmep-france.eu — gmep.france@gmail.com — Tel. 06 07 73 72 33', PW11/2, PH11 - 4, {align:'center'});
+  doc.setTextColor(0,0,0);
+
+  // Final footer is already rendered by bottom seal — skip addFooter on this page or add it anyway
+  // addFooter(doc, pageNum);  // Skip — bottom seal covers footer area
+
+  // ── Save ──
+  const sitePart = siteName ? '_' + siteName.replace(/[^a-zA-Z0-9]/g, '-') : '';
+  const filePart = commune ? '_' + commune.replace(/[^a-zA-Z0-9]/g, '-') : '';
+  doc.save('Rapport_EQRS_GMEP' + sitePart + filePart + '_' + dateEtude.replace(/\//g, '-') + '.pdf');
 }
 
 document.addEventListener('DOMContentLoaded', init);
