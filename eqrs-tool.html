@@ -2087,6 +2087,10 @@ function init() {
 // ============================================================
 
 function exportPDF() {
+  if (!window.jspdf) {
+    alert('Le module PDF est en cours de chargement, veuillez patienter 2 secondes et réessayer.');
+    return;
+  }
   const { jsPDF } = window.jspdf;
 
   // ── Collect site info ──
@@ -3179,7 +3183,7 @@ document.addEventListener('DOMContentLoaded', init);
 
 
 <!-- jsPDF loaded async so it doesn't block app initialization -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer onerror="this.src='https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js'"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" defer onerror="this.src='https://unpkg.com/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js'"></script>
 </body>
 </html>
