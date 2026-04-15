@@ -661,7 +661,7 @@ export async function registerRoutes(
       res.setHeader("X-Frame-Options", "SAMEORIGIN");
       res.setHeader(
         "Content-Security-Policy",
-        "default-src 'self' 'unsafe-inline' 'unsafe-eval'"
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://unpkg.com"
       );
       res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
       res.setHeader("Content-Type", "text/html; charset=utf-8");

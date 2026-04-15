@@ -8,7 +8,7 @@ import { useLocation } from "wouter";
 export default function ToolPage() {
   const { token, user, loading: authLoading } = useAuth();
   const [, navigate] = useLocation();
-  const [toolHtml, setToolHtml] = useState<string | null>(null);
+  const [toolUrl, setToolUrl] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -19,27 +19,9 @@ export default function ToolPage() {
       navigate("/login");
       return;
     }
-
-    async function loadTool() {
-      try {
-        const res = await apiRequest("GET", `/api/tool?token=${token}`);
-        const html = await res.text();
-        setToolHtml(html);
-      } catch (err: any) {
-        const msg = err.message || "";
-        if (msg.includes("403")) {
-          setError("Abonnement requis pour accéder à cet outil.");
-        } else if (msg.includes("401")) {
-          setError("Session expirée. Veuillez vous reconnecter.");
-        } else {
-          setError("Erreur lors du chargement de l'outil.");
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadTool();
+    // Use src URL instead of srcDoc to allow external scripts and PDF export
+    setToolUrl(`/api/tool?token=${token}`);
+    setLoading(false);
   }, [token, user, authLoading, navigate]);
 
   // Anti-copy on wrapper
@@ -134,14 +116,14 @@ export default function ToolPage() {
       </div>
 
       {/* Tool iframe */}
-      {toolHtml && (
+      {toolUrl && (
         <iframe
           ref={iframeRef}
           data-testid="iframe-eqrs-tool"
-          srcDoc={toolHtml}
+          src={toolUrl}
           className="flex-1 w-full border-0"
-          sandbox="allow-scripts allow-same-origin"
           title="Outil EQRS Johnson & Ettinger"
+          allow="downloads"
         />
       )}
     </div>
