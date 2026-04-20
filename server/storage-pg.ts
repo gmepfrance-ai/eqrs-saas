@@ -53,6 +53,7 @@ function rowToSubscription(row: any): Subscription {
     stripeSubscriptionId: row.stripe_subscription_id,
     status: row.status,
     plan: row.plan,
+    tool: row.tool || null,
     currentPeriodEnd: row.current_period_end instanceof Date
       ? row.current_period_end.toISOString()
       : row.current_period_end,
@@ -115,6 +116,7 @@ export class PgStorage implements IStorage {
           stripe_subscription_id TEXT,
           status TEXT DEFAULT 'inactive',
           plan TEXT,
+          tool TEXT DEFAULT NULL,
           current_period_end TIMESTAMPTZ,
           license_key TEXT,
           created_at TIMESTAMPTZ DEFAULT NOW()
@@ -129,6 +131,10 @@ export class PgStorage implements IStorage {
           path TEXT,
           ip TEXT
         );
+      `);
+      // Migration : ajouter colonne tool si elle n'existe pas (tables déjà créées en prod)
+      await client.query(`
+        ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS tool TEXT DEFAULT NULL;
       `);
       console.log("[PgStorage] Tables initialized successfully");
     } finally {
@@ -286,10 +292,6 @@ export class PgStorage implements IStorage {
     if (data.plan !== undefined) {
       fields.push(`plan = $${idx++}`);
       values.push(data.plan);
-    }
-    if (data.tool !== undefined) {
-      fields.push(`tool = $${idx++}`);
-      values.push(data.tool);
     }
     if (data.tool !== undefined) {
       fields.push(`tool = $${idx++}`);

@@ -533,9 +533,14 @@ export async function registerRoutes(
           STRIPE_PRICE_MONTHLY;
 
 
-        // Get or create Stripe customer
-        let sub = await storage.getSubscriptionByUserId(req.user!.id);
-        let customerId = sub?.stripeCustomerId;
+        // Déterminer le tool associé au plan
+        const tool = plan === "tsn_annual" ? "tsn" : "je";
+
+        // Chercher un abonnement existant pour ce tool (ou récupérer le customerId existant)
+        const allSubs = await storage.getSubscriptionsByUserId(req.user!.id);
+        let toolSub = allSubs.find(s => s.tool === tool);
+        let anySub = allSubs[0]; // pour récupérer un customerId existant
+        let customerId = toolSub?.stripeCustomerId || anySub?.stripeCustomerId;
 
         if (!customerId) {
           const customer = await stripe.customers.create({
@@ -544,16 +549,16 @@ export async function registerRoutes(
             metadata: { userId: req.user!.id.toString() },
           });
           customerId = customer.id;
+        }
 
-          if (sub) {
-            await storage.updateSubscription(sub.id, {
-              stripeCustomerId: customerId,
-            });
-          } else {
-            sub = await storage.createSubscription(req.user!.id, {
-              stripeCustomerId: customerId,
-            });
-          }
+        // Créer ou mettre à jour l'enregistrement d'abonnement pour ce tool
+        if (!toolSub) {
+          toolSub = await storage.createSubscription(req.user!.id, {
+            stripeCustomerId: customerId,
+            tool,
+          });
+        } else if (!toolSub.stripeCustomerId) {
+          await storage.updateSubscription(toolSub.id, { stripeCustomerId: customerId });
         }
 
         const origin = `${req.protocol}://${req.get("host")}`;
@@ -604,18 +609,37 @@ export async function registerRoutes(
         case "customer.subscription.updated": {
           const subscription = event.data.object as Stripe.Subscription;
           const customerId = subscription.customer as string;
-          const sub = await storage.getSubscriptionByStripeCustomerId(customerId);
+          const priceIdFromStripe = subscription.items.data[0]?.price?.id;
+          const plan =
+            priceIdFromStripe === STRIPE_PRICE_TSN_ANNUAL ? "tsn_annual" :
+            priceIdFromStripe === STRIPE_PRICE_ANNUAL ? "annual" : "monthly";
+          const tool = plan === "tsn_annual" ? "tsn" : "je";
+
+          // Chercher d'abord par stripe_subscription_id (le plus précis)
+          let sub = await storage.getSubscriptionByStripeSubscriptionId(subscription.id);
+          // Sinon chercher par customer_id + tool
+          if (!sub) {
+            const allSubs = await storage.getSubscriptionsByUserId ? null : null;
+            const byCustomer = await storage.getSubscriptionByStripeCustomerId(customerId);
+            if (byCustomer) {
+              // Si le tool correspond ou si c'est le seul abonnement
+              if (!byCustomer.tool || byCustomer.tool === tool) {
+                sub = byCustomer;
+              } else {
+                // Chercher dans tous les abonnements de cet utilisateur
+                const userSubs = await storage.getSubscriptionsByUserId(byCustomer.userId);
+                sub = userSubs.find(s => s.tool === tool) ||
+                      userSubs.find(s => s.stripeCustomerId === customerId && !s.stripeSubscriptionId);
+              }
+            }
+          }
 
           if (sub) {
-            const priceIdFromStripe = subscription.items.data[0]?.price?.id;
-            const plan =
-              priceIdFromStripe === STRIPE_PRICE_TSN_ANNUAL ? "tsn_annual" :
-              priceIdFromStripe === STRIPE_PRICE_ANNUAL ? "annual" : "monthly";
-            const tool = plan === "tsn_annual" ? "tsn" : "je";
             await storage.updateSubscription(sub.id, {
               stripeSubscriptionId: subscription.id,
               status: subscription.status === "active" ? "active" : subscription.status,
               plan,
+              tool,
               currentPeriodEnd: new Date(
                 (subscription as any).current_period_end * 1000
               ).toISOString(),
