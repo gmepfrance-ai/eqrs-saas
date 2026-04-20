@@ -167,12 +167,12 @@ function injectTsnTrialMode(html: string, daysLeft: number, token: string): stri
 </div>
 <style>body { padding-top: 46px !important; }</style>`;
 
-  // Limiter à 3 molécules : injecter un script qui filtre la liste POLLUANTS au chargement
+  // Limiter à 3 molécules : intercepter _gmepOnLicenseOk pour filtrer juste après initDropdowns()
   const trialScript = `
 <script>
 (function() {
   var TRIAL_MOLS = ["Perchloroéthylène (PCE)", "Trichloroéthylène (TCE)", "Benzène"];
-  var origAddEventListener = window.addEventListener;
+
   function limitMolecules() {
     var sel = document.getElementById('sel-polluant');
     if (!sel) return;
@@ -180,26 +180,61 @@ function injectTsnTrialMode(html: string, daysLeft: number, token: string): stri
     var toRemove = [];
     for (var i = 0; i < sel.options.length; i++) {
       var txt = sel.options[i].text.trim();
-      var keep = TRIAL_MOLS.some(function(m) { return txt.indexOf(m) !== -1 || m.indexOf(txt) !== -1; });
+      var keep = TRIAL_MOLS.some(function(m) { return txt === m; });
       if (!keep) toRemove.push(i);
     }
     for (var j = toRemove.length - 1; j >= 0; j--) sel.remove(toRemove[j]);
-    // Aussi limiter les optgroups vides
+    // Supprimer les optgroups vides
     var groups = sel.querySelectorAll('optgroup');
     groups.forEach(function(g) { if (g.children.length === 0) g.remove(); });
+    // Sélectionner PCE par défaut si rien n'est sélectionné
+    if (sel.options.length > 0 && !sel.value) sel.selectedIndex = 0;
+    // Déclencher le changement pour mettre à jour les paramètres
+    if (sel.options.length > 0) sel.dispatchEvent(new Event('change'));
   }
-  // Exécuter après chargement complet
-  window.addEventListener('load', function() {
-    setTimeout(limitMolecules, 300);
-    setTimeout(limitMolecules, 1000);
-    // Ré-appliquer si le select est reconstruit
-    var sel = document.getElementById('sel-polluant');
-    if (sel) { var obs = new MutationObserver(limitMolecules); obs.observe(sel, {childList:true,subtree:true}); }
+
+  // Intercepter _gmepOnLicenseOk : s'exécute juste APRÈS que initDropdowns() a peuplé le select
+  // On surveille la définition de la propriété via Object.defineProperty
+  var _origCallback = null;
+  Object.defineProperty(window, '_gmepOnLicenseOk', {
+    configurable: true,
+    get: function() { return _origCallback; },
+    set: function(fn) {
+      _origCallback = function() {
+        if (typeof fn === 'function') fn();
+        // Appliquer la limitation immédiatement après que initDropdowns() a rempli le select
+        limitMolecules();
+        // Ré-observer en cas de reconstruction ultérieure
+        var sel2 = document.getElementById('sel-polluant');
+        if (sel2) {
+          var obs = new MutationObserver(function() { limitMolecules(); });
+          obs.observe(sel2.parentNode || sel2, {childList: true, subtree: true});
+        }
+      };
+    }
+  });
+
+  // Fallback : si _gmepOnLicenseOk n'est jamais redéfini (appel direct), on surveille le DOM
+  document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+      var sel = document.getElementById('sel-polluant');
+      if (sel && sel.options.length > 0) limitMolecules();
+      // Observer le body pour détecter quand le select est rempli
+      var bodyObs = new MutationObserver(function() {
+        var s = document.getElementById('sel-polluant');
+        if (s && s.options.length > 3) { limitMolecules(); }
+      });
+      bodyObs.observe(document.body, {childList: true, subtree: true});
+    }, 200);
   });
 })();
 </script>`;
 
-  let result = html.replace("</body>", banner + trialScript + "\n</body>");
+  // Le script doit être injecté dans <head> AVANT le code de l'outil,
+  // pour que Object.defineProperty intercepte la définition de _gmepOnLicenseOk
+  let result = html.replace("</head>", trialScript + "\n</head>");
+  // La bannière va dans le body (après <body>)
+  result = result.replace("<body>", "<body>\n" + banner);
   return result;
 }
 
