@@ -38,16 +38,23 @@ export default function DashboardPage() {
     }
   }, []);
 
-  // Auto-checkout si un plan est passé dans l'URL après inscription/connexion
+  // Auto-checkout ou auto-essai si un plan est passé dans l'URL après inscription/connexion
   useEffect(() => {
     if (!token || authLoading) return;
     const hash = window.location.hash;
     const match = hash.match(/checkout=([a-z_]+)/);
     if (match && match[1] && match[1] !== "success" && match[1] !== "cancel") {
       const plan = match[1];
-      // Nettoyer le paramètre de l'URL
       window.location.hash = hash.replace(/[&?]?checkout=[a-z_]+/, "");
-      handleCheckout(plan);
+      if (plan === "tsn_trial") {
+        // Activer l'essai TSN puis rediriger vers l'outil
+        fetch(`/api/tsn-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
+          .then(r => r.json())
+          .then(() => { window.location.href = `/api/tsn-trial?token=${token}`; })
+          .catch(() => { window.location.hash = "#/subscribe-tsn"; });
+      } else {
+        handleCheckout(plan);
+      }
     }
   }, [token, authLoading]);
 
@@ -204,20 +211,38 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-sm font-semibold text-foreground mb-1">{t("dashboard.tsnTitle")}</h3>
-                  <p className="text-xs text-muted-foreground mb-1">Modèle Domenico (1987) — 24 polluants</p>
+                  <p className="text-xs text-muted-foreground mb-1">
+                    {tsnSubscription?.plan === "tsn_trial" ? "Mode Essai — 3 molécules (PCE, TCE, Benzène)" : "Modèle Domenico (1987) — 24 polluants"}
+                  </p>
                   <p className="text-xs text-muted-foreground mb-4">
                     {tsnSubscription?.status === "trialing" ? (
-                      <><span className="text-amber-600 font-semibold">{t("dashboard.trial.label")}</span>{" "}
+                      <><span className="text-amber-600 font-semibold">Essai gratuit</span>{" "}
                       — Essai jusqu'au {tsnSubscription?.currentPeriodEnd ? new Date(tsnSubscription.currentPeriodEnd).toLocaleDateString("fr-FR") : ""}</>
                     ) : (
                       <>Abonnement actif — 1 100€ HT/an — expire le {tsnSubscription?.currentPeriodEnd ? new Date(tsnSubscription.currentPeriodEnd).toLocaleDateString("fr-FR") : ""}</>
                     )}
                   </p>
-                  <Button data-testid="button-access-tsn" style={{ background: "#1e8449" }}
-                    className="text-white font-semibold hover:opacity-90"
-                    onClick={() => (window.location.hash = `#/tsn?token=${token}`)}>
-                    <Droplets className="w-4 h-4 mr-2" />{t("dashboard.accessTsn")}
-                  </Button>
+                  <div className="flex gap-2 flex-wrap">
+                    {tsnSubscription?.plan === "tsn_trial" ? (
+                      <Button data-testid="button-access-tsn-trial" style={{ background: "#1e8449" }}
+                        className="text-white font-semibold hover:opacity-90"
+                        onClick={() => { window.location.href = `/api/tsn-trial?token=${token}`; }}>
+                        <Droplets className="w-4 h-4 mr-2" />Accéder à l'essai (3 molécules)
+                      </Button>
+                    ) : (
+                      <Button data-testid="button-access-tsn" style={{ background: "#1e8449" }}
+                        className="text-white font-semibold hover:opacity-90"
+                        onClick={() => (window.location.hash = `#/tsn?token=${token}`)}>
+                        <Droplets className="w-4 h-4 mr-2" />{t("dashboard.accessTsn")}
+                      </Button>
+                    )}
+                    {tsnSubscription?.status === "trialing" && (
+                      <Button size="sm" variant="outline" className="text-xs border-[#1e8449] text-[#1e8449]"
+                        onClick={() => (window.location.hash = "#/subscribe-tsn")}>
+                        S'abonner — 1 100€ HT/an
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

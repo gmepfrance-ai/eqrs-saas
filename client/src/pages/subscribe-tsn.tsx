@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth";
 import { useTranslation } from "@/lib/i18n";
 import { Check, Droplets, ArrowLeft, CreditCard, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { apiRequest } from "@/lib/queryClient";
 
 function PricingItem({ children }: { children: React.ReactNode }) {
@@ -20,7 +21,34 @@ export default function SubscribeTsnPage() {
   const { user, token } = useAuth();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
+  const [trialLoading, setTrialLoading] = useState(false);
   const [error, setError] = useState("");
+
+  async function handleTrial() {
+    if (!user || !token) {
+      localStorage.setItem("pending_plan", "tsn_trial");
+      window.location.hash = "#/register";
+      return;
+    }
+    setTrialLoading(true);
+    setError("");
+    try {
+      await apiRequest("POST", `/api/tsn-trial/activate?token=${token}`, {});
+      // Rediriger vers l'outil en mode essai
+      window.location.href = `/api/tsn-trial?token=${token}`;
+    } catch (err: any) {
+      const msg = err.message || "";
+      const match = msg.match(/^\d+:\s*(.+)/);
+      if (match) {
+        try { setError(JSON.parse(match[1]).message || match[1]); }
+        catch { setError(match[1]); }
+      } else {
+        setError("Erreur lors de l'activation de l'essai.");
+      }
+    } finally {
+      setTrialLoading(false);
+    }
+  }
 
   async function handleSubscribe() {
     if (!user || !token) {
@@ -102,6 +130,22 @@ export default function SubscribeTsnPage() {
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <CreditCard className="w-4 h-4 mr-2" />}
             {user ? "Procéder au paiement" : "S'inscrire et s'abonner"}
+          </Button>
+
+          <div className="relative my-4 flex items-center">
+            <div className="flex-1 border-t border-border" />
+            <span className="mx-3 text-xs text-muted-foreground">ou</span>
+            <div className="flex-1 border-t border-border" />
+          </div>
+
+          <Button
+            variant="outline"
+            className="w-full text-sm font-medium"
+            disabled={trialLoading}
+            onClick={handleTrial}
+          >
+            {trialLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+            {user ? "Essai gratuit 8 jours (3 molécules)" : "S'inscrire + Essai gratuit 8 jours"}
           </Button>
 
           {!user && (

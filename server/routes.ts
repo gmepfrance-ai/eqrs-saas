@@ -157,6 +157,52 @@ document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
   return protected_html;
 }
 
+// Injecte le mode essai dans l'outil TSN : bannière + limitation à 3 molécules (PCE, TCE, Benzène)
+function injectTsnTrialMode(html: string, daysLeft: number, token: string): string {
+  const subscribeUrl = `/#/subscribe-tsn`;
+  const banner = `
+<div id="tsn-trial-banner" style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#1e8449;color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;font-family:sans-serif;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,0.3)">
+  <span>&#9888;&#65039; <strong>Mode Essai Gratuit</strong> — ${daysLeft} jour${daysLeft > 1 ? "s" : ""} restant${daysLeft > 1 ? "s" : ""} — Limité à 3 molécules (PCE, TCE, Benzène)</span>
+  <a href="${subscribeUrl}" style="background:#fff;color:#1e8449;padding:5px 14px;border-radius:20px;font-weight:700;text-decoration:none;font-size:12px;">S'abonner — 1 100€ HT/an</a>
+</div>
+<style>body { padding-top: 46px !important; }</style>`;
+
+  // Limiter à 3 molécules : injecter un script qui filtre la liste POLLUANTS au chargement
+  const trialScript = `
+<script>
+(function() {
+  var TRIAL_MOLS = ["Perchloroéthylène (PCE)", "Trichloroéthylène (TCE)", "Benzène"];
+  var origAddEventListener = window.addEventListener;
+  function limitMolecules() {
+    var sel = document.getElementById('sel-polluant');
+    if (!sel) return;
+    // Supprimer toutes les options sauf les 3 molécules d'essai
+    var toRemove = [];
+    for (var i = 0; i < sel.options.length; i++) {
+      var txt = sel.options[i].text.trim();
+      var keep = TRIAL_MOLS.some(function(m) { return txt.indexOf(m) !== -1 || m.indexOf(txt) !== -1; });
+      if (!keep) toRemove.push(i);
+    }
+    for (var j = toRemove.length - 1; j >= 0; j--) sel.remove(toRemove[j]);
+    // Aussi limiter les optgroups vides
+    var groups = sel.querySelectorAll('optgroup');
+    groups.forEach(function(g) { if (g.children.length === 0) g.remove(); });
+  }
+  // Exécuter après chargement complet
+  window.addEventListener('load', function() {
+    setTimeout(limitMolecules, 300);
+    setTimeout(limitMolecules, 1000);
+    // Ré-appliquer si le select est reconstruit
+    var sel = document.getElementById('sel-polluant');
+    if (sel) { var obs = new MutationObserver(limitMolecules); obs.observe(sel, {childList:true,subtree:true}); }
+  });
+})();
+</script>`;
+
+  let result = html.replace("</body>", banner + trialScript + "\n</body>");
+  return result;
+}
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
@@ -775,6 +821,66 @@ export async function registerRoutes(
       res.setHeader("Content-Type", "text/html; charset=utf-8");
 
       return res.send(protectToolHtml(tsnToolHtml));
+    }
+  );
+
+  // ── TSN Trial : activer essai 8 jours ─────────────────────────────────
+  app.post(
+    "/api/tsn-trial/activate",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      try {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const existing = subs.find(s => s.tool === "tsn");
+        if (existing && (existing.status === "active" || existing.status === "trialing")) {
+          return res.status(409).json({ message: "Vous avez déjà un accès TSN actif ou en cours d'essai." });
+        }
+        const trialEnd = new Date();
+        trialEnd.setDate(trialEnd.getDate() + 8);
+        let sub;
+        if (existing) {
+          sub = await storage.updateSubscription(existing.id, {
+            status: "trialing",
+            plan: "tsn_trial",
+            tool: "tsn",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        } else {
+          sub = await storage.createSubscription(req.user!.id, {
+            status: "trialing",
+            plan: "tsn_trial",
+            tool: "tsn",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        }
+        return res.json({ message: "Essai TSN activé (8 jours, 3 molécules)", subscription: sub });
+      } catch (err: any) {
+        return res.status(500).json({ message: err.message });
+      }
+    }
+  );
+
+  // ── TSN Trial : accès outil en mode essai (3 molécules) ───────────────
+  app.get(
+    "/api/tsn-trial",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      if (!tsnToolHtml) return res.status(500).json({ message: "Outil TSN non disponible" });
+      const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+      const tsnSub = subs.find(s => s.tool === "tsn" && s.status === "trialing");
+      if (!tsnSub) return res.status(403).json({ message: "Aucun essai TSN actif." });
+      if (tsnSub.currentPeriodEnd && new Date(tsnSub.currentPeriodEnd) < new Date()) {
+        return res.status(403).json({ message: "Votre essai de 8 jours est terminé. Souscrivez pour continuer." });
+      }
+      const daysLeft = tsnSub.currentPeriodEnd
+        ? Math.max(0, Math.ceil((new Date(tsnSub.currentPeriodEnd).getTime() - Date.now()) / 86400000))
+        : 0;
+      const trialHtml = injectTsnTrialMode(tsnToolHtml, daysLeft, req.query.token as string);
+      res.setHeader("X-Frame-Options", "SAMEORIGIN");
+      res.setHeader("Content-Security-Policy", "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com");
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.send(protectToolHtml(trialHtml));
     }
   );
 
