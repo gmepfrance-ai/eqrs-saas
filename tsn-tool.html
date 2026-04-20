@@ -1207,7 +1207,7 @@ function updateSynthese() {
 // \u2500\u2500\u2500 Rendu canvas Bar Chart (Cc1/Cc2/Cc3 vs Seuil) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 function renderBarChartCanvas(r, seuil, polluant) {
   // Dessin Canvas 2D natif — indépendant de Chart.js, toujours fonctionnel
-  return new Promise(resolve => {
+  return (function() {
     const W = 700, H = 320;
     const canvas = document.createElement('canvas');
     canvas.width = W; canvas.height = H;
@@ -1289,8 +1289,8 @@ function renderBarChartCanvas(r, seuil, polluant) {
     ctx.fillText('Concentration (mg/L)', 0, 0);
     ctx.restore();
 
-    resolve(canvas.toDataURL('image/png'));
-  });
+    return canvas.toDataURL('image/png');
+  })();
 }
 
 
@@ -1491,7 +1491,7 @@ function renderConceptualDiagram(r, p, polluant, sol, ok) {
 
 function renderAttenChartCanvas(r, seuil, polluant) {
   // Dessin Canvas 2D natif — profil d'atténuation Cc(x) vs Distance
-  return new Promise(resolve => {
+  return (function() {
     const W = 900, H = 380;
     const canvas = document.createElement('canvas');
     canvas.width = W; canvas.height = H;
@@ -1611,8 +1611,8 @@ function renderAttenChartCanvas(r, seuil, polluant) {
     ctx.fillStyle = '#333';
     ctx.fillText('Seuil AEP \u2014 ' + seuil.toExponential(2) + ' mg/L', ml + 218, mt - 14);
 
-    resolve(canvas.toDataURL('image/png'));
-  });
+    return canvas.toDataURL('image/png');
+  })();
 }
 
 
@@ -1626,17 +1626,9 @@ function telechargerPDF(openInTab) {
   let conceptImgData = null, attenImgData = null, barImgData = null;
   try { conceptImgData = renderConceptualDiagram(r, p, polluant, sol, ok); } catch(e) {}
 
-  // Tenter les graphiques canvas de façon synchrone via un canvas temporaire
-  try {
-    const c1 = document.createElement('canvas'); c1.width=900; c1.height=380;
-    const ctx1 = c1.getContext('2d'); ctx1.fillStyle='#fff'; ctx1.fillRect(0,0,900,380);
-    attenImgData = c1.toDataURL('image/png');
-  } catch(e) {}
-  try {
-    const c2 = document.createElement('canvas'); c2.width=700; c2.height=320;
-    const ctx2 = c2.getContext('2d'); ctx2.fillStyle='#fff'; ctx2.fillRect(0,0,700,320);
-    barImgData = c2.toDataURL('image/png');
-  } catch(e) {}
+  // Rendu synchrone des graphiques canvas
+  try { attenImgData = renderAttenChartCanvas(r, seuil, polluant); } catch(e) {}
+  try { barImgData = renderBarChartCanvas(r, seuil, polluant); } catch(e) {}
 
   // Appel synchrone direct — toujours dans le call stack du clic utilisateur
   buildPDF(r, p, polluant, sol, seuil, ok, attenImgData, barImgData, conceptImgData, openInTab);
