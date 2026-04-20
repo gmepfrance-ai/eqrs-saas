@@ -13,6 +13,7 @@ import {
   AlertCircle,
   Beaker,
   Settings,
+  Droplets,
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useEffect } from "react";
@@ -189,6 +190,37 @@ export default function DashboardPage() {
                   >
                     <Beaker className="w-4 h-4 mr-2" />
                     {t("dashboard.accessTool")}
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Outil TSN */}
+            <div className="bg-card border border-card-border rounded-lg p-6 shadow-sm mt-4">
+              <div className="flex items-start gap-4">
+                <div
+                  className="w-10 h-10 rounded-lg flex items-center justify-center text-white flex-shrink-0"
+                  style={{ background: "#1e8449" }}
+                >
+                  <Droplets className="w-5 h-5" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-foreground mb-1">
+                    {t("dashboard.tsnTitle")}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mb-4">
+                    {t("dashboard.tsnDesc")}
+                  </p>
+                  <Button
+                    data-testid="button-access-tsn"
+                    style={{ background: "#1e8449" }}
+                    className="text-white font-semibold hover:opacity-90"
+                    onClick={() =>
+                      (window.location.hash = `#/tsn?token=${token}`)
+                    }
+                  >
+                    <Droplets className="w-4 h-4 mr-2" />
+                    {t("dashboard.accessTsn")}
                   </Button>
                 </div>
               </div>

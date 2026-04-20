@@ -18,6 +18,17 @@ try {
   console.error("Warning: Could not load eqrs-tool.html", e);
 }
 
+// Load TSN tool HTML at startup
+let tsnToolHtml = "";
+try {
+  tsnToolHtml = fs.readFileSync(
+    path.resolve(process.cwd(), "tsn-tool.html"),
+    "utf-8"
+  );
+} catch (e) {
+  console.error("Warning: Could not load tsn-tool.html", e);
+}
+
 // Stripe setup
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "sk_test_placeholder";
 const isStripeConfigured =
@@ -667,6 +678,29 @@ export async function registerRoutes(
       res.setHeader("Content-Type", "text/html; charset=utf-8");
 
       return res.send(protectToolHtml(eqrsToolHtml));
+    }
+  );
+
+  // ── Protected TSN Tool Route ─────────────────────────────
+
+  app.get(
+    "/api/tsn-tool",
+    requireAuth as any,
+    requireSubscription as any,
+    (req: AuthRequest, res: Response) => {
+      if (!tsnToolHtml) {
+        return res.status(500).json({ message: "Outil TSN non disponible" });
+      }
+
+      res.setHeader("X-Frame-Options", "SAMEORIGIN");
+      res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com"
+      );
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+
+      return res.send(protectToolHtml(tsnToolHtml));
     }
   );
 

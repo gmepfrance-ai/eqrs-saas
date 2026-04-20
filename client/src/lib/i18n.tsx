@@ -8,8 +8,8 @@ const translations = {
     "header.login": "Connexion",
     "header.register": "Inscription",
     "header.logout": "Déconnexion",
-    "header.subtitle": "EQRS — Modèle Johnson & Ettinger",
-    "header.subtext": "Évaluation Quantitative des Risques Sanitaires • Intrusion de vapeurs",
+    "header.subtitle": "J&E + Transfert Sol→Nappe",
+    "header.subtext": "Modélisation environnementale professionnelle • Sites & Sols Pollués",
 
     // Footer
     "footer.rights": "Tous droits réservés.",
@@ -20,11 +20,11 @@ const translations = {
     "footer.conception": "Conception et développement",
 
     // Landing — Hero
-    "landing.hero.badge": "Modèle EPA J&E (2004)",
-    "landing.hero.title1": "Modélisation EQRS",
-    "landing.hero.title2": "Johnson & Ettinger",
+    "landing.hero.badge": "J&E EPA 2004 + Domenico 1987",
+    "landing.hero.title1": "Deux outils de modélisation",
+    "landing.hero.title2": "environnementale professionnelle",
     "landing.hero.desc":
-      "Outil professionnel d'évaluation quantitative des risques sanitaires liés à l'intrusion de vapeurs dans les bâtiments. Calculs en temps réel, 74 substances, conformité réglementaire.",
+      "EQRS Johnson & Ettinger pour l'intrusion de vapeurs et Transfert Sol→Nappe→Captage selon Domenico. Calculs temps réel, rapports PDF, conformité réglementaire.",
     "landing.hero.cta": "Commencer l'essai gratuit",
     "landing.hero.seePricing": "Voir les tarifs",
     "landing.hero.trial": "14 jours d'essai gratuit — sans carte bancaire",
@@ -32,23 +32,23 @@ const translations = {
     // Landing — Features
     "landing.features.title": "Un outil complet de modélisation environnementale",
     "landing.features.subtitle":
-      "Conforme aux recommandations de l'EPA et aux exigences réglementaires françaises.",
-    "landing.features.substances.title": "74 substances",
+      "Deux modèles conformes aux recommandations EPA et INERIS pour les sites et sols pollués.",
+    "landing.features.substances.title": "74 + 24 substances",
     "landing.features.substances.desc":
-      "Base de données complète incluant COV, métaux, HAP et autres polluants réglementaires.",
+      "74 substances pour J&E (COV, HAP, métaux) + 24 polluants pour le transfert Sol→Nappe.",
     "landing.features.realtime.title": "Calculs temps réel",
     "landing.features.realtime.desc":
       "Résultats instantanés : QD, ERI, VLEP, facteur d'atténuation et concentrations intérieures.",
     "landing.features.sensitivity.title": "Analyse de sensibilité",
     "landing.features.sensitivity.desc":
       "Étude paramétrique sur 8 variables clés pour évaluer l'incertitude du modèle.",
-    "landing.features.model.title": "Modèle J&E EPA 2004",
+    "landing.features.model.title": "2 modèles réglementaires",
     "landing.features.model.desc":
-      "Implémentation fidèle du modèle Johnson & Ettinger publié par l'US EPA.",
+      "J&E (US EPA 2004) pour l'intrusion de vapeurs + Domenico (1987) pour le transfert en nappe.",
 
     // Landing — Pricing
     "landing.pricing.title": "Tarifs simples et transparents",
-    "landing.pricing.subtitle": "Accédez à l'outil EQRS complet. Sans engagement.",
+    "landing.pricing.subtitle": "Accédez aux deux outils de modélisation. Sans engagement.",
     "landing.pricing.trialBadge": "Essayez gratuitement pendant 14 jours avant de vous engager",
     "landing.pricing.monthly": "Mensuel",
     "landing.pricing.annual": "Annuel",
@@ -58,8 +58,8 @@ const translations = {
     "landing.pricing.monthlyBilling": "Facturation mensuelle, résiliable à tout moment.",
     "landing.pricing.annualEquiv": "Soit ~208€/mois. Facturation annuelle.",
     "landing.pricing.subscribe": "S'abonner",
-    "landing.pricing.fullAccess": "Accès complet à l'outil EQRS",
-    "landing.pricing.substances": "74 substances disponibles",
+    "landing.pricing.fullAccess": "Accès complet aux deux outils (J&E + TSN)",
+    "landing.pricing.substances": "74 substances J&E + 24 polluants TSN",
     "landing.pricing.license": "Licence mono-poste (1 clé d'activation)",
     "landing.pricing.updates": "Mises à jour incluses",
     "landing.pricing.emailSupport": "Support par e-mail",
@@ -130,7 +130,7 @@ const translations = {
 
     // Dashboard
     "dashboard.hello": "Bonjour,",
-    "dashboard.welcome": "Bienvenue dans votre espace EQRS Johnson & Ettinger.",
+    "dashboard.welcome": "Bienvenue dans votre espace de modélisation environnementale.",
     "dashboard.subscriptionRequired": "Abonnement requis pour accéder à l'outil EQRS",
     "dashboard.toolTitle": "Outil EQRS Johnson & Ettinger",
     "dashboard.active.desc": "Votre abonnement est actif. Vous pouvez accéder à l'outil de modélisation.",
@@ -143,6 +143,9 @@ const translations = {
     "dashboard.statusActive": "Actif",
     "dashboard.plan": "Formule",
     "dashboard.nextRenewal": "Prochain renouvellement",
+    "dashboard.tsnTitle": "Transfert Sol → Nappe → Captage",
+    "dashboard.tsnDesc": "Modélisation du transfert de polluants en zone non saturée et nappe souterraine selon Domenico (1987). 24 polluants, 24 types de sol.",
+    "dashboard.accessTsn": "Accéder à l'outil TSN",
     "dashboard.licenseKey": "Clé d'activation",
     "dashboard.licenseWarning":
       "Cette clé est liée à votre poste de travail. Ne la partagez pas.",
@@ -198,7 +201,7 @@ const translations = {
     // Landing — Features
     "landing.features.title": "A complete environmental modeling tool",
     "landing.features.subtitle": "Compliant with EPA recommendations and regulatory requirements.",
-    "landing.features.substances.title": "74 substances",
+    "landing.features.substances.title": "74 + 24 substances",
     "landing.features.substances.desc":
       "Complete database including VOCs, metals, PAHs and other regulated pollutants.",
     "landing.features.realtime.title": "Real-time calculations",
@@ -352,7 +355,7 @@ const translations = {
     // Landing — Hero
     "landing.hero.badge": "Modelo EPA J&E (2004)",
     "landing.hero.title1": "Modelización EQRS",
-    "landing.hero.title2": "Johnson & Ettinger",
+    "landing.hero.title2": "environnementale professionnelle",
     "landing.hero.desc":
       "Herramienta profesional de evaluación cuantitativa de riesgos sanitarios por intrusión de vapores en edificios. Cálculos en tiempo real, 74 sustancias, cumplimiento normativo.",
     "landing.hero.cta": "Comenzar prueba gratuita",

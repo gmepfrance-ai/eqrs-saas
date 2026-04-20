@@ -10,6 +10,8 @@ import {
   BarChart3,
   ChevronRight,
   Check,
+  Droplets,
+  FlaskConical,
 } from "lucide-react";
 
 function scrollToSection(id: string) {
@@ -108,9 +110,62 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Interactive J&E Demo */}
-      <section className="py-16 px-4 bg-gradient-to-b from-background to-muted/30">
-        <div className="max-w-4xl mx-auto">
+      {/* Nos deux outils */}
+      <section className="py-16 sm:py-20 px-4 bg-gradient-to-b from-background to-muted/30">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-xl font-bold text-foreground mb-2">Deux modules de modélisation</h2>
+            <p className="text-sm text-muted-foreground max-w-lg mx-auto">
+              Chaque abonnement donne accès aux deux outils professionnels.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-8 mb-16">
+            {/* Outil 1 — J&E */}
+            <div className="bg-card border border-card-border rounded-xl p-6 shadow-sm flex flex-col">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white mb-4" style={{background:"#1a5276"}}>
+                <Beaker className="w-5 h-5" />
+              </div>
+              <div className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-100 text-blue-700 rounded-full px-3 py-0.5 text-xs font-medium mb-3 w-fit">
+                Modèle EPA J&E (2004)
+              </div>
+              <h3 className="text-base font-bold text-foreground mb-2">EQRS Johnson & Ettinger</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed mb-4 flex-1">
+                Évaluation Quantitative des Risques Sanitaires liés à l'intrusion de vapeurs dans les bâtiments.
+                74 substances (COV, HAP, métaux), calcul du facteur d'atténuation α, QD, ERI, VLEP. 
+                Conformité réglementaire française et internationale.
+              </p>
+              <ul className="space-y-1.5 text-xs text-foreground">
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>74 substances réglementaires</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Facteur d'atténuation α (J&E)</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>QD, ERI, VLEP en temps réel</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Analyse de sensibilité (8 paramètres)</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Rapport PDF complet</li>
+              </ul>
+            </div>
+            {/* Outil 2 — TSN */}
+            <div className="bg-card border border-card-border rounded-xl p-6 shadow-sm flex flex-col" style={{borderColor:"rgba(46,204,113,0.3)"}}>
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white mb-4" style={{background:"#1e8449"}}>
+                <Droplets className="w-5 h-5" />
+              </div>
+              <div className="inline-flex items-center gap-1.5 bg-green-50 border border-green-100 text-green-700 rounded-full px-3 py-0.5 text-xs font-medium mb-3 w-fit">
+                Modèle Domenico (1987)
+              </div>
+              <h3 className="text-base font-bold text-foreground mb-2">Transfert Sol → Nappe → Captage</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed mb-4 flex-1">
+                Modélisation du transfert de polluants depuis la source de pollution vers la nappe souterraine et le captage d'eau potable.
+                Calcul des concentrations Cc,1 (lixiviat), Cc,2 (nappe) et Cc,3 (captage) selon Domenico.
+              </p>
+              <ul className="space-y-1.5 text-xs text-foreground">
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>24 polluants (COHV, BTEX, HAP, PFAS, Métaux)</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>24 types de sol avec propriétés hydrauliques</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Profil d'atténuation Cc(x) graphique</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>DAF, gradient hydraulique, pluviométrie</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Rapport PDF éditeur de texte intégré</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Demo J&E */}
           <DemoCalculator />
         </div>
       </section>
