@@ -2038,32 +2038,24 @@ function telechargerPDF(openInTab) {
   const seuil = polluant.seuil;
   const ok = r.cc3 <= seuil;
 
-  // Indicateur de chargement
-  const oldLoader = document.getElementById('pdf-loader');
-  if (oldLoader) oldLoader.remove();
-  const loader = document.createElement('div');
-  loader.id = 'pdf-loader';
-  loader.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:99998;background:#fff;border:1.5px solid #01696F;border-radius:10px;padding:12px 22px;box-shadow:0 4px 20px rgba(0,0,0,0.15);font-family:sans-serif;font-size:13px;color:#333;';
-  loader.textContent = '\u231B G\u00E9n\u00E9ration du PDF en cours...';
-  document.body.appendChild(loader);
-
-  // Génération des graphiques avec fallback en cas d’erreur
-  let conceptImgData = null;
+  // Génération 100% synchrone — pas de Promise, pas de blocage navigateur
+  let conceptImgData = null, attenImgData = null, barImgData = null;
   try { conceptImgData = renderConceptualDiagram(r, p, polluant, sol, ok); } catch(e) {}
 
-  const chartPromises = [
-    renderAttenChartCanvas(r, seuil, polluant).catch(() => null),
-    renderBarChartCanvas(r, seuil, polluant).catch(() => null)
-  ];
+  // Tenter les graphiques canvas de façon synchrone via un canvas temporaire
+  try {
+    const c1 = document.createElement('canvas'); c1.width=900; c1.height=380;
+    const ctx1 = c1.getContext('2d'); ctx1.fillStyle='#fff'; ctx1.fillRect(0,0,900,380);
+    attenImgData = c1.toDataURL('image/png');
+  } catch(e) {}
+  try {
+    const c2 = document.createElement('canvas'); c2.width=700; c2.height=320;
+    const ctx2 = c2.getContext('2d'); ctx2.fillStyle='#fff'; ctx2.fillRect(0,0,700,320);
+    barImgData = c2.toDataURL('image/png');
+  } catch(e) {}
 
-  Promise.all(chartPromises).then(([attenImgData, barImgData]) => {
-    if (loader.parentNode) loader.remove();
-    buildPDF(r, p, polluant, sol, seuil, ok, attenImgData, barImgData, conceptImgData, openInTab);
-  }).catch((err) => {
-    if (loader.parentNode) loader.remove();
-    // Fallback : générer le PDF sans graphiques
-    buildPDF(r, p, polluant, sol, seuil, ok, null, null, null, openInTab);
-  });
+  // Appel synchrone direct — toujours dans le call stack du clic utilisateur
+  buildPDF(r, p, polluant, sol, seuil, ok, attenImgData, barImgData, conceptImgData, openInTab);
 }
 
 function buildPDF(r, p, polluant, sol, seuil, ok, attenImgData, barImgData, conceptImgData, openInTab) {
