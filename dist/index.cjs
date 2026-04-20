@@ -119,14 +119,16 @@ document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
   <span>&#9888;&#65039; <strong>Mode Essai Gratuit</strong> \u2014 ${e} jour${e>1?"s":""} restant${e>1?"s":""} \u2014 Limit\xE9 \xE0 3 mol\xE9cules (PCE, TCE, Benz\xE8ne)</span>
   <a href="/#/subscribe-tsn" style="background:#fff;color:#1e8449;padding:5px 14px;border-radius:20px;font-weight:700;text-decoration:none;font-size:12px;">S'abonner \u2014 1 100\u20AC HT/an</a>
 </div>
-<style>body { padding-top: 46px !important; }</style>`,o=t.replace("</head>",`
+<style>body { padding-top: 46px !important; }</style>`,r=`
 <script>
 (function() {
   var TRIAL_MOLS = ["Perchloro\xE9thyl\xE8ne (PCE)", "Trichloro\xE9thyl\xE8ne (TCE)", "Benz\xE8ne"];
+  var _limited = false;
 
   function limitMolecules() {
     var sel = document.getElementById('sel-polluant');
-    if (!sel) return;
+    if (!sel || sel.options.length === 0) return false;
+    if (sel.options.length <= 3) { _limited = true; return true; } // d\xE9j\xE0 limit\xE9
     // Supprimer toutes les options sauf les 3 mol\xE9cules d'essai
     var toRemove = [];
     for (var i = 0; i < sel.options.length; i++) {
@@ -138,50 +140,32 @@ document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
     // Supprimer les optgroups vides
     var groups = sel.querySelectorAll('optgroup');
     groups.forEach(function(g) { if (g.children.length === 0) g.remove(); });
-    // S\xE9lectionner PCE par d\xE9faut si rien n'est s\xE9lectionn\xE9
+    // S\xE9lectionner PCE par d\xE9faut
     if (sel.options.length > 0 && !sel.value) sel.selectedIndex = 0;
     // D\xE9clencher le changement pour mettre \xE0 jour les param\xE8tres
-    if (sel.options.length > 0) sel.dispatchEvent(new Event('change'));
+    sel.dispatchEvent(new Event('change'));
+    _limited = true;
+    return true;
   }
 
-  // Intercepter _gmepOnLicenseOk : s'ex\xE9cute juste APR\xC8S que initDropdowns() a peupl\xE9 le select
-  // On surveille la d\xE9finition de la propri\xE9t\xE9 via Object.defineProperty
-  var _origCallback = null;
-  Object.defineProperty(window, '_gmepOnLicenseOk', {
-    configurable: true,
-    get: function() { return _origCallback; },
-    set: function(fn) {
-      _origCallback = function() {
-        if (typeof fn === 'function') fn();
-        // Appliquer la limitation imm\xE9diatement apr\xE8s que initDropdowns() a rempli le select
-        limitMolecules();
-        // R\xE9-observer en cas de reconstruction ult\xE9rieure
-        var sel2 = document.getElementById('sel-polluant');
-        if (sel2) {
-          var obs = new MutationObserver(function() { limitMolecules(); });
-          obs.observe(sel2.parentNode || sel2, {childList: true, subtree: true});
-        }
-      };
-    }
-  });
+  // Surveiller toutes les 200ms jusqu'\xE0 ce que le select soit peupl\xE9 et limit\xE9
+  var _tries = 0;
+  var _interval = setInterval(function() {
+    _tries++;
+    if (limitMolecules() || _tries > 50) clearInterval(_interval);
+  }, 200);
 
-  // Fallback : si _gmepOnLicenseOk n'est jamais red\xE9fini (appel direct), on surveille le DOM
-  document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(function() {
-      var sel = document.getElementById('sel-polluant');
-      if (sel && sel.options.length > 0) limitMolecules();
-      // Observer le body pour d\xE9tecter quand le select est rempli
-      var bodyObs = new MutationObserver(function() {
-        var s = document.getElementById('sel-polluant');
-        if (s && s.options.length > 3) { limitMolecules(); }
-      });
-      bodyObs.observe(document.body, {childList: true, subtree: true});
-    }, 200);
-  });
+  // Re-v\xE9rifier apr\xE8s chaque clic sur le modal ("Continuer avec l'essai")
+  document.addEventListener('click', function(e) {
+    if (e.target && (e.target.id === 'lic-trial-btn' || e.target.closest && e.target.closest('#lic-trial-btn'))) {
+      setTimeout(limitMolecules, 300);
+      setTimeout(limitMolecules, 800);
+    }
+  }, true);
 })();
-</script>`+`
-</head>`);return o=o.replace("<body>",`<body>
-`+a),o}async function $g(t,e){_.ready&&(await _.ready(),console.log("[routes] DB migration complete, registering routes")),e.get("/sitemap.xml",(i,a)=>{a.setHeader("Content-Type","application/xml; charset=utf-8"),a.send(`<?xml version="1.0" encoding="UTF-8"?>
+</script>`,o=t.replace("<body>",`<body>
+`+a);return o=o.replace("</body>",r+`
+</body>`),o}async function $g(t,e){_.ready&&(await _.ready(),console.log("[routes] DB migration complete, registering routes")),e.get("/sitemap.xml",(i,a)=>{a.setHeader("Content-Type","application/xml; charset=utf-8"),a.send(`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.gmep-france.eu/</loc>

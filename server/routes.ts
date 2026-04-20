@@ -167,15 +167,18 @@ function injectTsnTrialMode(html: string, daysLeft: number, token: string): stri
 </div>
 <style>body { padding-top: 46px !important; }</style>`;
 
-  // Limiter à 3 molécules : intercepter _gmepOnLicenseOk pour filtrer juste après initDropdowns()
+  // Limiter à 3 molécules : surveiller le select via setInterval — simple et robuste
+  // N'interfère PAS avec l'initialisation de l'outil (pas de Object.defineProperty)
   const trialScript = `
 <script>
 (function() {
   var TRIAL_MOLS = ["Perchloroéthylène (PCE)", "Trichloroéthylène (TCE)", "Benzène"];
+  var _limited = false;
 
   function limitMolecules() {
     var sel = document.getElementById('sel-polluant');
-    if (!sel) return;
+    if (!sel || sel.options.length === 0) return false;
+    if (sel.options.length <= 3) { _limited = true; return true; } // déjà limité
     // Supprimer toutes les options sauf les 3 molécules d'essai
     var toRemove = [];
     for (var i = 0; i < sel.options.length; i++) {
@@ -187,54 +190,34 @@ function injectTsnTrialMode(html: string, daysLeft: number, token: string): stri
     // Supprimer les optgroups vides
     var groups = sel.querySelectorAll('optgroup');
     groups.forEach(function(g) { if (g.children.length === 0) g.remove(); });
-    // Sélectionner PCE par défaut si rien n'est sélectionné
+    // Sélectionner PCE par défaut
     if (sel.options.length > 0 && !sel.value) sel.selectedIndex = 0;
     // Déclencher le changement pour mettre à jour les paramètres
-    if (sel.options.length > 0) sel.dispatchEvent(new Event('change'));
+    sel.dispatchEvent(new Event('change'));
+    _limited = true;
+    return true;
   }
 
-  // Intercepter _gmepOnLicenseOk : s'exécute juste APRÈS que initDropdowns() a peuplé le select
-  // On surveille la définition de la propriété via Object.defineProperty
-  var _origCallback = null;
-  Object.defineProperty(window, '_gmepOnLicenseOk', {
-    configurable: true,
-    get: function() { return _origCallback; },
-    set: function(fn) {
-      _origCallback = function() {
-        if (typeof fn === 'function') fn();
-        // Appliquer la limitation immédiatement après que initDropdowns() a rempli le select
-        limitMolecules();
-        // Ré-observer en cas de reconstruction ultérieure
-        var sel2 = document.getElementById('sel-polluant');
-        if (sel2) {
-          var obs = new MutationObserver(function() { limitMolecules(); });
-          obs.observe(sel2.parentNode || sel2, {childList: true, subtree: true});
-        }
-      };
-    }
-  });
+  // Surveiller toutes les 200ms jusqu'à ce que le select soit peuplé et limité
+  var _tries = 0;
+  var _interval = setInterval(function() {
+    _tries++;
+    if (limitMolecules() || _tries > 50) clearInterval(_interval);
+  }, 200);
 
-  // Fallback : si _gmepOnLicenseOk n'est jamais redéfini (appel direct), on surveille le DOM
-  document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(function() {
-      var sel = document.getElementById('sel-polluant');
-      if (sel && sel.options.length > 0) limitMolecules();
-      // Observer le body pour détecter quand le select est rempli
-      var bodyObs = new MutationObserver(function() {
-        var s = document.getElementById('sel-polluant');
-        if (s && s.options.length > 3) { limitMolecules(); }
-      });
-      bodyObs.observe(document.body, {childList: true, subtree: true});
-    }, 200);
-  });
+  // Re-vérifier après chaque clic sur le modal ("Continuer avec l'essai")
+  document.addEventListener('click', function(e) {
+    if (e.target && (e.target.id === 'lic-trial-btn' || e.target.closest && e.target.closest('#lic-trial-btn'))) {
+      setTimeout(limitMolecules, 300);
+      setTimeout(limitMolecules, 800);
+    }
+  }, true);
 })();
 </script>`;
 
-  // Le script doit être injecté dans <head> AVANT le code de l'outil,
-  // pour que Object.defineProperty intercepte la définition de _gmepOnLicenseOk
-  let result = html.replace("</head>", trialScript + "\n</head>");
-  // La bannière va dans le body (après <body>)
-  result = result.replace("<body>", "<body>\n" + banner);
+  // Bannière dans <body>, script dans </body> (après tout le code de l'outil)
+  let result = html.replace("<body>", "<body>\n" + banner);
+  result = result.replace("</body>", trialScript + "\n</body>");
   return result;
 }
 
