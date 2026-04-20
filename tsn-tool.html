@@ -2218,41 +2218,57 @@ function buildPDF(r, p, polluant, sol, seuil, ok, attenImgData, barImgData, conc
 
   addPageFooters();
   const pdfName = `GMEP_Rapport_${ref.replace(/[^a-z0-9]/gi,'_')}.pdf`;
+
+  // Génération du data URI — fonctionne dans tous les contextes (Promise, API route, etc.)
+  const dataUri = doc.output('datauristring');
   const pdfBlob = doc.output('blob');
 
-  // Mode "Ouvrir PDF" — navigue dans le même onglet (contourne le blocage popup Edge)
+  // Supprimer l'ancien lien de téléchargement s'il existe
+  const oldLink = document.getElementById('pdf-download-link-container');
+  if (oldLink) oldLink.remove();
+
+  // Créer un lien de téléchargement visible et cliquable par l'utilisateur
+  const container = document.createElement('div');
+  container.id = 'pdf-download-link-container';
+  container.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:99998;background:#fff;border:1.5px solid #01696F;border-radius:10px;padding:14px 22px;box-shadow:0 4px 20px rgba(0,0,0,0.18);display:flex;align-items:center;gap:14px;font-family:sans-serif;font-size:13px;';
+
+  // Lien téléchargement direct (déclenché par clic utilisateur = pas bloqué)
+  let blobUrl = null;
+  try { blobUrl = URL.createObjectURL(pdfBlob); } catch(e) {}
+  const href = blobUrl || dataUri;
+
   if (openInTab) {
-    try {
-      const blobUrl = URL.createObjectURL(pdfBlob);
-      window.location.href = blobUrl;
-    } catch(e) {
-      window.location.href = doc.output('datauristring');
-    }
-    return;
+    // Ouvrir dans le même onglet
+    const a = document.createElement('a');
+    a.href = href;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.style.cssText = 'background:#01696F;color:#fff;padding:8px 18px;border-radius:6px;text-decoration:none;font-weight:600;font-size:13px;';
+    a.textContent = '📄 Ouvrir le PDF';
+    container.innerHTML = '<span style="color:#333">Rapport généré :</span>';
+    container.appendChild(a);
+  } else {
+    // Téléchargement direct
+    const a = document.createElement('a');
+    a.href = href;
+    a.download = pdfName;
+    a.style.cssText = 'background:#01696F;color:#fff;padding:8px 18px;border-radius:6px;text-decoration:none;font-weight:600;font-size:13px;';
+    a.textContent = '⬇ Télécharger ' + pdfName;
+    container.innerHTML = '<span style="color:#333">Rapport prêt :</span>';
+    container.appendChild(a);
   }
 
-  // Mode "Télécharger PDF"
-  // Méthode 1 : Edge legacy
-  if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-    window.navigator.msSaveOrOpenBlob(pdfBlob, pdfName);
-    return;
-  }
-  // Méthode 2 : Blob URL + lien <a download>
-  try {
-    const blobUrl = URL.createObjectURL(pdfBlob);
-    const a = document.createElement('a');
-    a.href = blobUrl;
-    a.download = pdfName;
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { URL.revokeObjectURL(blobUrl); document.body.removeChild(a); }, 2000);
-    return;
-  } catch(e1) { /* suite */ }
-  // Méthode 3 : doc.save() natif jsPDF
-  try { doc.save(pdfName); return; } catch(e2) { /* suite */ }
-  // Méthode 4 : nouvel onglet
-  window.open(doc.output('datauristring'), '_blank');
+  // Bouton fermer
+  const closeBtn = document.createElement('button');
+  closeBtn.textContent = '✕';
+  closeBtn.style.cssText = 'background:none;border:none;cursor:pointer;font-size:16px;color:#888;padding:0 4px;margin-left:4px;';
+  closeBtn.onclick = () => { container.remove(); if (blobUrl) URL.revokeObjectURL(blobUrl); };
+  container.appendChild(closeBtn);
+
+  document.body.appendChild(container);
+
+  // Auto-disparaît après 60 secondes
+  setTimeout(() => { if (container.parentNode) { container.remove(); if (blobUrl) URL.revokeObjectURL(blobUrl); } }, 60000);
 }
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 NAVIGATION \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
