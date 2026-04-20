@@ -598,6 +598,9 @@ export async function registerRoutes(
         console.error("Stripe checkout error:", err);
         return res.status(500).json({
           message: "Erreur lors de la création de la session de paiement",
+          detail: err?.message || String(err),
+          code: err?.code,
+          type: err?.type,
         });
       }
     }
