@@ -272,7 +272,7 @@ export default function LandingPage() {
                     <PricingItem>Schéma conceptuel automatique</PricingItem>
                     <PricingItem>Licence mono-poste + mises à jour</PricingItem>
                   </ul>
-                  <Button className="w-full text-white font-semibold" style={{background:"#2ecc71"}} onClick={() => { localStorage.setItem("pending_plan", "tsn_annual"); window.location.hash = "#/register"; }}>
+                  <Button className="w-full text-white font-semibold" style={{background:"#2ecc71"}} onClick={() => { window.location.hash = "#/subscribe-tsn"; }}>
                     {t("landing.pricing.subscribe")}
                   </Button>
                 </div>

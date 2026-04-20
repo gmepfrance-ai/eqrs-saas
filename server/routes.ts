@@ -558,13 +558,26 @@ export async function registerRoutes(
         }
 
         // Créer ou mettre à jour l'enregistrement d'abonnement pour ce tool
-        if (!toolSub) {
-          toolSub = await storage.createSubscription(req.user!.id, {
-            stripeCustomerId: customerId,
-            tool,
-          });
-        } else if (!toolSub.stripeCustomerId) {
-          await storage.updateSubscription(toolSub.id, { stripeCustomerId: customerId });
+        try {
+          if (!toolSub) {
+            toolSub = await storage.createSubscription(req.user!.id, {
+              stripeCustomerId: customerId,
+              tool,
+            });
+          } else if (!toolSub.stripeCustomerId) {
+            await storage.updateSubscription(toolSub.id, { stripeCustomerId: customerId });
+          }
+        } catch (subErr: any) {
+          // Si la colonne tool n'existe pas encore, fallback sur l'ancien comportement
+          console.warn("createSubscription with tool failed, falling back:", subErr.message);
+          let fallbackSub = await storage.getSubscriptionByUserId(req.user!.id);
+          if (!fallbackSub) {
+            fallbackSub = await storage.createSubscription(req.user!.id, {
+              stripeCustomerId: customerId,
+            });
+          } else if (!fallbackSub.stripeCustomerId) {
+            await storage.updateSubscription(fallbackSub.id, { stripeCustomerId: customerId });
+          }
         }
 
         const origin = `${req.protocol}://${req.get("host")}`;

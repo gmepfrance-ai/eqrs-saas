@@ -15,6 +15,7 @@ import StatsPage from "@/pages/stats";
 import DashboardPage from "@/pages/dashboard";
 import ToolPage from "@/pages/tool";
 import TsnPage from "@/pages/tsn";
+import SubscribeTsnPage from "@/pages/subscribe-tsn";
 import NotFound from "@/pages/not-found";
 
 const API_BASE_TRACK = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
@@ -46,6 +47,7 @@ function AppRouter() {
       <Route path="/dashboard" component={DashboardPage} />
       <Route path="/app" component={ToolPage} />
       <Route path="/tsn" component={TsnPage} />
+      <Route path="/subscribe-tsn" component={SubscribeTsnPage} />
       <Route path="/stats" component={StatsPage} />
       <Route component={NotFound} />
     </Switch>
