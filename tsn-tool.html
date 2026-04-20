@@ -2059,6 +2059,18 @@ function telechargerPDF(openInTab) {
 }
 
 function buildPDF(r, p, polluant, sol, seuil, ok, attenImgData, barImgData, conceptImgData, openInTab) {
+  try { _buildPDFInner(r, p, polluant, sol, seuil, ok, attenImgData, barImgData, conceptImgData, openInTab); }
+  catch(e) {
+    var msg = 'Erreur PDF : ' + (e && e.message ? e.message : String(e));
+    var errDiv = document.getElementById('pdf-error-msg') || document.createElement('div');
+    errDiv.id = 'pdf-error-msg';
+    errDiv.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:99999;background:#fef2f2;border:1.5px solid #dc2626;border-radius:10px;padding:12px 22px;font-family:sans-serif;font-size:13px;color:#dc2626;max-width:80%;';
+    errDiv.textContent = msg;
+    document.body.appendChild(errDiv);
+    setTimeout(function(){ if(errDiv.parentNode) errDiv.remove(); }, 10000);
+  }
+}
+function _buildPDFInner(r, p, polluant, sol, seuil, ok, attenImgData, barImgData, conceptImgData, openInTab) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
   const site = document.getElementById('r-site').value || '\u2014';
