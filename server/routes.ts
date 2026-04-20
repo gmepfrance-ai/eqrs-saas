@@ -44,7 +44,7 @@ const STRIPE_PRICE_MONTHLY =
 const STRIPE_PRICE_ANNUAL =
   process.env.STRIPE_PRICE_ANNUAL || "price_annual_placeholder";
 const STRIPE_PRICE_TSN_ANNUAL =
-  process.env.STRIPE_PRICE_TSN_ANNUAL || "price_tsn_annual_placeholder";
+  process.env.STRIPE_PRICE_TSN_ANNUAL || "price_1TOK7o3A2g3lkch9UDnnjOWw";
 const STRIPE_WEBHOOK_SECRET =
   process.env.STRIPE_WEBHOOK_SECRET || "whsec_placeholder";
 
@@ -356,25 +356,6 @@ export async function registerRoutes(
     });
   });
 
-  // Endpoint temporaire : créer le prix Stripe récurrent TSN
-  app.get("/api/admin/create-tsn-price", async (req: Request, res: Response) => {
-    if (!stripe || !isStripeConfigured) {
-      return res.status(503).json({ message: "Stripe non configuré" });
-    }
-    try {
-      const price = await stripe.prices.create({
-        product: "prod_UN2YkAEjBEk6sl",
-        unit_amount: 110000, // 1100 euros en centimes
-        currency: "eur",
-        recurring: { interval: "year" },
-        nickname: "Transfert Sol-Nappe Annuel",
-      });
-      return res.json({ id: price.id, type: price.type, recurring: price.recurring, active: price.active });
-    } catch (err: any) {
-      return res.status(500).json({ message: err.message });
-    }
-  });
-
   // Health check
   app.get("/api/health", async (req: Request, res: Response) => {
     try {
@@ -617,9 +598,6 @@ export async function registerRoutes(
         console.error("Stripe checkout error:", err);
         return res.status(500).json({
           message: "Erreur lors de la création de la session de paiement",
-          detail: err?.message || String(err),
-          code: err?.code,
-          type: err?.type,
         });
       }
     }
