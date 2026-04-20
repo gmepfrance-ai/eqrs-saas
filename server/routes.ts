@@ -372,6 +372,7 @@ export async function registerRoutes(
         hasPriceMonthly: !!process.env.STRIPE_PRICE_MONTHLY,
         hasPriceAnnual: !!process.env.STRIPE_PRICE_ANNUAL,
         hasPriceTsnAnnual: !!process.env.STRIPE_PRICE_TSN_ANNUAL,
+        priceTsnAnnualValue: process.env.STRIPE_PRICE_TSN_ANNUAL || "(not set, using fallback)",
         hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET,
         hasDatabaseUrl: !!process.env.DATABASE_URL,
         dbBackend: process.env.DATABASE_URL ? 'postgresql' : 'json',
