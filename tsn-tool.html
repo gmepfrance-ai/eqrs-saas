@@ -2037,12 +2037,32 @@ function telechargerPDF(openInTab) {
   const { r, p, polluant, sol } = lastResults;
   const seuil = polluant.seuil;
   const ok = r.cc3 <= seuil;
-  const conceptImgData = renderConceptualDiagram(r, p, polluant, sol, ok);
-  Promise.all([
-    renderAttenChartCanvas(r, seuil, polluant),
-    renderBarChartCanvas(r, seuil, polluant)
-  ]).then(([attenImgData, barImgData]) => {
+
+  // Indicateur de chargement
+  const oldLoader = document.getElementById('pdf-loader');
+  if (oldLoader) oldLoader.remove();
+  const loader = document.createElement('div');
+  loader.id = 'pdf-loader';
+  loader.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:99998;background:#fff;border:1.5px solid #01696F;border-radius:10px;padding:12px 22px;box-shadow:0 4px 20px rgba(0,0,0,0.15);font-family:sans-serif;font-size:13px;color:#333;';
+  loader.textContent = '\u231B G\u00E9n\u00E9ration du PDF en cours...';
+  document.body.appendChild(loader);
+
+  // Génération des graphiques avec fallback en cas d’erreur
+  let conceptImgData = null;
+  try { conceptImgData = renderConceptualDiagram(r, p, polluant, sol, ok); } catch(e) {}
+
+  const chartPromises = [
+    renderAttenChartCanvas(r, seuil, polluant).catch(() => null),
+    renderBarChartCanvas(r, seuil, polluant).catch(() => null)
+  ];
+
+  Promise.all(chartPromises).then(([attenImgData, barImgData]) => {
+    if (loader.parentNode) loader.remove();
     buildPDF(r, p, polluant, sol, seuil, ok, attenImgData, barImgData, conceptImgData, openInTab);
+  }).catch((err) => {
+    if (loader.parentNode) loader.remove();
+    // Fallback : générer le PDF sans graphiques
+    buildPDF(r, p, polluant, sol, seuil, ok, null, null, null, openInTab);
   });
 }
 
