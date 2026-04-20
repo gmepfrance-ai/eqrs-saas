@@ -171,102 +171,122 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section
-        id="pricing"
-        className="py-16 sm:py-20 px-4"
-        style={{ background: "hsl(200 10% 94%)" }}
-      >
-        <div className="max-w-3xl mx-auto">
+      <section id="pricing" className="py-16 sm:py-20 px-4" style={{ background: "hsl(200 10% 94%)" }}>
+        <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-xl font-bold text-foreground mb-2">
-              {t("landing.pricing.title")}
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              {t("landing.pricing.subtitle")}
-            </p>
+            <h2 className="text-xl font-bold text-foreground mb-2">{t("landing.pricing.title")}</h2>
+            <p className="text-sm text-muted-foreground">{t("landing.pricing.subtitle")}</p>
             <div className="mt-4 inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 rounded-full px-4 py-1.5 text-sm font-medium">
               <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
               {t("landing.pricing.trialBadge")}
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
-            {/* Monthly */}
-            <div className="bg-white rounded-lg border border-border p-6 flex flex-col shadow-sm">
-              <div className="text-sm font-medium text-muted-foreground mb-1">
-                {t("landing.pricing.monthly")}
+          {/* 2 colonnes — 1 outil par colonne */}
+          <div className="grid sm:grid-cols-2 gap-10">
+
+            {/* ── Colonne 1 : EQRS J&E ── */}
+            <div>
+              <div className="flex items-center gap-2 mb-5">
+                <div className="w-8 h-8 rounded-md flex items-center justify-center text-white" style={{background:"#1a5276"}}>
+                  <Beaker className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-foreground">EQRS Johnson & Ettinger</h3>
+                  <p className="text-xs text-muted-foreground">Modèle EPA J&E (2004)</p>
+                </div>
               </div>
-              <div className="flex items-baseline gap-1 mb-1">
-                <span className="text-3xl font-extrabold text-foreground">
-                  245€
-                </span>
-                <span className="text-sm text-muted-foreground">{t("landing.pricing.perMonth")}</span>
+              <div className="flex flex-col gap-4">
+                {/* Mensuel */}
+                <div className="bg-white rounded-lg border border-border p-5 shadow-sm flex flex-col">
+                  <div className="text-xs font-medium text-muted-foreground mb-1">{t("landing.pricing.monthly")}</div>
+                  <div className="flex items-baseline gap-1 mb-1">
+                    <span className="text-2xl font-extrabold text-foreground">245€</span>
+                    <span className="text-xs text-muted-foreground">HT{t("landing.pricing.perMonth")}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-4">{t("landing.pricing.monthlyBilling")}</p>
+                  <ul className="space-y-1.5 mb-5 flex-1 text-xs">
+                    <PricingItem>Accès complet EQRS J&E</PricingItem>
+                    <PricingItem>74 substances réglementaires</PricingItem>
+                    <PricingItem>Licence mono-poste</PricingItem>
+                    <PricingItem>Mises à jour incluses</PricingItem>
+                    <PricingItem>Support par e-mail</PricingItem>
+                  </ul>
+                  <Button className="w-full bg-primary hover:bg-primary/90" onClick={() => (window.location.hash = "#/register")}>
+                    {t("landing.pricing.subscribe")}
+                  </Button>
+                </div>
+                {/* Annuel */}
+                <div className="rounded-lg border-2 p-5 shadow-sm relative bg-white" style={{borderColor:"#3b82f6"}}>
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold text-white px-3 py-0.5 rounded-full" style={{background:"#3b82f6"}}>
+                    Économisez 15%
+                  </div>
+                  <div className="text-xs font-medium text-muted-foreground mb-1">{t("landing.pricing.annual")}</div>
+                  <div className="flex items-baseline gap-1 mb-1">
+                    <span className="text-2xl font-extrabold text-foreground">2 499€</span>
+                    <span className="text-xs text-muted-foreground">HT{t("landing.pricing.perYear")}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-4">Soit ~208€ HT/mois. Facturation annuelle.</p>
+                  <ul className="space-y-1.5 mb-5 flex-1 text-xs">
+                    <PricingItem>Accès complet EQRS J&E</PricingItem>
+                    <PricingItem>74 substances réglementaires</PricingItem>
+                    <PricingItem>Licence mono-poste</PricingItem>
+                    <PricingItem>Mises à jour incluses</PricingItem>
+                    <PricingItem>Support prioritaire</PricingItem>
+                  </ul>
+                  <Button className="w-full text-white font-semibold" style={{background:"#3b82f6"}} onClick={() => (window.location.hash = "#/register")}>
+                    {t("landing.pricing.subscribe")}
+                  </Button>
+                </div>
               </div>
-              <p className="text-xs text-muted-foreground mb-6">
-                {t("landing.pricing.monthlyBilling")}
-              </p>
-              <ul className="space-y-2 mb-6 flex-1">
-                <PricingItem>{t("landing.pricing.fullAccess")}</PricingItem>
-                <PricingItem>{t("landing.pricing.substances")}</PricingItem>
-                <PricingItem>{t("landing.pricing.license")}</PricingItem>
-                <PricingItem>{t("landing.pricing.updates")}</PricingItem>
-                <PricingItem>{t("landing.pricing.emailSupport")}</PricingItem>
-              </ul>
-              <Button
-                data-testid="button-subscribe-monthly"
-                className="w-full bg-primary hover:bg-primary/90"
-                onClick={() => (window.location.hash = "#/register")}
-              >
-                {t("landing.pricing.subscribe")}
-              </Button>
             </div>
 
-            {/* Annual */}
-            <div
-              className="rounded-lg border-2 p-6 flex flex-col shadow-sm relative"
-              style={{
-                borderColor: "#2ecc71",
-                background: "white",
-              }}
-            >
-              <div
-                className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold text-white px-3 py-0.5 rounded-full"
-                style={{ background: "#2ecc71" }}
-              >
-                {t("landing.pricing.save15")}
+            {/* ── Colonne 2 : Transfert Sol→Nappe ── */}
+            <div>
+              <div className="flex items-center gap-2 mb-5">
+                <div className="w-8 h-8 rounded-md flex items-center justify-center text-white" style={{background:"#1e8449"}}>
+                  <Droplets className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-foreground">Transfert Sol → Nappe → Captage</h3>
+                  <p className="text-xs text-muted-foreground">Modèle Domenico (1987)</p>
+                </div>
               </div>
-              <div className="text-sm font-medium text-muted-foreground mb-1">
-                {t("landing.pricing.annual")}
+              <div className="flex flex-col gap-4">
+                {/* Annuel uniquement */}
+                <div className="rounded-lg border-2 p-5 shadow-sm relative bg-white" style={{borderColor:"#2ecc71"}}>
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold text-white px-3 py-0.5 rounded-full" style={{background:"#2ecc71"}}>
+                    Licence annuelle
+                  </div>
+                  <div className="text-xs font-medium text-muted-foreground mb-1">Annuel</div>
+                  <div className="flex items-baseline gap-1 mb-1">
+                    <span className="text-2xl font-extrabold text-foreground">1 100€</span>
+                    <span className="text-xs text-muted-foreground">HT{t("landing.pricing.perYear")}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-4">Facturation annuelle. Résiliable à l'échéance.</p>
+                  <ul className="space-y-1.5 mb-5 text-xs">
+                    <PricingItem>Transfert Sol→Nappe→Captage complet</PricingItem>
+                    <PricingItem>24 polluants (COHV, BTEX, HAP, PFAS, Métaux)</PricingItem>
+                    <PricingItem>24 types de sol avec propriétés hydrauliques</PricingItem>
+                    <PricingItem>Rapport PDF + éditeur de texte intégré</PricingItem>
+                    <PricingItem>Schéma conceptuel automatique</PricingItem>
+                    <PricingItem>Licence mono-poste + mises à jour</PricingItem>
+                  </ul>
+                  <Button className="w-full text-white font-semibold" style={{background:"#2ecc71"}} onClick={() => (window.location.hash = "#/register")}>
+                    {t("landing.pricing.subscribe")}
+                  </Button>
+                </div>
+                {/* Note pas d'abonnement mensuel */}
+                <div className="bg-green-50 border border-green-100 rounded-lg p-4 text-xs text-green-800">
+                  <strong>Note :</strong> L'outil Transfert Sol→Nappe est disponible uniquement en licence annuelle à 1 100€ HT. Aucun abonnement mensuel pour ce module.
+                </div>
               </div>
-              <div className="flex items-baseline gap-1 mb-1">
-                <span className="text-3xl font-extrabold text-foreground">
-                  2 499€
-                </span>
-                <span className="text-sm text-muted-foreground">{t("landing.pricing.perYear")}</span>
-              </div>
-              <p className="text-xs text-muted-foreground mb-6">
-                {t("landing.pricing.annualEquiv")}
-              </p>
-              <ul className="space-y-2 mb-6 flex-1">
-                <PricingItem>{t("landing.pricing.fullAccess")}</PricingItem>
-                <PricingItem>{t("landing.pricing.substances")}</PricingItem>
-                <PricingItem>{t("landing.pricing.license")}</PricingItem>
-                <PricingItem>{t("landing.pricing.updates")}</PricingItem>
-                <PricingItem>{t("landing.pricing.prioritySupport")}</PricingItem>
-              </ul>
-              <Button
-                data-testid="button-subscribe-annual"
-                className="w-full text-white font-semibold"
-                style={{ background: "#2ecc71" }}
-                onClick={() => (window.location.hash = "#/register")}
-              >
-                {t("landing.pricing.subscribe")}
-              </Button>
             </div>
+
           </div>
 
           {/* Conditions d'utilisation */}
-          <div className="mt-10 max-w-2xl mx-auto">
+          <div className="mt-10 max-w-4xl mx-auto">
             <div className="bg-white/80 rounded-lg border border-border p-5 text-xs text-muted-foreground leading-relaxed">
               <h4 className="font-semibold text-foreground text-sm mb-3">{t("landing.conditions.title")}</h4>
               <ul className="space-y-1.5 list-disc list-inside">

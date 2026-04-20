@@ -43,6 +43,8 @@ const STRIPE_PRICE_MONTHLY =
   process.env.STRIPE_PRICE_MONTHLY || "price_monthly_placeholder";
 const STRIPE_PRICE_ANNUAL =
   process.env.STRIPE_PRICE_ANNUAL || "price_annual_placeholder";
+const STRIPE_PRICE_TSN_ANNUAL =
+  process.env.STRIPE_PRICE_TSN_ANNUAL || "price_tsn_annual_placeholder";
 const STRIPE_WEBHOOK_SECRET =
   process.env.STRIPE_WEBHOOK_SECRET || "whsec_placeholder";
 
@@ -93,7 +95,6 @@ async function requireSubscription(
       .status(403)
       .json({ message: "Abonnement actif requis pour accéder à cet outil" });
   }
-  // Check if trial has expired
   if (sub.status === "trialing" && sub.currentPeriodEnd) {
     if (new Date(sub.currentPeriodEnd) < new Date()) {
       return res
@@ -101,7 +102,29 @@ async function requireSubscription(
         .json({ message: "Votre période d'essai gratuit de 14 jours est terminée. Veuillez souscrire un abonnement pour continuer." });
     }
   }
+  next();
+}
 
+// Middleware spécifique au tool TSN
+async function requireTsnSubscription(
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) {
+  if (!req.user) return res.status(401).json({ message: "Authentification requise" });
+  const subs = await storage.getSubscriptionsByUserId(req.user.id);
+  const tsnSub = subs.find(
+    (s) => (s.tool === "tsn" || s.tool === "bundle") &&
+           (s.status === "active" || s.status === "trialing")
+  );
+  if (!tsnSub) {
+    return res.status(403).json({ message: "Abonnement Transfert Sol→Nappe requis pour accéder à cet outil" });
+  }
+  if (tsnSub.status === "trialing" && tsnSub.currentPeriodEnd) {
+    if (new Date(tsnSub.currentPeriodEnd) < new Date()) {
+      return res.status(403).json({ message: "Votre période d'essai est terminée. Veuillez souscrire un abonnement." });
+    }
+  }
   next();
 }
 
@@ -342,6 +365,7 @@ export async function registerRoutes(
         stripeKeyPrefix: process.env.STRIPE_SECRET_KEY?.substring(0, 10) || "not set",
         hasPriceMonthly: !!process.env.STRIPE_PRICE_MONTHLY,
         hasPriceAnnual: !!process.env.STRIPE_PRICE_ANNUAL,
+        hasPriceTsnAnnual: !!process.env.STRIPE_PRICE_TSN_ANNUAL,
         hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET,
         hasDatabaseUrl: !!process.env.DATABASE_URL,
         dbBackend: process.env.DATABASE_URL ? 'postgresql' : 'json',
@@ -463,10 +487,13 @@ export async function registerRoutes(
     "/api/auth/me",
     requireAuth as any,
     async (req: AuthRequest, res: Response) => {
-      const sub = await storage.getSubscriptionByUserId(req.user!.id);
+      const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+    const sub = subs.find(s => s.tool === "je" || s.tool === null) || subs[0];
+    const tsnSub = subs.find(s => s.tool === "tsn");
       return res.json({
         user: req.user,
         subscription: sub || null,
+      tsnSubscription: tsnSub || null,
       });
     }
   );
@@ -501,7 +528,10 @@ export async function registerRoutes(
       try {
         const { plan } = req.body;
         const priceId =
-          plan === "annual" ? STRIPE_PRICE_ANNUAL : STRIPE_PRICE_MONTHLY;
+          plan === "tsn_annual" ? STRIPE_PRICE_TSN_ANNUAL :
+          plan === "annual" ? STRIPE_PRICE_ANNUAL :
+          STRIPE_PRICE_MONTHLY;
+
 
         // Get or create Stripe customer
         let sub = await storage.getSubscriptionByUserId(req.user!.id);
@@ -577,10 +607,11 @@ export async function registerRoutes(
           const sub = await storage.getSubscriptionByStripeCustomerId(customerId);
 
           if (sub) {
+            const priceIdFromStripe = subscription.items.data[0]?.price?.id;
             const plan =
-              subscription.items.data[0]?.price?.id === STRIPE_PRICE_ANNUAL
-                ? "annual"
-                : "monthly";
+              priceIdFromStripe === STRIPE_PRICE_TSN_ANNUAL ? "tsn_annual" :
+              priceIdFromStripe === STRIPE_PRICE_ANNUAL ? "annual" : "monthly";
+            const tool = plan === "tsn_annual" ? "tsn" : "je";
             await storage.updateSubscription(sub.id, {
               stripeSubscriptionId: subscription.id,
               status: subscription.status === "active" ? "active" : subscription.status,
@@ -686,7 +717,7 @@ export async function registerRoutes(
   app.get(
     "/api/tsn-tool",
     requireAuth as any,
-    requireSubscription as any,
+    requireTsnSubscription as any,
     (req: AuthRequest, res: Response) => {
       if (!tsnToolHtml) {
         return res.status(500).json({ message: "Outil TSN non disponible" });
@@ -728,7 +759,8 @@ export async function registerRoutes(
       requireAuth as any,
       async (req: AuthRequest, res: Response) => {
         const plan = (req.body && req.body.plan) ? req.body.plan : "monthly";
-        const sub = await storage.activateSubscriptionForUser(req.user!.id, plan);
+        const tool = plan === "tsn_annual" ? "tsn" : "je";
+        const sub = await storage.activateSubscriptionForUserAndTool(req.user!.id, plan, tool);
         return res.json({
           message: "Abonnement activé (mode développement)",
           subscription: sub,

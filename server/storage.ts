@@ -83,11 +83,14 @@ export interface IStorage {
 
   // Subscriptions
   getSubscriptionByUserId(userId: number): Promise<Subscription | undefined>;
+  getSubscriptionsByUserId(userId: number): Promise<Subscription[]>;
+  getSubscriptionByUserIdAndTool(userId: number, tool: string): Promise<Subscription | undefined>;
   getSubscriptionByStripeCustomerId(stripeCustomerId: string): Promise<Subscription | undefined>;
   getSubscriptionByStripeSubscriptionId(stripeSubscriptionId: string): Promise<Subscription | undefined>;
   createSubscription(userId: number, data: Partial<Subscription>): Promise<Subscription>;
   updateSubscription(id: number, data: Partial<Subscription>): Promise<Subscription | undefined>;
   activateSubscriptionForUser(userId: number, plan: string): Promise<Subscription>;
+  activateSubscriptionForUserAndTool(userId: number, plan: string, tool: string): Promise<Subscription>;
 
   // Page Views
   addPageView(view: { country: string; countryCode: string; city: string; path: string; ip: string }): Promise<void>;
@@ -173,6 +176,16 @@ export class DatabaseStorage implements IStorage {
     return db.subscriptions.find((s) => s.userId === userId);
   }
 
+  async getSubscriptionsByUserId(userId: number): Promise<Subscription[]> {
+    return db.subscriptions.filter((s) => s.userId === userId);
+  }
+
+  async getSubscriptionByUserIdAndTool(userId: number, tool: string): Promise<Subscription | undefined> {
+    const subs = db.subscriptions.filter((s) => s.userId === userId);
+    // "bundle" donne accès aux deux outils
+    return subs.find((s) => s.tool === tool || s.tool === "bundle");
+  }
+
   async getSubscriptionByStripeCustomerId(stripeCustomerId: string): Promise<Subscription | undefined> {
     return db.subscriptions.find((s) => s.stripeCustomerId === stripeCustomerId);
   }
@@ -189,6 +202,7 @@ export class DatabaseStorage implements IStorage {
       stripeSubscriptionId: data.stripeSubscriptionId || null,
       status: data.status || "inactive",
       plan: data.plan || null,
+      tool: data.tool || null,
       currentPeriodEnd: data.currentPeriodEnd || null,
       licenseKey: data.licenseKey || generateLicenseKey(),
       createdAt: new Date().toISOString(),
@@ -207,6 +221,7 @@ export class DatabaseStorage implements IStorage {
     if (data.stripeSubscriptionId !== undefined) sub.stripeSubscriptionId = data.stripeSubscriptionId;
     if (data.status !== undefined) sub.status = data.status;
     if (data.plan !== undefined) sub.plan = data.plan;
+    if (data.tool !== undefined) sub.tool = data.tool;
     if (data.currentPeriodEnd !== undefined) sub.currentPeriodEnd = data.currentPeriodEnd;
     if (data.licenseKey !== undefined) sub.licenseKey = data.licenseKey;
 
@@ -216,13 +231,23 @@ export class DatabaseStorage implements IStorage {
   }
 
   async activateSubscriptionForUser(userId: number, plan: string): Promise<Subscription> {
-    const existing = await this.getSubscriptionByUserId(userId);
-    const endDate = new Date();
-    endDate.setFullYear(endDate.getFullYear() + 1);
+    return this.activateSubscriptionForUserAndTool(userId, plan, "je");
+  }
 
+  async activateSubscriptionForUserAndTool(userId: number, plan: string, tool: string): Promise<Subscription> {
+    const endDate = new Date();
+    if (plan === "monthly") {
+      endDate.setMonth(endDate.getMonth() + 1);
+    } else {
+      endDate.setFullYear(endDate.getFullYear() + 1);
+    }
+
+    // Chercher un abonnement existant pour ce tool
+    const existing = db.subscriptions.find((s) => s.userId === userId && s.tool === tool);
     if (existing) {
       existing.status = "active";
       existing.plan = plan;
+      existing.tool = tool;
       existing.currentPeriodEnd = endDate.toISOString();
       if (!existing.licenseKey) existing.licenseKey = generateLicenseKey();
       const idx = db.subscriptions.findIndex((s) => s.id === existing.id);
@@ -234,6 +259,7 @@ export class DatabaseStorage implements IStorage {
     return this.createSubscription(userId, {
       status: "active",
       plan,
+      tool,
       currentPeriodEnd: endDate.toISOString(),
     });
   }

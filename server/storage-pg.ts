@@ -208,8 +208,24 @@ export class PgStorage implements IStorage {
 
   async getSubscriptionByUserId(userId: number): Promise<Subscription | undefined> {
     const result = await this.pool.query(
-      "SELECT * FROM subscriptions WHERE user_id = $1",
+      "SELECT * FROM subscriptions WHERE user_id = $1 ORDER BY id LIMIT 1",
       [userId]
+    );
+    return result.rows[0] ? rowToSubscription(result.rows[0]) : undefined;
+  }
+
+  async getSubscriptionsByUserId(userId: number): Promise<Subscription[]> {
+    const result = await this.pool.query(
+      "SELECT * FROM subscriptions WHERE user_id = $1 ORDER BY id",
+      [userId]
+    );
+    return result.rows.map(rowToSubscription);
+  }
+
+  async getSubscriptionByUserIdAndTool(userId: number, tool: string): Promise<Subscription | undefined> {
+    const result = await this.pool.query(
+      "SELECT * FROM subscriptions WHERE user_id = $1 AND (tool = $2 OR tool = 'bundle') AND (status = 'active' OR status = 'trialing') ORDER BY id LIMIT 1",
+      [userId, tool]
     );
     return result.rows[0] ? rowToSubscription(result.rows[0]) : undefined;
   }
@@ -233,14 +249,15 @@ export class PgStorage implements IStorage {
   async createSubscription(userId: number, data: Partial<Subscription>): Promise<Subscription> {
     const licenseKey = data.licenseKey || generateLicenseKey();
     const result = await this.pool.query(
-      `INSERT INTO subscriptions (user_id, stripe_customer_id, stripe_subscription_id, status, plan, current_period_end, license_key)
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      `INSERT INTO subscriptions (user_id, stripe_customer_id, stripe_subscription_id, status, plan, tool, current_period_end, license_key)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
       [
         userId,
         data.stripeCustomerId || null,
         data.stripeSubscriptionId || null,
         data.status || "inactive",
         data.plan || null,
+        data.tool || null,
         data.currentPeriodEnd || null,
         licenseKey,
       ]
@@ -270,6 +287,14 @@ export class PgStorage implements IStorage {
       fields.push(`plan = $${idx++}`);
       values.push(data.plan);
     }
+    if (data.tool !== undefined) {
+      fields.push(`tool = $${idx++}`);
+      values.push(data.tool);
+    }
+    if (data.tool !== undefined) {
+      fields.push(`tool = $${idx++}`);
+      values.push(data.tool);
+    }
     if (data.currentPeriodEnd !== undefined) {
       fields.push(`current_period_end = $${idx++}`);
       values.push(data.currentPeriodEnd);
@@ -292,16 +317,29 @@ export class PgStorage implements IStorage {
   }
 
   async activateSubscriptionForUser(userId: number, plan: string): Promise<Subscription> {
-    const existing = await this.getSubscriptionByUserId(userId);
+    return this.activateSubscriptionForUserAndTool(userId, plan, "je");
+  }
+
+  async activateSubscriptionForUserAndTool(userId: number, plan: string, tool: string): Promise<Subscription> {
     const endDate = new Date();
-    endDate.setFullYear(endDate.getFullYear() + 1);
+    if (plan === "monthly") {
+      endDate.setMonth(endDate.getMonth() + 1);
+    } else {
+      endDate.setFullYear(endDate.getFullYear() + 1);
+    }
+
+    const existingResult = await this.pool.query(
+      "SELECT * FROM subscriptions WHERE user_id = $1 AND tool = $2 LIMIT 1",
+      [userId, tool]
+    );
+    const existing = existingResult.rows[0] ? rowToSubscription(existingResult.rows[0]) : null;
 
     if (existing) {
       const licenseKey = existing.licenseKey || generateLicenseKey();
       const result = await this.pool.query(
-        `UPDATE subscriptions SET status = 'active', plan = $1, current_period_end = $2, license_key = $3
-         WHERE id = $4 RETURNING *`,
-        [plan, endDate.toISOString(), licenseKey, existing.id]
+        `UPDATE subscriptions SET status = 'active', plan = $1, tool = $2, current_period_end = $3, license_key = $4
+         WHERE id = $5 RETURNING *`,
+        [plan, tool, endDate.toISOString(), licenseKey, existing.id]
       );
       return rowToSubscription(result.rows[0]);
     }
@@ -309,6 +347,7 @@ export class PgStorage implements IStorage {
     return this.createSubscription(userId, {
       status: "active",
       plan,
+      tool,
       currentPeriodEnd: endDate.toISOString(),
     });
   }

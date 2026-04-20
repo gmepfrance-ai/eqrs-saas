@@ -24,6 +24,7 @@ export interface Subscription {
   stripeSubscriptionId: string | null;
   status: string;
   plan: string | null;
+  tool: string | null;       // "je" | "tsn" | "bundle"
   currentPeriodEnd: string | null;
   licenseKey: string | null;
   createdAt: string;

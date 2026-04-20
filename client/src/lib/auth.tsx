@@ -18,6 +18,7 @@ interface AuthState {
   token: string | null;
   user: SafeUser | null;
   subscription: Subscription | null;
+  tsnSubscription: Subscription | null;
   loading: boolean;
 }
 
@@ -35,6 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     token: null,
     user: null,
     subscription: null,
+    tsnSubscription: null,
     loading: true,
   });
 
@@ -67,10 +69,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         token,
         user: data.user,
         subscription: data.subscription,
+        tsnSubscription: data.tsnSubscription || null,
         loading: false,
       });
     } catch {
-      setState({ token: null, user: null, subscription: null, loading: false });
+      setState({ token: null, user: null, subscription: null, tsnSubscription: null, loading: false });
     }
   }
 
@@ -89,6 +92,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       token: data.token,
       user: data.user,
       subscription: null,
+      tsnSubscription: null,
       loading: true,
     });
     window.location.hash = `#/dashboard?token=${data.token}`;
@@ -110,6 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       token: data.token,
       user: data.user,
       subscription: null,
+      tsnSubscription: null,
       loading: true,
     });
     window.location.hash = `#/dashboard?token=${data.token}`;
@@ -124,7 +129,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // ignore
       }
     }
-    setState({ token: null, user: null, subscription: null, loading: false });
+    setState({ token: null, user: null, subscription: null, tsnSubscription: null, loading: false });
     window.location.hash = "#/";
   }, [state.token]);
 

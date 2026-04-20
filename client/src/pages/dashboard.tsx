@@ -19,7 +19,7 @@ import { useLocation } from "wouter";
 import { useEffect } from "react";
 
 export default function DashboardPage() {
-  const { user, token, subscription, refreshUser, loading: authLoading } = useAuth();
+  const { user, token, subscription, tsnSubscription, refreshUser, loading: authLoading } = useAuth();
   const { t } = useTranslation();
   const [, navigate] = useLocation();
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
@@ -58,6 +58,7 @@ export default function DashboardPage() {
   }
 
   const isActive = subscription?.status === "active" || subscription?.status === "trialing";
+  const isTsnActive = tsnSubscription?.status === "active" || tsnSubscription?.status === "trialing";
 
   async function handleCheckout(plan: string) {
     setCheckoutLoading(plan);
@@ -152,79 +153,62 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Active subscription: show tool access */}
-        {isActive && (
+        {/* Outils disponibles */}
+        {(isActive || isTsnActive) && (
           <div className="mb-8">
+            {isActive && (
             <div className="bg-card border border-card-border rounded-lg p-6 shadow-sm">
               <div className="flex items-start gap-4">
-                <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center text-white flex-shrink-0"
-                  style={{ background: "#2ecc71" }}
-                >
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white flex-shrink-0" style={{ background: "#1a5276" }}>
                   <Beaker className="w-5 h-5" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-sm font-semibold text-foreground mb-1">
-                    {t("dashboard.toolTitle")}
-                  </h3>
+                  <h3 className="text-sm font-semibold text-foreground mb-1">{t("dashboard.toolTitle")}</h3>
+                  <p className="text-xs text-muted-foreground mb-1">Modèle J&E EPA 2004 — 74 substances</p>
                   <p className="text-xs text-muted-foreground mb-4">
                     {subscription?.status === "trialing" ? (
-                      <>
-                        <span className="text-amber-600 font-semibold">{t("dashboard.trial.label")}</span>{" "}
-                        — {t("dashboard.trial.desc", {
-                          date: subscription?.currentPeriodEnd
-                            ? new Date(subscription.currentPeriodEnd).toLocaleDateString("fr-FR")
-                            : "",
-                        })}
-                      </>
+                      <><span className="text-amber-600 font-semibold">{t("dashboard.trial.label")}</span>{" "}
+                      — Essai jusqu'au {subscription?.currentPeriodEnd ? new Date(subscription.currentPeriodEnd).toLocaleDateString("fr-FR") : ""}</>
                     ) : (
-                      t("dashboard.active.desc")
+                      <>Abonnement actif — {subscription?.plan === "annual" ? "245€ HT/mois (annuel)" : "245€ HT/mois"} — expire le {subscription?.currentPeriodEnd ? new Date(subscription.currentPeriodEnd).toLocaleDateString("fr-FR") : ""}</>
                     )}
                   </p>
-                  <Button
-                    data-testid="button-access-tool"
-                    className="bg-[#2ecc71] hover:bg-[#27ae60] text-white font-semibold"
-                    onClick={() =>
-                      (window.location.hash = `#/app?token=${token}`)
-                    }
-                  >
-                    <Beaker className="w-4 h-4 mr-2" />
-                    {t("dashboard.accessTool")}
+                  <Button data-testid="button-access-tool" className="text-white font-semibold" style={{background:"#1a5276"}}
+                    onClick={() => (window.location.hash = `#/app?token=${token}`)}>
+                    <Beaker className="w-4 h-4 mr-2" />{t("dashboard.accessTool")}
                   </Button>
                 </div>
               </div>
             </div>
+            )}
 
             {/* Outil TSN */}
+            {isTsnActive && (
             <div className="bg-card border border-card-border rounded-lg p-6 shadow-sm mt-4">
               <div className="flex items-start gap-4">
-                <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center text-white flex-shrink-0"
-                  style={{ background: "#1e8449" }}
-                >
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white flex-shrink-0" style={{ background: "#1e8449" }}>
                   <Droplets className="w-5 h-5" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-sm font-semibold text-foreground mb-1">
-                    {t("dashboard.tsnTitle")}
-                  </h3>
+                  <h3 className="text-sm font-semibold text-foreground mb-1">{t("dashboard.tsnTitle")}</h3>
+                  <p className="text-xs text-muted-foreground mb-1">Modèle Domenico (1987) — 24 polluants</p>
                   <p className="text-xs text-muted-foreground mb-4">
-                    {t("dashboard.tsnDesc")}
+                    {tsnSubscription?.status === "trialing" ? (
+                      <><span className="text-amber-600 font-semibold">{t("dashboard.trial.label")}</span>{" "}
+                      — Essai jusqu'au {tsnSubscription?.currentPeriodEnd ? new Date(tsnSubscription.currentPeriodEnd).toLocaleDateString("fr-FR") : ""}</>
+                    ) : (
+                      <>Abonnement actif — 1 100€ HT/an — expire le {tsnSubscription?.currentPeriodEnd ? new Date(tsnSubscription.currentPeriodEnd).toLocaleDateString("fr-FR") : ""}</>
+                    )}
                   </p>
-                  <Button
-                    data-testid="button-access-tsn"
-                    style={{ background: "#1e8449" }}
+                  <Button data-testid="button-access-tsn" style={{ background: "#1e8449" }}
                     className="text-white font-semibold hover:opacity-90"
-                    onClick={() =>
-                      (window.location.hash = `#/tsn?token=${token}`)
-                    }
-                  >
-                    <Droplets className="w-4 h-4 mr-2" />
-                    {t("dashboard.accessTsn")}
+                    onClick={() => (window.location.hash = `#/tsn?token=${token}`)}>
+                    <Droplets className="w-4 h-4 mr-2" />{t("dashboard.accessTsn")}
                   </Button>
                 </div>
               </div>
             </div>
+            )}
 
             {/* Subscription info */}
             <div className="bg-card border border-card-border rounded-lg p-5 shadow-sm mt-4">
@@ -326,84 +310,75 @@ export default function DashboardPage() {
         )}
 
         {/* No subscription: show pricing */}
-        {!isActive && (
+        {(!isActive || !isTsnActive) && (
           <div className="mb-8">
             <div className="bg-orange-50 border border-orange-200 rounded-md p-4 mb-6">
               <p className="text-sm text-orange-800 font-medium flex items-center gap-2">
                 <AlertCircle className="w-4 h-4" />
-                {t("dashboard.subscriptionRequired")}
+                Souscrivez à un ou plusieurs outils ci-dessous
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-4">
-              {/* Monthly */}
-              <div className="bg-card border border-card-border rounded-lg p-5 shadow-sm">
-                <div className="text-xs font-medium text-muted-foreground mb-1">
-                  {t("landing.pricing.monthly")}
-                </div>
-                <div className="flex items-baseline gap-1 mb-1">
-                  <span className="text-2xl font-extrabold text-foreground">
-                    245€
-                  </span>
-                  <span className="text-xs text-muted-foreground">{t("landing.pricing.perMonth")}</span>
-                </div>
-                <p className="text-xs text-muted-foreground mb-4">
-                  {t("landing.pricing.monthlyBilling")}
-                </p>
-                <Button
-                  data-testid="button-checkout-monthly"
-                  className="w-full"
-                  disabled={checkoutLoading === "monthly"}
-                  onClick={() => handleCheckout("monthly")}
-                >
-                  {checkoutLoading === "monthly" ? (
-                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  ) : (
-                    <CreditCard className="w-4 h-4 mr-2" />
-                  )}
-                  {t("landing.pricing.subscribe")}
-                </Button>
+            {/* ── EQRS J&E ── */}
+            {!isActive && (
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-7 h-7 rounded flex items-center justify-center text-white" style={{background:"#1a5276"}}><Beaker className="w-3.5 h-3.5"/></div>
+                <span className="text-sm font-bold text-foreground">EQRS Johnson & Ettinger</span>
               </div>
+              <div className="grid sm:grid-cols-2 gap-3">
+                <div className="bg-card border border-card-border rounded-lg p-4 shadow-sm">
+                  <div className="text-xs font-medium text-muted-foreground mb-1">Mensuel</div>
+                  <div className="flex items-baseline gap-1 mb-3">
+                    <span className="text-xl font-extrabold text-foreground">245€</span>
+                    <span className="text-xs text-muted-foreground">HT/mois</span>
+                  </div>
+                  <Button data-testid="button-checkout-monthly" className="w-full" size="sm"
+                    disabled={checkoutLoading === "monthly"} onClick={() => handleCheckout("monthly")}>
+                    {checkoutLoading === "monthly" ? <Loader2 className="w-3 h-3 animate-spin mr-1"/> : <CreditCard className="w-3 h-3 mr-1"/>}
+                    S'abonner
+                  </Button>
+                </div>
+                <div className="rounded-lg border-2 p-4 shadow-sm relative" style={{borderColor:"#3b82f6", background:"hsl(var(--card))"}}>
+                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 text-[0.6rem] font-semibold text-white px-2 py-0.5 rounded-full" style={{background:"#3b82f6"}}>-15%</div>
+                  <div className="text-xs font-medium text-muted-foreground mb-1">Annuel</div>
+                  <div className="flex items-baseline gap-1 mb-3">
+                    <span className="text-xl font-extrabold text-foreground">2 499€</span>
+                    <span className="text-xs text-muted-foreground">HT/an</span>
+                  </div>
+                  <Button data-testid="button-checkout-annual" className="w-full text-white font-semibold" size="sm"
+                    style={{background:"#3b82f6"}} disabled={checkoutLoading === "annual"} onClick={() => handleCheckout("annual")}>
+                    {checkoutLoading === "annual" ? <Loader2 className="w-3 h-3 animate-spin mr-1"/> : <CreditCard className="w-3 h-3 mr-1"/>}
+                    S'abonner
+                  </Button>
+                </div>
+              </div>
+            </div>
+            )}
 
-              {/* Annual */}
-              <div
-                className="rounded-lg border-2 p-5 shadow-sm relative"
-                style={{ borderColor: "#2ecc71", background: "hsl(var(--card))" }}
-              >
-                <div
-                  className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[0.65rem] font-semibold text-white px-2.5 py-0.5 rounded-full"
-                  style={{ background: "#2ecc71" }}
-                >
-                  -15%
-                </div>
-                <div className="text-xs font-medium text-muted-foreground mb-1">
-                  {t("landing.pricing.annual")}
-                </div>
+            {/* ── Transfert Sol→Nappe ── */}
+            {!isTsnActive && (
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-7 h-7 rounded flex items-center justify-center text-white" style={{background:"#1e8449"}}><Droplets className="w-3.5 h-3.5"/></div>
+                <span className="text-sm font-bold text-foreground">Transfert Sol → Nappe → Captage</span>
+              </div>
+              <div className="rounded-lg border-2 p-4 shadow-sm relative" style={{borderColor:"#2ecc71", background:"hsl(var(--card))"}}>
+                <div className="absolute -top-2 left-1/2 -translate-x-1/2 text-[0.6rem] font-semibold text-white px-2 py-0.5 rounded-full" style={{background:"#2ecc71"}}>Annuel uniquement</div>
+                <div className="text-xs font-medium text-muted-foreground mb-1">Licence annuelle</div>
                 <div className="flex items-baseline gap-1 mb-1">
-                  <span className="text-2xl font-extrabold text-foreground">
-                    2 499€
-                  </span>
-                  <span className="text-xs text-muted-foreground">{t("landing.pricing.perYear")}</span>
+                  <span className="text-xl font-extrabold text-foreground">1 100€</span>
+                  <span className="text-xs text-muted-foreground">HT/an</span>
                 </div>
-                <p className="text-xs text-muted-foreground mb-4">
-                  {t("landing.pricing.annualEquiv")}
-                </p>
-                <Button
-                  data-testid="button-checkout-annual"
-                  className="w-full text-white font-semibold"
-                  style={{ background: "#2ecc71" }}
-                  disabled={checkoutLoading === "annual"}
-                  onClick={() => handleCheckout("annual")}
-                >
-                  {checkoutLoading === "annual" ? (
-                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  ) : (
-                    <CreditCard className="w-4 h-4 mr-2" />
-                  )}
-                  {t("landing.pricing.subscribe")}
+                <p className="text-xs text-muted-foreground mb-3">Rapport PDF + schéma conceptuel + éditeur intégré</p>
+                <Button data-testid="button-checkout-tsn" className="w-full text-white font-semibold" size="sm"
+                  style={{background:"#2ecc71"}} disabled={checkoutLoading === "tsn_annual"} onClick={() => handleCheckout("tsn_annual")}>
+                  {checkoutLoading === "tsn_annual" ? <Loader2 className="w-3 h-3 animate-spin mr-1"/> : <CreditCard className="w-3 h-3 mr-1"/>}
+                  S'abonner
                 </Button>
               </div>
             </div>
+            )}
 
             {/* Conditions de licence */}
             <div className="mt-4 bg-muted/50 rounded-md p-3 text-[0.7rem] text-muted-foreground leading-relaxed">
