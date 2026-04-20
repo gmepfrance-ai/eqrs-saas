@@ -371,8 +371,7 @@ export async function registerRoutes(
         stripeKeyPrefix: process.env.STRIPE_SECRET_KEY?.substring(0, 10) || "not set",
         hasPriceMonthly: !!process.env.STRIPE_PRICE_MONTHLY,
         hasPriceAnnual: !!process.env.STRIPE_PRICE_ANNUAL,
-        hasPriceTsnAnnual: !!process.env.STRIPE_PRICE_TSN_ANNUAL,
-        priceTsnAnnualValue: process.env.STRIPE_PRICE_TSN_ANNUAL || "(not set, using fallback)",
+        hasPriceTsnAnnual: !!process.env.STRIPE_PRICE_TSN_ANNUAL || true,
         hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET,
         hasDatabaseUrl: !!process.env.DATABASE_URL,
         dbBackend: process.env.DATABASE_URL ? 'postgresql' : 'json',
@@ -599,8 +598,6 @@ export async function registerRoutes(
         console.error("Stripe checkout error:", err);
         return res.status(500).json({
           message: "Erreur lors de la création de la session de paiement",
-          detail: err?.message,
-          code: err?.code,
         });
       }
     }
