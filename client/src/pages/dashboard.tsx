@@ -38,6 +38,19 @@ export default function DashboardPage() {
     }
   }, []);
 
+  // Auto-checkout si un plan est passé dans l'URL après inscription/connexion
+  useEffect(() => {
+    if (!token || authLoading) return;
+    const hash = window.location.hash;
+    const match = hash.match(/checkout=([a-z_]+)/);
+    if (match && match[1] && match[1] !== "success" && match[1] !== "cancel") {
+      const plan = match[1];
+      // Nettoyer le paramètre de l'URL
+      window.location.hash = hash.replace(/[&?]?checkout=[a-z_]+/, "");
+      handleCheckout(plan);
+    }
+  }, [token, authLoading]);
+
   // Redirect if not authenticated
   useEffect(() => {
     if (!authLoading && !user) {

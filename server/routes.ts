@@ -162,6 +162,12 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
 
+  // Attendre la migration DB avant d'enregistrer les routes
+  if ((storage as any).ready) {
+    await (storage as any).ready();
+    console.log("[routes] DB migration complete, registering routes");
+  }
+
   // ── SEO: Sitemap and robots.txt ──
   app.get("/sitemap.xml", (_req: Request, res: Response) => {
     res.setHeader("Content-Type", "application/xml; charset=utf-8");

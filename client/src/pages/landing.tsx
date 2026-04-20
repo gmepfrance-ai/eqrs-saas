@@ -212,7 +212,7 @@ export default function LandingPage() {
                     <PricingItem>Mises à jour incluses</PricingItem>
                     <PricingItem>Support par e-mail</PricingItem>
                   </ul>
-                  <Button className="w-full bg-primary hover:bg-primary/90" onClick={() => (window.location.hash = "#/register")}>
+                  <Button className="w-full bg-primary hover:bg-primary/90" onClick={() => { localStorage.setItem("pending_plan", "monthly"); window.location.hash = "#/register"; }}>
                     {t("landing.pricing.subscribe")}
                   </Button>
                 </div>
@@ -234,7 +234,7 @@ export default function LandingPage() {
                     <PricingItem>Mises à jour incluses</PricingItem>
                     <PricingItem>Support prioritaire</PricingItem>
                   </ul>
-                  <Button className="w-full text-white font-semibold" style={{background:"#3b82f6"}} onClick={() => (window.location.hash = "#/register")}>
+                  <Button className="w-full text-white font-semibold" style={{background:"#3b82f6"}} onClick={() => { localStorage.setItem("pending_plan", "annual"); window.location.hash = "#/register"; }}>
                     {t("landing.pricing.subscribe")}
                   </Button>
                 </div>
@@ -272,7 +272,7 @@ export default function LandingPage() {
                     <PricingItem>Schéma conceptuel automatique</PricingItem>
                     <PricingItem>Licence mono-poste + mises à jour</PricingItem>
                   </ul>
-                  <Button className="w-full text-white font-semibold" style={{background:"#2ecc71"}} onClick={() => (window.location.hash = "#/register")}>
+                  <Button className="w-full text-white font-semibold" style={{background:"#2ecc71"}} onClick={() => { localStorage.setItem("pending_plan", "tsn_annual"); window.location.hash = "#/register"; }}>
                     {t("landing.pricing.subscribe")}
                   </Button>
                 </div>

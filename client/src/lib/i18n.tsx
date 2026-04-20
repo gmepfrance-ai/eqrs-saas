@@ -118,7 +118,7 @@ const translations = {
 
     // Register
     "register.title": "Créer un compte",
-    "register.subtitle": "Inscrivez-vous pour accéder à l'outil EQRS",
+    "register.subtitle": "Inscrivez-vous pour accéder aux outils GMEP",
     "register.name": "Nom complet",
     "register.email": "Adresse e-mail",
     "register.password": "Mot de passe",
@@ -286,7 +286,7 @@ const translations = {
 
     // Register
     "register.title": "Create an account",
-    "register.subtitle": "Sign up to access the EQRS tool",
+    "register.subtitle": "Sign up to access GMEP tools",
     "register.name": "Full name",
     "register.email": "Email address",
     "register.password": "Password",

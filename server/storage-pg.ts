@@ -76,6 +76,8 @@ function rowToPageView(row: any): PageView {
 export class PgStorage implements IStorage {
   private pool: Pool;
 
+  private _ready: Promise<void>;
+
   constructor() {
     this.pool = new Pool({
       connectionString: process.env.DATABASE_URL,
@@ -83,10 +85,15 @@ export class PgStorage implements IStorage {
         ? { rejectUnauthorized: false }
         : false,
     });
-    // Run auto-migration at startup
-    this.initializeTables().catch((err) => {
+    // Run auto-migration at startup — store promise so callers can await it
+    this._ready = this.initializeTables().catch((err) => {
       console.error("Failed to initialize PostgreSQL tables:", err);
-    });
+    }) as Promise<void>;
+  }
+
+  /** Await this before handling any requests to ensure migration is complete */
+  async ready(): Promise<void> {
+    return this._ready;
   }
 
   private async initializeTables(): Promise<void> {
