@@ -494,6 +494,46 @@ export async function registerRoutes(
       ).toISOString();
       await storage.createSession(token, user.id, expiresAt);
 
+      // Email de bienvenue avec essai gratuit
+      try {
+        const resendKey = process.env.RESEND_API_KEY;
+        if (resendKey) {
+          const { Resend } = require("resend");
+          const resend = new Resend(resendKey);
+          await resend.emails.send({
+            from: "GMEP <noreply@gmep-france.eu>",
+            to: email,
+            subject: "Bienvenue sur GMEP — Votre essai gratuit est activé",
+            html: `
+              <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+                <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+                  <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+                  <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">Outils de modélisation environnementale</p>
+                </div>
+                <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+                  <p style="font-size:16px;">Bonjour ${name},</p>
+                  <p>Votre compte GMEP a bien été créé. Votre <strong>essai gratuit de 14 jours</strong> est activé pour l'outil <strong>EQRS (Johnson &amp; Ettinger)</strong>.</p>
+                  <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
+                    <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #cce0f0;">${email}</td></tr>
+                    <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Essai EQRS</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours gratuits</td></tr>
+                    <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Essai TSN</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours gratuits (disponible dans votre tableau de bord)</td></tr>
+                  </table>
+                  <div style="text-align:center;margin:28px 0;">
+                    <a href="https://www.gmep-france.eu/#/dashboard" style="background:#1a365d;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à mon espace</a>
+                  </div>
+                  <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a> — Tél. 06 07 73 72 33</p>
+                  <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+                  <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+                </div>
+              </div>
+            `,
+          });
+          console.log(`[WELCOME EMAIL] Sent to ${email}`);
+        }
+      } catch (emailErr: any) {
+        console.error("[WELCOME EMAIL] Failed:", emailErr.message);
+      }
+
       return res.json({
         token,
         user: storage.toSafeUser(user),
@@ -718,6 +758,7 @@ export async function registerRoutes(
           }
 
           if (sub) {
+            const isNewActivation = sub.status !== "active" && subscription.status === "active";
             await storage.updateSubscription(sub.id, {
               stripeSubscriptionId: subscription.id,
               status: subscription.status === "active" ? "active" : subscription.status,
@@ -727,6 +768,63 @@ export async function registerRoutes(
                 (subscription as any).current_period_end * 1000
               ).toISOString(),
             });
+
+            // Envoyer email d'activation uniquement lors de la première activation
+            if (isNewActivation && event.type === "customer.subscription.created") {
+              try {
+                const user = await storage.getUser(sub.userId);
+                const resendKey = process.env.RESEND_API_KEY;
+                if (user && resendKey) {
+                  const { Resend } = require("resend");
+                  const resend = new Resend(resendKey);
+                  const toolName = tool === "tsn"
+                    ? "TSN — Transfert Sol vers Nappe"
+                    : "EQRS — Johnson & Ettinger";
+                  const toolUrl = tool === "tsn"
+                    ? "https://www.gmep-france.eu/#/dashboard"
+                    : "https://www.gmep-france.eu/#/dashboard";
+                  const planLabel = plan === "tsn_annual" ? "Annuel — 1 100 € HT/an" :
+                                    plan === "annual" ? "Annuel — 2 499 € HT/an" :
+                                    "Mensuel — 245 € HT/mois";
+                  const periodEnd = new Date((subscription as any).current_period_end * 1000)
+                    .toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+
+                  await resend.emails.send({
+                    from: "GMEP <noreply@gmep-france.eu>",
+                    to: user.email,
+                    subject: `✅ Votre accès ${toolName} est activé`,
+                    html: `
+                      <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+                        <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+                          <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+                          <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">${toolName}</p>
+                        </div>
+                        <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+                          <p style="font-size:16px;">Bonjour ${user.name || ""},</p>
+                          <p>Votre abonnement <strong>${toolName}</strong> est maintenant <strong style="color:#1a7a3c;">actif</strong>.</p>
+                          <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
+                            <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Outil</td><td style="padding:10px;border:1px solid #cce0f0;">${toolName}</td></tr>
+                            <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Plan</td><td style="padding:10px;border:1px solid #e2e8f0;">${planLabel}</td></tr>
+                            <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Valide jusqu'au</td><td style="padding:10px;border:1px solid #e2e8f0;">${periodEnd}</td></tr>
+                            <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #e2e8f0;">${user.email}</td></tr>
+                          </table>
+                          <div style="text-align:center;margin:28px 0;">
+                            <a href="${toolUrl}" style="background:#1a365d;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à mon logiciel</a>
+                          </div>
+                          <p style="font-size:13px;color:#64748b;">Connectez-vous avec votre adresse e-mail et votre mot de passe sur <a href="https://www.gmep-france.eu">www.gmep-france.eu</a>.</p>
+                          <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a> — Tél. 06 07 73 72 33</p>
+                          <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+                          <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+                        </div>
+                      </div>
+                    `,
+                  });
+                  console.log(`[ACTIVATION EMAIL] Sent to ${user.email} for tool=${tool} plan=${plan}`);
+                }
+              } catch (emailErr: any) {
+                console.error("[ACTIVATION EMAIL] Failed:", emailErr.message);
+              }
+            }
           }
           break;
         }
