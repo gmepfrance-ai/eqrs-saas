@@ -10,7 +10,7 @@ export default function CgvPage() {
           <div className="container">
             <article>
               <h1>Conditions générales de vente</h1>
-              <p className="updated">Version en vigueur — janvier 2026</p>
+              <p className="updated">Version en vigueur — mai 2026 (rév. licence mono-poste)</p>
               <div style={{ margin: "16px 0 24px 0" }}>
                 <a
                   href="/CGV_GMEP_2026.pdf"
@@ -101,14 +101,40 @@ export default function CgvPage() {
                 du Code de la propriété intellectuelle.
               </p>
 
-              <h2>7. Données personnelles</h2>
+              <h2>7. Licence mono-poste et clé d'activation</h2>
+              <p>
+                Chaque abonnement souscrit (EQRS Johnson &amp; Ettinger, Transfert Sol → Nappe →
+                Captage, Rabattement de nappe) ouvre droit à <strong>une licence mono-poste</strong>{" "}
+                associée à une <strong>clé d'activation unique</strong>, strictement liée à un seul
+                poste de travail (ordinateur).
+              </p>
+              <p>
+                La clé d'activation est <strong>personnelle, incessible et non partageable</strong>.
+                Elle ne peut être transférée, communiquée à un tiers, ni utilisée simultanément
+                sur plusieurs ordinateurs. Toute tentative d'usage sur plusieurs postes avec une
+                même clé entraîne la suspension immédiate de l'accès, sans remboursement.
+              </p>
+              <p>
+                Pour une utilisation sur <strong>N postes</strong> au sein d'une même entreprise,
+                l'Abonné doit souscrire <strong>N abonnements distincts</strong>, chacun bénéficiant
+                de sa propre clé d'activation et de la durée (mensuelle ou annuelle) choisie. Chaque
+                licence supplémentaire est facturée au même tarif unitaire que la première.
+              </p>
+              <p>
+                Le remplacement d'un poste (changement de matériel, panne, vol) ouvre droit à une
+                nouvelle clé d'activation sur demande écrite à{" "}
+                <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>, sans surcoût,
+                dans la limite d'un transfert par an et par licence.
+              </p>
+
+              <h2>8. Données personnelles</h2>
               <p>
                 L'Éditeur traite les données personnelles de l'Abonné conformément au RGPD. Voir{" "}
                 <a href="#/mentions-legales">mentions légales</a> pour le détail des finalités,
                 durées et droits de l'Abonné.
               </p>
 
-              <h2>8. Confidentialité des calculs</h2>
+              <h2>9. Confidentialité des calculs</h2>
               <p>
                 Les paramètres saisis par l'Abonné (données de projet, coordonnées, valeurs de
                 calcul) restent strictement confidentiels. Les calculs s'exécutent côté
@@ -116,7 +142,7 @@ export default function CgvPage() {
                 commerciales par l'Éditeur.
               </p>
 
-              <h2>9. Limitation de responsabilité</h2>
+              <h2>10. Limitation de responsabilité</h2>
               <p>
                 Les résultats produits par les logiciels constituent une aide à la décision.
                 L'Abonné conserve la responsabilité pleine et entière de leur interprétation,
@@ -127,13 +153,13 @@ export default function CgvPage() {
                 inadapté des résultats.
               </p>
 
-              <h2>10. Force majeure</h2>
+              <h2>11. Force majeure</h2>
               <p>
                 Aucune des parties ne pourra être tenue responsable d'une inexécution résultant
                 d'un cas de force majeure au sens de l'article 1218 du Code civil.
               </p>
 
-              <h2>11. Droit applicable et juridiction</h2>
+              <h2>12. Droit applicable et juridiction</h2>
               <p>
                 Les présentes CGV sont soumises au droit français. À défaut de résolution
                 amiable, tout litige relèvera de la compétence exclusive du{" "}
@@ -141,7 +167,7 @@ export default function CgvPage() {
                 ou appel en garantie.
               </p>
 
-              <h2>12. Contact</h2>
+              <h2>13. Contact</h2>
               <p>
                 Pour toute question sur les présentes CGV :{" "}
                 <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a> — SARL G.M.E.P, 9

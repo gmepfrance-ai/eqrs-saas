@@ -94,7 +94,7 @@ flow = []
 
 flow.append(Paragraph("Conditions générales de vente", style_title))
 flow.append(Paragraph(
-    "SARL G.M.E.P — Version en vigueur janvier 2026",
+    "SARL G.M.E.P — Version en vigueur mai 2026 (rév. licence mono-poste)",
     style_subtitle,
 ))
 
@@ -155,19 +155,35 @@ p("Les logiciels et leurs contenus sont la propriété exclusive de la SARL G.M.
   "passible de poursuites au titre des articles L.335-2 et suivants du Code de la propriété "
   "intellectuelle.")
 
-h2("8. Données personnelles")
+h2("8. Licence mono-poste et clé d'activation")
+p("Chaque abonnement souscrit (EQRS Johnson &amp; Ettinger, Transfert Sol → Nappe → Captage, "
+  "Rabattement de nappe) ouvre droit à <b>une licence mono-poste</b> associée à une "
+  "<b>clé d'activation unique</b>, strictement liée à un seul poste de travail (ordinateur).")
+p("La clé d'activation est <b>personnelle, incessible et non partageable</b>. Elle ne peut "
+  "être transférée, communiquée à un tiers, ni utilisée simultanément sur plusieurs "
+  "ordinateurs. Toute tentative d'usage sur plusieurs postes avec une même clé entraîne la "
+  "suspension immédiate de l'accès, sans remboursement.")
+p("Pour une utilisation sur <b>N postes</b> au sein d'une même entreprise, l'Abonné doit "
+  "souscrire <b>N abonnements distincts</b>, chacun bénéficiant de sa propre clé "
+  "d'activation et de la durée (mensuelle ou annuelle) choisie. Chaque licence "
+  "supplémentaire est facturée au même tarif unitaire que la première.")
+p("Le remplacement d'un poste (changement de matériel, panne, vol) ouvre droit à une "
+  "nouvelle clé d'activation sur demande écrite à gmep.france@gmail.com, sans surcoût, "
+  "dans la limite d'un transfert par an et par licence.")
+
+h2("9. Données personnelles")
 p("L'Éditeur traite les données personnelles de l'Abonné conformément au RGPD (Règlement UE "
   "2016/679) et à la loi Informatique et Libertés modifiée. Les finalités, durées de "
   "conservation, sous-traitants et droits de l'Abonné (accès, rectification, effacement, "
   "portabilité, opposition) sont détaillés dans les <b>Mentions légales et politique de "
   "confidentialité</b> accessibles sur www.gmep-france.eu/#/mentions-legales.")
 
-h2("9. Confidentialité des calculs")
+h2("10. Confidentialité des calculs")
 p("Les paramètres saisis par l'Abonné (données de projet, coordonnées, valeurs de calcul) "
   "restent strictement confidentiels. Les calculs s'exécutent côté navigateur (client) ou "
   "sur un serveur dédié, sans réutilisation à des fins commerciales par l'Éditeur.")
 
-h2("10. Limitation de responsabilité")
+h2("11. Limitation de responsabilité")
 p("Les résultats produits par les logiciels constituent une aide à la décision. L'Abonné "
   "conserve la responsabilité pleine et entière de leur interprétation, validation et "
   "utilisation dans ses livrables professionnels et réglementaires (rapports IEM, dossiers "
@@ -178,31 +194,31 @@ p("La responsabilité de l'Éditeur ne pourra être engagée pour des dommages i
   "responsabilité de l'Éditeur est plafonnée au montant des sommes effectivement versées "
   "par l'Abonné au titre des 12 derniers mois.")
 
-h2("11. Force majeure")
+h2("12. Force majeure")
 p("Aucune des parties ne pourra être tenue responsable d'une inexécution résultant d'un cas "
   "de force majeure au sens de l'article 1218 du Code civil (notamment : interruption "
   "généralisée d'internet, attaque cyber-criminelle massive, décision administrative "
   "imposant l'arrêt du service).")
 
-h2("12. Médiation et résolution amiable")
+h2("13. Médiation et résolution amiable")
 p("Conformément à l'article L.612-1 du Code de la consommation, en cas de litige non résolu "
   "à l'amiable avec un consommateur, l'Abonné peut saisir gratuitement le médiateur de la "
   "consommation. L'Éditeur invite les Abonnés à formuler toute réclamation préalable à "
   "gmep.france@gmail.com.")
 
-h2("13. Droit applicable et juridiction")
+h2("14. Droit applicable et juridiction")
 p("Les présentes CGV sont soumises au droit français. À défaut de résolution amiable, tout "
   "litige relèvera de la compétence exclusive du <b>Tribunal judiciaire de Niort</b>, "
   "nonobstant pluralité de défendeurs ou appel en garantie. Pour les Abonnés consommateurs, "
   "les règles de compétence territoriale prévues par le Code de procédure civile demeurent "
   "applicables.")
 
-h2("14. Modifications des CGV")
+h2("15. Modifications des CGV")
 p("L'Éditeur se réserve le droit de modifier les présentes CGV. Les Abonnés en cours seront "
   "informés par e-mail au moins 30 jours avant l'entrée en vigueur des modifications. "
   "Le maintien de l'abonnement après cette période vaut acceptation des nouvelles CGV.")
 
-h2("15. Contact")
+h2("16. Contact")
 p("Pour toute question sur les présentes CGV :")
 p("<b>SARL G.M.E.P</b><br/>"
   "9 rue de la Marne — 79400 Saint-Maixent-l'École, France<br/>"
@@ -219,7 +235,7 @@ def _on_page(canvas, doc):
     canvas.saveState()
     canvas.setFont(FONT_BODY, 8)
     canvas.setFillColor("#7A7974")
-    canvas.drawString(22*mm, 12*mm, "CGV — SARL G.M.E.P — Janvier 2026")
+    canvas.drawString(22*mm, 12*mm, "CGV — SARL G.M.E.P — Mai 2026")
     canvas.drawRightString(A4[0]-22*mm, 12*mm, f"Page {doc.page}")
     canvas.restoreState()
 

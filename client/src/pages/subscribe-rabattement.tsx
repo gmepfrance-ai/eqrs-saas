@@ -109,6 +109,7 @@ export default function SubscribeRabattementPage() {
             <PricingItem>Dossier PDF 27 pages prêt pour la DDT</PricingItem>
             <PricingItem>Bilan hydrique départemental + ETP</PricingItem>
             <PricingItem>Schéma technique automatique</PricingItem>
+            <PricingItem>Licence mono-poste + mises à jour</PricingItem>
             <PricingItem>Support par e-mail + mises à jour réglementaires</PricingItem>
           </ul>
 

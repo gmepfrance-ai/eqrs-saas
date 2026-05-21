@@ -253,6 +253,40 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* === CONDITIONS DE LICENCE === */}
+      <section className="v2-section" style={{ background: "#fffbeb" }}>
+        <div className="container">
+          <div
+            style={{
+              maxWidth: 920,
+              margin: "0 auto",
+              padding: "28px 32px",
+              background: "#fff",
+              border: "1px solid #fcd34d",
+              borderRadius: 14,
+              boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+            }}
+          >
+            <h2 style={{ margin: "0 0 16px 0", color: "#92400e", fontSize: 22 }}>
+              Conditions de licence — mono-poste
+            </h2>
+            <p style={{ margin: "0 0 12px 0", fontSize: 15, color: "#451a03", lineHeight: 1.65 }}>
+              Le tarif indiqué pour chaque logiciel correspond à{" "}
+              <strong>une seule licence mono-poste</strong> : 1 clé d'activation = 1 ordinateur.
+              La clé d'activation est <strong>personnelle, incessible et non partageable</strong>{" "}
+              entre plusieurs postes.
+            </p>
+            <p style={{ margin: 0, fontSize: 15, color: "#451a03", lineHeight: 1.65 }}>
+              Pour équiper <strong>plusieurs postes</strong> au sein d'une même entreprise (par
+              exemple 3 ou 4 collaborateurs), l'entreprise doit souscrire{" "}
+              <strong>autant d'abonnements que de postes</strong>, chacun avec sa propre clé
+              d'activation et sa durée (mensuelle ou annuelle). Chaque licence supplémentaire est
+              facturée au même tarif unitaire.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* === BANNIÈRE CTA === */}
       <section className="v2-section">
         <div className="container">

@@ -134,6 +134,42 @@ export default function TarifsPage() {
           <p style={{ textAlign: "center", marginTop: 32, fontSize: 13.5, color: "#6b7280" }}>
             TVA française au taux normal de 20 % (art. 278 du CGI). Facturation sécurisée par Stripe.
           </p>
+
+          {/* Conditions de licence — mono-poste */}
+          <div
+            style={{
+              marginTop: 40,
+              padding: "24px 28px",
+              background: "#fff7ed",
+              border: "1px solid #fed7aa",
+              borderRadius: 12,
+              maxWidth: 880,
+              margin: "40px auto 0",
+            }}
+          >
+            <h3 style={{ margin: "0 0 12px 0", fontSize: 17, color: "#9a3412" }}>
+              Conditions de licence — mono-poste
+            </h3>
+            <ul style={{ margin: 0, paddingLeft: 20, fontSize: 14, color: "#7c2d12", lineHeight: 1.7 }}>
+              <li>
+                Chaque tarif indiqué correspond à <strong>une licence mono-poste</strong> : 1 clé
+                d'activation = 1 ordinateur.
+              </li>
+              <li>
+                La clé d'activation est strictement personnelle et incessible. Elle ne peut être
+                partagée, transférée ou utilisée simultanément sur plusieurs postes.
+              </li>
+              <li>
+                Pour équiper <strong>2, 3 ou 4 postes</strong> au sein d'une même entreprise,
+                souscrivez le nombre de licences correspondant (un abonnement et une clé
+                d'activation par poste).
+              </li>
+              <li>
+                Chaque licence supplémentaire ouvre droit au même tarif unitaire (mensuel ou
+                annuel) pour la durée souscrite.
+              </li>
+            </ul>
+          </div>
         </div>
       </section>
 
