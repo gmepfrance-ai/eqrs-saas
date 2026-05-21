@@ -93,6 +93,14 @@ async function requireAuth(req: AuthRequest, res: Response, next: NextFunction) 
   next();
 }
 
+// Comptes admin/exemptés de la limite d'essai
+const ADMIN_EMAILS = new Set([
+  "gmep.france@gmail.com",
+]);
+function isAdminEmail(email?: string | null): boolean {
+  return !!email && ADMIN_EMAILS.has(email.toLowerCase());
+}
+
 async function requireSubscription(
   req: AuthRequest,
   res: Response,
@@ -125,6 +133,8 @@ async function requireTsnSubscription(
   next: NextFunction
 ) {
   if (!req.user) return res.status(401).json({ message: "Authentification requise" });
+  // Bypass admin
+  if (isAdminEmail((req.user as any).email)) return next();
   const subs = await storage.getSubscriptionsByUserId(req.user.id);
   const tsnSub = subs.find(
     (s) => (s.tool === "tsn" || s.tool === "bundle") &&
@@ -148,6 +158,8 @@ async function requireRabattementSubscription(
   next: NextFunction
 ) {
   if (!req.user) return res.status(401).json({ message: "Authentification requise" });
+  // Bypass admin
+  if (isAdminEmail((req.user as any).email)) return next();
   const subs = await storage.getSubscriptionsByUserId(req.user.id);
   const rabSub = subs.find(
     (s) => (s.tool === "rabattement" || s.tool === "bundle") &&
@@ -1029,6 +1041,14 @@ export async function registerRoutes(
     requireAuth as any,
     async (req: AuthRequest, res: Response) => {
       if (!tsnToolHtml) return res.status(500).json({ message: "Outil TSN non disponible" });
+      // Bypass admin: accès complet sans limite, mais via la route complète (pas mode essai)
+      if (isAdminEmail((req.user as any).email)) {
+        res.setHeader("X-Frame-Options", "SAMEORIGIN");
+        res.setHeader("Content-Security-Policy", "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://*.geopf.fr https://*.eaufrance.fr https://hubeau.eaufrance.fr; img-src 'self' data: blob: https://*.geopf.fr https://*.openstreetmap.org https://*.tile.openstreetmap.org; connect-src 'self' https://*.geopf.fr https://hubeau.eaufrance.fr https://*.eaufrance.fr");
+        res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+        res.setHeader("Content-Type", "text/html; charset=utf-8");
+        return res.send(protectToolHtml(tsnToolHtml));
+      }
       const subs = await storage.getSubscriptionsByUserId(req.user!.id);
       const tsnSub = subs.find(s => s.tool === "tsn" && s.status === "trialing");
       if (!tsnSub) return res.status(403).json({ message: "Aucun essai TSN actif." });
