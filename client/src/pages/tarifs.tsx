@@ -86,7 +86,7 @@ export default function TarifsPage() {
               <h3>Transfert Sol → Nappe → Captage</h3>
               <p className="sub">Modèle Domenico — licence annuelle</p>
               <div className="v2-price-amount">
-                <span className="currency">€</span>1 100
+                <span className="currency">€</span>850
               </div>
               <div className="v2-price-period">HT / an</div>
               <ul className="v2-price-features">
