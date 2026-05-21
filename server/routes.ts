@@ -211,7 +211,7 @@ function injectTsnTrialMode(html: string, daysLeft: number, token: string): stri
   const banner = `
 <div id="tsn-trial-banner" style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#1e8449;color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;font-family:sans-serif;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,0.3)">
   <span>&#9888;&#65039; <strong>Mode Essai Gratuit</strong> — ${daysLeft} jour${daysLeft > 1 ? "s" : ""} restant${daysLeft > 1 ? "s" : ""} — Limité à 3 molécules (PCE, TCE, Benzène)</span>
-  <a href="${subscribeUrl}" style="background:#fff;color:#1e8449;padding:5px 14px;border-radius:20px;font-weight:700;text-decoration:none;font-size:12px;">S'abonner — 1 100€ HT/an</a>
+  <a href="${subscribeUrl}" style="background:#fff;color:#1e8449;padding:5px 14px;border-radius:20px;font-weight:700;text-decoration:none;font-size:12px;">S'abonner — 850€ HT/an</a>
 </div>
 <style>body { padding-top: 46px !important; }</style>`;
 
@@ -842,7 +842,7 @@ export async function registerRoutes(
                   const toolUrl = "https://www.gmep-france.eu/#/dashboard";
                   const planLabel =
                     plan === "rabattement_annual" ? "Annuel — 1 100 € HT/an" :
-                    plan === "tsn_annual" ? "Annuel — 1 100 € HT/an" :
+                    plan === "tsn_annual" ? "Annuel — 850 € HT/an" :
                     plan === "annual" ? "Annuel — 2 499 € HT/an" :
                     "Mensuel — 245 € HT/mois";
                   const periodEnd = new Date((subscription as any).current_period_end * 1000)

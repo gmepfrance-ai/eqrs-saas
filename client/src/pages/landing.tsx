@@ -129,7 +129,7 @@ export default function LandingPage() {
                 Modèle Domenico 1987. 24 polluants (BTEX, HAP, PFAS, métaux). Courbe d'atténuation
                 Cc(x), DAF, gradient hydraulique.
               </p>
-              <div className="v2-tool-price">1 100 € HT/an</div>
+              <div className="v2-tool-price">850 € HT/an</div>
               <a href="#/subscribe-tsn" className="v2-btn v2-btn-blue">
                 Découvrir →
               </a>

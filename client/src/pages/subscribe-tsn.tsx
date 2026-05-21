@@ -101,7 +101,7 @@ export default function SubscribeTsnPage() {
           </div>
 
           <div className="flex items-baseline gap-1 mb-1">
-            <span className="text-4xl font-extrabold text-foreground">1 100€</span>
+            <span className="text-4xl font-extrabold text-foreground">850€</span>
             <span className="text-sm text-muted-foreground">HT/an</span>
           </div>
           <p className="text-xs text-muted-foreground mb-6">Facturation annuelle. Résiliable à l'échéance.</p>

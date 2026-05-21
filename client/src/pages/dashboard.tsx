@@ -264,7 +264,7 @@ export default function DashboardPage() {
                       <><span className="text-amber-600 font-semibold">Essai gratuit</span>{" "}
                       — Essai jusqu'au {tsnSubscription?.currentPeriodEnd ? new Date(tsnSubscription.currentPeriodEnd).toLocaleDateString("fr-FR") : ""}</>
                     ) : (
-                      <>Abonnement actif — 1 100€ HT/an — expire le {tsnSubscription?.currentPeriodEnd ? new Date(tsnSubscription.currentPeriodEnd).toLocaleDateString("fr-FR") : ""}</>
+                      <>Abonnement actif — 850€ HT/an — expire le {tsnSubscription?.currentPeriodEnd ? new Date(tsnSubscription.currentPeriodEnd).toLocaleDateString("fr-FR") : ""}</>
                     )}
                   </p>
                   <div className="flex gap-2 flex-wrap">
@@ -284,7 +284,7 @@ export default function DashboardPage() {
                     {tsnSubscription?.status === "trialing" && (
                       <Button size="sm" variant="outline" className="text-xs border-[#1e8449] text-[#1e8449]"
                         onClick={() => (window.location.hash = "#/subscribe-tsn")}>
-                        S'abonner — 1 100€ HT/an
+                        S'abonner — 850€ HT/an
                       </Button>
                     )}
                   </div>
@@ -481,7 +481,7 @@ export default function DashboardPage() {
                 <div className="absolute -top-2 left-1/2 -translate-x-1/2 text-[0.6rem] font-semibold text-white px-2 py-0.5 rounded-full" style={{background:"#2ecc71"}}>Annuel uniquement</div>
                 <div className="text-xs font-medium text-muted-foreground mb-1">Licence annuelle</div>
                 <div className="flex items-baseline gap-1 mb-1">
-                  <span className="text-xl font-extrabold text-foreground">1 100€</span>
+                  <span className="text-xl font-extrabold text-foreground">850€</span>
                   <span className="text-xs text-muted-foreground">HT/an</span>
                 </div>
                 <p className="text-xs text-muted-foreground mb-3">Rapport PDF + schéma conceptuel + éditeur intégré</p>
