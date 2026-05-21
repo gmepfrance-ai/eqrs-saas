@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { GmepHeader } from "@/components/gmep-header";
-import { GmepFooter } from "@/components/gmep-footer";
+import { V2Header } from "@/components/v2-header";
+import { V2Footer } from "@/components/v2-footer";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { useTranslation } from "@/lib/i18n";
@@ -73,12 +73,12 @@ export default function DashboardPage() {
 
   if (authLoading || !user) {
     return (
-      <div className="min-h-screen flex flex-col bg-background">
-        <GmepHeader />
+      <div className="v2-page min-h-screen flex flex-col bg-background">
+        <V2Header />
         <div className="flex-1 flex items-center justify-center">
           <Loader2 className="w-6 h-6 animate-spin text-primary" />
         </div>
-        <GmepFooter />
+        <V2Footer />
       </div>
     );
   }
@@ -155,8 +155,8 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <GmepHeader />
+    <div className="v2-page min-h-screen flex flex-col bg-background">
+      <V2Header />
 
       <div className="flex-1 px-4 py-8 max-w-3xl mx-auto w-full">
         {/* Welcome */}
@@ -502,7 +502,7 @@ export default function DashboardPage() {
         )}
       </div>
 
-      <GmepFooter />
+      <V2Footer />
     </div>
   );
 }

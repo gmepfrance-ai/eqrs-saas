@@ -1,408 +1,275 @@
-import { GmepHeader } from "@/components/gmep-header";
-import { GmepFooter } from "@/components/gmep-footer";
-import { Button } from "@/components/ui/button";
-import { useTranslation } from "@/lib/i18n";
-import { DemoCalculator } from "@/components/demo-calculator";
-import {
-  Beaker,
-  Shield,
-  Zap,
-  BarChart3,
-  ChevronRight,
-  Check,
-  Droplets,
-  FlaskConical,
-  Waves,
-} from "lucide-react";
+import { V2Header } from "@/components/v2-header";
+import { V2Footer } from "@/components/v2-footer";
 
-function scrollToSection(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-}
-
+/** Landing page v2 — design marketing GMEP repris du site v2 */
 export default function LandingPage() {
-  const { t } = useTranslation();
-
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <GmepHeader />
+    <div className="v2-page" style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <V2Header />
 
-      {/* Hero */}
-      <section
-        className="relative py-20 sm:py-28 px-4 text-center text-white overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(160deg, #0e2f44 0%, #1a5276 40%, #2471a3 100%)",
-        }}
-      >
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }} />
-        <div className="relative max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-sm mb-6">
-            <Beaker className="w-4 h-4" />
-            <span>{t("landing.hero.badge")}</span>
+      {/* === HERO === */}
+      <section className="v2-hero">
+        <div className="container">
+          <div className="v2-hero-grid">
+            <div>
+              <span className="v2-hero-badge">Conformité EPA · ANSES · Loi sur l'Eau</span>
+              <h1>
+                Trois outils de <span className="accent">modélisation environnementale</span>{" "}
+                professionnelle
+              </h1>
+              <p className="lead">
+                Logiciels SaaS conformes EPA, ANSES et Loi sur l'Eau, pour bureaux d'études
+                environnementaux et hydrogéologues. Calculs en temps réel, dossiers PDF prêts à
+                déposer.
+              </p>
+              <div className="v2-hero-cta">
+                <a
+                  href="#/tarifs"
+                  className="v2-btn v2-btn-primary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById("v2-outils")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                >
+                  Découvrir nos outils
+                </a>
+                <a href="#/register" className="v2-btn v2-btn-outline">
+                  Essai gratuit
+                </a>
+              </div>
+            </div>
+            <div className="v2-hero-mock" aria-hidden="true">
+              <div className="v2-hero-mock-head">
+                <span className="dot" style={{ background: "#ed5d5d" }}></span>
+                <span className="dot" style={{ background: "#f5b94d" }}></span>
+                <span className="dot" style={{ background: "#62c87f" }}></span>
+                <span className="label">gmep · console</span>
+              </div>
+              <div className="v2-hero-mock-row">
+                <span className="l">Substance</span>
+                <span className="v">Trichloroéthylène</span>
+              </div>
+              <div className="v2-hero-mock-row">
+                <span className="l">α (facteur d'atténuation)</span>
+                <span className="v">2,4 × 10⁻⁴</span>
+              </div>
+              <div className="v2-hero-mock-row">
+                <span className="l">Cc(x) à 100 m</span>
+                <span className="v">12,8 µg/L</span>
+              </div>
+              <div className="v2-hero-mock-row">
+                <span className="l">Q Theis corrigé</span>
+                <span className="v">106,22 m³/h</span>
+              </div>
+              <div className="v2-hero-mock-result">
+                <strong>STATUT IOTA</strong>
+                <span>AUTORISATION</span>
+              </div>
+            </div>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4 leading-tight">
-            {t("landing.hero.title1")}
-            <br />
-            <span className="text-[#2ecc71]">{t("landing.hero.title2")}</span>
-          </h1>
-          <p className="text-base sm:text-lg text-white/80 max-w-xl mx-auto mb-8 leading-relaxed">
-            {t("landing.hero.desc")}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button
-              data-testid="button-cta-register"
-              size="lg"
-              className="bg-[#2ecc71] hover:bg-[#27ae60] text-white font-semibold px-8"
-              onClick={() => (window.location.hash = "#/register")}
-            >
-              {t("landing.hero.cta")}
-              <ChevronRight className="w-4 h-4 ml-1" />
-            </Button>
-            <Button
-              data-testid="button-cta-pricing"
-              size="lg"
-              variant="outline"
-              className="border-white/30 text-white hover:bg-white/10"
-              onClick={() => scrollToSection("pricing")}
-            >
-              {t("landing.hero.seePricing")}
-            </Button>
-          </div>
-          <p className="mt-4 text-sm text-white/60">{t("landing.hero.trial")}</p>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-16 sm:py-20 px-4 bg-background">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-xl font-bold text-foreground mb-2">
-              {t("landing.features.title")}
-            </h2>
-            <p className="text-sm text-muted-foreground max-w-lg mx-auto">
-              {t("landing.features.subtitle")}
+      {/* === NOS TROIS LOGICIELS === */}
+      <section className="v2-section" id="v2-outils">
+        <div className="container">
+          <div className="v2-section-head">
+            <span className="v2-section-eyebrow">Catalogue</span>
+            <h2>Nos trois logiciels</h2>
+            <p>
+              Trois moteurs de calcul indépendants, conçus pour les contraintes réelles du terrain.
+              Démos interactives disponibles dans le navigateur, sans installation.
             </p>
           </div>
+          <div className="v2-tools-grid">
+            {/* Carte 1 : EQRS J&E */}
+            <article className="v2-tool-card">
+              <div className="v2-tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <circle cx="9" cy="22" r="3.2" fill="#2563eb" />
+                  <circle cx="22" cy="22" r="3.2" fill="#2563eb" />
+                  <circle cx="16" cy="11" r="3.6" fill="#1a2b4a" />
+                  <path d="M16 14l-5 6M16 14l5 6" stroke="#1a2b4a" strokeWidth="1.6" />
+                  <path
+                    d="M5 6c1 1.5 0 3 1 4M27 6c1 1.5 0 3 1 4M13 5c1 1.5 0 3 1 4"
+                    stroke="#3ddc84"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
+              <h3>EQRS Johnson &amp; Ettinger</h3>
+              <p>
+                Intrusion de vapeurs dans les bâtiments. 74 substances (COV, HAP, métaux). Conforme
+                EPA 2004 / ANSES 2018.
+              </p>
+              <div className="v2-tool-price">À partir de 208 € HT/mois</div>
+              <a
+                href="#/register"
+                className="v2-btn v2-btn-blue"
+                onClick={() => localStorage.setItem("pending_plan", "monthly")}
+              >
+                Découvrir →
+              </a>
+            </article>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <FeatureCard
-              icon={<Beaker className="w-5 h-5" />}
-              title={t("landing.features.substances.title")}
-              description={t("landing.features.substances.desc")}
-            />
-            <FeatureCard
-              icon={<Zap className="w-5 h-5" />}
-              title={t("landing.features.realtime.title")}
-              description={t("landing.features.realtime.desc")}
-            />
-            <FeatureCard
-              icon={<BarChart3 className="w-5 h-5" />}
-              title={t("landing.features.sensitivity.title")}
-              description={t("landing.features.sensitivity.desc")}
-            />
-            <FeatureCard
-              icon={<Shield className="w-5 h-5" />}
-              title={t("landing.features.model.title")}
-              description={t("landing.features.model.desc")}
-            />
+            {/* Carte 2 : Domenico */}
+            <article className="v2-tool-card">
+              <div className="v2-tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <rect x="2" y="6" width="28" height="6" rx="1" fill="#a16207" />
+                  <rect x="2" y="12" width="28" height="6" rx="1" fill="#2563eb" opacity="0.7" />
+                  <rect x="2" y="18" width="28" height="8" rx="1" fill="#1a2b4a" />
+                  <path d="M22 4v22" stroke="#3ddc84" strokeWidth="2" strokeLinecap="round" />
+                  <circle cx="22" cy="20" r="2" fill="#3ddc84" />
+                </svg>
+              </div>
+              <h3>Transfert Sol → Nappe → Captage</h3>
+              <p>
+                Modèle Domenico 1987. 24 polluants (BTEX, HAP, PFAS, métaux). Courbe d'atténuation
+                Cc(x), DAF, gradient hydraulique.
+              </p>
+              <div className="v2-tool-price">1 100 € HT/an</div>
+              <a href="#/subscribe-tsn" className="v2-btn v2-btn-blue">
+                Découvrir →
+              </a>
+            </article>
+
+            {/* Carte 3 : Rabattement (NOUVEAU) */}
+            <article className="v2-tool-card">
+              <span className="v2-badge">NOUVEAU</span>
+              <div className="v2-tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <path d="M3 14h26" stroke="#2563eb" strokeWidth="1.5" strokeDasharray="2 2" />
+                  <path d="M3 20h26" stroke="#2563eb" strokeWidth="1.5" strokeDasharray="2 2" />
+                  <rect x="13" y="3" width="6" height="22" rx="1" fill="#1a2b4a" />
+                  <path
+                    d="M16 14c-2 2-4 5-4 8a4 4 0 008 0c0-3-2-6-4-8z"
+                    fill="#3ddc84"
+                  />
+                  <path
+                    d="M10 26c2-3 5-3 6-2 1-1 4-1 6 2"
+                    stroke="#2563eb"
+                    strokeWidth="1.5"
+                    fill="none"
+                  />
+                </svg>
+              </div>
+              <h3>Rabattement de nappe</h3>
+              <p>
+                Theis + Dupuit-Thiem. Classification IOTA automatique (R.214-1). Carte OpenStreetMap
+                + dossier DDT 27 pages.
+              </p>
+              <div className="v2-tool-price">1 100 € HT/an</div>
+              <a href="#/subscribe-rabattement" className="v2-btn v2-btn-blue">
+                Découvrir →
+              </a>
+            </article>
           </div>
         </div>
       </section>
 
-      {/* Nos deux outils */}
-      <section className="py-16 sm:py-20 px-4 bg-gradient-to-b from-background to-muted/30">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-xl font-bold text-foreground mb-2">Deux modules de modélisation</h2>
-            <p className="text-sm text-muted-foreground max-w-lg mx-auto">
-              Chaque abonnement donne accès aux deux outils professionnels.
+      {/* === POURQUOI GMEP === */}
+      <section className="v2-section bg-soft">
+        <div className="container">
+          <div className="v2-section-head">
+            <span className="v2-section-eyebrow">Pourquoi GMEP</span>
+            <h2>Pensé par et pour les bureaux d'études</h2>
+          </div>
+          <div className="v2-why-grid">
+            <div className="v2-why-item">
+              <div className="v2-why-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 2l9 4v6c0 5-3.5 9-9 10-5.5-1-9-5-9-10V6l9-4z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M8 12l3 3 5-6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <h3>Conformité réglementaire</h3>
+              <p>EPA 2004, ANSES 2018, articles L.214-1 et R.214-1 du Code de l'environnement.</p>
+            </div>
+            <div className="v2-why-item">
+              <div className="v2-why-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
+                  <path
+                    d="M12 7v5l3 2"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
+              <h3>Calculs en temps réel</h3>
+              <p>Saisie → résultat instantané. Étude paramétrique sur 8 variables pour J&amp;E.</p>
+            </div>
+            <div className="v2-why-item">
+              <div className="v2-why-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M6 3h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M15 3v5h5M9 13h6M9 17h4"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
+              <h3>PDF prêts à déposer</h3>
+              <p>Dossiers de 27 pages pour DDT, IEM sites pollués, rapports d'étude.</p>
+            </div>
+            <div className="v2-why-item">
+              <div className="v2-why-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
+                  <path
+                    d="M8 12l3 3 5-6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <h3>Essai gratuit sans CB</h3>
+              <p>8 à 14 jours d'accès complet, aucune carte bancaire requise.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* === BANNIÈRE CTA === */}
+      <section className="v2-section">
+        <div className="container">
+          <div className="v2-cta-band">
+            <h2>Essai gratuit 8 à 14 jours</h2>
+            <p>
+              Testez les démos interactives dans votre navigateur. Aucune installation, aucune carte
+              bancaire.
             </p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {/* Outil 1 — J&E */}
-            <div className="bg-card border border-card-border rounded-xl p-6 shadow-sm flex flex-col">
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white mb-4" style={{background:"#1a5276"}}>
-                <Beaker className="w-5 h-5" />
-              </div>
-              <div className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-100 text-blue-700 rounded-full px-3 py-0.5 text-xs font-medium mb-3 w-fit">
-                Modèle EPA J&E (2004)
-              </div>
-              <h3 className="text-base font-bold text-foreground mb-2">EQRS Johnson & Ettinger</h3>
-              <p className="text-xs text-muted-foreground leading-relaxed mb-4 flex-1">
-                Évaluation Quantitative des Risques Sanitaires liés à l'intrusion de vapeurs dans les bâtiments.
-                74 substances (COV, HAP, métaux), calcul du facteur d'atténuation α, QD, ERI, VLEP. 
-                Conformité réglementaire française et internationale.
-              </p>
-              <ul className="space-y-1.5 text-xs text-foreground">
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>74 substances réglementaires</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Facteur d'atténuation α (J&E)</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>QD, ERI, VLEP en temps réel</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Analyse de sensibilité (8 paramètres)</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Rapport PDF complet</li>
-              </ul>
-            </div>
-            {/* Outil 2 — TSN */}
-            <div className="bg-card border border-card-border rounded-xl p-6 shadow-sm flex flex-col" style={{borderColor:"rgba(46,204,113,0.3)"}}>
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white mb-4" style={{background:"#1e8449"}}>
-                <Droplets className="w-5 h-5" />
-              </div>
-              <div className="inline-flex items-center gap-1.5 bg-green-50 border border-green-100 text-green-700 rounded-full px-3 py-0.5 text-xs font-medium mb-3 w-fit">
-                Modèle Domenico (1987)
-              </div>
-              <h3 className="text-base font-bold text-foreground mb-2">Transfert Sol → Nappe → Captage</h3>
-              <p className="text-xs text-muted-foreground leading-relaxed mb-4 flex-1">
-                Modélisation du transfert de polluants depuis la source de pollution vers la nappe souterraine et le captage d'eau potable.
-                Calcul des concentrations Cc,1 (lixiviat), Cc,2 (nappe) et Cc,3 (captage) selon Domenico.
-              </p>
-              <ul className="space-y-1.5 text-xs text-foreground">
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>24 polluants (COHV, BTEX, HAP, PFAS, Métaux)</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>24 types de sol avec propriétés hydrauliques</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Profil d'atténuation Cc(x) graphique</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>DAF, gradient hydraulique, pluviométrie</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Rapport PDF éditeur de texte intégré</li>
-              </ul>
-            </div>
-            {/* Outil 3 — Rabattement de nappe */}
-            <div className="bg-card border border-card-border rounded-xl p-6 shadow-sm flex flex-col relative" style={{borderColor:"rgba(26,54,93,0.3)"}}>
-              <span className="absolute top-4 right-4 bg-[#2ecc71] text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full">NOUVEAU</span>
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white mb-4" style={{background:"#1a365d"}}>
-                <Waves className="w-5 h-5" />
-              </div>
-              <div className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-100 text-blue-700 rounded-full px-3 py-0.5 text-xs font-medium mb-3 w-fit">
-                Theis + Dupuit-Thiem
-              </div>
-              <h3 className="text-base font-bold text-foreground mb-2">Rabattement de nappe</h3>
-              <p className="text-xs text-muted-foreground leading-relaxed mb-4 flex-1">
-                Modélisation du rabattement de nappe pour ouvrages de pompage et fouilles. Classification IOTA automatique (R.214-1) : Déclaration ou Autorisation. Dossier Loi sur l'Eau prêt à déposer.
-              </p>
-              <ul className="space-y-1.5 text-xs text-foreground">
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Calcul Theis (régime transitoire)</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Dupuit-Thiem (régime permanent)</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Classification IOTA automatique</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>13 substrats × 15 départements</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Dossier PDF 27 pages pour la DDT</li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Demo J&E */}
-          <DemoCalculator />
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section id="pricing" className="py-16 sm:py-20 px-4" style={{ background: "hsl(200 10% 94%)" }}>
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-xl font-bold text-foreground mb-2">{t("landing.pricing.title")}</h2>
-            <p className="text-sm text-muted-foreground">{t("landing.pricing.subtitle")}</p>
-            <div className="mt-4 inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 rounded-full px-4 py-1.5 text-sm font-medium">
-              <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
-              {t("landing.pricing.trialBadge")}
-            </div>
-          </div>
-
-          {/* 3 colonnes — 1 outil par colonne */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
-
-            {/* ── Colonne 1 : EQRS J&E ── */}
-            <div>
-              <div className="flex items-center gap-2 mb-5">
-                <div className="w-8 h-8 rounded-md flex items-center justify-center text-white" style={{background:"#1a5276"}}>
-                  <Beaker className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-foreground">EQRS Johnson & Ettinger</h3>
-                  <p className="text-xs text-muted-foreground">Modèle EPA J&E (2004)</p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4">
-                {/* Mensuel */}
-                <div className="bg-white rounded-lg border border-border p-5 shadow-sm flex flex-col">
-                  <div className="text-xs font-medium text-muted-foreground mb-1">{t("landing.pricing.monthly")}</div>
-                  <div className="flex items-baseline gap-1 mb-1">
-                    <span className="text-2xl font-extrabold text-foreground">245€</span>
-                    <span className="text-xs text-muted-foreground">HT{t("landing.pricing.perMonth")}</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mb-4">{t("landing.pricing.monthlyBilling")}</p>
-                  <ul className="space-y-1.5 mb-5 flex-1 text-xs">
-                    <PricingItem>Accès complet EQRS J&E</PricingItem>
-                    <PricingItem>74 substances réglementaires</PricingItem>
-                    <PricingItem>Licence mono-poste</PricingItem>
-                    <PricingItem>Mises à jour incluses</PricingItem>
-                    <PricingItem>Support par e-mail</PricingItem>
-                  </ul>
-                  <Button className="w-full bg-primary hover:bg-primary/90" onClick={() => { localStorage.setItem("pending_plan", "monthly"); window.location.hash = "#/register"; }}>
-                    {t("landing.pricing.subscribe")}
-                  </Button>
-                </div>
-                {/* Annuel */}
-                <div className="rounded-lg border-2 p-5 shadow-sm relative bg-white" style={{borderColor:"#3b82f6"}}>
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold text-white px-3 py-0.5 rounded-full" style={{background:"#3b82f6"}}>
-                    Économisez 15%
-                  </div>
-                  <div className="text-xs font-medium text-muted-foreground mb-1">{t("landing.pricing.annual")}</div>
-                  <div className="flex items-baseline gap-1 mb-1">
-                    <span className="text-2xl font-extrabold text-foreground">2 499€</span>
-                    <span className="text-xs text-muted-foreground">HT{t("landing.pricing.perYear")}</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mb-4">Soit ~208€ HT/mois. Facturation annuelle.</p>
-                  <ul className="space-y-1.5 mb-5 flex-1 text-xs">
-                    <PricingItem>Accès complet EQRS J&E</PricingItem>
-                    <PricingItem>74 substances réglementaires</PricingItem>
-                    <PricingItem>Licence mono-poste</PricingItem>
-                    <PricingItem>Mises à jour incluses</PricingItem>
-                    <PricingItem>Support prioritaire</PricingItem>
-                  </ul>
-                  <Button className="w-full text-white font-semibold" style={{background:"#3b82f6"}} onClick={() => { localStorage.setItem("pending_plan", "annual"); window.location.hash = "#/register"; }}>
-                    {t("landing.pricing.subscribe")}
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* ── Colonne 2 : Transfert Sol→Nappe ── */}
-            <div>
-              <div className="flex items-center gap-2 mb-5">
-                <div className="w-8 h-8 rounded-md flex items-center justify-center text-white" style={{background:"#1e8449"}}>
-                  <Droplets className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-foreground">Transfert Sol → Nappe → Captage</h3>
-                  <p className="text-xs text-muted-foreground">Modèle Domenico (1987)</p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4">
-                {/* Annuel uniquement */}
-                <div className="rounded-lg border-2 p-5 shadow-sm relative bg-white" style={{borderColor:"#2ecc71"}}>
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold text-white px-3 py-0.5 rounded-full" style={{background:"#2ecc71"}}>
-                    Licence annuelle
-                  </div>
-                  <div className="text-xs font-medium text-muted-foreground mb-1">Annuel</div>
-                  <div className="flex items-baseline gap-1 mb-1">
-                    <span className="text-2xl font-extrabold text-foreground">1 100€</span>
-                    <span className="text-xs text-muted-foreground">HT{t("landing.pricing.perYear")}</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mb-4">Facturation annuelle. Résiliable à l'échéance.</p>
-                  <ul className="space-y-1.5 mb-5 text-xs">
-                    <PricingItem>Transfert Sol→Nappe→Captage complet</PricingItem>
-                    <PricingItem>24 polluants (COHV, BTEX, HAP, PFAS, Métaux)</PricingItem>
-                    <PricingItem>24 types de sol avec propriétés hydrauliques</PricingItem>
-                    <PricingItem>Rapport PDF + éditeur de texte intégré</PricingItem>
-                    <PricingItem>Schéma conceptuel automatique</PricingItem>
-                    <PricingItem>Licence mono-poste + mises à jour</PricingItem>
-                  </ul>
-                  <Button className="w-full text-white font-semibold" style={{background:"#2ecc71"}} onClick={() => { window.location.hash = "#/subscribe-tsn"; }}>
-                    {t("landing.pricing.subscribe")}
-                  </Button>
-                </div>
-                {/* Note pas d'abonnement mensuel */}
-                <div className="bg-green-50 border border-green-100 rounded-lg p-4 text-xs text-green-800">
-                  <strong>Note :</strong> L'outil Transfert Sol→Nappe est disponible uniquement en licence annuelle à 1 100€ HT. Aucun abonnement mensuel pour ce module.
-                </div>
-              </div>
-            </div>
-
-            {/* ── Colonne 3 : Rabattement de nappe ── */}
-            <div>
-              <div className="flex items-center gap-2 mb-5">
-                <div className="w-8 h-8 rounded-md flex items-center justify-center text-white" style={{background:"#1a365d"}}>
-                  <Waves className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-foreground">Rabattement de nappe</h3>
-                  <p className="text-xs text-muted-foreground">Theis + Dupuit-Thiem + IOTA</p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4">
-                {/* Annuel uniquement */}
-                <div className="rounded-lg border-2 p-5 shadow-sm relative bg-white" style={{borderColor:"#1a365d"}}>
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold text-white px-3 py-0.5 rounded-full" style={{background:"#1a365d"}}>
-                    Licence annuelle
-                  </div>
-                  <div className="text-xs font-medium text-muted-foreground mb-1">Annuel</div>
-                  <div className="flex items-baseline gap-1 mb-1">
-                    <span className="text-2xl font-extrabold text-foreground">1 100€</span>
-                    <span className="text-xs text-muted-foreground">HT{t("landing.pricing.perYear")}</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mb-4">Facturation annuelle. Résiliable à l'échéance.</p>
-                  <ul className="space-y-1.5 mb-5 text-xs">
-                    <PricingItem>Modélisation Theis (régime transitoire)</PricingItem>
-                    <PricingItem>Dupuit-Thiem (régime permanent)</PricingItem>
-                    <PricingItem>Classification IOTA automatique R.214-1</PricingItem>
-                    <PricingItem>Cartographie Leaflet + cône de rabattement</PricingItem>
-                    <PricingItem>Dossier Loi sur l'Eau (PDF)</PricingItem>
-                    <PricingItem>Essai gratuit 8 jours</PricingItem>
-                  </ul>
-                  <Button className="w-full text-white font-semibold" style={{background:"#1a365d"}} onClick={() => { window.location.hash = "#/subscribe-rabattement"; }}>
-                    {t("landing.pricing.subscribe")}
-                  </Button>
-                </div>
-                <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 text-xs text-blue-900">
-                  <strong>Note :</strong> L'outil Rabattement de nappe est disponible uniquement en licence annuelle à 1 100€ HT. Essai gratuit 8 jours sans engagement.
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Conditions d'utilisation */}
-          <div className="mt-10 max-w-4xl mx-auto">
-            <div className="bg-white/80 rounded-lg border border-border p-5 text-xs text-muted-foreground leading-relaxed">
-              <h4 className="font-semibold text-foreground text-sm mb-3">{t("landing.conditions.title")}</h4>
-              <ul className="space-y-1.5 list-disc list-inside">
-                <li>{t("landing.conditions.item1")}</li>
-                <li>{t("landing.conditions.item2")}</li>
-                <li>{t("landing.conditions.item3")}</li>
-                <li>{t("landing.conditions.item4")}</li>
-                <li>{t("landing.conditions.item5")}</li>
-                <li>{t("landing.conditions.item6")}</li>
-              </ul>
-              <p className="mt-3 text-[0.65rem] opacity-70">
-                © 2023–2026 SARL G.M.E.P — SIREN 753 097 625 — 9 rue de la Marne, 79400 Saint-Maixent-l'École
-              </p>
-            </div>
+            <a href="#/register" className="v2-btn v2-btn-primary">
+              Créer mon compte
+            </a>
           </div>
         </div>
       </section>
 
-      <GmepFooter />
+      <V2Footer />
     </div>
-  );
-}
-
-function FeatureCard({
-  icon,
-  title,
-  description,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="bg-card border border-card-border rounded-lg p-5 shadow-sm">
-      <div
-        className="w-9 h-9 rounded-md flex items-center justify-center text-white mb-3"
-        style={{ background: "#1a5276" }}
-      >
-        {icon}
-      </div>
-      <h3 className="text-sm font-semibold text-foreground mb-1">{title}</h3>
-      <p className="text-xs text-muted-foreground leading-relaxed">
-        {description}
-      </p>
-    </div>
-  );
-}
-
-function PricingItem({ children }: { children: React.ReactNode }) {
-  return (
-    <li className="flex items-start gap-2 text-xs text-foreground">
-      <Check className="w-4 h-4 text-[#2ecc71] flex-shrink-0 mt-0.5" />
-      <span>{children}</span>
-    </li>
   );
 }

@@ -1,5 +1,5 @@
-import { GmepHeader } from "@/components/gmep-header";
-import { GmepFooter } from "@/components/gmep-footer";
+import { V2Header } from "@/components/v2-header";
+import { V2Footer } from "@/components/v2-footer";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { Check, Waves, ArrowLeft, CreditCard, Loader2 } from "lucide-react";
@@ -70,8 +70,8 @@ export default function SubscribeRabattementPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <GmepHeader />
+    <div className="v2-page min-h-screen flex flex-col bg-background">
+      <V2Header />
       <div className="flex-1 px-4 py-12 max-w-lg mx-auto w-full">
         <button
           onClick={() => (window.location.hash = "#/")}
@@ -161,7 +161,7 @@ export default function SubscribeRabattementPage() {
           <strong>Note :</strong> L'outil Rabattement de nappe est disponible uniquement en licence annuelle. Aucun abonnement mensuel pour ce module.
         </div>
       </div>
-      <GmepFooter />
+      <V2Footer />
     </div>
   );
 }

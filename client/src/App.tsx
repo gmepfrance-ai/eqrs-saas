@@ -18,6 +18,10 @@ import TsnPage from "@/pages/tsn";
 import SubscribeTsnPage from "@/pages/subscribe-tsn";
 import RabattementPage from "@/pages/rabattement";
 import SubscribeRabattementPage from "@/pages/subscribe-rabattement";
+import TarifsPage from "@/pages/tarifs";
+import ContactPage from "@/pages/contact";
+import MentionsLegalesPage from "@/pages/mentions-legales";
+import CgvPage from "@/pages/cgv";
 import NotFound from "@/pages/not-found";
 
 const API_BASE_TRACK = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
@@ -53,6 +57,10 @@ function AppRouter() {
       <Route path="/rabattement" component={RabattementPage} />
       <Route path="/subscribe-rabattement" component={SubscribeRabattementPage} />
       <Route path="/stats" component={StatsPage} />
+      <Route path="/tarifs" component={TarifsPage} />
+      <Route path="/contact" component={ContactPage} />
+      <Route path="/mentions-legales" component={MentionsLegalesPage} />
+      <Route path="/cgv" component={CgvPage} />
       <Route component={NotFound} />
     </Switch>
   );

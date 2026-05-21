@@ -1,17 +1,10 @@
 import { useState } from "react";
-import { GmepHeader } from "@/components/gmep-header";
-import { GmepFooter } from "@/components/gmep-footer";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { V2Header } from "@/components/v2-header";
+import { V2Footer } from "@/components/v2-footer";
 import { useAuth } from "@/lib/auth";
-import { useTranslation } from "@/lib/i18n";
-import { Loader2, Mail, Lock } from "lucide-react";
-import { Link } from "wouter";
 
 export default function LoginPage() {
   const { login } = useAuth();
-  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -21,12 +14,10 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
       await login(email, password);
     } catch (err: any) {
       const msg = err.message || "";
-      // Extract the message part after the status code
       const match = msg.match(/^\d+:\s*(.+)/);
       if (match) {
         try {
@@ -44,107 +35,71 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <GmepHeader />
+    <div className="v2-page" style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <V2Header />
+      <div className="v2-auth-wrap" style={{ flex: 1 }}>
+        <div className="v2-auth-card">
+          <h1>Connexion</h1>
+          <p className="sub">Accédez à votre espace abonné pour utiliser les logiciels GMEP.</p>
 
-      <div className="flex-1 flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-sm">
-          <div className="bg-card border border-card-border rounded-lg p-6 shadow-sm">
-            <div className="text-center mb-6">
-              <h2 className="text-lg font-bold text-foreground" data-testid="text-login-title">
-                {t("login.title")}
-              </h2>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t("login.subtitle")}
-              </p>
+          {error && (
+            <div className="alert" data-testid="text-login-error">
+              {error}
             </div>
+          )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {error && (
-                <div
-                  data-testid="text-login-error"
-                  className="bg-destructive/10 text-destructive text-xs rounded-md p-3 border border-destructive/20"
-                >
-                  {error}
-                </div>
-              )}
+          <form onSubmit={handleSubmit}>
+            <div className="v2-form-field">
+              <label htmlFor="login-email">Adresse email</label>
+              <input
+                type="email"
+                id="login-email"
+                data-testid="input-email"
+                required
+                autoComplete="username"
+                placeholder="prenom.nom@bureau-etudes.fr"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="v2-form-field">
+              <label htmlFor="login-password">Mot de passe</label>
+              <input
+                type="password"
+                id="login-password"
+                data-testid="input-password"
+                required
+                minLength={8}
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <span className="hint">Au moins 8 caractères.</span>
+            </div>
+            <button
+              type="submit"
+              className="v2-btn v2-btn-primary v2-btn-block"
+              data-testid="button-login"
+              disabled={loading}
+            >
+              {loading ? "Connexion…" : "Se connecter"}
+            </button>
+          </form>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-xs font-medium">
-                  {t("login.email")}
-                </Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    data-testid="input-email"
-                    type="email"
-                    placeholder="vous@exemple.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-9 text-sm"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-xs font-medium">
-                  {t("login.password")}
-                </Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    data-testid="input-password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-9 text-sm"
-                    required
-                  />
-                </div>
-              </div>
-
-              <Button
-                data-testid="button-login"
-                type="submit"
-                disabled={loading}
-                className="w-full"
-              >
-                {loading ? (
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                ) : null}
-                {t("login.submit")}
-              </Button>
-            </form>
-
-            <p className="text-center text-xs text-muted-foreground mt-3">
-              <Link
-                href="/forgot-password"
-                data-testid="link-forgot-password"
-                className="text-primary hover:underline"
-              >
-                {t("login.forgotPassword")}
-              </Link>
-            </p>
-
-            <p className="text-center text-xs text-muted-foreground mt-2">
-              {t("login.noAccount")}{" "}
-              <Link
-                href="/register"
-                data-testid="link-to-register"
-                className="text-primary hover:underline font-medium"
-              >
-                {t("login.createAccount")}
-              </Link>
-            </p>
-          </div>
+          <p className="form-foot">
+            <a href="#/forgot-password" data-testid="link-forgot-password">
+              Mot de passe oublié ?
+            </a>
+          </p>
+          <p className="form-foot">
+            Pas encore de compte ?{" "}
+            <a href="#/register" data-testid="link-to-register">
+              Créer un compte
+            </a>
+          </p>
         </div>
       </div>
-
-      <GmepFooter />
+      <V2Footer />
     </div>
   );
 }

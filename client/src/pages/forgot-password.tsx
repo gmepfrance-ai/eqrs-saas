@@ -1,17 +1,10 @@
 import { useState } from "react";
-import { GmepHeader } from "@/components/gmep-header";
-import { GmepFooter } from "@/components/gmep-footer";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useTranslation } from "@/lib/i18n";
-import { Loader2, Mail, Lock, CheckCircle2 } from "lucide-react";
-import { Link } from "wouter";
+import { V2Header } from "@/components/v2-header";
+import { V2Footer } from "@/components/v2-footer";
 
 const API_BASE = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
 
 export default function ForgotPasswordPage() {
-  const { t } = useTranslation();
   const [step, setStep] = useState<"email" | "reset" | "done">("email");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -25,7 +18,6 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
       const res = await fetch(`${API_BASE}/api/auth/forgot-password`, {
         method: "POST",
@@ -40,7 +32,9 @@ export default function ForgotPasswordPage() {
           setCode(data._code);
           setInfo(`Votre code de réinitialisation est : ${data._code}`);
         } else {
-          setInfo("Un code de réinitialisation a été envoyé à votre adresse e-mail. Vérifiez votre boîte de réception (et les spams).");
+          setInfo(
+            "Un code de réinitialisation a été envoyé à votre adresse e-mail. Vérifiez votre boîte de réception (et les spams).",
+          );
         }
         setStep("reset");
       }
@@ -54,7 +48,6 @@ export default function ForgotPasswordPage() {
   async function handleReset(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-
     if (newPassword !== confirmPassword) {
       setError("Les mots de passe ne correspondent pas");
       return;
@@ -63,9 +56,7 @@ export default function ForgotPasswordPage() {
       setError("Le mot de passe doit contenir au moins 8 caractères");
       return;
     }
-
     setLoading(true);
-
     try {
       const res = await fetch(`${API_BASE}/api/auth/reset-password`, {
         method: "POST",
@@ -73,11 +64,8 @@ export default function ForgotPasswordPage() {
         body: JSON.stringify({ email, code, newPassword }),
       });
       const data = await res.json();
-      if (!res.ok) {
-        setError(data.message || "Erreur");
-      } else {
-        setStep("done");
-      }
+      if (!res.ok) setError(data.message || "Erreur");
+      else setStep("done");
     } catch {
       setError("Erreur de connexion au serveur");
     } finally {
@@ -86,180 +74,118 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <GmepHeader />
-
-      <div className="flex-1 flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-sm">
-          <div className="bg-card border border-card-border rounded-lg p-6 shadow-sm">
-            
-            {step === "done" ? (
-              <div className="text-center py-4">
-                <CheckCircle2 className="w-12 h-12 text-[#2ecc71] mx-auto mb-4" />
-                <h2 className="text-lg font-bold text-foreground mb-2">
-                  {t("forgot.doneTitle")}
-                </h2>
-                <p className="text-xs text-muted-foreground mb-6">
-                  {t("forgot.doneDesc")}
-                </p>
-                <Button
-                  className="w-full"
-                  onClick={() => (window.location.hash = "#/login")}
-                >
-                  {t("forgot.signIn")}
-                </Button>
-              </div>
-            ) : step === "reset" ? (
-              <>
-                <div className="text-center mb-6">
-                  <h2 className="text-lg font-bold text-foreground">
-                    {t("forgot.newPasswordTitle")}
-                  </h2>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {t("forgot.newPasswordSubtitle")}
-                  </p>
-                </div>
-
-                <form onSubmit={handleReset} className="space-y-4">
-                  {info && (
-                    <div className="bg-[#2ecc71]/10 text-[#27ae60] text-xs rounded-md p-3 border border-[#2ecc71]/20 font-mono text-center tracking-wider">
-                      {info}
-                    </div>
-                  )}
-                  {error && (
-                    <div className="bg-destructive/10 text-destructive text-xs rounded-md p-3 border border-destructive/20">
-                      {error}
-                    </div>
-                  )}
-
-                  <div className="space-y-1.5">
-                    <Label htmlFor="code" className="text-xs font-medium">
-                      {t("forgot.verificationCode")}
-                    </Label>
-                    <Input
-                      id="code"
-                      data-testid="input-reset-code"
-                      type="text"
-                      placeholder="123456"
-                      value={code}
-                      onChange={(e) => setCode(e.target.value)}
-                      className="text-sm text-center tracking-widest font-mono"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <Label htmlFor="new-password" className="text-xs font-medium">
-                      {t("forgot.newPasswordLabel")}
-                    </Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        id="new-password"
-                        data-testid="input-new-password"
-                        type="password"
-                        placeholder="Min. 8 caractères"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        className="pl-9 text-sm"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <Label htmlFor="confirm-password" className="text-xs font-medium">
-                      {t("forgot.confirmPassword")}
-                    </Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        id="confirm-password"
-                        data-testid="input-confirm-password"
-                        type="password"
-                        placeholder="••••••••"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="pl-9 text-sm"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <Button
-                    data-testid="button-reset-password"
-                    type="submit"
-                    disabled={loading}
-                    className="w-full"
-                  >
-                    {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                    {t("forgot.reset")}
-                  </Button>
-                </form>
-              </>
-            ) : (
-              <>
-                <div className="text-center mb-6">
-                  <h2 className="text-lg font-bold text-foreground">
-                    {t("forgot.title")}
-                  </h2>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {t("forgot.subtitle")}
-                  </p>
-                </div>
-
-                <form onSubmit={handleRequestCode} className="space-y-4">
-                  {error && (
-                    <div className="bg-destructive/10 text-destructive text-xs rounded-md p-3 border border-destructive/20">
-                      {error}
-                    </div>
-                  )}
-
-                  <div className="space-y-1.5">
-                    <Label htmlFor="email" className="text-xs font-medium">
-                      {t("forgot.email")}
-                    </Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        id="email"
-                        data-testid="input-forgot-email"
-                        type="email"
-                        placeholder="vous@exemple.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="pl-9 text-sm"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <Button
-                    data-testid="button-send-code"
-                    type="submit"
-                    disabled={loading}
-                    className="w-full"
-                  >
-                    {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                    {t("forgot.sendCode")}
-                  </Button>
-                </form>
-              </>
-            )}
-
-            <p className="text-center text-xs text-muted-foreground mt-4">
-              <Link
-                href="/login"
-                className="text-primary hover:underline"
+    <div className="v2-page" style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <V2Header />
+      <div className="v2-auth-wrap" style={{ flex: 1 }}>
+        <div className="v2-auth-card">
+          {step === "done" ? (
+            <>
+              <h1>Mot de passe réinitialisé</h1>
+              <p className="sub">Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.</p>
+              <button
+                className="v2-btn v2-btn-primary v2-btn-block"
+                onClick={() => (window.location.hash = "#/login")}
               >
-                {t("forgot.backToLogin")}
-              </Link>
-            </p>
-          </div>
+                Se connecter
+              </button>
+            </>
+          ) : step === "reset" ? (
+            <>
+              <h1>Nouveau mot de passe</h1>
+              <p className="sub">Saisissez le code reçu par email et votre nouveau mot de passe.</p>
+              {info && (
+                <div
+                  className="alert"
+                  style={{ background: "rgba(61,220,132,0.1)", borderColor: "rgba(61,220,132,0.3)", color: "#15803d" }}
+                >
+                  {info}
+                </div>
+              )}
+              {error && <div className="alert">{error}</div>}
+              <form onSubmit={handleReset}>
+                <div className="v2-form-field">
+                  <label htmlFor="code">Code de vérification</label>
+                  <input
+                    type="text"
+                    id="code"
+                    data-testid="input-reset-code"
+                    required
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    placeholder="123456"
+                    style={{ textAlign: "center", letterSpacing: "0.3em", fontFamily: "monospace" }}
+                  />
+                </div>
+                <div className="v2-form-field">
+                  <label htmlFor="new-password">Nouveau mot de passe</label>
+                  <input
+                    type="password"
+                    id="new-password"
+                    data-testid="input-new-password"
+                    required
+                    minLength={8}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
+                  <span className="hint">Au moins 8 caractères.</span>
+                </div>
+                <div className="v2-form-field">
+                  <label htmlFor="confirm-password">Confirmer le mot de passe</label>
+                  <input
+                    type="password"
+                    id="confirm-password"
+                    data-testid="input-confirm-password"
+                    required
+                    minLength={8}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="v2-btn v2-btn-primary v2-btn-block"
+                  data-testid="button-reset-password"
+                  disabled={loading}
+                >
+                  {loading ? "Réinitialisation…" : "Réinitialiser"}
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <h1>Mot de passe oublié</h1>
+              <p className="sub">Saisissez votre email pour recevoir un code de réinitialisation.</p>
+              {error && <div className="alert">{error}</div>}
+              <form onSubmit={handleRequestCode}>
+                <div className="v2-form-field">
+                  <label htmlFor="email">Adresse email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    data-testid="input-forgot-email"
+                    required
+                    placeholder="prenom.nom@bureau-etudes.fr"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="v2-btn v2-btn-primary v2-btn-block"
+                  data-testid="button-send-code"
+                  disabled={loading}
+                >
+                  {loading ? "Envoi…" : "Envoyer le code"}
+                </button>
+              </form>
+            </>
+          )}
+          <p className="form-foot">
+            <a href="#/login">Retour à la connexion</a>
+          </p>
         </div>
       </div>
-
-      <GmepFooter />
+      <V2Footer />
     </div>
   );
 }
