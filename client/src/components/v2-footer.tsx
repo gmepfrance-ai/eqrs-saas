@@ -18,13 +18,13 @@ export function V2Footer() {
             <h6>Nos outils</h6>
             <ul>
               <li>
-                <a href="#/">EQRS Johnson &amp; Ettinger</a>
+                <a href="#/app">EQRS Johnson &amp; Ettinger</a>
               </li>
               <li>
-                <a href="#/">Transfert Sol → Nappe → Captage</a>
+                <a href="#/tsn">Transfert Sol → Nappe → Captage</a>
               </li>
               <li>
-                <a href="#/">Rabattement de nappe IOTA</a>
+                <a href="#/rabattement">Rabattement de nappe IOTA</a>
               </li>
             </ul>
           </div>

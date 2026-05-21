@@ -84,21 +84,22 @@ export function V2Header() {
               </svg>
             </button>
             <div className="v2-nav-dropdown-menu" role="menu">
-              <a href="#/" onClick={() => setDropdownOpen(false)}>
+              <a href="#/app" onClick={() => setDropdownOpen(false)}>
                 EQRS Johnson &amp; Ettinger
                 <span className="v2-nav-mi-desc">Intrusion de vapeurs — EPA 2004</span>
               </a>
-              <a href="#/" onClick={() => setDropdownOpen(false)}>
+              <a href="#/subscribe-tsn" onClick={() => setDropdownOpen(false)}>
                 Transfert Sol → Nappe → Captage
                 <span className="v2-nav-mi-desc">Modèle Domenico 1987</span>
               </a>
-              <a href="#/" onClick={() => setDropdownOpen(false)}>
+              <a href="#/subscribe-rabattement" onClick={() => setDropdownOpen(false)}>
                 Rabattement de nappe
                 <span className="v2-nav-mi-desc">Theis + IOTA — NOUVEAU</span>
               </a>
             </div>
           </div>
           <a href="#/tarifs">Tarifs</a>
+          <a href="#/cgv">CGV</a>
           <a href="#/contact">Contact</a>
         </nav>
 

@@ -105,7 +105,7 @@ export default function LandingPage() {
               </p>
               <div className="v2-tool-price">À partir de 208 € HT/mois</div>
               <a
-                href="#/register"
+                href="#/app"
                 className="v2-btn v2-btn-blue"
                 onClick={() => localStorage.setItem("pending_plan", "monthly")}
               >
