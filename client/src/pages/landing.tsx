@@ -12,6 +12,7 @@ import {
   Check,
   Droplets,
   FlaskConical,
+  Waves,
 } from "lucide-react";
 
 function scrollToSection(id: string) {
@@ -119,7 +120,7 @@ export default function LandingPage() {
               Chaque abonnement donne accès aux deux outils professionnels.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 gap-8 mb-16">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
             {/* Outil 1 — J&E */}
             <div className="bg-card border border-card-border rounded-xl p-6 shadow-sm flex flex-col">
               <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white mb-4" style={{background:"#1a5276"}}>
@@ -163,6 +164,27 @@ export default function LandingPage() {
                 <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Rapport PDF éditeur de texte intégré</li>
               </ul>
             </div>
+            {/* Outil 3 — Rabattement de nappe */}
+            <div className="bg-card border border-card-border rounded-xl p-6 shadow-sm flex flex-col relative" style={{borderColor:"rgba(26,54,93,0.3)"}}>
+              <span className="absolute top-4 right-4 bg-[#2ecc71] text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full">NOUVEAU</span>
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white mb-4" style={{background:"#1a365d"}}>
+                <Waves className="w-5 h-5" />
+              </div>
+              <div className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-100 text-blue-700 rounded-full px-3 py-0.5 text-xs font-medium mb-3 w-fit">
+                Theis + Dupuit-Thiem
+              </div>
+              <h3 className="text-base font-bold text-foreground mb-2">Rabattement de nappe</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed mb-4 flex-1">
+                Modélisation du rabattement de nappe pour ouvrages de pompage et fouilles. Classification IOTA automatique (R.214-1) : Déclaration ou Autorisation. Dossier Loi sur l'Eau prêt à déposer.
+              </p>
+              <ul className="space-y-1.5 text-xs text-foreground">
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Calcul Theis (régime transitoire)</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Dupuit-Thiem (régime permanent)</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Classification IOTA automatique</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>13 substrats × 15 départements</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2ecc71]"/>Dossier PDF 27 pages pour la DDT</li>
+              </ul>
+            </div>
           </div>
 
           {/* Demo J&E */}
@@ -182,8 +204,8 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* 2 colonnes — 1 outil par colonne */}
-          <div className="grid sm:grid-cols-2 gap-10">
+          {/* 3 colonnes — 1 outil par colonne */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
 
             {/* ── Colonne 1 : EQRS J&E ── */}
             <div>
@@ -279,6 +301,47 @@ export default function LandingPage() {
                 {/* Note pas d'abonnement mensuel */}
                 <div className="bg-green-50 border border-green-100 rounded-lg p-4 text-xs text-green-800">
                   <strong>Note :</strong> L'outil Transfert Sol→Nappe est disponible uniquement en licence annuelle à 1 100€ HT. Aucun abonnement mensuel pour ce module.
+                </div>
+              </div>
+            </div>
+
+            {/* ── Colonne 3 : Rabattement de nappe ── */}
+            <div>
+              <div className="flex items-center gap-2 mb-5">
+                <div className="w-8 h-8 rounded-md flex items-center justify-center text-white" style={{background:"#1a365d"}}>
+                  <Waves className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-foreground">Rabattement de nappe</h3>
+                  <p className="text-xs text-muted-foreground">Theis + Dupuit-Thiem + IOTA</p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-4">
+                {/* Annuel uniquement */}
+                <div className="rounded-lg border-2 p-5 shadow-sm relative bg-white" style={{borderColor:"#1a365d"}}>
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold text-white px-3 py-0.5 rounded-full" style={{background:"#1a365d"}}>
+                    Licence annuelle
+                  </div>
+                  <div className="text-xs font-medium text-muted-foreground mb-1">Annuel</div>
+                  <div className="flex items-baseline gap-1 mb-1">
+                    <span className="text-2xl font-extrabold text-foreground">1 100€</span>
+                    <span className="text-xs text-muted-foreground">HT{t("landing.pricing.perYear")}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-4">Facturation annuelle. Résiliable à l'échéance.</p>
+                  <ul className="space-y-1.5 mb-5 text-xs">
+                    <PricingItem>Modélisation Theis (régime transitoire)</PricingItem>
+                    <PricingItem>Dupuit-Thiem (régime permanent)</PricingItem>
+                    <PricingItem>Classification IOTA automatique R.214-1</PricingItem>
+                    <PricingItem>Cartographie Leaflet + cône de rabattement</PricingItem>
+                    <PricingItem>Dossier Loi sur l'Eau (PDF)</PricingItem>
+                    <PricingItem>Essai gratuit 8 jours</PricingItem>
+                  </ul>
+                  <Button className="w-full text-white font-semibold" style={{background:"#1a365d"}} onClick={() => { window.location.hash = "#/subscribe-rabattement"; }}>
+                    {t("landing.pricing.subscribe")}
+                  </Button>
+                </div>
+                <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 text-xs text-blue-900">
+                  <strong>Note :</strong> L'outil Rabattement de nappe est disponible uniquement en licence annuelle à 1 100€ HT. Essai gratuit 8 jours sans engagement.
                 </div>
               </div>
             </div>

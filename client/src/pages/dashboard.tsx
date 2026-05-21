@@ -14,12 +14,13 @@ import {
   Beaker,
   Settings,
   Droplets,
+  Waves,
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useEffect } from "react";
 
 export default function DashboardPage() {
-  const { user, token, subscription, tsnSubscription, refreshUser, loading: authLoading } = useAuth();
+  const { user, token, subscription, tsnSubscription, rabattementSubscription, refreshUser, loading: authLoading } = useAuth();
   const { t } = useTranslation();
   const [, navigate] = useLocation();
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
@@ -52,6 +53,11 @@ export default function DashboardPage() {
           .then(r => r.json())
           .then(() => { window.location.href = `/api/tsn-trial?token=${token}`; })
           .catch(() => { window.location.hash = "#/subscribe-tsn"; });
+      } else if (plan === "rabattement_trial") {
+        fetch(`/api/rabattement-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
+          .then(r => r.json())
+          .then(() => { window.location.href = `/api/rabattement-tool?token=${token}`; })
+          .catch(() => { window.location.hash = "#/subscribe-rabattement"; });
       } else {
         handleCheckout(plan);
       }
@@ -79,6 +85,7 @@ export default function DashboardPage() {
 
   const isActive = subscription?.status === "active" || subscription?.status === "trialing";
   const isTsnActive = tsnSubscription?.status === "active" || tsnSubscription?.status === "trialing";
+  const isRabattementActive = rabattementSubscription?.status === "active" || rabattementSubscription?.status === "trialing";
 
   async function handleCheckout(plan: string) {
     setCheckoutLoading(plan);
@@ -197,6 +204,44 @@ export default function DashboardPage() {
                     onClick={() => (window.location.hash = `#/app?token=${token}`)}>
                     <Beaker className="w-4 h-4 mr-2" />{t("dashboard.accessTool")}
                   </Button>
+                </div>
+              </div>
+            </div>
+            )}
+
+            {/* Outil Rabattement de nappe */}
+            {isRabattementActive && (
+            <div className="bg-card border border-card-border rounded-lg p-6 shadow-sm mt-4">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white flex-shrink-0" style={{ background: "#1a365d" }}>
+                  <Waves className="w-5 h-5" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-foreground mb-1">Rabattement de nappe</h3>
+                  <p className="text-xs text-muted-foreground mb-1">
+                    Theis + Dupuit-Thiem — Classification IOTA automatique
+                  </p>
+                  <p className="text-xs text-muted-foreground mb-4">
+                    {rabattementSubscription?.status === "trialing" ? (
+                      <><span className="text-amber-600 font-semibold">Essai gratuit</span>{" "}
+                      — Essai jusqu'au {rabattementSubscription?.currentPeriodEnd ? new Date(rabattementSubscription.currentPeriodEnd).toLocaleDateString("fr-FR") : ""}</>
+                    ) : (
+                      <>Abonnement actif — 1 100€ HT/an — expire le {rabattementSubscription?.currentPeriodEnd ? new Date(rabattementSubscription.currentPeriodEnd).toLocaleDateString("fr-FR") : ""}</>
+                    )}
+                  </p>
+                  <div className="flex gap-2 flex-wrap">
+                    <Button data-testid="button-access-rabattement" style={{ background: "#1a365d" }}
+                      className="text-white font-semibold hover:opacity-90"
+                      onClick={() => (window.location.hash = `#/rabattement?token=${token}`)}>
+                      <Waves className="w-4 h-4 mr-2" />Accéder au logiciel
+                    </Button>
+                    {rabattementSubscription?.status === "trialing" && (
+                      <Button size="sm" variant="outline" className="text-xs border-[#1a365d] text-[#1a365d]"
+                        onClick={() => (window.location.hash = "#/subscribe-rabattement")}>
+                        S'abonner — 1 100€ HT/an
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -388,6 +433,37 @@ export default function DashboardPage() {
                     style={{background:"#3b82f6"}} disabled={checkoutLoading === "annual"} onClick={() => handleCheckout("annual")}>
                     {checkoutLoading === "annual" ? <Loader2 className="w-3 h-3 animate-spin mr-1"/> : <CreditCard className="w-3 h-3 mr-1"/>}
                     S'abonner
+                  </Button>
+                </div>
+              </div>
+            </div>
+            )}
+
+            {/* ── Rabattement de nappe ── */}
+            {!isRabattementActive && (
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-7 h-7 rounded flex items-center justify-center text-white" style={{background:"#1a365d"}}><Waves className="w-3.5 h-3.5"/></div>
+                <span className="text-sm font-bold text-foreground">Rabattement de nappe</span>
+                <span className="text-[0.6rem] font-semibold text-white px-2 py-0.5 rounded-full" style={{background:"#2ecc71"}}>NOUVEAU</span>
+              </div>
+              <div className="rounded-lg border-2 p-4 shadow-sm relative" style={{borderColor:"#2ecc71", background:"hsl(var(--card))"}}>
+                <div className="absolute -top-2 left-1/2 -translate-x-1/2 text-[0.6rem] font-semibold text-white px-2 py-0.5 rounded-full" style={{background:"#2ecc71"}}>Annuel uniquement</div>
+                <div className="text-xs font-medium text-muted-foreground mb-1">Licence annuelle</div>
+                <div className="flex items-baseline gap-1 mb-1">
+                  <span className="text-xl font-extrabold text-foreground">1 100€</span>
+                  <span className="text-xs text-muted-foreground">HT/an</span>
+                </div>
+                <p className="text-xs text-muted-foreground mb-3">Theis + Dupuit-Thiem + IOTA + dossier DDT 27 pages</p>
+                <div className="flex gap-2">
+                  <Button data-testid="button-checkout-rabattement" className="flex-1 text-white font-semibold" size="sm"
+                    style={{background:"#2ecc71"}} disabled={checkoutLoading === "rabattement_annual"} onClick={() => handleCheckout("rabattement_annual")}>
+                    {checkoutLoading === "rabattement_annual" ? <Loader2 className="w-3 h-3 animate-spin mr-1"/> : <CreditCard className="w-3 h-3 mr-1"/>}
+                    S'abonner
+                  </Button>
+                  <Button size="sm" variant="outline" className="text-xs"
+                    onClick={() => { fetch(`/api/rabattement-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} }).then(() => refreshUser()).then(() => { window.location.hash = `#/rabattement?token=${token}`; }); }}>
+                    Essai 8 jours
                   </Button>
                 </div>
               </div>

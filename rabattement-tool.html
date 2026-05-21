@@ -1,0 +1,4674 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rabattement de nappe — GMEP</title>
+<meta name="description" content="Logiciel professionnel de modélisation du rabattement de nappe — Theis, Dupuit-Thiem, classification IOTA. Démo gratuite 8 jours. 1 100 € HT / an.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+<style>
+  /* Override : la démo utilise .btn-secondary, on définit ici */
+  .btn-secondary {
+    background: #fff;
+    color: var(--navy-800);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--bg-soft); }
+  /* Ajustements pour cohabitation avec le header global */
+  .demo-section .container, #fonctions .container, #tarif .container, #faq .container {
+    max-width: 1200px;
+  }
+</style>
+<style>
+/* ── base.css ── */
+/* GMEP — base.css : reset + design tokens */
+
+:root {
+  /* Couleurs */
+  --navy-900: #0d1b2e;
+  --navy-800: #1a2b4a;
+  --navy-700: #213354;
+  --blue-600: #2563eb;
+  --blue-500: #3b82f6;
+  --green-500: #3ddc84;
+  --green-400: #39e07a;
+  --green-600: #22c55e;
+  --bg-white: #ffffff;
+  --bg-soft: #f5f5f5;
+  --bg-light: #f8fafc;
+  --text-dark: #0d1b2e;
+  --text-mid: #1f2937;
+  --text-soft: #4b5563;
+  --text-mute: #6b7280;
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --danger: #b00020;
+  --warning: #f5b94d;
+
+  /* Typo */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SF Mono', Menlo, monospace;
+
+  /* Espacements */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+  --sp-9: 96px;
+
+  /* Rayons */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 20px;
+
+  /* Ombres */
+  --shadow-sm: 0 1px 2px rgba(13,27,46,0.05);
+  --shadow-md: 0 4px 12px rgba(13,27,46,0.08);
+  --shadow-lg: 0 12px 32px rgba(13,27,46,0.12);
+
+  /* Conteneurs */
+  --container-max: 1200px;
+  --container-narrow: 800px;
+
+  /* Transitions */
+  --t-fast: 0.15s ease;
+  --t-base: 0.25s ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-dark);
+  background: var(--bg-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: var(--blue-600);
+  text-decoration: none;
+  transition: color var(--t-fast);
+}
+a:hover { color: var(--navy-800); }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  color: var(--text-dark);
+  line-height: 1.2;
+  margin: 0 0 var(--sp-4);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+h1 { font-size: clamp(2rem, 4vw + 1rem, 3.25rem); letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.6rem, 2vw + 1rem, 2.25rem); letter-spacing: -0.015em; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.1rem; }
+
+p { margin: 0 0 var(--sp-4); color: var(--text-soft); }
+
+ul, ol { padding-left: 1.25rem; color: var(--text-soft); }
+li { margin-bottom: 0.25rem; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: 1rem;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--sp-5);
+}
+
+.container-narrow {
+  max-width: var(--container-narrow);
+  margin: 0 auto;
+  padding: 0 var(--sp-5);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+/* ── site.css ── */
+/* GMEP — site.css : composants du site */
+
+/* ============ BOUTONS ============ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: var(--r-md);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: transform var(--t-fast), background var(--t-base), box-shadow var(--t-base);
+  cursor: pointer;
+  white-space: nowrap;
+  line-height: 1.2;
+  border: 1.5px solid transparent;
+}
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+  background: var(--green-500);
+  color: var(--navy-900);
+  box-shadow: 0 4px 14px rgba(61,220,132,0.35);
+}
+.btn-primary:hover {
+  background: var(--green-400);
+  color: var(--navy-900);
+  box-shadow: 0 6px 20px rgba(61,220,132,0.45);
+}
+
+.btn-blue {
+  background: var(--blue-600);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+}
+.btn-blue:hover { background: #1d4ed8; color: #fff; }
+
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid #fff;
+  color: #fff;
+}
+.btn-outline:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+.btn-ghost {
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--text-dark);
+}
+.btn-ghost:hover { background: var(--bg-soft); }
+
+.btn-block { width: 100%; }
+
+/* ============ HEADER ============ */
+.site-header {
+  background: var(--navy-800);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  min-height: 72px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.brand:hover { color: #fff; }
+.brand-logo { width: 120px; height: 32px; flex-shrink: 0; }
+.brand-tag {
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.65);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  display: block;
+  margin-top: 2px;
+}
+
+.nav-center {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex: 1;
+  justify-content: center;
+}
+.nav-center a, .nav-center .nav-trigger {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.94rem;
+  padding: 10px 14px;
+  border-radius: var(--r-sm);
+  transition: color var(--t-fast), background var(--t-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+.nav-center a:hover, .nav-center .nav-trigger:hover { color: #fff; background: rgba(255,255,255,0.08); }
+.nav-center a.active { color: var(--green-400); }
+
+.nav-dropdown { position: relative; }
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  background: #fff;
+  border-radius: var(--r-md);
+  min-width: 240px;
+  box-shadow: var(--shadow-lg);
+  padding: 8px;
+  display: none;
+  z-index: 200;
+}
+.nav-dropdown.open .nav-dropdown-menu { display: block; }
+.nav-dropdown-menu a {
+  display: block;
+  color: var(--text-dark);
+  padding: 10px 12px;
+  border-radius: var(--r-sm);
+  font-weight: 500;
+  font-size: 0.94rem;
+}
+.nav-dropdown-menu a:hover { background: var(--bg-soft); color: var(--navy-800); }
+.nav-dropdown-menu .nav-mi-desc {
+  display: block;
+  font-size: 12px;
+  color: var(--text-mute);
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-shrink: 0;
+}
+
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: var(--sp-2);
+}
+.lang-btn {
+  padding: 6px 8px;
+  border-radius: var(--r-sm);
+  font-size: 1.1rem;
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  border: none;
+  cursor: pointer;
+  transition: background var(--t-fast);
+  line-height: 1;
+}
+.lang-btn:hover { background: rgba(255,255,255,0.1); }
+.lang-btn.active { background: rgba(61,220,132,0.18); color: #fff; }
+
+.btn-header-outline {
+  padding: 8px 16px;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  color: #fff;
+  border-radius: var(--r-md);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background var(--t-fast), border var(--t-fast);
+}
+.btn-header-outline:hover { background: rgba(255,255,255,0.12); border-color: #fff; color: #fff; }
+.btn-header-cta {
+  padding: 8px 16px;
+  background: var(--green-500);
+  color: var(--navy-900);
+  border-radius: var(--r-md);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.btn-header-cta:hover { background: var(--green-400); color: var(--navy-900); }
+
+.burger {
+  display: none;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 8px;
+}
+
+@media (max-width: 1024px) {
+  .nav-center, .nav-right { display: none; }
+  .burger { display: inline-flex; }
+  .brand-tag { display: none; }
+  .site-header.menu-open .nav-center,
+  .site-header.menu-open .nav-right {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--navy-800);
+    flex-direction: column;
+    padding: var(--sp-4);
+    gap: var(--sp-2);
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .site-header.menu-open .nav-center { padding-bottom: 0; }
+  .site-header.menu-open .nav-right { padding-top: 0; padding-bottom: var(--sp-5); align-items: stretch; }
+  .site-header.menu-open .nav-center a,
+  .site-header.menu-open .nav-center .nav-trigger { width: 100%; padding: 12px 14px; }
+  .nav-dropdown-menu { position: static; box-shadow: none; background: rgba(255,255,255,0.05); }
+  .nav-dropdown-menu a { color: rgba(255,255,255,0.9); }
+  .nav-dropdown-menu a:hover { background: rgba(255,255,255,0.1); color: #fff; }
+}
+
+/* ============ HERO ============ */
+.hero {
+  background: linear-gradient(135deg, #0d1b2e 0%, #1a2b4a 100%);
+  color: #fff;
+  padding: var(--sp-9) 0 var(--sp-8);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 60%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(61,220,132,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero .container { position: relative; }
+
+.hero h1 {
+  color: #fff;
+  font-size: clamp(2.2rem, 4vw + 1rem, 3.4rem);
+  margin-bottom: var(--sp-4);
+}
+.hero .accent {
+  color: var(--green-400);
+  background: linear-gradient(180deg, transparent 60%, rgba(61,220,132,0.15) 60%);
+  padding: 0 4px;
+}
+.hero p.lead {
+  font-size: 1.15rem;
+  color: rgba(255,255,255,0.85);
+  max-width: 720px;
+  margin-bottom: var(--sp-6);
+}
+.hero-cta {
+  display: flex;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+.hero-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(61,220,132,0.12);
+  border: 1px solid rgba(61,220,132,0.3);
+  color: var(--green-400);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-bottom: var(--sp-4);
+}
+
+/* ============ SECTIONS ============ */
+section { padding: var(--sp-9) 0; }
+section.tight { padding: var(--sp-7) 0; }
+section.bg-soft { background: var(--bg-soft); }
+section.bg-navy {
+  background: var(--navy-800);
+  color: #fff;
+}
+section.bg-navy h2, section.bg-navy h3 { color: #fff; }
+section.bg-navy p { color: rgba(255,255,255,0.85); }
+
+.section-head {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto var(--sp-7);
+}
+.section-eyebrow {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue-600);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--sp-3);
+}
+section.bg-navy .section-eyebrow { color: var(--green-400); }
+
+/* ============ CARTES OUTILS ============ */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--sp-5);
+}
+
+.tool-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--t-base), box-shadow var(--t-base), border-color var(--t-base);
+  position: relative;
+}
+.tool-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--blue-500);
+}
+.tool-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-md);
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--sp-4);
+}
+.tool-icon svg { width: 30px; height: 30px; }
+.tool-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: var(--sp-3);
+}
+.tool-card p {
+  color: var(--text-soft);
+  font-size: 0.96rem;
+  flex: 1;
+  margin-bottom: var(--sp-4);
+}
+.tool-price {
+  font-weight: 700;
+  color: var(--navy-800);
+  margin-bottom: var(--sp-4);
+  font-size: 1.05rem;
+}
+.tool-card .btn { align-self: flex-start; }
+.badge {
+  position: absolute;
+  top: -10px;
+  right: var(--sp-4);
+  background: var(--green-500);
+  color: var(--navy-900);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+.badge-blue { background: var(--blue-600); color: #fff; }
+
+/* ============ POURQUOI GMEP — 4 colonnes ============ */
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--sp-5);
+}
+.why-item {
+  text-align: center;
+  padding: var(--sp-4);
+}
+.why-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-md);
+  background: rgba(61,220,132,0.15);
+  color: var(--green-600);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--sp-3);
+}
+.why-item h3 { font-size: 1.05rem; margin-bottom: 6px; }
+.why-item p { font-size: 0.92rem; margin: 0; }
+
+/* ============ CTA BAND ============ */
+.cta-band {
+  background: linear-gradient(135deg, var(--navy-800) 0%, var(--navy-900) 100%);
+  color: #fff;
+  border-radius: var(--r-xl);
+  padding: var(--sp-7);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-band::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background: radial-gradient(ellipse at top right, rgba(61,220,132,0.18) 0%, transparent 60%);
+}
+.cta-band > * { position: relative; }
+.cta-band h2 { color: #fff; margin-bottom: var(--sp-3); }
+.cta-band p { color: rgba(255,255,255,0.85); margin-bottom: var(--sp-5); }
+
+/* ============ TARIFS ============ */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--sp-5);
+  margin-top: var(--sp-6);
+}
+.price-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform var(--t-base), box-shadow var(--t-base);
+}
+.price-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+.price-card.featured {
+  border-color: var(--green-500);
+  box-shadow: 0 8px 24px rgba(61,220,132,0.18);
+}
+.price-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: var(--sp-2);
+}
+.price-card .sub {
+  font-size: 13px;
+  color: var(--text-mute);
+  margin-bottom: var(--sp-4);
+}
+.price-amount {
+  font-size: 2.3rem;
+  font-weight: 700;
+  color: var(--navy-800);
+  line-height: 1;
+}
+.price-amount .currency { font-size: 1.4rem; margin-right: 4px; color: var(--text-soft); }
+.price-period {
+  font-size: 14px;
+  color: var(--text-mute);
+  margin-bottom: var(--sp-5);
+}
+.price-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--sp-5);
+  flex: 1;
+}
+.price-features li {
+  padding: 6px 0 6px 24px;
+  position: relative;
+  font-size: 14px;
+  color: var(--text-soft);
+}
+.price-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--green-600);
+  font-weight: 700;
+}
+.price-breakdown {
+  background: var(--bg-soft);
+  border-radius: var(--r-sm);
+  padding: var(--sp-3);
+  margin-bottom: var(--sp-4);
+  font-size: 13.5px;
+}
+.pb-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  color: var(--text-soft);
+}
+.pb-row.pb-total {
+  border-top: 1px solid var(--border);
+  padding-top: 6px;
+  margin-top: 6px;
+  font-weight: 700;
+  color: var(--navy-800);
+}
+.country-select {
+  margin-bottom: var(--sp-3);
+}
+.country-select label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-soft);
+  display: block;
+  margin-bottom: 4px;
+}
+.country-select select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: #fff;
+  color: var(--text-dark);
+  font-size: 13.5px;
+}
+
+/* ============ PAGE OUTIL DÉTAILLÉE ============ */
+.outil-hero {
+  background: linear-gradient(135deg, #0d1b2e 0%, #1a2b4a 100%);
+  color: #fff;
+  padding: var(--sp-8) 0;
+}
+.outil-hero h1 { color: #fff; }
+.outil-hero .lead { color: rgba(255,255,255,0.85); }
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--sp-5);
+}
+.feature-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: var(--sp-5);
+}
+.feature-card .feature-ico {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-sm);
+  background: rgba(37,99,235,0.1);
+  color: var(--blue-600);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--sp-3);
+}
+.feature-card h3 { font-size: 1.05rem; margin-bottom: 6px; }
+.feature-card p { font-size: 14.5px; margin: 0; }
+
+.substances-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  background: #fff;
+}
+.substances-table th, .substances-table td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+.substances-table th {
+  background: var(--bg-soft);
+  font-weight: 600;
+  color: var(--navy-800);
+}
+.substances-table tr:last-child td { border-bottom: none; }
+
+.compliance-list {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: var(--sp-5);
+}
+.compliance-list h3 { margin-top: 0; }
+
+.demo-placeholder {
+  background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+  border: 2px dashed var(--blue-500);
+  border-radius: var(--r-lg);
+  padding: var(--sp-7);
+  text-align: center;
+}
+.demo-placeholder h3 { color: var(--navy-800); }
+
+/* ============ FOOTER ============ */
+.site-footer {
+  background: var(--navy-800);
+  color: rgba(255,255,255,0.8);
+  padding: var(--sp-8) 0 var(--sp-5);
+  font-size: 14px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.4fr;
+  gap: var(--sp-6);
+  margin-bottom: var(--sp-6);
+}
+.site-footer .brand-logo path,
+.site-footer .brand-logo text { fill: #fff !important; }
+.footer-col h6 {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--sp-3);
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li {
+  margin-bottom: 6px;
+  color: rgba(255,255,255,0.7);
+}
+.footer-col a {
+  color: rgba(255,255,255,0.7);
+  transition: color var(--t-fast);
+}
+.footer-col a:hover { color: var(--green-400); }
+.footer-company { color: rgba(255,255,255,0.7); line-height: 1.7; }
+.footer-company strong { color: #fff; display: block; margin-bottom: 4px; font-size: 15px; }
+.footer-legal {
+  border-top: 1px solid rgba(255,255,255,0.12);
+  padding-top: var(--sp-4);
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.7;
+}
+.footer-legal p { margin: 0 0 6px; color: inherit; }
+.footer-legal .credit { color: rgba(255,255,255,0.5); font-style: italic; }
+@media (max-width: 900px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .footer-grid { grid-template-columns: 1fr; }
+}
+
+/* ============ TOAST ============ */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--navy-800);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity var(--t-base), transform var(--t-base);
+  pointer-events: none;
+}
+.toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-8px);
+}
+
+/* ============ AUTH ============ */
+.auth-wrap {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-7) var(--sp-4);
+  background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+}
+.auth-card {
+  background: #fff;
+  border-radius: var(--r-lg);
+  padding: var(--sp-7);
+  width: 100%;
+  max-width: 440px;
+  box-shadow: var(--shadow-lg);
+}
+.auth-card h1 {
+  font-size: 1.6rem;
+  margin-bottom: var(--sp-2);
+}
+.auth-card .sub {
+  color: var(--text-soft);
+  margin-bottom: var(--sp-5);
+  font-size: 14.5px;
+}
+.form-field {
+  margin-bottom: var(--sp-4);
+}
+.form-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+.form-field input,
+.form-field textarea,
+.form-field select {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  font-size: 0.95rem;
+  background: #fff;
+  color: var(--text-dark);
+  transition: border var(--t-fast), box-shadow var(--t-fast);
+}
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+  outline: none;
+  border-color: var(--blue-600);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+.form-field .hint {
+  font-size: 12.5px;
+  color: var(--text-mute);
+  margin-top: 4px;
+}
+.auth-card .form-foot {
+  font-size: 14px;
+  color: var(--text-soft);
+  margin-top: var(--sp-4);
+  text-align: center;
+}
+.auth-card .form-foot a {
+  color: var(--blue-600);
+  font-weight: 600;
+}
+.auth-card .alert {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #9a3412;
+  padding: 10px 12px;
+  border-radius: var(--r-sm);
+  font-size: 13.5px;
+  margin-bottom: var(--sp-4);
+}
+
+/* ============ PAGES JURIDIQUES (mentions, CGV) ============ */
+.legal-page {
+  background: #fff;
+  padding: var(--sp-8) 0;
+}
+.legal-page article {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.legal-page h1 {
+  margin-bottom: var(--sp-3);
+}
+.legal-page h2 {
+  margin-top: var(--sp-6);
+  margin-bottom: var(--sp-3);
+  font-size: 1.35rem;
+  color: var(--navy-800);
+}
+.legal-page h3 {
+  margin-top: var(--sp-5);
+  font-size: 1.1rem;
+  color: var(--navy-800);
+}
+.legal-page p, .legal-page li {
+  font-size: 0.97rem;
+  line-height: 1.7;
+  color: var(--text-mid);
+}
+.legal-page .updated {
+  color: var(--text-mute);
+  font-size: 13.5px;
+  margin-bottom: var(--sp-5);
+}
+
+/* ============ CONTACT ============ */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--sp-7);
+}
+@media (max-width: 900px) {
+  .contact-grid { grid-template-columns: 1fr; }
+}
+.contact-info {
+  background: var(--bg-soft);
+  padding: var(--sp-6);
+  border-radius: var(--r-lg);
+}
+.contact-info h3 { margin-top: 0; }
+.contact-info dt {
+  font-weight: 600;
+  color: var(--navy-800);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: var(--sp-3);
+}
+.contact-info dd {
+  margin: 4px 0 0;
+  color: var(--text-soft);
+}
+.contact-map {
+  margin-top: var(--sp-4);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  aspect-ratio: 16/10;
+}
+.contact-map iframe { width: 100%; height: 100%; border: 0; }
+
+/* ============ DIVERS ============ */
+.text-center { text-align: center; }
+.mt-6 { margin-top: var(--sp-6); }
+.mb-6 { margin-bottom: var(--sp-6); }
+
+/* Hero illustration (mock card) */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: var(--sp-6);
+  align-items: center;
+}
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr; }
+}
+.hero-mock {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+}
+.hero-mock-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: var(--sp-4);
+}
+.hero-mock-head .dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.hero-mock-head .label {
+  margin-left: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+}
+.hero-mock-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(255,255,255,0.12);
+  font-size: 13.5px;
+}
+.hero-mock-row:last-child { border-bottom: none; }
+.hero-mock-row .l { color: rgba(255,255,255,0.65); }
+.hero-mock-row .v { color: var(--green-400); font-family: var(--font-mono); }
+.hero-mock-result {
+  margin-top: var(--sp-3);
+  padding: var(--sp-3);
+  background: rgba(61,220,132,0.12);
+  border: 1px solid rgba(61,220,132,0.3);
+  border-radius: var(--r-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+.hero-mock-result strong { color: #fff; font-size: 14px; }
+.hero-mock-result span { color: var(--green-400); }
+
+/* ── rabattement/styles.css ── */
+/* ════════════════════════════════════════════════════════════
+   GMEP — Logiciel Rabattement de Nappe
+   Charte alignée sur gmep-france.eu
+   ════════════════════════════════════════════════════════════ */
+
+:root {
+  --primary: #2a7ab5;
+  --primary-dark: #1a5276;
+  --primary-light: #eaf3fa;
+  --accent: #2ecc71;
+  --accent-dark: #1e8449;
+  --accent-light: #e8f8ef;
+  --bg: #ffffff;
+  --bg-soft: #f5f5f0;
+  --text: #1a1f2b;
+  --text-soft: #4a5566;
+  --text-mute: #6b6b66;
+  --border: #e5e7eb;
+  --border-strong: #cdd5df;
+  --success: #27ae60;
+  --danger: #dc2626;
+  --warning: #d97706;
+  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Consolas', 'Courier New', monospace;
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 2px rgba(20,30,50,.06), 0 1px 3px rgba(20,30,50,.04);
+  --shadow: 0 4px 12px rgba(20,30,50,.08), 0 2px 4px rgba(20,30,50,.04);
+  --shadow-lg: 0 12px 32px rgba(20,30,50,.10), 0 4px 8px rgba(20,30,50,.06);
+  --maxw: 1180px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.container { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+/* ─── Header / Footer : gérés par le site global (site.css) — règles neutralisées ─── */
+
+/* ─── Hero ─── */
+.hero {
+  background: linear-gradient(135deg, #f8fbfd 0%, #eaf3fa 100%);
+  padding: 80px 0 64px;
+  border-bottom: 1px solid var(--border);
+}
+.hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 60px; align-items: center; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent-light); color: var(--accent-dark);
+  padding: 6px 14px; border-radius: 999px;
+  font-size: 13px; font-weight: 600;
+  margin-bottom: 20px; border: 1px solid #c8ecd5;
+}
+.hero h1 {
+  font-size: 44px; line-height: 1.15; font-weight: 800;
+  color: var(--primary-dark); letter-spacing: -.02em; margin-bottom: 20px;
+}
+.hero h1 .accent { color: var(--accent-dark); }
+.hero p.lead { font-size: 19px; color: var(--text-soft); margin-bottom: 32px; }
+.hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 24px; border-radius: var(--radius-sm);
+  font-weight: 600; font-size: 15px; font-family: inherit;
+  cursor: pointer; border: 1px solid transparent;
+  transition: transform .12s, box-shadow .12s, background .15s;
+  text-decoration: none;
+}
+.btn:hover { transform: translateY(-1px); text-decoration: none; box-shadow: var(--shadow); }
+.btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.btn-primary { background: var(--accent-dark); color: #fff; }
+.btn-primary:hover { background: var(--accent); color: #fff; }
+.btn-secondary { background: #fff; color: var(--primary-dark); border-color: var(--border-strong); }
+.btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+.btn-block { width: 100%; justify-content: center; padding: 16px; font-size: 16px; }
+
+.hero-visual {
+  background: #fff; border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg); overflow: hidden; border: 1px solid var(--border);
+}
+.hero-visual-header {
+  background: #f8f9fb; padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 12px; color: var(--text-mute);
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot.red { background: #ff6058; } .dot.yel { background: #febc2e; } .dot.grn { background: #28c840; }
+.hero-visual-body { padding: 24px; }
+.mini-row {
+  display: flex; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px dashed var(--border); font-size: 14px;
+}
+.mini-row:last-child { border-bottom: none; }
+.mini-label { color: var(--text-soft); }
+.mini-val { font-family: var(--font-mono); font-weight: 600; color: var(--primary-dark); }
+.mini-val.calc { color: var(--accent-dark); }
+.hero-result {
+  margin-top: 16px; background: var(--accent-light);
+  border: 1px solid #c8ecd5; border-radius: var(--radius-sm);
+  padding: 14px 16px; font-size: 14px; color: var(--accent-dark);
+  font-weight: 600; display: flex; align-items: center; gap: 10px;
+}
+
+/* ─── Sections ─── */
+section { padding: 80px 0; }
+section.alt { background: var(--bg-soft); }
+.section-head { text-align: center; margin-bottom: 56px; max-width: 720px; margin-left: auto; margin-right: auto; }
+.section-eyebrow {
+  text-transform: uppercase; letter-spacing: .15em;
+  font-size: 12px; font-weight: 700; color: var(--accent-dark); margin-bottom: 12px;
+}
+.section-head h2 {
+  font-size: 34px; line-height: 1.2; font-weight: 800;
+  color: var(--primary-dark); letter-spacing: -.015em; margin-bottom: 16px;
+}
+.section-head p { font-size: 17px; color: var(--text-soft); }
+
+/* ─── Features ─── */
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.feature-card {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px;
+  transition: transform .15s, box-shadow .15s, border-color .15s;
+}
+.feature-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--accent); }
+.feature-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: var(--primary-light); color: var(--primary);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 18px;
+}
+.feature-card h3 { font-size: 17px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; }
+.feature-card p { font-size: 14.5px; color: var(--text-soft); }
+
+/* ─── Démo interactive ─── */
+.demo-banner {
+  background: linear-gradient(135deg, var(--accent-light) 0%, #d1f2e0 100%);
+  border-bottom: 1px solid #c8ecd5;
+  padding: 14px 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--accent-dark);
+  font-weight: 500;
+}
+.demo-banner strong { color: var(--primary-dark); }
+.demo-banner.warn { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-bottom-color: #fcd34d; color: #92400e; }
+.demo-banner.expired { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-bottom-color: #fca5a5; color: var(--danger); }
+
+.demo-section { padding: 60px 0; background: var(--bg-soft); }
+
+.demo-layout {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: 32px;
+}
+
+.demo-panel {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.demo-panel-head {
+  padding: 18px 24px;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+  color: #fff;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.demo-panel-head h3 {
+  font-size: 16px; font-weight: 700;
+  display: flex; align-items: center; gap: 10px;
+}
+.demo-badge {
+  background: rgba(255,255,255,.18);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.demo-panel-body { padding: 24px; }
+
+.demo-tabs { display: flex; gap: 4px; padding: 14px 24px 0; background: #f8f9fb; border-bottom: 1px solid var(--border); }
+.demo-tab {
+  padding: 10px 14px; font-size: 13px; font-weight: 600;
+  color: var(--text-mute); cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+}
+.demo-tab.active { color: var(--primary-dark); border-bottom-color: var(--accent-dark); }
+.demo-tab:hover { color: var(--primary); }
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.field-grp { margin-bottom: 18px; }
+.field-grp label {
+  display: block; font-size: 12.5px; font-weight: 600;
+  color: var(--primary-dark); margin-bottom: 5px;
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.field-grp .hint { display: block; font-size: 12px; color: var(--text-mute); margin-top: 4px; font-weight: 400; text-transform: none; letter-spacing: 0; }
+.field-grp input, .field-grp select, .field-grp textarea {
+  width: 100%; padding: 10px 13px;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  font-size: 14.5px; font-family: inherit; color: var(--text);
+  background: #fff; transition: border-color .15s, box-shadow .15s;
+}
+.field-grp input:focus, .field-grp select:focus {
+  outline: none; border-color: var(--accent-dark);
+  box-shadow: 0 0 0 3px rgba(46,204,113,.15);
+}
+.field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+.section-label {
+  font-size: 12.5px; font-weight: 700; color: var(--accent-dark);
+  text-transform: uppercase; letter-spacing: .12em;
+  margin: 22px 0 14px; padding-bottom: 6px;
+  border-bottom: 2px solid var(--accent-light);
+}
+.section-label:first-child { margin-top: 0; }
+
+/* Résultats */
+.results-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 14px; margin-bottom: 16px;
+}
+.results-table td {
+  padding: 9px 12px; border-bottom: 1px solid var(--border);
+}
+.results-table td:first-child { color: var(--text-soft); }
+.results-table td:last-child {
+  font-family: var(--font-mono); font-weight: 600;
+  color: var(--primary-dark); text-align: right;
+}
+.results-table tr.highlight td:last-child { color: var(--accent-dark); font-size: 15px; }
+.results-table tr.section-header td {
+  background: var(--bg-soft); font-weight: 700; color: var(--primary-dark);
+  text-transform: uppercase; font-size: 11.5px; letter-spacing: .08em;
+  padding: 8px 12px;
+}
+
+.iota-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px; border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 700;
+  margin: 16px 0;
+}
+.iota-badge.ok { background: var(--accent-light); color: var(--accent-dark); border: 1px solid #c8ecd5; }
+.iota-badge.declaration { background: #dbeafe; color: var(--primary-dark); border: 1px solid #93c5fd; }
+.iota-badge.autorisation { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+.iota-badge.hors { background: #f1f5f9; color: var(--text-soft); border: 1px solid var(--border-strong); }
+
+/* Carte */
+.map-container {
+  width: 100%; height: 320px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  background: #f1f5f9;
+}
+#leaflet-map { width: 100%; height: 100%; }
+
+/* Tableau IOTA dans résultats */
+.iota-table {
+  width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 14px;
+}
+.iota-table th, .iota-table td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+.iota-table th { background: var(--bg-soft); font-size: 11px; text-transform: uppercase; color: var(--text-soft); font-weight: 600; letter-spacing: .05em; }
+.iota-table code { font-family: var(--font-mono); background: var(--bg-soft); padding: 2px 5px; border-radius: 3px; font-size: 12px; color: var(--primary-dark); }
+.iota-table .st-ok { color: var(--text-mute); font-weight: 500; }
+.iota-table .st-declar { color: var(--primary); font-weight: 700; }
+.iota-table .st-autor { color: var(--warning); font-weight: 700; }
+.iota-table .st-warn { color: var(--warning); font-weight: 700; }
+
+.demo-actions {
+  display: flex; gap: 12px; margin-top: 24px; padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.demo-actions .btn { flex: 1; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(15,25,40,.6);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: none;
+  align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: #fff; border-radius: var(--radius-lg);
+  max-width: 480px; width: 100%;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  animation: modalIn .25s ease-out;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(20px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.modal-head { padding: 22px 26px; border-bottom: 1px solid var(--border); }
+.modal-head h3 { font-size: 19px; color: var(--primary-dark); font-weight: 700; margin-bottom: 6px; }
+.modal-head p { font-size: 14px; color: var(--text-soft); }
+.modal-body { padding: 22px 26px; }
+.modal-foot {
+  padding: 18px 26px;
+  background: var(--bg-soft);
+  display: flex; gap: 12px;
+  justify-content: flex-end;
+  border-top: 1px solid var(--border);
+}
+.modal-foot .btn { padding: 11px 18px; font-size: 14px; }
+
+.lock-card {
+  text-align: center;
+  background: #fff;
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 48px 32px;
+}
+.lock-icon {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: #fef3c7; color: #d97706;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 18px;
+}
+.lock-card h4 { font-size: 20px; color: var(--primary-dark); margin-bottom: 8px; font-weight: 700; }
+.lock-card p { color: var(--text-soft); font-size: 15px; max-width: 380px; margin: 0 auto 20px; }
+.lock-card .lock-sub { font-size: 12px; color: var(--text-muted, #888); margin-top: 14px; margin-bottom: 0; }
+
+/* ─── Pricing ─── */
+.pricing-wrap { max-width: 520px; margin: 0 auto; }
+.price-card {
+  background: #fff;
+  border: 2px solid var(--accent-dark);
+  border-radius: var(--radius-lg);
+  padding: 40px 36px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  position: relative;
+}
+.price-tag {
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  background: var(--accent-dark); color: #fff;
+  padding: 4px 16px; border-radius: 999px;
+  font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .1em;
+}
+.price-title { font-size: 22px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; }
+.price-sub { color: var(--text-soft); font-size: 14px; margin-bottom: 28px; }
+.price-amount {
+  font-size: 56px; font-weight: 800; color: var(--primary-dark);
+  letter-spacing: -.02em; line-height: 1;
+}
+.price-amount .currency { font-size: 28px; vertical-align: top; margin-right: 4px; }
+.price-unit { color: var(--text-soft); font-size: 15px; margin-bottom: 8px; }
+.price-vat { font-size: 12px; color: var(--text-mute); margin-bottom: 28px; }
+.price-features {
+  list-style: none; text-align: left;
+  margin: 24px 0 28px; padding: 24px 0 0;
+  border-top: 1px solid var(--border);
+}
+.price-features li {
+  padding: 8px 0; font-size: 14.5px; color: var(--text);
+  display: flex; align-items: center; gap: 10px;
+}
+.price-features li::before { content: "✓"; color: var(--accent-dark); font-weight: 700; font-size: 16px; }
+
+/* ─── FAQ ─── */
+.faq-list { max-width: 820px; margin: 0 auto; }
+details.faq {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 12px; overflow: hidden;
+  transition: border-color .15s;
+}
+details.faq[open] { border-color: var(--accent); }
+details.faq summary {
+  padding: 18px 24px; cursor: pointer;
+  font-weight: 600; color: var(--primary-dark);
+  list-style: none; display: flex; justify-content: space-between; align-items: center;
+  font-size: 15.5px;
+}
+details.faq summary::-webkit-details-marker { display: none; }
+details.faq summary::after { content: "+"; font-size: 22px; color: var(--accent-dark); }
+details.faq[open] summary::after { content: "−"; }
+details.faq .faq-body { padding: 0 24px 22px; color: var(--text-soft); font-size: 14.5px; line-height: 1.65; }
+
+/* ─── Footer : géré par site.css global ─── */
+
+/* ─── Responsive ─── */
+@media (max-width: 920px) {
+  .hero { padding: 56px 0 48px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .hero h1 { font-size: 34px; }
+  section { padding: 56px 0; }
+  .section-head h2 { font-size: 26px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .demo-layout { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+}
+@media (max-width: 520px) {
+  .field-row-2, .field-row-3 { grid-template-columns: 1fr; }
+  .demo-actions { flex-direction: column; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 28px; }
+  .price-amount { font-size: 44px; }
+}
+
+/* ─── Compléments pour démo interactive (ajouts) ─── */
+.quota-banner {
+  margin: 0 0 18px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  border: 1px solid var(--border);
+  background: #f5f9ff;
+  color: var(--text);
+}
+.quota-banner.ok { border-color: rgba(46, 204, 113, .35); background: rgba(46, 204, 113, .08); }
+.quota-banner.expired { border-color: rgba(220, 53, 69, .35); background: rgba(220, 53, 69, .08); color: #842029; }
+.quota-banner a { color: var(--accent-dark); font-weight: 700; }
+
+.demo-tab {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 16px; border-radius: 8px 8px 0 0;
+  font-size: 13.5px; font-weight: 600; color: var(--text-soft);
+  background: transparent; border: none; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all .15s ease;
+}
+.demo-tab:hover { color: var(--primary-dark); }
+.demo-tab.active { color: var(--primary-dark); background: #fff; border-bottom: 2px solid var(--primary); }
+
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.result-grid .card {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px 18px;
+}
+.result-grid .card h4 {
+  font-size: 13px; font-weight: 700; color: var(--primary-dark);
+  text-transform: uppercase; letter-spacing: .04em; margin-bottom: 12px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.result-grid .iota-card { grid-column: 1 / -1; }
+.result-grid .iota-card.iota-hors h4 { color: var(--primary-dark); }
+.result-grid .iota-card.iota-declaration h4 { color: #c97b00; }
+.result-grid .iota-card.iota-autorisation h4 { color: #b00020; }
+
+.iota-status {
+  display: inline-block; padding: 8px 14px; border-radius: 8px;
+  font-weight: 700; font-size: 14px; margin-bottom: 14px;
+  background: var(--bg-soft); color: var(--primary-dark);
+}
+.iota-card.iota-declaration .iota-status { background: #fff3cd; color: #946100; }
+.iota-card.iota-autorisation .iota-status { background: #ffcdd2; color: #b00020; }
+
+.iota-pill {
+  display: inline-block; padding: 3px 10px; border-radius: 12px;
+  font-size: 12px; font-weight: 600;
+}
+.iota-pill.st-ok { background: rgba(46, 204, 113, .15); color: var(--accent-dark); }
+.iota-pill.st-warn { background: #ffe0b2; color: #8c4d00; }
+.iota-pill.st-declar { background: #fff3cd; color: #946100; }
+.iota-pill.st-autor { background: #ffcdd2; color: #b00020; }
+
+table.kv { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+table.kv td { padding: 6px 4px; border-bottom: 1px solid var(--border); }
+table.kv td:first-child { color: var(--text-soft); width: 55%; }
+table.kv td:last-child { text-align: right; font-family: var(--font-mono); font-weight: 600; color: var(--primary-dark); }
+
+.empty { padding: 60px 20px; text-align: center; color: var(--text-soft); background: var(--bg-soft); border-radius: 10px; }
+.map-legend {
+  margin-top: 12px; padding: 10px 14px; background: var(--bg-soft); border-radius: 8px;
+  display: flex; gap: 22px; flex-wrap: wrap; font-size: 13px;
+}
+.map-legend b { color: var(--primary-dark); margin-right: 4px; }
+
+#lock-overlay {
+  position: fixed; inset: 0; z-index: 9998;
+  background: rgba(15, 30, 50, .65); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center;
+  padding: 24px;
+}
+#lock-overlay.open { display: flex; }
+
+@media (max-width: 768px) {
+  .result-grid { grid-template-columns: 1fr; }
+  .map-legend { flex-direction: column; gap: 6px; }
+}
+
+/* ─── FAQ collapsibles ─── */
+.faq-item {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  padding: 0;
+  overflow: hidden;
+}
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 18px 22px;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--primary-dark);
+  display: flex; justify-content: space-between; align-items: center;
+  position: relative;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+  content: "+";
+  font-size: 22px; line-height: 1; color: var(--primary);
+  margin-left: 12px; flex-shrink: 0;
+  transition: transform .2s ease;
+}
+.faq-item[open] summary::after { content: "−"; }
+.faq-item p {
+  padding: 0 22px 18px;
+  font-size: 14.5px; line-height: 1.6;
+  color: var(--text);
+}
+
+.nav-cta { padding: 8px 16px !important; font-size: 13px !important; }
+.cta-li { list-style: none; }
+
+/* ─── Pricing : sélecteur pays + détail TVA ─── */
+.country-select {
+  display: flex; align-items: center; gap: 12px;
+  background: #f5f9ff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 0 0 22px;
+  font-size: 13px;
+}
+.country-select label {
+  font-weight: 600; color: var(--primary-dark);
+  white-space: nowrap;
+  text-transform: uppercase; font-size: 11px; letter-spacing: .05em;
+}
+.country-select select {
+  flex: 1;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--text);
+  cursor: pointer;
+}
+.country-select select:focus { outline: 2px solid var(--primary); outline-offset: 1px; }
+
+.price-breakdown {
+  margin: 18px 0 6px;
+  padding: 14px 20px;
+  background: var(--bg-soft);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 14px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.pb-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 12px;
+  padding: 5px 0;
+  color: var(--text-soft);
+}
+.pb-row > span:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pb-row .pb-val {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--primary-dark);
+  white-space: nowrap;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.pb-total {
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+  padding-top: 10px;
+  color: var(--primary-dark);
+  font-weight: 700;
+  font-size: 15px;
+}
+.pb-total .pb-val { color: var(--accent-dark); font-size: 16px; }
+
+</style>
+</head>
+<body>
+
+
+
+
+<!-- ╭───────── HERO ─────────╮ -->
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge">Conforme R.214-1 — Loi sur l'Eau</span>
+        <h1>Modélisation rabattement de <span class="accent">nappe</span> en quelques clics</h1>
+        <p class="lead">
+          Calculs hydrauliques selon Theis et Dupuit-Thiem, classification IOTA automatique,
+          génération de dossier réglementaire prêt pour la DDT. Conçu par et pour les bureaux
+          d'études hydrogéologie.
+        </p>
+        <div class="hero-cta">
+          <a href="#demo" class="btn btn-primary">Tester la démo — 8 jours gratuits</a>
+          <a href="#tarif" class="btn btn-outline">Voir le tarif</a>
+        </div>
+        <p style="margin-top:16px;font-size:13px;color:rgba(255,255,255,0.65);">
+          Aucune carte bancaire requise pour la démo. Email demandé pour activer l'essai.
+        </p>
+      </div>
+
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">rabattement · gmep</span>
+        </div>
+        <div class="hero-mock-row"><span class="l">Substrat</span><span class="v">→ à sélectionner</span></div>
+        <div class="hero-mock-row"><span class="l">Rabattement s</span><span class="v">→ votre cote</span></div>
+        <div class="hero-mock-row"><span class="l">Q Theis corrigé</span><span class="v">→ calcul auto</span></div>
+        <div class="hero-mock-row"><span class="l">Volume annuel</span><span class="v">→ calcul auto</span></div>
+        <div class="hero-mock-result"><strong>STATUT IOTA</strong><span>HORS / DÉCLA / AUTO</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ╭───────── FONCTIONS ─────────╮ -->
+<section id="fonctions">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Fonctions clés</span>
+      <h2>Tout ce qu'il faut pour un dossier Loi sur l'Eau</h2>
+      <p>Du paramétrage hydrogéologique à l'export PDF, en passant par la classification IOTA — un seul outil, conçu pour les contraintes réelles du terrain.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M12 2C8 8 6 12 6 15a6 6 0 0012 0c0-3-2-7-6-13z" fill="#2563eb"/></svg>
+        </div>
+        <h3>Calculs Theis + Dupuit-Thiem</h3>
+        <p>Fonction de puits W(u) en série de Taylor, régime transitoire et permanent, corrections η et f_K.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M3 4l6-2 6 2 6-2v18l-6 2-6-2-6 2V4z" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 2v18M15 4v18" stroke="#2563eb" stroke-width="1.6"/></svg>
+        </div>
+        <h3>Carte OpenStreetMap</h3>
+        <p>Conversion Lambert 93 → WGS84 et tracé de la zone d'influence directement sur la carte.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="#2563eb" stroke-width="1.6"/><path d="M8 8h8M8 12h8M8 16h5" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Classification IOTA automatique</h3>
+        <p>Rubriques 1.1.1.0, 1.1.2.0, 1.3.1.0 — statut HORS / DÉCLARATION / AUTORISATION calculé en temps réel.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M3 17l5-5 4 4 9-9" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Base géologique intégrée</h3>
+        <p>13 substrats paramétrés (calcaires, alluvions, granites, schistes, marnes, remblais…) avec K, T, S, ne, épaisseur.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M6 4l-2 5M10 4l-2 5M14 4l-2 5M18 4l-2 5M3 12h18M5 14c1 4 4 6 7 6s6-2 7-6" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Bilan hydrique départemental</h3>
+        <p>15 départements de référence avec pluie, ETP et recharge calibrées Météo-France.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M15 3v5h5M8 13h8M8 17h6" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Dossier PDF prêt pour DDT</h3>
+        <p>Mise en page professionnelle, calculs, tableau IOTA, carte. En version complète : signature numérique et entête personnalisable.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ╭───────── DÉMO INTERACTIVE ─────────╮ -->
+<section id="demo" class="demo-section">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Essai gratuit — 8 jours</span>
+      <h2>Démo interactive</h2>
+      <p>Saisissez vos paramètres, lancez le calcul, téléchargez votre PDF de démonstration. Aucune installation, tout se passe dans votre navigateur.</p>
+    </div>
+
+    <div id="quota-banner" class="quota-banner">Initialisation…</div>
+
+    <div class="demo-banner">
+      <strong>Mode démonstration.</strong> Les PDF générés portent la mention « DÉMO — non valable pour dépôt DDT ». Souscrivez à la version complète pour des dossiers réglementaires officiels.
+    </div>
+
+    <!-- Onglets -->
+    <div class="demo-tabs">
+      <button class="demo-tab active" data-tab="saisie">① Saisie</button>
+      <button class="demo-tab" data-tab="resultats">② Résultats</button>
+      <button class="demo-tab" data-tab="carte">③ Carte</button>
+    </div>
+
+    <!-- Panels -->
+    <div class="demo-panel" style="border-top:none;border-radius:0 0 12px 12px;">
+      <div class="demo-panel-body">
+
+        <!-- PANEL SAISIE -->
+        <div id="panel-saisie" class="tab-pane active">
+
+          <div class="section-label">Identification du projet</div>
+          <div class="field-row-2">
+            <div class="field-grp">
+              <label>Intitulé du projet</label>
+              <input type="text" id="inp-projet" placeholder="Intitulé de votre chantier" value="">
+            </div>
+            <div class="field-grp">
+              <label>Commune</label>
+              <input type="text" id="inp-commune" placeholder="Ville (Département)" value="">
+            </div>
+          </div>
+          <div class="field-row-2">
+            <div class="field-grp">
+              <label>Maître d'ouvrage</label>
+              <input type="text" id="inp-mo" placeholder="Nom du donneur d'ordre" value="">
+            </div>
+            <div class="field-grp">
+              <label>Bureau d'études</label>
+              <input type="text" id="inp-be" placeholder="Votre bureau d'études" value="">
+            </div>
+          </div>
+
+          <div class="section-label">Contexte géologique</div>
+          <div class="field-row-3">
+            <div class="field-grp">
+              <label>Substrat (base intégrée)</label>
+              <select id="inp-substrat"></select>
+            </div>
+            <div class="field-grp">
+              <label>Département (climat)</label>
+              <select id="inp-dept"></select>
+            </div>
+            <div class="field-grp">
+              <label>Commune en ZRE ?</label>
+              <select id="inp-zre">
+                <option value="auto">Auto (selon département)</option>
+                <option value="oui">Oui — commune classée ZRE</option>
+                <option value="non">Non — hors périmètre ZRE</option>
+              </select>
+              <span class="hint">Zone de Répartition des Eaux — seuil ≥8 m³/h = Autorisation</span>
+            </div>
+          </div>
+
+          <div class="section-label">Géométrie de l'ouvrage</div>
+          <div class="field-row-3">
+            <div class="field-grp">
+              <label>Niveau statique NS (m)</label>
+              <input type="text" id="inp-ns" placeholder="ex. 2,80" value="">
+              <span class="hint">Profondeur du toit de nappe / TN</span>
+            </div>
+            <div class="field-grp">
+              <label>Fond de fouille FF (m)</label>
+              <input type="text" id="inp-ff" placeholder="ex. 4,50" value="">
+              <span class="hint">Cote à atteindre / TN</span>
+            </div>
+            <div class="field-grp">
+              <label>Profondeur du puits (m)</label>
+              <input type="text" id="inp-prof-puits" placeholder="ex. 10,00" value="">
+              <span class="hint">Profondeur totale du forage</span>
+            </div>
+          </div>
+          <div class="field-row-3">
+            <div class="field-grp">
+              <label>Diamètre intérieur (mm)</label>
+              <input type="text" id="inp-diam-int" placeholder="ex. 200" value="">
+            </div>
+            <div class="field-grp">
+              <label>Rayon d'influence R (m)</label>
+              <input type="text" id="inp-rayon-inf" placeholder="ex. 50" value="">
+            </div>
+            <div class="field-grp">
+              <label>Durée pompage (h)</label>
+              <input type="text" id="inp-t-pompage" placeholder="ex. 72" value="">
+            </div>
+          </div>
+          <div class="field-row-2">
+            <div class="field-grp">
+              <label>Heures d'exploitation / jour</label>
+              <input type="text" id="inp-t-exp" placeholder="ex. 10" value="">
+            </div>
+            <div class="field-grp"></div>
+          </div>
+
+          <div class="section-label">Coordonnées (Lambert 93) — facultatif</div>
+          <div class="field-row-2">
+            <div class="field-grp">
+              <label>X (m)</label>
+              <input type="text" id="inp-x" placeholder="Vos coordonnées X" value="">
+            </div>
+            <div class="field-grp">
+              <label>Y (m)</label>
+              <input type="text" id="inp-y" placeholder="Vos coordonnées Y" value="">
+              <span class="hint">Requis pour afficher la carte</span>
+            </div>
+          </div>
+
+          <div class="section-label" style="margin-top:18px">
+            <details style="display:inline">
+              <summary style="cursor:pointer; font-weight:600; color:#264F7A;">Informations détaillées pour le dossier PDF (facultatif)</summary>
+            </details>
+          </div>
+          <div class="field-row-3">
+            <div class="field-grp">
+              <label>Entreprise travaux</label>
+              <input type="text" id="inp-travaux" placeholder="Nom de l'entreprise" value="">
+            </div>
+            <div class="field-grp">
+              <label>SIRET entreprise travaux</label>
+              <input type="text" id="inp-travaux-siret" placeholder="14 chiffres" value="">
+            </div>
+            <div class="field-grp">
+              <label>Adresse entreprise travaux</label>
+              <input type="text" id="inp-travaux-adresse" placeholder="Adresse complète" value="">
+            </div>
+          </div>
+          <div class="field-row-3">
+            <div class="field-grp">
+              <label>Société de forage</label>
+              <input type="text" id="inp-forage" placeholder="Nom de la société" value="">
+            </div>
+            <div class="field-grp">
+              <label>SIRET société de forage</label>
+              <input type="text" id="inp-forage-siret" placeholder="14 chiffres" value="">
+            </div>
+            <div class="field-grp">
+              <label>Adresse société de forage</label>
+              <input type="text" id="inp-forage-adresse" placeholder="Adresse complète" value="">
+            </div>
+          </div>
+          <div class="field-row-3">
+            <div class="field-grp">
+              <label>Adresse maître d'ouvrage</label>
+              <input type="text" id="inp-mo-adresse" placeholder="Adresse complète" value="">
+            </div>
+            <div class="field-grp">
+              <label>Téléphone MO</label>
+              <input type="text" id="inp-mo-tel" placeholder="Téléphone" value="">
+            </div>
+            <div class="field-grp">
+              <label>Email MO</label>
+              <input type="text" id="inp-mo-email" placeholder="email@exemple.fr" value="">
+            </div>
+          </div>
+          <div class="field-row-3">
+            <div class="field-grp">
+              <label>Diamètre extérieur (mm)</label>
+              <input type="text" id="inp-diam-ext" placeholder="ex. 250" value="">
+            </div>
+            <div class="field-grp">
+              <label>Altimétrie tête d'ouvrage (m NGF)</label>
+              <input type="text" id="inp-alt-tete" placeholder="ex. 124,63" value="">
+            </div>
+            <div class="field-grp">
+              <label>Altimétrie fond d'ouvrage (m NGF)</label>
+              <input type="text" id="inp-alt-fond" placeholder="ex. 114,63" value="">
+            </div>
+          </div>
+          <div class="field-row-2">
+            <div class="field-grp">
+              <label>Type de captage</label>
+              <input type="text" id="inp-type-captage" placeholder="Puits foré tubage PVC crépiné" value="">
+            </div>
+            <div class="field-grp"></div>
+          </div>
+
+          <div class="demo-actions">
+            <button id="btn-example" class="btn btn-secondary">Effacer / saisir mon propre chantier</button>
+            <button id="btn-calc" class="btn btn-primary">▶ Lancer le calcul</button>
+            <button id="btn-pdf" class="btn btn-primary">Télécharger le PDF de démonstration</button>
+          </div>
+
+        </div>
+
+        <!-- PANEL RÉSULTATS -->
+        <div id="panel-resultats" class="tab-pane">
+          <div class="empty">Lancez d'abord le calcul pour afficher les résultats.</div>
+        </div>
+
+        <!-- PANEL CARTE -->
+        <div id="panel-carte" class="tab-pane">
+          <div class="empty">Saisissez les coordonnées Lambert 93 puis cliquez sur cet onglet.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ╭───────── TARIF ─────────╮ -->
+<section id="tarif">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Tarif</span>
+      <h2>Un seul abonnement, projets illimités</h2>
+      <p>Un prix simple, sans engagement de durée et sans renouvellement automatique. Tarif valable pour 1 utilisateur, projets illimités.</p>
+    </div>
+    <div class="pricing-wrap" id="souscrire">
+      <div class="price-card" style="max-width:520px;margin:0 auto;">
+        <span class="price-tag">★ Offre standard</span>
+        <div class="price-title">Logiciel Rabattement v15</div>
+        <div class="price-sub">Pour bureaux d'études, exploitants TP, gestionnaires d'ouvrages.</div>
+
+        <div class="country-select">
+          <label for="buyer-country">Pays de facturation</label>
+          <select id="buyer-country">
+            <option value="FR" selected>France métropolitaine (TVA 20 %)</option>
+            <option value="FR-DOM">DROM (Guadeloupe, Martinique, Réunion, Mayotte, Guyane)</option>
+            <option value="EU">Union européenne (hors France)</option>
+            <option value="INTL">Hors Union européenne</option>
+          </select>
+        </div>
+
+        <div class="price-amount"><span class="currency">€</span>1 100</div>
+        <div class="price-unit">HT / utilisateur / an</div>
+
+        <div class="price-breakdown" id="price-breakdown">
+          <div class="pb-row"><span>Montant HT</span><span class="pb-val">1 100,00 €</span></div>
+          <div class="pb-row" id="pb-tva-row"><span id="pb-tva-label">TVA 20 %</span><span class="pb-val" id="pb-tva-val">220,00 €</span></div>
+          <div class="pb-row pb-total"><span>Total TTC</span><span class="pb-val" id="pb-ttc-val">1 320,00 €</span></div>
+        </div>
+
+        <div class="price-vat" id="price-vat-note">
+          TVA française au taux normal de 20 % (art. 278 du CGI).
+        </div>
+
+        <ul class="price-features">
+          <li>Projets et calculs illimités</li>
+          <li>13 substrats hydrogéologiques + 15 départements</li>
+          <li>Génération dossier Loi sur l'Eau (PDF officiel sans filigrane)</li>
+          <li>Tableau IOTA conforme R.214-1</li>
+          <li>Carte OpenStreetMap intégrée</li>
+          <li>Support technique par email</li>
+          <li>Mises à jour réglementaires incluses</li>
+        </ul>
+
+        <a id="btn-souscrire" href="../../tarifs.html#rabattement_annual" class="btn btn-primary btn-block">Souscrire — 1 320,00 € TTC / an</a>
+
+        <p style="text-align:center;font-size:12.5px;color:var(--text-mute);margin-top:14px;">
+          Paiement sécurisé par carte bancaire via <strong>Stripe</strong> — accès immédiat après paiement, facture envoyée par e-mail.<br>
+          Sans engagement, résiliable à l'échéance.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ╭───────── FAQ ─────────╮ -->
+<section id="faq" style="background:var(--bg-soft);">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">FAQ</span>
+      <h2>Questions fréquentes</h2>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item" open>
+        <summary>Comment fonctionne l'essai gratuit de 8 jours ?</summary>
+        <p>À la première génération d'un PDF, votre adresse e-mail vous est demandée. Une fois validée, votre compteur démarre et vous disposez de 8 jours d'accès complet à la démo — calculs illimités, PDF illimités. Passé ce délai, la génération PDF est bloquée et vous devez souscrire à la version complète.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Le PDF généré en démo a-t-il une valeur réglementaire ?</summary>
+        <p>Non. Tous les PDF générés en mode démo portent la mention « DÉMO — NON VALABLE POUR DÉPÔT DDT » en filigrane. Seuls les PDF produits par la version complète, sans filigrane, peuvent être déposés auprès du Service Eau et Biodiversité de la DDT.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Mes données sont-elles transmises à un serveur ?</summary>
+        <p>Seule votre adresse e-mail est enregistrée pour activer l'essai. Les valeurs saisies (paramètres hydrauliques, coordonnées, etc.) restent dans votre navigateur — aucun envoi vers nos serveurs. Le calcul et la génération PDF s'exécutent intégralement en local (JavaScript côté client).</p>
+      </details>
+      <details class="faq-item">
+        <summary>Quelles méthodes de calcul sont utilisées ?</summary>
+        <p>Le moteur reprend exactement la logique du tableur GMEP v15.60 : fonction de puits W(u) de Theis en série de Taylor (régime transitoire), formule de Dupuit-Thiem (régime permanent), corrections de rendement hydraulique η = 0,70 et f_K = 0,95. Les classifications IOTA suivent l'article R.214-1 du Code de l'environnement.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Puis-je personnaliser le PDF avec mon logo ?</summary>
+        <p>La personnalisation du PDF (logo bureau d'études, en-tête, pied de page, signature numérique) est disponible dans la version complète après souscription.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Comment souscrire ?</summary>
+        <p>Cliquez sur le bouton « Souscrire » ci-dessus. Vous serez redirigé vers la page Tarifs pour finaliser votre souscription par <strong>carte bancaire via Stripe</strong> (paiement sécurisé). Accès immédiat à la version complète dès validation du paiement. Vous recevez automatiquement votre facture par e-mail.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ╭───────── MODAL EMAIL ─────────╮ -->
+<div id="email-modal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Activer votre essai gratuit</h3>
+      <p>8 jours d'accès complet à la démo. Aucune carte bancaire. Votre email nous sert à vous accompagner si besoin.</p>
+    </div>
+    <form id="email-form">
+      <div class="modal-body">
+        <div class="field-grp">
+          <label>Votre adresse e-mail professionnelle *</label>
+          <input type="email" id="email-input" required placeholder="prenom.nom@bureau-etudes.fr">
+        </div>
+        <div class="field-grp">
+          <label>Société / bureau d'études (facultatif)</label>
+          <input type="text" id="company-input" placeholder="Nom de votre structure">
+        </div>
+        <div id="email-error" style="color:#b00020;font-size:13px;min-height:18px;"></div>
+        <p style="font-size:12px;color:var(--text-mute);margin-top:8px;">
+          En cliquant sur « Démarrer », vous acceptez que votre email soit conservé pour la durée de l'essai (8 jours).
+          Données non revendues. Conformité RGPD.
+        </p>
+      </div>
+      <div class="modal-foot">
+        <button type="button" id="email-close" class="btn btn-secondary">Annuler</button>
+        <button type="submit" class="btn btn-primary">Démarrer mes 8 jours →</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ╭───────── LOCK OVERLAY ─────────╮ -->
+<div id="lock-overlay">
+  <div class="lock-card">
+    <div class="lock-icon">🔒</div>
+    <h4>Votre essai de 8 jours est terminé</h4>
+    <p>Pour continuer à générer des dossiers Loi sur l'Eau, souscrivez à la version complète. Vous récupérez accès immédiat, sans filigrane, et avec dossier PDF officiel.</p>
+    <a id="lock-souscrire" href="../../tarifs.html#rabattement_annual" class="btn btn-primary">Souscrire en ligne — paiement sécurisé Stripe</a>
+    <p class="lock-sub">Vous êtes redirigé vers la page Tarifs pour finaliser votre paiement par carte bancaire. Accès immédiat après paiement.</p>
+  </div>
+</div>
+
+
+
+
+<!-- Scripts du site -->
+<script src="../../assets/js/nav.js"></script>
+<script src="../../assets/js/stripe-checkout.js"></script>
+
+<!-- Scripts de la démo Rabattement -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+
+
+
+
+<script>
+/* ── calculs.js ── */
+/* ════════════════════════════════════════════════════════════
+   GMEP — Moteur de calcul Rabattement (Theis + Dupuit-Thiem)
+   Reproduit la logique du tableur v15.60
+   ════════════════════════════════════════════════════════════ */
+
+// ─── Base géologique (extrait du tableur 'Base Géologique') ───
+// Format : nom → { famille, type_nappe, K (m/s), T (m²/s), S_captif, S_libre, ne, epaisseur (m) }
+const BASE_GEO = {
+  "Calcaire karstifié":           { famille: "Carbonatée",  type: "Libre",   K: 1e-3,  T: 5e-2,  Sc: 1e-4, Sl: 0.05, ne: 0.05, ep: 30 },
+  "Calcaire fissuré":             { famille: "Carbonatée",  type: "Libre",   K: 5e-5,  T: 1e-3,  Sc: 1e-4, Sl: 0.03, ne: 0.03, ep: 25 },
+  "Craie":                        { famille: "Carbonatée",  type: "Libre",   K: 1e-4,  T: 3e-3,  Sc: 1e-4, Sl: 0.02, ne: 0.02, ep: 40 },
+  "Sables et graviers (alluvions)":{ famille: "Détritique", type: "Libre",   K: 5e-4,  T: 2e-2,  Sc: 1e-4, Sl: 0.15, ne: 0.18, ep: 15 },
+  "Sables fins":                  { famille: "Détritique",  type: "Libre",   K: 1e-5,  T: 3e-4,  Sc: 1e-4, Sl: 0.10, ne: 0.12, ep: 10 },
+  "Grès":                         { famille: "Détritique",  type: "Captive", K: 1e-6,  T: 2e-5,  Sc: 5e-5, Sl: 0.05, ne: 0.05, ep: 50 },
+  "Argiles":                      { famille: "Imperméable", type: "Aucune",  K: 1e-9,  T: 3e-8,  Sc: 1e-5, Sl: 0.01, ne: 0.01, ep: 20 },
+  "Marnes":                       { famille: "Semi-perméable",type:"Captive",K: 1e-8,  T: 3e-7,  Sc: 1e-5, Sl: 0.02, ne: 0.02, ep: 25 },
+  "Granite altéré":               { famille: "Cristalline", type: "Libre",   K: 1e-5,  T: 3e-4,  Sc: 1e-4, Sl: 0.02, ne: 0.02, ep: 20 },
+  "Granite fissuré":              { famille: "Cristalline", type: "Libre",   K: 1e-6,  T: 3e-5,  Sc: 5e-5, Sl: 0.005,ne: 0.005,ep: 30 },
+  "Schistes":                     { famille: "Cristalline", type: "Captive", K: 1e-7,  T: 3e-6,  Sc: 1e-5, Sl: 0.01, ne: 0.01, ep: 25 },
+  "Basalte":                      { famille: "Volcanique",  type: "Libre",   K: 5e-5,  T: 1.5e-3,Sc: 1e-4, Sl: 0.05, ne: 0.05, ep: 30 },
+  "Remblais"                    : { famille: "Anthropique", type: "Libre",   K: 1e-4,  T: 3e-3,  Sc: 1e-4, Sl: 0.10, ne: 0.12, ep: 5  }
+};
+
+// ─── Climat par département (extrait Climat.csv tableur) ───
+const CLIMAT = {
+  "41": { dept: "Loir-et-Cher",    station: "Blois",         P: 641, ETP: 720, R: 150 },
+  "79": { dept: "Deux-Sèvres",     station: "Niort",         P: 815, ETP: 770, R: 180 },
+  "75": { dept: "Paris",           station: "Paris-Montsouris",P: 637, ETP: 760, R: 110 },
+  "33": { dept: "Gironde",         station: "Bordeaux-Mérignac",P: 950,ETP: 820, R: 220 },
+  "13": { dept: "Bouches-du-Rhône",station: "Marseille",     P: 540, ETP: 1100,R: 80  },
+  "59": { dept: "Nord",            station: "Lille",         P: 740, ETP: 660, R: 250 },
+  "69": { dept: "Rhône",           station: "Lyon-Bron",     P: 830, ETP: 820, R: 170 },
+  "44": { dept: "Loire-Atlantique",station: "Nantes",        P: 820, ETP: 760, R: 200 },
+  "31": { dept: "Haute-Garonne",   station: "Toulouse-Blagnac",P: 630,ETP: 950, R: 90  },
+  "06": { dept: "Alpes-Maritimes", station: "Nice",          P: 770, ETP: 1050,R: 110 },
+  "67": { dept: "Bas-Rhin",        station: "Strasbourg",    P: 670, ETP: 720, R: 140 },
+  "35": { dept: "Ille-et-Vilaine", station: "Rennes",        P: 700, ETP: 720, R: 180 },
+  "76": { dept: "Seine-Maritime",  station: "Rouen",         P: 800, ETP: 690, R: 230 },
+  "57": { dept: "Moselle",         station: "Metz",          P: 730, ETP: 720, R: 170 },
+  "63": { dept: "Puy-de-Dôme",     station: "Clermont-Ferrand",P: 580,ETP: 770, R: 100 }
+};
+
+// ─── Fonction de puits W(u) de Theis — série de Taylor (Excel-compatible) ───
+function wellFunction(u) {
+  if (u <= 0) return 0;
+  if (u > 5) {
+    // Asymptote pour u grand : W(u) ≈ e^-u / u × (1 - 1/u + 2/u² - 6/u³)
+    return Math.exp(-u) / u * (1 - 1/u + 2/(u*u) - 6/(u*u*u));
+  }
+  // Série pour u petit (la même que dans le tableur)
+  return -0.5772156649 - Math.log(u) - u
+       + (u*u)/4 - (u*u*u)/18 + Math.pow(u,4)/96
+       - Math.pow(u,5)/600 + Math.pow(u,6)/4320
+       - Math.pow(u,7)/35280 + Math.pow(u,8)/322560;
+}
+
+// ─── Calcul principal ───
+function calculer(p) {
+  // p = paramètres saisis par l'utilisateur
+  const geo = BASE_GEO[p.substrat] || BASE_GEO["Calcaire karstifié"];
+  const clim = CLIMAT[p.dept] || CLIMAT["41"];
+
+  // Paramètres de base
+  const ns = p.ns;                          // niveau statique
+  const ff = p.ff;                          // fond de fouille (ou NDC pour AEP)
+  const r_puits = p.diam_int / 2;           // rayon puits
+  const R = p.rayon_inf;                    // rayon d'influence
+  const t_h = p.t_pompage;                  // temps pompage en h
+  const t_s = t_h * 3600;                   // en secondes
+  const T = geo.T;                          // transmissivité (m²/s)
+  const S = (geo.type === "Captive") ? geo.Sc : geo.Sl;
+
+  // Rabattement requis
+  const s = Math.max(0, ff - ns);
+
+  // Theis : u = r²·S / (4·T·t)
+  const u = (r_puits * r_puits * S) / (4 * T * t_s);
+  const Wu = wellFunction(u);
+
+  // Q Theis (m³/s) = 4π T s / W(u)
+  const Q_theis_si = (s > 0 && Wu > 0 && T > 0) ? (4 * Math.PI * T * s) / Wu : 0;
+  const Q_theis = Q_theis_si * 3600;        // m³/h
+
+  // Q Dupuit-Thiem (régime permanent) = 2π T s / ln(R/r)
+  const Q_dupuit_si = (s > 0 && R > r_puits && T > 0) ? (2 * Math.PI * T * s) / Math.log(R / r_puits) : 0;
+  const Q_dupuit = Q_dupuit_si * 3600;      // m³/h
+
+  // Corrections
+  const eta = 0.7;                          // rendement hydraulique
+  const f_K = 0.95;                         // correction perméabilité
+  const Q_theis_corr = Q_theis * eta;
+  const Q_dupuit_corr = Q_dupuit * eta;
+
+  // Débits recommandés ± 15 %
+  const Q_min = Math.max(Q_theis_corr, Q_dupuit_corr) * 0.85;
+  const Q_max = Math.max(Q_theis_corr, Q_dupuit_corr) * 1.15;
+
+  // Volumes
+  const t_exp = p.t_exp || 24;              // heures/j
+  const V_jour = Q_theis_corr * t_exp;
+  const V_mois = V_jour * 30;
+  const V_an = V_jour * 365;
+
+  // Bilan hydrique
+  const P_eff = Math.max(clim.P - clim.ETP, 0);
+  const R_eff = clim.R * f_K;
+  const surface_inf = Math.PI * R * R;
+  const V_recharge = surface_inf * R_eff / 1000;
+  const ratio = V_an > 0 && V_recharge > 0 ? V_an / V_recharge : 0;
+
+  // ─── Statut ZRE (Zone de Répartition des Eaux) ───
+  // p.zre : "oui" (commune classée ZRE), "non" (hors ZRE), ou "auto" (déduit par département présomptif)
+  const ZRE_DEPTS_PRESUMPTIVE = ["41","45","28","18","36","37","86","79","17"];  // ZRE Beauce + sous-bassins Loire-Bretagne
+  let zre_applicable;  // true / false / null (indéterminé)
+  if (p.zre === "oui")      zre_applicable = true;
+  else if (p.zre === "non") zre_applicable = false;
+  else                       zre_applicable = ZRE_DEPTS_PRESUMPTIVE.includes(p.dept) ? null : false;  // null = présomption à confirmer
+
+  // En ZRE : seuils abaissés — autorisation à partir de 8 m³/h, déclaration en deçà
+  // Statut 1.3.1.0 : si Q ≥ 8 m³/h ET commune en ZRE → AUTORISATION ; sinon Déclaration (en ZRE) ou Non applicable
+  let zre_regime;
+  if (zre_applicable === true) {
+    zre_regime = Q_theis_corr >= 8 ? "AUTORISATION" : "DÉCLARATION";
+  } else if (zre_applicable === false) {
+    zre_regime = "Non applicable";
+  } else {
+    zre_regime = Q_theis_corr >= 8 ? "À VÉRIFIER" : "Non applicable";  // présomption mais Q dépasse seuil
+  }
+
+  // Classification IOTA — régime le plus contraignant (cumulatif)
+  let iota_status, iota_type;
+  if (s <= 0) {
+    iota_status = "HORS NOMENCLATURE";
+    iota_type = "hors";
+  } else if (V_an < 10000 && Q_theis_corr < 8) {
+    iota_status = "HORS NOMENCLATURE";
+    iota_type = "hors";
+  } else if (V_an < 200000) {
+    iota_status = "DÉCLARATION";
+    iota_type = "declaration";
+  } else {
+    iota_status = "AUTORISATION";
+    iota_type = "autorisation";
+  }
+
+  // Override ZRE : si ZRE OUI confirmé et Q ≥ 8 m³/h → AUTORISATION (règle 1.3.1.0 plus contraignante)
+  if (zre_applicable === true && Q_theis_corr >= 8) {
+    iota_status = "AUTORISATION";
+    iota_type = "autorisation";
+  }
+
+  // Tableau IOTA détaillé
+  const iota_table = [
+    {
+      code: "1.1.1.0",
+      libelle: "Prélèvement permanent ou temporaire en eaux souterraines",
+      seuil: "10 000 m³/an",
+      statut: V_an >= 200000 ? "AUTORISATION" : (V_an >= 10000 ? "DÉCLARATION" : "Non applicable"),
+      class_st: V_an >= 200000 ? "st-autor" : (V_an >= 10000 ? "st-declar" : "st-ok")
+    },
+    {
+      code: "1.1.2.0",
+      libelle: "Prélèvement supérieur à 10 % du QMNA5",
+      seuil: "8 m³/h",
+      statut: Q_theis_corr >= 8 ? "VIGILANCE" : "Non applicable",
+      class_st: Q_theis_corr >= 8 ? "st-warn" : "st-ok"
+    },
+    {
+      code: "1.3.1.0",
+      libelle: "Prélèvement en Zone de Répartition des Eaux (ZRE)",
+      seuil: "8 m³/h",
+      statut: (Q_theis_corr >= 8 && ["41","45","28","18","36"].includes(p.dept)) ? "VIGILANCE ZRE" : "Non applicable",
+      class_st: (Q_theis_corr >= 8 && ["41","45","28","18","36"].includes(p.dept)) ? "st-warn" : "st-ok"
+    },
+    {
+      code: "2.1.5.0",
+      libelle: "Rejet d'eaux pluviales (surface > 1 ha)",
+      seuil: "1 ha",
+      statut: "Non applicable",
+      class_st: "st-ok"
+    },
+    {
+      code: "3.1.5.0",
+      libelle: "Travaux dans le lit d'un cours d'eau",
+      seuil: "—",
+      statut: "Non applicable",
+      class_st: "st-ok"
+    }
+  ];
+
+  return {
+    inputs: p,
+    geo,
+    clim,
+    s, T, S, r_puits, R, t_s, u, Wu,
+    zre_applicable, zre_regime,
+    Q_theis, Q_dupuit, Q_theis_corr, Q_dupuit_corr,
+    Q_min, Q_max,
+    V_jour, V_mois, V_an,
+    P_eff, R_eff, surface_inf, V_recharge, ratio,
+    iota_status, iota_type, iota_table
+  };
+}
+
+// ─── Conversion Lambert 93 → WGS84 (pour la carte) ───
+// Algorithme officiel IGN reproduit du module VBA GMEP_Geo.Lambert93ToWGS84
+function lambert93_to_wgs84(x, y) {
+  const n = 0.7256077650532670;
+  const c = 11754255.4261;
+  const xs = 700000;
+  const ys = 12655612.0499;
+  const lon0 = 3 * Math.PI / 180;
+  const e = 0.0818191910428158;
+
+  const dx = x - xs;
+  const dy = y - ys;
+  const r = Math.sqrt(dx*dx + dy*dy);
+  // Formule officielle IGN : gamma = atan( (x-xs) / (ys-y) )
+  const gamma = Math.atan2(dx, ys - y);
+
+  const lon = lon0 + gamma / n;
+  const latIso = -1/n * Math.log(Math.abs(r/c));
+  let phi = 2 * Math.atan(Math.exp(latIso)) - Math.PI/2;
+  for (let i = 0; i < 10; i++) {
+    const dphi = 0.5 * Math.log((1 + Math.sin(phi))/(1 - Math.sin(phi)))
+               - e/2 * Math.log((1 + e*Math.sin(phi))/(1 - e*Math.sin(phi)))
+               - latIso;
+    phi = phi - dphi * Math.cos(phi) * (1 - e*e*Math.sin(phi)*Math.sin(phi)) / (1 - e*e);
+    if (Math.abs(dphi) < 1e-13) break;
+  }
+  return { lon: lon * 180 / Math.PI, lat: phi * 180 / Math.PI };
+}
+
+// Format helpers
+function fmt(v, dec = 2) {
+  if (v == null || isNaN(v) || !isFinite(v)) return "—";
+  if (Math.abs(v) >= 1e6) return v.toExponential(2);
+  if (Math.abs(v) < 0.01 && v !== 0) return v.toExponential(2);
+  return v.toFixed(dec).replace('.', ',');
+}
+function fmtInt(v) {
+  if (v == null || isNaN(v) || !isFinite(v)) return "—";
+  return Math.round(v).toLocaleString('fr-FR');
+}
+
+</script>
+<script>
+/* ── quota.js ── */
+/* ════════════════════════════════════════════════════════════
+   GMEP — Gestion du quota démo 8 jours
+   - Stocke la date de démarrage en localStorage + cookie
+   - Bloque la génération PDF passé 8 jours
+   - Modal email obligatoire avant la 1re génération
+   ════════════════════════════════════════════════════════════ */
+
+const QUOTA_KEY = "gmep_demo_start";
+const QUOTA_EMAIL = "gmep_demo_email";
+const QUOTA_DURATION_MS = 8 * 24 * 3600 * 1000; // 8 jours
+
+// ─── Endpoint serveur (à brancher par l'opérateur) ───
+// Remplacer ci-dessous par votre endpoint Formspree / Google Sheet / Airtable / Make
+// Exemple Formspree : "https://formspree.io/f/xxxxxxxx"
+const REMOTE_ENDPOINT = ""; // ← à compléter
+
+// ─── Lecture / écriture cookie (fallback si localStorage purgé) ───
+function setCookie(name, value, days) {
+  const d = new Date();
+  d.setTime(d.getTime() + days * 24 * 3600 * 1000);
+  document.cookie = `${name}=${encodeURIComponent(value)};expires=${d.toUTCString()};path=/;SameSite=Lax`;
+}
+function getCookie(name) {
+  const v = document.cookie.split('; ').find(r => r.startsWith(name + '='));
+  return v ? decodeURIComponent(v.split('=')[1]) : null;
+}
+
+// ─── Récupère la date de démarrage (priorité localStorage, fallback cookie) ───
+function getDemoStart() {
+  let v = null;
+  try { v = localStorage.getItem(QUOTA_KEY); } catch(e) {}
+  if (!v) v = getCookie(QUOTA_KEY);
+  return v ? parseInt(v, 10) : null;
+}
+function getDemoEmail() {
+  let v = null;
+  try { v = localStorage.getItem(QUOTA_EMAIL); } catch(e) {}
+  if (!v) v = getCookie(QUOTA_EMAIL);
+  return v || null;
+}
+
+// ─── Sauvegarde de la date + email ───
+function saveDemoStart(email) {
+  const now = Date.now();
+  try {
+    localStorage.setItem(QUOTA_KEY, String(now));
+    localStorage.setItem(QUOTA_EMAIL, email);
+  } catch(e) {}
+  setCookie(QUOTA_KEY, String(now), 8);
+  setCookie(QUOTA_EMAIL, email, 8);
+}
+
+// ─── État du quota ───
+function checkQuota() {
+  const start = getDemoStart();
+  if (!start) return { state: "new" };
+  const elapsed = Date.now() - start;
+  if (elapsed >= QUOTA_DURATION_MS) {
+    return { state: "expired", expiredAt: start + QUOTA_DURATION_MS };
+  }
+  const remaining = QUOTA_DURATION_MS - elapsed;
+  const daysLeft = Math.ceil(remaining / (24 * 3600 * 1000));
+  return { state: "active", start, daysLeft, remaining, email: getDemoEmail() };
+}
+
+// ─── Modal email (1re génération) ───
+function showEmailModal() {
+  return new Promise((resolve, reject) => {
+    const modal = document.getElementById("email-modal");
+    const form = document.getElementById("email-form");
+    const input = document.getElementById("email-input");
+    const company = document.getElementById("company-input");
+    const closeBtn = document.getElementById("email-close");
+    const errBox = document.getElementById("email-error");
+
+    if (!modal) return reject(new Error("Modal introuvable"));
+
+    errBox.textContent = "";
+    modal.classList.add("active");
+    setTimeout(() => input.focus(), 100);
+
+    const onClose = () => {
+      modal.classList.remove("active");
+      cleanup();
+      reject(new Error("Annulé"));
+    };
+    const onSubmit = async (ev) => {
+      ev.preventDefault();
+      const email = input.value.trim();
+      const co = company.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errBox.textContent = "Adresse e-mail invalide.";
+        return;
+      }
+      errBox.textContent = "Enregistrement…";
+
+      // Envoi optionnel à l'endpoint serveur (fire-and-forget si pas configuré)
+      if (REMOTE_ENDPOINT) {
+        try {
+          await fetch(REMOTE_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify({
+              email,
+              company: co,
+              source: "GMEP Démo Rabattement",
+              date: new Date().toISOString()
+            })
+          });
+        } catch(e) {
+          // On laisse passer même si l'envoi échoue, mais on log
+          console.warn("Envoi email échoué :", e);
+        }
+      }
+
+      saveDemoStart(email);
+      modal.classList.remove("active");
+      cleanup();
+      resolve({ email, company: co });
+    };
+
+    function cleanup() {
+      form.removeEventListener("submit", onSubmit);
+      closeBtn.removeEventListener("click", onClose);
+    }
+    form.addEventListener("submit", onSubmit);
+    closeBtn.addEventListener("click", onClose);
+  });
+}
+
+// ─── Bannière de statut (toujours affichée en mode démo) ───
+function refreshQuotaBanner() {
+  const banner = document.getElementById("quota-banner");
+  const lock = document.getElementById("lock-overlay");
+  if (!banner) return;
+  const q = checkQuota();
+  if (q.state === "new") {
+    banner.innerHTML = `<strong>Mode démonstration</strong> — La 1re génération PDF déclenchera le démarrage de votre essai gratuit de 8 jours.`;
+    banner.className = "quota-banner ok";
+    if (lock) lock.classList.remove("open");
+  } else if (q.state === "active") {
+    const date_fin = new Date(q.start + QUOTA_DURATION_MS).toLocaleDateString("fr-FR");
+    banner.innerHTML = `<strong>Essai actif</strong> — ${q.daysLeft} jour${q.daysLeft > 1 ? "s" : ""} restant${q.daysLeft > 1 ? "s" : ""} (jusqu'au ${date_fin}). Compte&nbsp;: ${q.email || ""}.`;
+    banner.className = "quota-banner ok";
+    if (lock) lock.classList.remove("open");
+  } else {
+    const checkoutURL = `https://www.gmep-france.eu/#/register?plan=rabattement_annual&country=${encodeURIComponent(document.getElementById('buyer-country')?.value || 'FR')}`;
+    banner.innerHTML = `<strong>Essai expiré</strong> — Votre période de démonstration de 8 jours est terminée. <a href="${checkoutURL}" target="_blank" rel="noopener">💳 Souscrire en ligne (Stripe) →</a>`;
+    banner.className = "quota-banner expired";
+    if (lock) lock.classList.add("open");
+  }
+}
+
+// ─── Garde principale : à appeler avant chaque génération PDF ───
+async function ensureCanGeneratePdf() {
+  const q = checkQuota();
+  if (q.state === "expired") {
+    const lock = document.getElementById("lock-overlay");
+    if (lock) lock.classList.add("open");
+    throw new Error("Essai expiré");
+  }
+  if (q.state === "new") {
+    // Affiche modal email avant 1re génération
+    await showEmailModal();
+    refreshQuotaBanner();
+  }
+  return true;
+}
+
+window.GMEP_Quota = {
+  checkQuota,
+  ensureCanGeneratePdf,
+  refreshQuotaBanner,
+  showEmailModal,
+  saveDemoStart  // exposé pour debug/admin
+};
+
+</script>
+<script>
+/* ── pdf-generator.js ── */
+/* ════════════════════════════════════════════════════════════════════════════
+   GMEP — Générateur PDF (jsPDF) — Logiciel Rabattement v15.61
+   Refonte alignée structure & mise en page du dossier de référence
+   (~ 25-30 pages, A4 portrait)
+
+   Structure :
+     PAGE 1   — Garde (bandeau bleu, intervenants 4 col., réf dossier auto)
+     PAGE 2   — Sommaire (8 sections numérotées)
+     PAGE 3   — 1. Objet de l'étude
+     PAGE 4   — 2.1 Caractéristiques de l'ouvrage
+     PAGE 5   — 2.2 Paramètres hydrogéologiques
+     PAGES 6-8 — 2bis Schémas SVG (coupe puits, cône Dupuit-Thiem, schéma conceptuel)
+     PAGE 9   — Localisation (carte capturée Leaflet ou cadre placeholder)
+     PAGES 10-12 — 3. Méthodes (Theis & Dupuit) + abaques
+     PAGES 13-14 — 4. Résultats (rabattement, débits, volumes, bilan)
+     PAGES 15-19 — 5. Vérification réglementaire (5.1 à 5.6 - rubriques IOTA)
+     PAGES 20-22 — 6. Sensibilité environnementale (cadres éditables)
+     PAGE 23  — 7. Préconisations techniques
+     PAGE 24-25 — 8. Conclusion (synthèse + visa GMEP)
+     PAGES 26-28 — Lexique des abréviations
+
+   ════════════════════════════════════════════════════════════════════════════ */
+
+// ─── Palette PDF (alignée référence) ───
+const BLUE   = [38, 79, 122];   // #264F7A — bandeau header
+const BLUE_D = [29, 53, 87];    // #1D3557 — titres sections
+const BLUE_L = [232, 240, 250]; // bleu très clair — tables alternées
+const ORANGE = [212, 130,  74]; // #D4824A — header tables hydrogéo
+const GREEN_BG = [216, 242, 226]; // cadres "OK"
+const GREEN_DK = [ 39, 121,  85]; // bordure verte
+const ORANGE_BG = [253, 235, 220];
+const ORANGE_DK = [212, 130, 74];
+const RED_BG = [253, 224, 224];
+const RED_DK = [192,  60,  60];
+const GREY   = [102, 102, 102];
+const GREY_L = [240, 240, 240];
+const GREY_LL = [248, 250, 252];
+const BLACK  = [33, 33, 33];
+
+// Marges A4
+const M_LEFT = 15;
+const M_RIGHT = 15;
+const M_TOP = 24;       // sous header
+const M_BOTTOM = 22;    // au-dessus footer
+
+// ─── Identité dossier ───
+const REF_PREFIX = "DE";
+
+function genRef() {
+  // 11 chiffres : YYYYMMDDHHM + random 1 chiffre
+  const d = new Date();
+  const stamp = d.getFullYear().toString()
+    + String(d.getMonth() + 1).padStart(2, "0")
+    + String(d.getDate()).padStart(2, "0")
+    + String(d.getHours()).padStart(2, "0")
+    + String(d.getMinutes()).padStart(2, "0")
+    + String(Math.floor(Math.random() * 10));
+  return REF_PREFIX + stamp;
+}
+
+// ─── Sanitization texte (WinAnsi safe) ───
+function safeText(s) {
+  if (s == null) return "";
+  return String(s)
+    .replace(/\u00A0/g, " ").replace(/\u202F/g, " ").replace(/\u2009/g, " ")
+    .replace(/\u2013/g, "-").replace(/\u2014/g, "-")
+    .replace(/\u03C0/g, "pi").replace(/\u03B7/g, "eta")
+    .replace(/\u00B7/g, ".").replace(/\u2212/g, "-")
+    .replace(/\u00AB/g, '"').replace(/\u00BB/g, '"')
+    .replace(/\u2192/g, "->").replace(/\u2190/g, "<-")
+    .replace(/\u2264/g, "<=").replace(/\u2265/g, ">=")
+    .replace(/\u2248/g, "~").replace(/\u00D7/g, "x")
+    .replace(/\u00B1/g, "+/-")
+    .replace(/\u26A0\uFE0F?/g, "!")
+    .replace(/[\u2600-\u27BF]/g, "");
+}
+
+// ─── Helpers formatage ───
+function fmtN(v, dec) {
+  if (v == null || isNaN(v) || !isFinite(v)) return "—";
+  if (dec == null) dec = 2;
+  return v.toFixed(dec).replace(".", ",");
+}
+function fmtInt(v) {
+  if (v == null || isNaN(v) || !isFinite(v)) return "—";
+  return Math.round(v).toLocaleString("fr-FR");
+}
+function fmtExp(v) {
+  if (v == null || isNaN(v) || !isFinite(v)) return "—";
+  if (v === 0) return "0";
+  const s = v.toExponential(2);
+  return s.replace("e", "x10^").replace("+0", "").replace("-0", "-").replace("+", "");
+}
+function valOrFill(v) {
+  if (v == null || v === "" || v === "—") return "[ à compléter ]";
+  return v;
+}
+
+// ─── Capture carte Leaflet (si visible) ───
+async function captureMap() {
+  return new Promise((resolve) => {
+    const mapEl = document.getElementById("map");
+    if (!mapEl || !window.html2canvas) { resolve(null); return; }
+    html2canvas(mapEl, { useCORS: true, allowTaint: true, scale: 2 })
+      .then(c => resolve(c.toDataURL("image/jpeg", 0.85)))
+      .catch(() => resolve(null));
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//                          PRIMITIVES DE MISE EN PAGE
+// ═══════════════════════════════════════════════════════════════════════════
+
+function pageW(doc) { return doc.internal.pageSize.getWidth(); }
+function pageH(doc) { return doc.internal.pageSize.getHeight(); }
+
+// Header récurrent en haut de page (sauf garde)
+function drawHeader(doc, ctx) {
+  const w = pageW(doc);
+  // Bandeau bleu (15 mm)
+  doc.setFillColor(...BLUE);
+  doc.rect(0, 0, w, 15, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.text("G.M.E.P", M_LEFT, 9);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  // Texte gauche : abréger le libellé pour ne pas déborder vers la droite
+  const regimeShort = ctx.regimeLibelle === "Dossier de demande d'autorisation IOTA" ? "Demande d'autorisation IOTA"
+                    : ctx.regimeLibelle === "Dossier de déclaration IOTA"             ? "Déclaration IOTA"
+                    : (ctx.regimeLibelle || "Hors nomenclature IOTA");
+  doc.text(safeText("-  Dossier technique  -  " + regimeShort), M_LEFT + 18, 9);
+  // Réf + commune à droite
+  doc.setFontSize(9);
+  const right = `Réf. : ${ctx.ref}    |    ${ctx.commune || "—"}`;
+  doc.text(safeText(right), w - M_RIGHT, 9, { align: "right" });
+  doc.setTextColor(...BLACK);
+}
+
+// Footer récurrent
+function drawFooter(doc, ctx, pageNum) {
+  const w = pageW(doc), h = pageH(doc);
+  doc.setDrawColor(...BLUE);
+  doc.setLineWidth(0.4);
+  doc.line(M_LEFT, h - 16, w - M_RIGHT, h - 16);
+  // Ligne 1 (haute) : G.M.E.P en bold (gauche) + MO/date au centre + Page à droite
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(...BLUE_D);
+  doc.text("G.M.E.P", M_LEFT, h - 11);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(...GREY);
+  // MO au centre, sur ligne haute (h - 11) pour ne pas chevaucher l'adresse
+  const moTxt = `MO : ${ctx.mo || "—"}   |   ${ctx.date}`;
+  doc.text(moTxt, w / 2, h - 11, { align: "center" });
+  // Page X à droite, sur ligne haute
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...BLUE_D);
+  doc.text(`Page ${pageNum}`, w - M_RIGHT, h - 11, { align: "right" });
+  // Ligne 2 (basse) : adresse complète, sur toute la largeur centrée
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7.5);
+  doc.setTextColor(...GREY);
+  doc.text("SARL G.M.E.P  -  9 rue de la Marne, 79400 Saint-Maixent-l'École  -  gmep.france@gmail.com  -  www.gmep-france.eu", w / 2, h - 6, { align: "center" });
+  doc.setTextColor(...BLACK);
+}
+
+// Wrapper : nouvelle page courante avec header/footer
+function newPage(doc, ctx) {
+  doc.addPage();
+  ctx.pageNum++;
+  drawHeader(doc, ctx);
+  drawFooter(doc, ctx, ctx.pageNum);
+}
+
+// Bandeau titre section (style bleu plein largeur)
+function sectionBanner(doc, y, title) {
+  const w = pageW(doc);
+  doc.setFillColor(...BLUE);
+  doc.rect(M_LEFT, y, w - M_LEFT - M_RIGHT, 9, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.text(safeText(title), M_LEFT + 4, y + 6.2);
+  doc.setTextColor(...BLACK);
+  return y + 14;
+}
+
+// Sous-titre type "1.1 Foo"
+function subTitle(doc, y, title) {
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(...BLUE_D);
+  doc.text(safeText(title), M_LEFT, y);
+  doc.setTextColor(...BLACK);
+  return y + 6;
+}
+
+// Paragraphe justifié simple (rendu jsPDF = renvoi à la ligne sur largeur)
+function paragraph(doc, y, txt, opts) {
+  opts = opts || {};
+  const w = pageW(doc);
+  const maxW = w - M_LEFT - M_RIGHT - (opts.indent || 0);
+  doc.setFont("helvetica", opts.bold ? "bold" : "normal");
+  doc.setFontSize(opts.size || 10);
+  doc.setTextColor(...(opts.color || BLACK));
+  const lines = doc.splitTextToSize(safeText(txt), maxW);
+  doc.text(lines, M_LEFT + (opts.indent || 0), y);
+  doc.setTextColor(...BLACK);
+  return y + lines.length * (opts.lineH || 4.5);
+}
+
+// Tableau 2 colonnes Paramètre / Valeur (style référence)
+// rows = [[label, value], ...]
+function table2Col(doc, y, rows, opts) {
+  opts = opts || {};
+  const w = pageW(doc);
+  const fullW = w - M_LEFT - M_RIGHT;
+  const colW1 = opts.colW1 || fullW * 0.42;
+  const colW2 = fullW - colW1;
+  const rowH = opts.rowH || 7;
+  const header = opts.header;        // [labelHdr, valueHdr] ou null
+  const orange = opts.orange;        // true => header orange
+
+  let cy = y;
+  if (header) {
+    doc.setFillColor(...(orange ? ORANGE : BLUE));
+    doc.rect(M_LEFT, cy, fullW, rowH, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9.5);
+    doc.text(safeText(header[0]), M_LEFT + 3, cy + rowH - 2);
+    doc.text(safeText(header[1]), M_LEFT + colW1 + 3, cy + rowH - 2);
+    cy += rowH;
+    doc.setTextColor(...BLACK);
+  }
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9.5);
+  rows.forEach((row, i) => {
+    // Découpe valeur sur 2 lignes max
+    const valLines = doc.splitTextToSize(safeText(row[1] != null ? row[1] : "—"), colW2 - 6);
+    const lines = Math.max(1, valLines.length);
+    const h = Math.max(rowH, lines * 5 + 2);
+    if (i % 2 === 0) {
+      doc.setFillColor(...GREY_LL);
+      doc.rect(M_LEFT, cy, fullW, h, "F");
+    }
+    // Bordure cellule label (subtile)
+    doc.setDrawColor(220, 220, 220);
+    doc.setLineWidth(0.1);
+    doc.line(M_LEFT + colW1, cy, M_LEFT + colW1, cy + h);
+    // Label
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...BLUE_D);
+    doc.text(safeText(row[0]), M_LEFT + 3, cy + 5);
+    // Valeur
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(...BLACK);
+    doc.text(valLines, M_LEFT + colW1 + 3, cy + 5);
+    cy += h;
+  });
+  // Cadre extérieur
+  doc.setDrawColor(...BLUE);
+  doc.setLineWidth(0.3);
+  doc.rect(M_LEFT, y + (header ? rowH : 0), fullW, cy - y - (header ? rowH : 0));
+  return cy + 3;
+}
+
+// Tableau multi-colonnes générique
+function tableN(doc, y, rows, opts) {
+  opts = opts || {};
+  const w = pageW(doc);
+  const fullW = w - M_LEFT - M_RIGHT;
+  const widths = opts.widths;
+  const total = widths.reduce((a, b) => a + b, 0);
+  const colW = widths.map(p => p / total * fullW);
+  const header = opts.header || null;
+  const rowH = opts.rowH || 7;
+  const orange = opts.orange;
+
+  let cy = y;
+  if (header) {
+    doc.setFillColor(...(orange ? ORANGE : BLUE));
+    doc.rect(M_LEFT, cy, fullW, rowH, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9.5);
+    let cx = M_LEFT;
+    header.forEach((label, i) => {
+      doc.text(safeText(label), cx + 3, cy + rowH - 2);
+      cx += colW[i];
+    });
+    cy += rowH;
+    doc.setTextColor(...BLACK);
+  }
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  rows.forEach((row, i) => {
+    // Hauteur ligne (max wrapped lines)
+    let maxLines = 1;
+    const wrapped = row.map((cell, j) => {
+      const lines = doc.splitTextToSize(safeText(cell != null ? cell : "—"), colW[j] - 6);
+      maxLines = Math.max(maxLines, lines.length);
+      return lines;
+    });
+    const h = Math.max(rowH, maxLines * 4.5 + 2.5);
+    if (i % 2 === 0) {
+      doc.setFillColor(...GREY_LL);
+      doc.rect(M_LEFT, cy, fullW, h, "F");
+    }
+    // séparateurs colonnes
+    let cx = M_LEFT;
+    doc.setDrawColor(220, 220, 220);
+    doc.setLineWidth(0.1);
+    wrapped.forEach((lines, j) => {
+      if (j > 0) doc.line(cx, cy, cx, cy + h);
+      doc.setTextColor(...BLACK);
+      doc.text(lines, cx + 3, cy + 5);
+      cx += colW[j];
+    });
+    cy += h;
+  });
+  doc.setDrawColor(...BLUE);
+  doc.setLineWidth(0.3);
+  doc.rect(M_LEFT, y + (header ? rowH : 0), fullW, cy - y - (header ? rowH : 0));
+  return cy + 3;
+}
+
+// Cadre rempli (info / warning / success) avec texte intérieur
+function calloutBox(doc, y, text, kind) {
+  const w = pageW(doc);
+  const fullW = w - M_LEFT - M_RIGHT;
+  let bg = GREEN_BG, dk = GREEN_DK;
+  if (kind === "warn") { bg = ORANGE_BG; dk = ORANGE_DK; }
+  if (kind === "danger") { bg = RED_BG; dk = RED_DK; }
+  if (kind === "info") { bg = BLUE_L; dk = BLUE; }
+  const lines = doc.splitTextToSize(safeText(text), fullW - 10);
+  const h = lines.length * 4.5 + 6;
+  doc.setFillColor(...bg);
+  doc.setDrawColor(...dk);
+  doc.setLineWidth(0.6);
+  doc.rect(M_LEFT, y, fullW, h, "FD");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9.5);
+  doc.setTextColor(...dk);
+  doc.text(lines, M_LEFT + 5, y + 5);
+  doc.setTextColor(...BLACK);
+  return y + h + 3;
+}
+
+// Cadre éditable (placeholder à compléter — fond blanc, contour pointillé)
+function editableBox(doc, y, minHeight, prompt) {
+  const w = pageW(doc);
+  const fullW = w - M_LEFT - M_RIGHT;
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(9);
+  // Wrap du texte d'invite
+  const safePrompt = safeText(prompt);
+  const lines = doc.splitTextToSize(safePrompt, fullW - 8);
+  // Hauteur nécessaire : 5 (top padding) + 4.2*nbLines + 8 (bas pour saisie manuelle minimale)
+  const needed = 5 + lines.length * 4.2 + 8;
+  const height = Math.max(minHeight, needed);
+  doc.setFillColor(255, 255, 255);
+  doc.setDrawColor(160, 160, 160);
+  doc.setLineDashPattern([1.5, 1.5], 0);
+  doc.setLineWidth(0.4);
+  doc.rect(M_LEFT, y, fullW, height, "FD");
+  doc.setLineDashPattern([], 0);
+  doc.setTextColor(...GREY);
+  doc.text(lines, M_LEFT + 4, y + 5);
+  doc.setTextColor(...BLACK);
+  return y + height + 3;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//                           SCHÉMAS SVG via jsPDF
+// ═══════════════════════════════════════════════════════════════════════════
+
+// (A) Coupe schématique puits/piézomètre — vue en coupe simplifiée
+function drawWellCrossSection(doc, x0, y0, w, h, data) {
+  const d = data || {};
+  doc.setDrawColor(...BLACK);
+  doc.setLineWidth(0.4);
+
+  // Cadre fond
+  doc.setFillColor(252, 252, 250);
+  doc.rect(x0, y0, w, h, "F");
+  doc.rect(x0, y0, w, h);
+
+  // Sol (terrain naturel hachuré)
+  const tnY = y0 + 18;
+  doc.setLineWidth(0.3);
+  doc.line(x0, tnY, x0 + w, tnY);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.text("TN", x0 + 2, tnY - 1);
+
+  // Puits (rectangle vertical)
+  const wellW = 14;
+  const wellX = x0 + w / 2 - wellW / 2;
+  const wellH = h - 28;
+  const wellY = tnY;
+
+  // Margelle / capot (au-dessus du TN)
+  doc.setFillColor(190, 190, 190);
+  doc.rect(wellX - 3, wellY - 6, wellW + 6, 6, "F");
+  doc.rect(wellX - 3, wellY - 6, wellW + 6, 6);
+  doc.setFontSize(7);
+  doc.text("Capot étanche", wellX + wellW + 5, wellY - 2);
+
+  // Massif filtrant (silice 2-4 mm)
+  doc.setFillColor(255, 230, 180);
+  doc.rect(wellX, wellY, wellW, wellH, "F");
+
+  // Bentonite (3-5 m sup)
+  doc.setFillColor(110, 70, 50);
+  doc.rect(wellX, wellY, wellW, 8, "F");
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7);
+  doc.setTextColor(255, 255, 255);
+  doc.text("Bentonite", wellX + 0.6, wellY + 5);
+  doc.setTextColor(...BLACK);
+
+  // Tubage PVC (lignes verticales noires - tubes pleins en haut)
+  doc.setLineWidth(0.6);
+  doc.line(wellX + 2, wellY + 8, wellX + 2, wellY + wellH - 4);
+  doc.line(wellX + wellW - 2, wellY + 8, wellX + wellW - 2, wellY + wellH - 4);
+
+  // Crépine (lignes horizontales) sur la moitié basse
+  const crepY = wellY + wellH * 0.55;
+  doc.setLineWidth(0.3);
+  for (let cy = crepY; cy < wellY + wellH - 6; cy += 1.6) {
+    doc.line(wellX + 2.5, cy, wellX + wellW - 2.5, cy);
+  }
+  // Bouchon fond
+  doc.setFillColor(80, 80, 80);
+  doc.rect(wellX + 2, wellY + wellH - 4, wellW - 4, 3, "F");
+
+  // Niveau statique (NS) — ligne bleue horizontale en dehors du puits
+  const nsY = wellY + 22;
+  doc.setDrawColor(30, 100, 200);
+  doc.setLineWidth(0.5);
+  doc.line(x0 + 6, nsY, wellX - 1, nsY);
+  doc.line(wellX + wellW + 1, nsY, x0 + w - 6, nsY);
+  // triangles NS
+  doc.setFillColor(30, 100, 200);
+  doc.triangle(x0 + 8, nsY, x0 + 11, nsY - 2, x0 + 11, nsY + 2, "F");
+  doc.setFontSize(7);
+  doc.setTextColor(30, 100, 200);
+  doc.text(`NS ${d.ns != null ? fmtN(d.ns, 2) + " m" : "[--]"}`, x0 + 12, nsY - 1);
+  doc.setTextColor(...BLACK);
+
+  // Niveau dynamique (ND) plus bas
+  const ndY = nsY + 10;
+  doc.setDrawColor(150, 80, 30);
+  doc.setLineDashPattern([1, 1], 0);
+  doc.line(x0 + 6, ndY, wellX - 1, ndY);
+  doc.line(wellX + wellW + 1, ndY, x0 + w - 6, ndY);
+  doc.setLineDashPattern([], 0);
+  doc.setFontSize(7);
+  doc.setTextColor(150, 80, 30);
+  doc.text(`ND (rabattement s = ${d.s != null ? fmtN(d.s, 2) + " m" : "[--]"})`, wellX + wellW + 4, ndY - 1);
+  doc.setTextColor(...BLACK);
+
+  // Fond de fouille (cote)
+  const ffY = nsY + 16;
+  doc.setDrawColor(...RED_DK);
+  doc.setLineDashPattern([2, 1], 0);
+  doc.line(x0 + 6, ffY, x0 + w - 6, ffY);
+  doc.setLineDashPattern([], 0);
+  doc.setFontSize(7);
+  doc.setTextColor(...RED_DK);
+  doc.text(`Fond de fouille ${d.ff != null ? fmtN(d.ff, 2) + " m" : "[--]"}`, x0 + w - 6, ffY - 1, { align: "right" });
+  doc.setTextColor(...BLACK);
+
+  // Cote profondeur puits (flèche vert à droite du puits)
+  doc.setDrawColor(60, 60, 60);
+  doc.setLineWidth(0.3);
+  doc.line(wellX - 8, wellY, wellX - 8, wellY + wellH);
+  doc.triangle(wellX - 8, wellY, wellX - 9.5, wellY + 2, wellX - 6.5, wellY + 2, "F");
+  doc.triangle(wellX - 8, wellY + wellH, wellX - 9.5, wellY + wellH - 2, wellX - 6.5, wellY + wellH - 2, "F");
+  doc.setFontSize(7);
+  doc.text(`Profondeur ${d.prof != null ? fmtN(d.prof, 1) + " m" : "[--]"}`, wellX - 12, wellY + wellH / 2, { align: "right" });
+
+  // Légende (en bas)
+  const lgY = y0 + h - 6;
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "bold");
+  doc.text("Légende :", x0 + 2, lgY);
+  doc.setFont("helvetica", "normal");
+  // Bentonite swatch
+  doc.setFillColor(110, 70, 50); doc.rect(x0 + 18, lgY - 3, 4, 3, "F");
+  doc.text("Bentonite", x0 + 23, lgY);
+  // Massif filtrant
+  doc.setFillColor(255, 230, 180); doc.rect(x0 + 43, lgY - 3, 4, 3, "FD");
+  doc.text("Massif filtrant silice 2-4 mm", x0 + 48, lgY);
+  // Crépine
+  doc.text("|||  Crépine PVC", x0 + 105, lgY);
+}
+
+// (B) Cône de rabattement Dupuit-Thiem — coupe verticale
+function drawDrawdownCone(doc, x0, y0, w, h, data) {
+  const d = data || {};
+  doc.setDrawColor(...BLACK);
+  doc.setLineWidth(0.4);
+  doc.setFillColor(252, 252, 250);
+  doc.rect(x0, y0, w, h, "F");
+  doc.rect(x0, y0, w, h);
+
+  // TN
+  const tnY = y0 + 12;
+  doc.line(x0, tnY, x0 + w, tnY);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.text("TN", x0 + 2, tnY - 1);
+
+  // NS initial horizontal (toute la largeur)
+  const nsY = tnY + 14;
+  doc.setDrawColor(30, 100, 200);
+  doc.setLineWidth(0.5);
+  doc.line(x0 + 5, nsY, x0 + w - 5, nsY);
+  doc.setFontSize(7);
+  doc.setTextColor(30, 100, 200);
+  doc.text(`NS initial ${d.ns != null ? fmtN(d.ns, 2) + " m" : ""}`, x0 + 6, nsY - 1);
+  doc.setTextColor(...BLACK);
+
+  // Puits central
+  const wellX = x0 + w / 2;
+  const wellTop = tnY;
+  const wellBottom = y0 + h - 14;
+  doc.setLineWidth(0.6);
+  doc.line(wellX - 2, wellTop, wellX - 2, wellBottom);
+  doc.line(wellX + 2, wellTop, wellX + 2, wellBottom);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "bold");
+  doc.text("Puits", wellX, wellTop - 1, { align: "center" });
+
+  // Cône (courbe logarithmique approchée par segments)
+  doc.setDrawColor(150, 80, 30);
+  doc.setLineWidth(0.6);
+  const sMax = 24; // amplitude graphique
+  const rPxLeft = wellX - x0 - 5;
+  const rPxRight = x0 + w - 5 - wellX;
+  // côté gauche
+  const N = 40;
+  let px = wellX - 2, py = nsY + sMax;
+  doc.line(wellX - 2, nsY, wellX - 2, py);
+  for (let i = 1; i <= N; i++) {
+    const t = i / N;
+    const rPx = t * rPxLeft;
+    // forme log : ln(R/r) → s décroissant
+    const s = sMax * (1 - Math.log(1 + 9 * t) / Math.log(10));
+    const nx = wellX - 2 - rPx;
+    const ny = nsY + Math.max(0, s);
+    doc.line(px, py, nx, ny);
+    px = nx; py = ny;
+  }
+  // côté droit
+  px = wellX + 2; py = nsY + sMax;
+  doc.line(wellX + 2, nsY, wellX + 2, py);
+  for (let i = 1; i <= N; i++) {
+    const t = i / N;
+    const rPx = t * rPxRight;
+    const s = sMax * (1 - Math.log(1 + 9 * t) / Math.log(10));
+    const nx = wellX + 2 + rPx;
+    const ny = nsY + Math.max(0, s);
+    doc.line(px, py, nx, ny);
+    px = nx; py = ny;
+  }
+
+  // Cotes : rabattement s (vertical au centre)
+  doc.setDrawColor(60, 60, 60);
+  doc.setLineWidth(0.3);
+  doc.line(wellX + 4, nsY, wellX + 4, nsY + sMax);
+  doc.triangle(wellX + 4, nsY, wellX + 2.8, nsY + 2, wellX + 5.2, nsY + 2, "F");
+  doc.triangle(wellX + 4, nsY + sMax, wellX + 2.8, nsY + sMax - 2, wellX + 5.2, nsY + sMax - 2, "F");
+  doc.setFontSize(7);
+  doc.text(`s = ${d.s != null ? fmtN(d.s, 2) + " m" : "[--]"}`, wellX + 6, nsY + sMax / 2);
+
+  // Cote R (rayon d'influence — flèche horizontale en bas)
+  const arrY = nsY + sMax + 5;
+  doc.line(wellX, arrY, x0 + w - 6, arrY);
+  doc.triangle(x0 + w - 6, arrY, x0 + w - 8, arrY - 1, x0 + w - 8, arrY + 1, "F");
+  doc.triangle(wellX, arrY, wellX + 2, arrY - 1, wellX + 2, arrY + 1, "F");
+  doc.setFontSize(7);
+  doc.text(`R = ${d.R != null ? fmtN(d.R, 1) + " m" : "[--]"}`, (wellX + x0 + w) / 2, arrY + 4, { align: "center" });
+
+  // Légende
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.text(`Hypothèse Dupuit-Thiem : Q = 2.pi.T.s / ln(R/r)   |   T = ${d.T != null ? fmtExp(d.T) + " m²/s" : "[--]"}`,
+    x0 + 4, y0 + h - 3);
+}
+
+// (C) Schéma conceptuel — Puits + 2 piézomètres P1, P2 en vue de dessus
+function drawConceptualLayout(doc, x0, y0, w, h, data) {
+  const d = data || {};
+  doc.setDrawColor(...BLACK);
+  doc.setLineWidth(0.4);
+  doc.setFillColor(252, 252, 250);
+  doc.rect(x0, y0, w, h, "F");
+  doc.rect(x0, y0, w, h);
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.text("Vue en plan — Puits et piézomètres de suivi", x0 + 4, y0 + 6);
+
+  // Cercles zone d'influence (recentrés vers la gauche pour laisser place au tableau à droite)
+  const cx = x0 + w * 0.28;
+  const cy = y0 + h * 0.55;
+  doc.setDrawColor(30, 100, 200);
+  doc.setLineDashPattern([1.5, 1.5], 0);
+  doc.setLineWidth(0.4);
+  doc.circle(cx, cy, 22);
+  doc.setLineDashPattern([], 0);
+
+  doc.setDrawColor(150, 80, 30);
+  doc.setLineWidth(0.3);
+  doc.circle(cx, cy, 8);
+
+  // Puits central
+  doc.setFillColor(...RED_DK);
+  doc.circle(cx, cy, 1.6, "F");
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...RED_DK);
+  doc.text("Puits", cx + 2, cy - 1);
+
+  // P1
+  const p1x = cx - 12, p1y = cy - 10;
+  doc.setFillColor(30, 100, 200);
+  doc.circle(p1x, p1y, 1.4, "F");
+  doc.setTextColor(30, 100, 200);
+  doc.text("P1", p1x - 4, p1y - 1);
+
+  // P2
+  const p2x = cx + 15, p2y = cy + 6;
+  doc.circle(p2x, p2y, 1.4, "F");
+  doc.text("P2", p2x + 2, p2y);
+
+  doc.setTextColor(...BLACK);
+  // Légende cercles (sous le schéma, pas à côté)
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7);
+  doc.text(`R = ${d.R != null ? fmtN(d.R, 0) + " m" : "[--]"}`, cx, cy + 26);
+  doc.text("C\u00f4ne de rabattement", cx - 8, y0 + h - 4);
+
+  // Tableau récapitulatif à droite (largement à droite, hors zone cercle)
+  const tx = x0 + w * 0.58;
+  const ty = y0 + 14;
+  const tw = w * 0.40;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setFillColor(...BLUE);
+  doc.rect(tx, ty, tw, 5, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.text("Ouvrage", tx + 1, ty + 3.5);
+  doc.text("Dist.", tx + 18, ty + 3.5);
+  doc.text("Rabatt.", tx + 32, ty + 3.5);
+  doc.setTextColor(...BLACK);
+  doc.setFont("helvetica", "normal");
+  const rows = [
+    ["Puits", "0 m", `${d.s != null ? fmtN(d.s, 2) + " m" : "—"}`],
+    ["P1",    "[à compléter]", "—"],
+    ["P2",    "[à compléter]", "—"]
+  ];
+  let yy = ty + 5;
+  rows.forEach((r, i) => {
+    if (i % 2 === 0) {
+      doc.setFillColor(...GREY_LL);
+      doc.rect(tx, yy, tw, 5, "F");
+    }
+    doc.text(r[0], tx + 1, yy + 3.5);
+    doc.text(r[1], tx + 18, yy + 3.5);
+    doc.text(r[2], tx + 32, yy + 3.5);
+    yy += 5;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//                                  PAGE DE GARDE
+// ═══════════════════════════════════════════════════════════════════════════
+
+function buildCover(doc, ctx, r) {
+  const w = pageW(doc), h = pageH(doc);
+  const inp = r.inputs;
+
+  // Bandeau bleu haut
+  doc.setFillColor(...BLUE);
+  doc.rect(0, 0, w, 38, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(22);
+  doc.text("G.M.E.P", w / 2, 18, { align: "center" });
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "normal");
+  doc.text("Bureau d'études en environnement et hydrogéologie", w / 2, 25, { align: "center" });
+  doc.text("9 rue de la Marne  |  79400 Saint-Maixent-l'École  |  gmep.france@gmail.com", w / 2, 32, { align: "center" });
+  doc.setTextColor(...BLACK);
+
+  // Titres
+  let y = 56;
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...BLUE_D);
+  doc.setFontSize(22);
+  doc.text("Rabattement d'une nappe souterraine", w / 2, y, { align: "center" });
+  y += 12;
+  doc.setFontSize(15);
+  doc.text("DOSSIER TECHNIQUE — " + (ctx.regimeUpper || "HORS NOMENCLATURE IOTA"), w / 2, y, { align: "center" });
+  y += 9;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+  doc.setTextColor(...BLACK);
+  doc.text("Articles L.214-1 à L.214-6 du Code de l'environnement", w / 2, y, { align: "center" });
+  y += 5;
+  doc.text("Nomenclature IOTA — R.214-1 du Code de l'environnement", w / 2, y, { align: "center" });
+
+  // Tableau référence dossier (rectangle)
+  y += 10;
+  const refRows = [
+    ["Référence dossier", ctx.ref],
+    ["Commune", inp.commune || "[ à compléter ]"],
+    ["Département", inp.dept ? `${inp.dept}${r.clim && r.clim.dept ? " — " + r.clim.dept : ""}` : "[ à compléter ]"],
+    ["Date d'édition", ctx.date],
+    ["Version", "v15.61"]
+  ];
+  y = table2Col(doc, y, refRows, { colW1: (w - M_LEFT - M_RIGHT) * 0.38 });
+
+  // Intervenants — 4 colonnes
+  y += 6;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(...BLUE_D);
+  doc.text("Intervenants", M_LEFT, y);
+  doc.setTextColor(...BLACK);
+  y += 4;
+
+  const interv = [
+    [
+      "Maître d'ouvrage",
+      inp.mo || "[ MO à compléter ]",
+      (inp.mo_adresse || "Adresse :\n[ à compléter ]")
+        + "\n" + (inp.mo_tel ? "Tél : " + inp.mo_tel : "Tél : [ à compléter ]")
+        + "\n" + (inp.mo_email ? "Email : " + inp.mo_email : "Email : [ à compléter ]")
+    ],
+    [
+      "Entreprise travaux",
+      inp.travaux || "[ à compléter ]",
+      (inp.travaux_adresse || "Adresse :\n[ à compléter ]")
+        + "\n" + (inp.travaux_siret ? "SIRET : " + inp.travaux_siret : "SIRET : [ à compléter ]")
+    ],
+    [
+      "Bureau d'études",
+      inp.be || "G.M.E.P",
+      "SARL G.M.E.P\n9 rue de la Marne\n79400 Saint-Maixent-l'École\nSIRET 75309762500010\ngmep.france@gmail.com"
+    ],
+    [
+      "Société de forage",
+      inp.forage || "[ à compléter ]",
+      (inp.forage_adresse || "Adresse :\n[ à compléter ]")
+        + "\n" + (inp.forage_siret ? "SIRET : " + inp.forage_siret : "SIRET : [ à compléter ]")
+    ]
+  ];
+  // 4 colonnes uniformes — pour chacune : header bleu + nom gras + corps
+  const fullW = w - M_LEFT - M_RIGHT;
+  const colW = fullW / 4;
+  const colH = 56;
+  for (let i = 0; i < 4; i++) {
+    const cx = M_LEFT + i * colW;
+    // header
+    doc.setFillColor(...BLUE);
+    doc.rect(cx, y, colW, 7, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.text(safeText(interv[i][0]), cx + colW / 2, y + 5, { align: "center" });
+    // corps
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(...BLUE);
+    doc.setLineWidth(0.3);
+    doc.rect(cx, y + 7, colW, colH - 7);
+    doc.setTextColor(...BLUE_D);
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "bold");
+    const nameLines = doc.splitTextToSize(safeText(interv[i][1]), colW - 4);
+    doc.text(nameLines, cx + 2, y + 12);
+    doc.setTextColor(...BLACK);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    const bodyY = y + 12 + nameLines.length * 4;
+    const bodyLines = doc.splitTextToSize(safeText(interv[i][2]), colW - 4);
+    doc.text(bodyLines, cx + 2, bodyY);
+  }
+  y += colH + 6;
+
+  // Cadre conclusion préliminaire
+  doc.setFillColor(...GREEN_BG);
+  doc.setDrawColor(...GREEN_DK);
+  doc.setLineWidth(0.6);
+  doc.rect(M_LEFT, y, fullW, 24, "FD");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(...GREEN_DK);
+  doc.text("Statut réglementaire pré-calculé", w / 2, y + 8, { align: "center" });
+  doc.setFontSize(13);
+  doc.text(safeText(r.iota_status), w / 2, y + 17, { align: "center" });
+  doc.setTextColor(...BLACK);
+  y += 28;
+
+  // Logo / signature pied de garde
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(8);
+  doc.setTextColor(...GREY);
+  doc.text("Document généré automatiquement par GMEP Logiciel Rabattement v15.61 — www.gmep-france.eu",
+    w / 2, h - 12, { align: "center" });
+  doc.text("Ce dossier doit être complété et vérifié avant tout dépôt en DDT.",
+    w / 2, h - 7, { align: "center" });
+  doc.setTextColor(...BLACK);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//                                  SOMMAIRE
+// ═══════════════════════════════════════════════════════════════════════════
+
+function buildToc(doc, ctx) {
+  let y = M_TOP + 4;
+  y = sectionBanner(doc, y, "SOMMAIRE");
+  const items = [
+    ["1.",   "Objet de l'étude",                                              3],
+    ["2.",   "Données du projet",                                              4],
+    ["2.1",  "Caractéristiques de l'ouvrage",                                  4],
+    ["2.2",  "Paramètres hydrogéologiques",                                    5],
+    ["2bis", "Schémas techniques et contexte géographique",                    6],
+    ["3.",   "Méthodes de calcul",                                            10],
+    ["3.1",  "Méthode de Theis (régime transitoire)",                         10],
+    ["3.2",  "Méthode de Dupuit-Thiem (régime permanent)",                    11],
+    ["4.",   "Résultats des calculs",                                         13],
+    ["4.1",  "Rabattement et débits",                                         13],
+    ["4.2",  "Bilan volumétrique",                                            14],
+    ["5.",   "Vérification réglementaire — Nomenclature IOTA",                15],
+    ["5.1",  "Rubrique 1.1.1.0 — Création d'ouvrage",                         15],
+    ["5.2",  "Rubrique 1.1.2.0 — Prélèvements",                               16],
+    ["5.3",  "Rubrique 1.3.1.0 — Zone de Répartition des Eaux (ZRE)",         17],
+    ["5.4",  "Rubrique 2.x.x.0 — Rejet des eaux d'exhaure",                   18],
+    ["5.5",  "Masse d'eau souterraine concernée (référentiel SANDRE)",        19],
+    ["5.6",  "Régime cumulé & délais d'instruction",                          20],
+    ["6.",   "Sensibilité environnementale — ZNIEFF et Natura 2000",          21],
+    ["7.",   "Préconisations techniques",                                     24],
+    ["8.",   "Conclusion — Synthèse",                                         26],
+    ["—",    "Lexique des abréviations",                                      28]
+  ];
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10.5);
+  const w = pageW(doc);
+  const fullW = w - M_LEFT - M_RIGHT;
+  items.forEach((it, i) => {
+    if (i % 2 === 0) {
+      doc.setFillColor(...GREY_LL);
+      doc.rect(M_LEFT, y - 4, fullW, 6, "F");
+    }
+    doc.setTextColor(...BLUE_D);
+    doc.setFont("helvetica", "bold");
+    doc.text(it[0], M_LEFT + 4, y);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(...BLACK);
+    doc.text(safeText(it[1]), M_LEFT + 22, y);
+    // pointillé droite
+    doc.setTextColor(...GREY);
+    doc.setFontSize(8);
+    doc.text("p. " + it[2], w - M_RIGHT - 4, y, { align: "right" });
+    doc.setFontSize(10.5);
+    doc.setTextColor(...BLACK);
+    y += 6;
+  });
+
+  // Note
+  y += 6;
+  paragraph(doc, y,
+    "Ce dossier technique a pour objet d'évaluer la nécessité d'une procédure de déclaration ou d'autorisation au titre de la Loi sur l'Eau pour un projet de rabattement temporaire de nappe. Les sections 1 à 5 sont calculées automatiquement à partir des paramètres saisis. Les sections 6, 7 et 8 sont à compléter par l'opérateur en s'appuyant sur les bases de données officielles (INPN, BRGM, IGN, SANDRE).",
+    { size: 9, color: GREY });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//                       SECTION 1 — Objet de l'étude
+// ═══════════════════════════════════════════════════════════════════════════
+
+function buildSection1(doc, ctx, r) {
+  let y = M_TOP + 4;
+  y = sectionBanner(doc, y, "1. OBJET DE L'ÉTUDE");
+  const inp = r.inputs;
+  y = paragraph(doc, y,
+    `Le présent dossier technique a pour objet l'évaluation hydrogéologique d'un projet de rabattement de nappe sur la commune de ${inp.commune || "[ à compléter ]"} (département ${inp.dept || "—"}). Les calculs sont effectués selon les méthodes de Theis (régime transitoire) et de Dupuit-Thiem (régime permanent), à partir des paramètres hydrauliques du substrat retenu et de la géométrie de l'ouvrage projeté.`,
+    { size: 10 });
+  y += 2;
+  y = paragraph(doc, y,
+    "L'étude vise à déterminer si le projet relève d'une procédure réglementaire au titre de la Loi sur l'Eau (déclaration ou autorisation), conformément à la nomenclature IOTA définie à l'article R.214-1 du Code de l'environnement. Sont examinées les rubriques 1.1.1.0 (création d'ouvrage), 1.1.2.0 (prélèvements), 1.3.1.0 (Zone de Répartition des Eaux) et 2.x.x.0 (rejet des eaux d'exhaure).",
+    { size: 10 });
+  y += 5;
+
+  // Tableau régime
+  y = subTitle(doc, y, "Synthèse réglementaire");
+  y = tableN(doc, y, [
+    ["Code de l'environnement", "L.214-1 à L.214-6 / R.214-1", r.iota_status, "Voir §5"]
+  ], {
+    header: ["Texte", "Nomenclature applicable", "Régime calculé", "Référence"],
+    widths: [25, 30, 25, 20]
+  });
+
+  y += 4;
+  y = subTitle(doc, y, "Périmètre de l'étude");
+  y = paragraph(doc, y,
+    "— Modélisation hydraulique : calculs de rabattement, débit pompable et volume prélevé.\n— Vérification réglementaire : nomenclature IOTA, ZRE, masse d'eau SANDRE.\n— Sensibilité environnementale : ZNIEFF I/II, Natura 2000 (ZPS/ZSC) — à compléter.\n— Préconisations techniques : équipement de pompage, gestion des eaux d'exhaure, suivi piézométrique.",
+    { size: 10 });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//             SECTION 2 — Données du projet (2.1 + 2.2)
+// ═══════════════════════════════════════════════════════════════════════════
+
+function buildSection2_1(doc, ctx, r) {
+  let y = M_TOP + 4;
+  y = sectionBanner(doc, y, "2. DONNÉES DU PROJET");
+  const inp = r.inputs;
+
+  y = subTitle(doc, y, "2.1  Caractéristiques de l'ouvrage");
+  y = paragraph(doc, y,
+    "Les caractéristiques géométriques et altimétriques de l'ouvrage projeté sont synthétisées ci-après. Ces données conditionnent l'ensemble des calculs hydrogéologiques présentés en sections 3 et 4.",
+    { size: 10 });
+  y += 2;
+
+  const diaIntMm = inp.diam_int ? inp.diam_int * 1000 : null;
+  const rows = [
+    ["Diamètre intérieur (Ø int)",   diaIntMm != null ? `${fmtN(diaIntMm, 0)} mm` : "[ à compléter ]"],
+    ["Diamètre extérieur (Ø ext)",   inp.diam_ext != null && !isNaN(inp.diam_ext) ? `${fmtN(inp.diam_ext, 0)} mm` : "[ à compléter ]"],
+    ["Profondeur du forage",          inp.prof_puits != null && !isNaN(inp.prof_puits) ? `${fmtN(inp.prof_puits, 2)} m` : "[ à compléter ]"],
+    ["Altimétrie tête d'ouvrage",     inp.alt_tete != null && !isNaN(inp.alt_tete) ? `${fmtN(inp.alt_tete, 2)} m NGF` : "[ à compléter ]"],
+    ["Altimétrie fond de l'ouvrage",  inp.alt_fond != null && !isNaN(inp.alt_fond) ? `${fmtN(inp.alt_fond, 2)} m NGF` : "[ à compléter ]"],
+    ["Rayon du puits r",              inp.diam_int != null ? `${fmtN(inp.diam_int / 2, 3)} m` : "[ à compléter ]"],
+    ["Type de captage",               inp.type_captage || "Puits foré avec tubage PVC crépiné"],
+    ["Niveau statique (NS / TN)",     inp.ns != null && !isNaN(inp.ns) ? `${fmtN(inp.ns, 2)} m` : "[ à compléter ]"],
+    ["Fond de fouille (FF / TN)",     inp.ff != null && !isNaN(inp.ff) ? `${fmtN(inp.ff, 2)} m` : "[ à compléter ]"],
+    ["Rabattement requis s = FF - NS", r.s != null && !isNaN(r.s) ? `${fmtN(r.s, 2)} m` : "—"],
+    ["Rayon d'influence R (saisie)",  inp.rayon_inf != null && !isNaN(inp.rayon_inf) ? `${fmtN(inp.rayon_inf, 1)} m` : "—"],
+    ["Durée de pompage prévue",       inp.t_pompage != null && !isNaN(inp.t_pompage) ? `${fmtN(inp.t_pompage, 0)} h` : "[ à compléter ]"]
+  ];
+  y = table2Col(doc, y, rows, { header: ["Paramètre", "Valeur"] });
+
+  y += 3;
+  y = subTitle(doc, y, "Équipements de l'ouvrage");
+  y = paragraph(doc, y,
+    "— Margelle bétonnée ou dalle périphérique étanche (rayon minimal 0,5 m).\n"
+    + "— Capot verrouillé étanche aux eaux de ruissellement.\n"
+    + "— Tubage plein PVC ou acier inox sur la partie supérieure (zone non saturée).\n"
+    + "— Crépine sur la zone captée — fente adaptée à la granulométrie de l'aquifère.\n"
+    + "— Massif filtrant de silice 2-4 mm sur toute la hauteur crépinée.\n"
+    + "— Bouchon de bentonite (≥ 2 m) en partie supérieure pour étanchéité annulaire.\n"
+    + "— Cimentation annulaire au-dessus du bouchon bentonite jusqu'au TN.",
+    { size: 9.5 });
+}
+
+function buildSection2_2(doc, ctx, r) {
+  let y = M_TOP + 4;
+  y = subTitle(doc, y, "2.2  Paramètres hydrogéologiques");
+  y = paragraph(doc, y,
+    "Le substrat retenu fixe les paramètres hydrauliques utilisés dans les calculs. La transmissivité T est calculée comme le produit de la conductivité hydraulique K par l'épaisseur saturée e de l'aquifère.",
+    { size: 10 });
+  y += 2;
+
+  const geo = r.geo || {};
+  const rows = [
+    ["Substrat retenu",            r.inputs.substrat || "[ à compléter ]"],
+    ["Famille géologique",         geo.famille || "—"],
+    ["Type de nappe",              geo.type || "—"],
+    ["Conductivité hydraulique K", geo.K != null ? `${fmtExp(geo.K)} m/s` : "—"],
+    ["Transmissivité T = K × e",   r.T != null ? `${fmtExp(r.T)} m²/s` : "—"],
+    ["Coefficient d'emmagasinement S (captif)",  geo.S_captif != null ? fmtExp(geo.S_captif) : (r.S != null ? fmtExp(r.S) : "—")],
+    ["Coefficient d'emmagasinement S (libre)",   geo.S_libre  != null ? fmtExp(geo.S_libre)  : "—"],
+    ["Porosité efficace ne",       geo.ne != null ? fmtN(geo.ne, 3) : "—"],
+    ["Épaisseur saturée e",        geo.ep != null ? `${fmtN(geo.ep, 1)} m` : "—"]
+  ];
+  y = table2Col(doc, y, rows, { header: ["Paramètre hydrogéologique", "Valeur"], orange: true });
+
+  y += 3;
+  y = subTitle(doc, y, "Données terrain");
+  const dataRows = [
+    ["Niveau statique NS",    r.inputs.ns != null ? `${fmtN(r.inputs.ns, 2)} m / TN` : "—"],
+    ["Fond de fouille FF",    r.inputs.ff != null ? `${fmtN(r.inputs.ff, 2)} m / TN` : "—"],
+    ["Rabattement s",         r.s  != null ? `${fmtN(r.s, 2)} m` : "—"],
+    ["Rayon d'influence R",   r.R  != null ? `${fmtN(r.R, 1)} m` : "—"],
+    ["Durée pompage",         r.inputs.t_pompage != null ? `${fmtN(r.inputs.t_pompage, 0)} h` : "—"],
+    ["Heures d'exploitation/jour", r.inputs.t_exp != null ? `${fmtN(r.inputs.t_exp, 0)} h/j` : "—"]
+  ];
+  y = table2Col(doc, y, dataRows, { header: ["Donnée", "Valeur"] });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//          SECTION 2bis — Schémas techniques (3 pages)
+// ═══════════════════════════════════════════════════════════════════════════
+
+function buildSchemas(doc, ctx, r) {
+  // Page schéma A : coupe puits
+  let y = M_TOP + 4;
+  y = sectionBanner(doc, y, "2bis. SCHÉMAS TECHNIQUES");
+  y = subTitle(doc, y, "A.  Coupe schématique du puits et du piézomètre");
+  y = paragraph(doc, y,
+    "La coupe schématique ci-dessous illustre la configuration projetée : tubage PVC plein en partie supérieure, crépine sur la zone captée, massif filtrant de silice 2-4 mm, et bouchon de bentonite en tête. Les niveaux d'eau (statique et dynamique) ainsi que la cote du fond de fouille sont positionnés pour faciliter l'interprétation.",
+    { size: 9.5 });
+  const w = pageW(doc);
+  const drawW = w - M_LEFT - M_RIGHT;
+  drawWellCrossSection(doc, M_LEFT, y, drawW, 130, {
+    ns: r.inputs.ns, ff: r.inputs.ff, prof: r.inputs.prof_puits, s: r.s
+  });
+
+  // Page schéma B : cône Dupuit-Thiem
+  newPage(doc, ctx);
+  y = M_TOP + 4;
+  y = subTitle(doc, y, "B.  Cône de rabattement (Dupuit-Thiem, régime permanent)");
+  y = paragraph(doc, y,
+    "Le rabattement induit par le pompage prend la forme d'un cône de dépression centré sur l'ouvrage. Sa géométrie suit la solution analytique de Dupuit-Thiem en régime permanent : s(r) = Q / (2.pi.T) . ln(R/r). Le rayon d'influence R correspond à la distance à laquelle le rabattement devient négligeable.",
+    { size: 9.5 });
+  drawDrawdownCone(doc, M_LEFT, y, drawW, 110, { ns: r.inputs.ns, s: r.s, R: r.R, T: r.T });
+
+  // Page schéma C : conceptuel + cartes
+  newPage(doc, ctx);
+  y = M_TOP + 4;
+  y = subTitle(doc, y, "C.  Schéma conceptuel — Puits et piézomètres de suivi");
+  y = paragraph(doc, y,
+    "Configuration recommandée : au moins deux piézomètres de suivi (P1, P2) implantés à des distances croissantes du puits, dans le périmètre du cône de rabattement. Leurs relevés permettront de valider en phase chantier les hypothèses hydrauliques de la présente note.",
+    { size: 9.5 });
+  drawConceptualLayout(doc, M_LEFT, y, drawW, 70, { R: r.R, s: r.s });
+  y += 76;
+
+  y = subTitle(doc, y, "Contexte géographique — Cartes de référence");
+  y = paragraph(doc, y,
+    "Les cartes officielles à joindre au dossier (cadres ci-dessous) sont à générer depuis les portails IGN Géoportail, BRGM InfoTerre, SANDRE Eau France et Hub'Eau. À reporter manuellement ou via l'onglet « Carte » du logiciel.",
+    { size: 9, color: GREY });
+  // 5 placeholders mini
+  const halfW = (drawW - 4) / 2;
+  const mapH = 22;
+  const labels = [
+    "Carte 1 — Localisation générale (IGN Géoportail PLANIGNV2, échelle 1:100 000)",
+    "Carte 2 — Topographique (IGN PLANIGNV2, échelle 1:25 000)",
+    "Carte 3 — Géologique (BRGM InfoTerre, échelle 1:50 000)",
+    "Carte 4 — Hydrologique (IGN + SANDRE, échelle 1:25 000)",
+    "Carte 5 — Masses d'eau souterraine DCE (Eau France MDO + BRGM BSS)"
+  ];
+  for (let i = 0; i < labels.length; i++) {
+    const col = i % 2, row = Math.floor(i / 2);
+    const cx = M_LEFT + col * (halfW + 4);
+    const cy = y + row * (mapH + 3);
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(160, 160, 160);
+    doc.setLineDashPattern([1.5, 1.5], 0);
+    doc.setLineWidth(0.4);
+    doc.rect(cx, cy, halfW, mapH, "FD");
+    doc.setLineDashPattern([], 0);
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(8);
+    doc.setTextColor(...GREY);
+    const lines = doc.splitTextToSize(labels[i], halfW - 4);
+    doc.text(lines, cx + 2, cy + 5);
+    doc.setTextColor(...BLACK);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//          PAGE Localisation — capture carte Leaflet si dispo
+// ═══════════════════════════════════════════════════════════════════════════
+
+async function buildLocation(doc, ctx, r) {
+  let y = M_TOP + 4;
+  y = sectionBanner(doc, y, "2ter. LOCALISATION CARTOGRAPHIQUE");
+  const inp = r.inputs;
+
+  if (inp.x_l93 && inp.y_l93) {
+    const wgs = lambert93_to_wgs84(inp.x_l93, inp.y_l93);
+    y = table2Col(doc, y, [
+      ["X Lambert 93",       `${fmtInt(inp.x_l93)} m`],
+      ["Y Lambert 93",       `${fmtInt(inp.y_l93)} m`],
+      ["Latitude WGS84",     wgs.lat.toFixed(5) + "°"],
+      ["Longitude WGS84",    wgs.lon.toFixed(5) + "°"],
+      ["Rayon d'influence",  r.R != null ? `${fmtN(r.R, 0)} m` : "—"]
+    ], { header: ["Paramètre", "Valeur"] });
+  } else {
+    y = calloutBox(doc, y, "Coordonnées Lambert 93 non saisies. Renseignez X et Y dans l'onglet « Saisie » pour activer la carte automatique.", "warn");
+  }
+
+  // Capture carte si visible
+  let mapImg = null;
+  if (inp.x_l93 && inp.y_l93) {
+    const mapEl = document.getElementById("map");
+    if (mapEl && mapEl.offsetParent !== null) {
+      mapImg = await captureMap();
+    }
+  }
+  const w = pageW(doc);
+  const drawW = w - M_LEFT - M_RIGHT;
+  if (mapImg) {
+    doc.addImage(mapImg, "JPEG", M_LEFT, y, drawW, 110);
+  } else {
+    doc.setDrawColor(160, 160, 160);
+    doc.setFillColor(252, 252, 252);
+    doc.setLineDashPattern([1.5, 1.5], 0);
+    doc.rect(M_LEFT, y, drawW, 110, "FD");
+    doc.setLineDashPattern([], 0);
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(10);
+    doc.setTextColor(...GREY);
+    doc.text("Affichez l'onglet « Carte » dans l'application avant de générer le PDF pour insérer ici la carte de situation.",
+      w / 2, y + 55, { align: "center", maxWidth: drawW - 20 });
+    doc.setTextColor(...BLACK);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//          SECTION 3 — Méthodes de calcul (Theis & Dupuit)
+// ═══════════════════════════════════════════════════════════════════════════
+
+function buildSection3(doc, ctx, r) {
+  let y = M_TOP + 4;
+  y = sectionBanner(doc, y, "3. MÉTHODES DE CALCUL");
+
+  y = subTitle(doc, y, "3.1  Méthode de Theis — Régime transitoire");
+  y = paragraph(doc, y,
+    "La méthode de Theis (1935) permet de calculer le débit Q nécessaire pour atteindre un rabattement s en régime transitoire dans un aquifère captif homogène et isotrope. L'expression analytique est :",
+    { size: 10 });
+  y += 1;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(...BLUE_D);
+  doc.text("Q = 4.pi.T.s / W(u)        avec        u = r².S / (4.T.t)", pageW(doc) / 2, y + 4, { align: "center" });
+  doc.setTextColor(...BLACK);
+  y += 10;
+
+  y = paragraph(doc, y,
+    "où W(u) est la fonction de puits (well function), T la transmissivité, S le coefficient d'emmagasinement, r le rayon du puits et t la durée de pompage. La fonction W(u) est évaluée par développement en série pour u < 1, et par approximation asymptotique pour u >> 1.",
+    { size: 10 });
+  y += 2;
+
+  y = table2Col(doc, y, [
+    ["Rayon du puits r",            r.r_puits != null ? `${fmtN(r.r_puits, 3)} m` : "—"],
+    ["Durée de pompage t",          r.t_s != null ? `${fmtN(r.t_s / 3600, 1)} h (${fmtInt(r.t_s)} s)` : "—"],
+    ["Variable u",                  r.u != null ? fmtExp(r.u) : "—"],
+    ["Fonction de puits W(u)",      r.Wu != null ? fmtN(r.Wu, 4) : "—"],
+    ["Débit Theis brut Q",          r.Q_theis != null ? `${fmtN(r.Q_theis, 2)} m³/h` : "—"],
+    ["Rendement η",                 "0,70"],
+    ["Débit Theis corrigé Q × η",   r.Q_theis_corr != null ? `${fmtN(r.Q_theis_corr, 2)} m³/h` : "—"]
+  ], { header: ["Paramètre Theis", "Valeur"] });
+
+  y += 3;
+  y = subTitle(doc, y, "3.2  Méthode de Dupuit-Thiem — Régime permanent");
+  y = paragraph(doc, y,
+    "La méthode de Dupuit-Thiem (1906) décrit le régime permanent. Elle suppose un cône de rabattement stabilisé avec un rayon d'influence R fini. L'expression analytique est :",
+    { size: 10 });
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(...BLUE_D);
+  doc.text("Q = 2.pi.T.s / ln(R/r)", pageW(doc) / 2, y + 4, { align: "center" });
+  doc.setTextColor(...BLACK);
+  y += 10;
+
+  y = table2Col(doc, y, [
+    ["Rayon d'influence R",        r.R != null ? `${fmtN(r.R, 1)} m` : "—"],
+    ["Débit Dupuit brut Q",        r.Q_dupuit != null ? `${fmtN(r.Q_dupuit, 2)} m³/h` : "—"],
+    ["Débit Dupuit corrigé Q × η", r.Q_dupuit_corr != null ? `${fmtN(r.Q_dupuit_corr, 2)} m³/h` : "—"]
+  ], { header: ["Paramètre Dupuit-Thiem", "Valeur"] });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//          SECTION 4 — Résultats
+// ═══════════════════════════════════════════════════════════════════════════
+
+function buildSection4(doc, ctx, r) {
+  let y = M_TOP + 4;
+  y = sectionBanner(doc, y, "4. RÉSULTATS DES CALCULS");
+
+  y = subTitle(doc, y, "4.1  Rabattement, débits et fourchette recommandée");
+  y = paragraph(doc, y,
+    "Les deux méthodes de calcul (Theis et Dupuit-Thiem) convergent vers une fourchette de débit recommandée. Cette fourchette intègre une marge de ±15 % pour absorber les incertitudes sur les paramètres hydrauliques et tenir compte des variations saisonnières du niveau piézométrique.",
+    { size: 10 });
+  y += 2;
+
+  y = table2Col(doc, y, [
+    ["Rabattement requis s",            r.s != null ? `${fmtN(r.s, 2)} m` : "—"],
+    ["Débit Theis corrigé",             r.Q_theis_corr != null ? `${fmtN(r.Q_theis_corr, 2)} m³/h` : "—"],
+    ["Débit Dupuit-Thiem corrigé",      r.Q_dupuit_corr != null ? `${fmtN(r.Q_dupuit_corr, 2)} m³/h` : "—"],
+    ["Plage Q recommandée (±15 %)",     (r.Q_min != null && r.Q_max != null) ? `${fmtN(r.Q_min, 2)} — ${fmtN(r.Q_max, 2)} m³/h` : "—"]
+  ], { header: ["Résultat hydraulique", "Valeur"] });
+
+  y += 3;
+  y = subTitle(doc, y, "4.2  Bilan volumétrique");
+  y = paragraph(doc, y,
+    "Les volumes journalier, mensuel et annuel sont calculés à partir du débit corrigé et de la durée d'exploitation effective. Le ratio prélèvement / recharge évalue la pression sur la ressource.",
+    { size: 10 });
+  y += 2;
+  const tExp = r.inputs.t_exp || 24;
+  y = table2Col(doc, y, [
+    ["Durée d'exploitation journalière", `${tExp} h/jour`],
+    ["Volume journalier (Vj = Q × t)",   r.V_jour != null ? `${fmtInt(r.V_jour)} m³/j` : "—"],
+    ["Volume mensuel (30 j)",            r.V_mois != null ? `${fmtInt(r.V_mois)} m³/mois` : "—"],
+    ["Volume annuel (365 j)",            r.V_an   != null ? `${fmtInt(r.V_an)} m³/an` : "—"],
+    ["Surface du cône d'influence",      r.surface_inf != null ? `${fmtInt(r.surface_inf)} m²` : "—"],
+    ["Volume recharge équivalent",       r.V_recharge != null ? `${fmtInt(r.V_recharge)} m³/an` : "—"],
+    ["Ratio prélèvement / recharge",     r.ratio != null ? `${fmtN(r.ratio * 100, 1)} %` : "—"]
+  ], { header: ["Bilan volumétrique", "Valeur"] });
+
+  // Conclusion 4
+  y += 3;
+  const sValid = r.s != null && r.s > 0;
+  if (!sValid) {
+    y = calloutBox(doc, y,
+      "Rabattement nul ou négatif : le fond de fouille est situé au-dessus du niveau d'eau. Aucun pompage gravitaire n'est physiquement requis pour la mise hors d'eau du chantier.",
+      "info");
+  } else {
+    y = calloutBox(doc, y,
+      `Rabattement effectif s = ${fmtN(r.s, 2)} m sur un rayon d'influence de ${fmtN(r.R, 0)} m. Volume prélevé annuel estimé : ${fmtInt(r.V_an)} m³/an.`,
+      "info");
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//          SECTION 5 — Vérification réglementaire IOTA
+// ═══════════════════════════════════════════════════════════════════════════
+
+function buildSection5(doc, ctx, r) {
+  let y = M_TOP + 4;
+  y = sectionBanner(doc, y, "5. VÉRIFICATION RÉGLEMENTAIRE — NOMENCLATURE IOTA");
+  y = paragraph(doc, y,
+    "La nomenclature IOTA (Installations, Ouvrages, Travaux et Activités) définie à l'article R.214-1 du Code de l'Environnement fixe les seuils de déclaration et d'autorisation pour les prélèvements d'eaux souterraines, ainsi que pour les rejets associés. Le présent rabattement de nappe relève simultanément de plusieurs rubriques, examinées ci-après.",
+    { size: 10 });
+  y += 4;
+
+  // 5.1 — 1.1.1.0
+  y = subTitle(doc, y, "5.1  Rubrique 1.1.1.0 — Sondage, forage, puits ou ouvrage souterrain");
+  y = paragraph(doc, y,
+    "Intitulé réglementaire (R.214-1) : sondages, forages, y compris les essais de pompage, création de puits ou d'ouvrage souterrain non destiné à un usage domestique, exécutés en vue de la recherche, surveillance ou prélèvement d'eaux souterraines. Rubrique sans seuil de volume — toute création d'ouvrage de prélèvement non domestique est soumise à déclaration.",
+    { size: 9.5 });
+  y = tableN(doc, y, [["Déclaration (D)", "Tout ouvrage non domestique", "Sans seuil"]],
+    { header: ["Régime", "Condition", "Seuil"], widths: [20, 50, 20] });
+  y = calloutBox(doc, y,
+    "Les ouvrages de rabattement (puits, pointes filtrantes ou tranchées drainantes) projetés relèvent de la rubrique 1.1.1.0 — DÉCLARATION, indépendamment du volume.",
+    "info");
+
+  // 5.2 — 1.1.2.0
+  newPage(doc, ctx);
+  y = M_TOP + 4;
+  y = subTitle(doc, y, "5.2  Rubrique 1.1.2.0 — Prélèvements permanents ou temporaires");
+  y = paragraph(doc, y,
+    "Intitulé réglementaire (R.214-1) : prélèvements permanents ou temporaires issus d'un forage, puits ou ouvrage souterrain dans un système aquifère, à l'exclusion des nappes d'accompagnement de cours d'eau, par pompage, drainage, dérivation ou tout autre procédé. Le volume total prélevé étant :",
+    { size: 9.5 });
+  y = tableN(doc, y, [
+    ["Autorisation (A)",  "Volume annuel prélevé",   "≥ 200 000 m³/an"],
+    ["Déclaration (D)",   "Volume annuel prélevé",   "≥ 10 000 et < 200 000 m³/an"],
+    ["Hors nomenclature", "Volume annuel prélevé",   "< 10 000 m³/an"]
+  ], { header: ["Régime", "Condition", "Seuil annuel"], widths: [20, 35, 35] });
+
+  y += 2;
+  y = subTitle(doc, y, "Calcul du volume annuel prévisionnel");
+  y = table2Col(doc, y, [
+    ["Débit pompé Q (Theis, corrigé η)",   r.Q_theis_corr != null ? `${fmtN(r.Q_theis_corr, 2)} m³/h` : "—"],
+    ["Durée d'exploitation journalière",   `${r.inputs.t_exp || 24} h/jour`],
+    ["Volume journalier Vj",               r.V_jour != null ? `${fmtInt(r.V_jour)} m³/j` : "—"],
+    ["Volume mensuel (30 j)",              r.V_mois != null ? `${fmtInt(r.V_mois)} m³/mois` : "—"],
+    ["Volume annuel V = Vj × 365",         r.V_an != null ? `${fmtInt(r.V_an)} m³/an` : "—"],
+    ["Comparaison seuil déclaration",      r.V_an != null && r.V_an < 10000 ? "< 10 000 m³/an" : (r.V_an != null && r.V_an < 200000 ? "≥ 10 000 et < 200 000" : "≥ 200 000")],
+    ["Statut réglementaire 1.1.2.0",       r.V_an >= 200000 ? "AUTORISATION" : (r.V_an >= 10000 ? "DÉCLARATION" : "HORS NOMENCLATURE")]
+  ], { header: ["Paramètre", "Valeur"] });
+
+  // 5.3 — ZRE
+  newPage(doc, ctx);
+  y = M_TOP + 4;
+  y = subTitle(doc, y, "5.3  Rubrique 1.3.1.0 — Zone de Répartition des Eaux (ZRE)");
+  y = paragraph(doc, y,
+    "Les Zones de Répartition des Eaux (ZRE) sont des secteurs où les ressources hydriques sont insuffisantes par rapport aux besoins. Dans ces zones, les seuils sont abaissés : autorisation à partir de 8 m³/h en capacité totale, déclaration en deçà.",
+    { size: 9.5 });
+  y = tableN(doc, y, [
+    ["Autorisation (A)", "Capacité totale maximale", "≥ 8 m³/h"],
+    ["Déclaration (D)",  "Capacité totale maximale", "< 8 m³/h"]
+  ], { header: ["Régime", "Condition (capacité totale)", "Seuil"], widths: [20, 50, 20] });
+
+  // Statut ZRE pré-calculé + régime résultant pour le projet
+  const zreCommuneLabel = r.zre_applicable === true  ? "OUI — commune classée ZRE (saisie utilisateur)"
+                        : r.zre_applicable === false ? "NON — hors périmètre ZRE"
+                        : "À VÉRIFIER — département à ZRE présomptives (Beauce / Loire-Bretagne)";
+  const debitInfo = `Débit Q calculé (Theis corrigé) = ${fmtN(r.Q_theis_corr, 2)} m³/h — ${r.Q_theis_corr >= 8 ? "DÉPASSE" : "INFÉRIEUR À"} le seuil ZRE de 8 m³/h.`;
+  y = tableN(doc, y, [
+    ["Statut ZRE de la commune", zreCommuneLabel],
+    ["Débit projet vs seuil ZRE",  debitInfo],
+    ["Régime résultant 1.3.1.0",   r.zre_regime]
+  ], { header: ["Paramètre", "Valeur"], widths: [40, 50] });
+
+  // Callout d'alerte si AUTORISATION ZRE
+  if (r.zre_applicable === true && r.Q_theis_corr >= 8) {
+    y = calloutBox(doc, y,
+      `⚠ La commune ${ctx.commune} est classée en Zone de Répartition des Eaux et le débit projeté (${fmtN(r.Q_theis_corr, 2)} m³/h) dépasse le seuil de 8 m³/h. Le projet est donc soumis à AUTORISATION au titre de la rubrique 1.3.1.0 (article R.214-1 du Code de l'environnement). Référence de l'arrêté préfectoral fondateur à indiquer dans le dossier déposé en DDT(M).`,
+      "danger");
+  } else if (r.zre_applicable === null) {
+    y = editableBox(doc, y, 18,
+      "À confirmer : vérifier le classement ZRE de la commune sur le registre officiel (Agence de l'Eau) par code INSEE et reporter la référence de l'arrêté préfectoral fondateur.");
+  }
+
+  // 5.4 — Rejet eaux exhaure (nouvelle page pour clarté)
+  newPage(doc, ctx);
+  y = M_TOP + 4;
+  y = subTitle(doc, y, "5.4  Rejet des eaux d'exhaure — Rubriques 2.x.x.0");
+  y = paragraph(doc, y,
+    "Les eaux pompées dans le cadre du rabattement (eaux d'exhaure) doivent faire l'objet d'un exutoire dûment identifié. Selon le mode de rejet retenu, plusieurs rubriques de la nomenclature IOTA peuvent s'appliquer.",
+    { size: 9.5 });
+  y = tableN(doc, y, [
+    ["2.1.5.0", "Rejet d'eaux pluviales superficielles ou bassin versant", "D : 1 ≤ S < 20 ha  |  A : S ≥ 20 ha"],
+    ["2.2.1.0", "Rejet en eau douce superficielle modifiant le régime",     "D : 2 000 ≤ Q < 10 000 m³/j  |  A : Q ≥ 10 000"],
+    ["2.2.3.0", "Rejet superficiel de substances polluantes",                "Selon flux (DBO5, DCO, MES, HC, métaux)"],
+    ["2.3.1.0", "Rejet dans les eaux souterraines",                          "Autorisation systématique (interdit hors dérogation)"]
+  ], { header: ["Rubrique", "Objet", "Seuils (D / A)"], widths: [12, 45, 33] });
+
+  // 5.5 — SANDRE
+  newPage(doc, ctx);
+  y = M_TOP + 4;
+  y = subTitle(doc, y, "5.5  Masse d'eau souterraine concernée — Référentiel SANDRE");
+  y = paragraph(doc, y,
+    "L'identification de la masse d'eau souterraine impactée est nécessaire pour l'instruction du dossier au titre de la Directive-Cadre sur l'Eau (DCE) et du SDAGE applicable. La résolution est effectuée automatiquement à partir des coordonnées Lambert 93 via le référentiel SANDRE / Hub'Eau.",
+    { size: 9.5 });
+  y = editableBox(doc, y, 40,
+    "À compléter automatiquement par requête Hub'Eau ou manuellement :\n— Code SANDRE (DCE) :\n— Libellé de la masse d'eau :\n— District hydrographique :\n— SDAGE / SAGE de référence :\n— État quantitatif / qualitatif (dernier état DCE)");
+
+  // 5.6 — Régime cumulé (nouvelle page pour éviter chevauchement)
+  newPage(doc, ctx);
+  y = M_TOP + 4;
+  y = subTitle(doc, y, "5.6  Régime cumulé et délais d'instruction");
+  y = paragraph(doc, y,
+    "La nomenclature IOTA étant cumulative, le projet relève du régime le plus contraignant parmi les rubriques applicables. Les seuils de bascule sont rappelés ci-dessous.",
+    { size: 9.5 });
+  // Régime calculé par rubrique
+  const reg112 = r.V_an >= 200000 ? "AUTORISATION" : (r.V_an >= 10000 ? "DÉCLARATION" : "Hors nomenclature");
+  y = tableN(doc, y, [
+    ["1.1.1.0 — Forage / ouvrage",    "Sans seuil (ouvrage non domestique)",                          "DÉCLARATION"],
+    ["1.1.2.0 — Prélèvement (V annuel)", "≥ 200 000 m³/an : Autorisation  |  ≥ 10 000 et < 200 000 : Déclaration", reg112],
+    ["1.3.1.0 — ZRE",                 "≥ 8 m³/h : Autorisation  |  < 8 m³/h : Déclaration",            r.zre_regime]
+  ], { header: ["Rubrique", "Seuil de bascule", "Régime calculé"], widths: [22, 48, 20] });
+
+  // Commentaire régime retenu — détaillé par cas (ZRE, volume, hors nomenclature)
+  const sValid = r.s != null && r.s > 0;
+  const zreTrigger = r.zre_applicable === true && r.Q_theis_corr >= 8;
+  let regimeText, regimeKind;
+  if (!sValid) {
+    regimeText = "→ RÉGIME RETENU : HORS NOMENCLATURE — Le fond de fouille est situé au-dessus du niveau d'eau, aucun pompage gravitaire n'est requis. La rubrique 1.1.1.0 ne s'applique qu'en cas de création d'ouvrage temporaire d'épuisement de chantier en cas de remontée piézométrique saisonnière avérée.";
+    regimeKind = "info";
+  } else if (zreTrigger && r.V_an < 200000) {
+    regimeText = `→ RÉGIME RETENU : AUTORISATION (ZRE) — La commune ${ctx.commune} est classée en Zone de Répartition des Eaux et le débit projeté Q = ${fmtN(r.Q_theis_corr, 2)} m³/h dépasse le seuil de 8 m³/h. La rubrique 1.3.1.0 emporte la classification au régime d'autorisation (article R.214-1, plus contraignant que la 1.1.2.0). Volume annuel : ${fmtInt(r.V_an)} m³/an. La création d'ouvrage (1.1.1.0) reste à déclarer indépendamment du volume.`;
+    regimeKind = "danger";
+  } else if (zreTrigger) {
+    regimeText = `→ RÉGIME RETENU : AUTORISATION — Cumul des rubriques 1.1.2.0 (V = ${fmtInt(r.V_an)} m³/an ≥ 200 000) et 1.3.1.0 ZRE (Q = ${fmtN(r.Q_theis_corr, 2)} m³/h ≥ 8 m³/h sur commune ${ctx.commune} classée ZRE). La création d'ouvrage (1.1.1.0) reste à déclarer indépendamment du volume.`;
+    regimeKind = "danger";
+  } else if (r.iota_status === "AUTORISATION") {
+    regimeText = `→ RÉGIME RETENU : AUTORISATION — Volume annuel calculé ${fmtInt(r.V_an)} m³/an ≥ 200 000 m³/an, débit Q = ${fmtN(r.Q_theis_corr, 2)} m³/h. La création d'ouvrage (1.1.1.0) reste à déclarer indépendamment du volume.`;
+    regimeKind = "danger";
+  } else if (r.iota_status === "DÉCLARATION") {
+    regimeText = `→ RÉGIME RETENU : DÉCLARATION — Volume annuel calculé ${fmtInt(r.V_an)} m³/an (entre 10 000 et 200 000 m³/an), débit Q = ${fmtN(r.Q_theis_corr, 2)} m³/h. La création d'ouvrage (1.1.1.0) est également soumise à déclaration.`;
+    regimeKind = "warn";
+  } else {
+    regimeText = `→ RÉGIME RETENU : HORS NOMENCLATURE — Volume annuel calculé ${fmtInt(r.V_an)} m³/an < 10 000 m³/an et débit Q = ${fmtN(r.Q_theis_corr, 2)} m³/h < 8 m³/h.`;
+    regimeKind = "info";
+  }
+  y = calloutBox(doc, y, regimeText, regimeKind);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//          SECTION 6 — Sensibilité environnementale (cadres éditables)
+// ═══════════════════════════════════════════════════════════════════════════
+
+function buildSection6(doc, ctx, r) {
+  let y = M_TOP + 4;
+  y = sectionBanner(doc, y, "6. SENSIBILITÉ ENVIRONNEMENTALE — ZNIEFF ET NATURA 2000");
+  y = paragraph(doc, y,
+    "Dans le cadre de la Loi sur l'Eau (articles L.214-1 à L.214-6 du Code de l'Environnement), l'analyse des zonages environnementaux constitue un élément essentiel de l'évaluation des incidences du projet sur les milieux naturels. Conformément à l'article R.122-5 du Code de l'Environnement et aux dispositions de la Directive Habitats (92/43/CEE) et Oiseaux (79/409/CEE), l'identification des zones à statut réglementaire dans un rayon de 5 km autour du site est nécessaire.",
+    { size: 9.5 });
+  y += 3;
+  y = paragraph(doc, y,
+    `Le site est localisé sur la commune de ${r.inputs.commune || "[ à compléter ]"}, coordonnées Lambert 93 : X = ${r.inputs.x_l93 != null ? fmtInt(r.inputs.x_l93) + " m" : "[ à compléter ]"}, Y = ${r.inputs.y_l93 != null ? fmtInt(r.inputs.y_l93) + " m" : "[ à compléter ]"}. La prospection doit être menée à partir des bases de données officielles : INPN/PatriNat (MNHN), AgriMap (DREAL), DOCOB officiels, services de l'État.`,
+    { size: 9.5 });
+  y += 3;
+
+  y = subTitle(doc, y, "6.1  ZNIEFF de Type I (rayon 5 km)");
+  y = paragraph(doc, y,
+    "Les ZNIEFF de Type I correspondent aux secteurs de plus grande valeur écologique, identifiés sur la présence d'espèces et d'habitats rares, remarquables ou protégés. À identifier sur INPN.",
+    { size: 9, color: GREY });
+  y = editableBox(doc, y, 30,
+    "Pour chaque ZNIEFF de Type I dans le rayon de 5 km — nom, code INPN, surface (ha), distance au site, habitats remarquables, espèces déterminantes :");
+
+  y = subTitle(doc, y, "6.2  ZNIEFF de Type II (proximité)");
+  y = paragraph(doc, y,
+    "Les ZNIEFF de Type II désignent de grands ensembles naturels riches et peu modifiés, offrant des potentialités biologiques importantes.",
+    { size: 9, color: GREY });
+  y = editableBox(doc, y, 25, "Identification des ZNIEFF de Type II à proximité — nom, surface, distance, habitats remarquables :");
+
+  newPage(doc, ctx);
+  y = M_TOP + 4;
+  y = subTitle(doc, y, "6.3  Zone Natura 2000 (ZPS / ZSC)");
+  y = paragraph(doc, y,
+    "Les zones Natura 2000 incluent les Zones de Protection Spéciale (ZPS, Directive Oiseaux 79/409/CEE) et les Zones Spéciales de Conservation (ZSC, Directive Habitats 92/43/CEE). Tout plan ou projet susceptible d'affecter significativement un site Natura 2000 doit faire l'objet d'une évaluation des incidences (art. L.414-4 du Code de l'Environnement).",
+    { size: 9.5 });
+  y = editableBox(doc, y, 50,
+    "Pour chaque site Natura 2000 dans le rayon de 5 km — Nom, Code européen (FRxxxxxxx), Type (ZPS/ZSC), Surface (ha), Désignation (arrêté), Rapport au site (sur la commune / commune voisine / hors périmètre), Habitats représentés, Espèces Annexe I :");
+
+  y = subTitle(doc, y, "6.4  Évaluation des incidences Natura 2000");
+  y = paragraph(doc, y,
+    "Conformément à l'article L.414-4 du Code de l'Environnement (transposition Directive Habitats), tout plan ou projet susceptible d'affecter de manière significative un site Natura 2000 doit faire l'objet d'une évaluation des incidences. L'évaluation s'appuie sur les caractéristiques du projet et les enjeux des sites identifiés.",
+    { size: 9.5 });
+  y = editableBox(doc, y, 60,
+    "Évaluation des incidences (à rédiger après identification des sites) :\n— Nature du projet :\n— Volume annuel prélevé :\n— Impact sur la ZPS (habitats, espèces d'oiseaux) :\n— Impact sur la ZSC (habitats, espèces) :\n— Enjeux ornithologiques communs (Annexe I) :\n— Conclusion (significatif / non significatif) :");
+
+  newPage(doc, ctx);
+  y = M_TOP + 4;
+  y = subTitle(doc, y, "Tableau récapitulatif des zonages environnementaux");
+  y = tableN(doc, y, [
+    ["ZNIEFF I",   "[ à compléter ]", "[ code ]", "ZNIEFF Type I",    "[ ha ]", "[ rapport ]"],
+    ["ZNIEFF II",  "[ à compléter ]", "[ code ]", "ZNIEFF Type II",   "[ ha ]", "[ rapport ]"],
+    ["N2000 ZPS",  "[ à compléter ]", "[ FRxxx ]", "ZPS - Dir. Oiseaux", "[ ha ]", "[ rapport ]"],
+    ["N2000 ZSC",  "[ à compléter ]", "[ FRxxx ]", "ZSC - Dir. Habitats", "[ ha ]", "[ rapport ]"]
+  ], { header: ["Zonage", "Nom", "Code", "Type", "Surface", "Rapport au site"], widths: [12, 22, 12, 18, 10, 18] });
+  y += 3;
+  paragraph(doc, y,
+    "Note réglementaire : en application de l'article R.414-19 du Code de l'Environnement, les projets soumis à simple déclaration au titre de la Loi sur l'Eau et dont l'évaluation préalable conclut à l'absence d'incidence significative ne sont pas tenus de déposer un dossier d'évaluation des incidences complète. La présente analyse, jointe au dossier de déclaration, satisfait à cette obligation.",
+    { size: 8, color: GREY });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//          SECTION 7 — Préconisations techniques
+// ═══════════════════════════════════════════════════════════════════════════
+
+function buildSection7(doc, ctx, r) {
+  let y = M_TOP + 4;
+  y = sectionBanner(doc, y, "7. PRÉCONISATIONS TECHNIQUES");
+
+  y = subTitle(doc, y, "7.1  Équipement de pompage");
+  const qMin = r.Q_min, qMax = r.Q_max, qNom = r.Q_theis_corr;
+  y = paragraph(doc, y,
+    `Le débit de dimensionnement de la pompe est compris dans la fourchette suivante : ${qMin != null ? fmtN(qMin, 2) : "—"} m³/h à ${qMax != null ? fmtN(qMax, 2) : "—"} m³/h. Il est recommandé de choisir une pompe immergée de débit nominal de ${qNom != null ? fmtN(qNom, 2) : "—"} m³/h, avec une marge de sécurité de ±15 %.`,
+    { size: 9.5 });
+  y = paragraph(doc, y,
+    "La pompe devra être équipée de :\n— Un clapet anti-retour en partie basse.\n— Un pressostat de contrôle de niveau (protection anti-désamorçage).\n— Un débitmètre volumétrique agréé conforme aux exigences réglementaires.\n— Un boîtier de télégestion en cas d'usage industriel ou agricole intensif.\n— Un système de régulation à vitesse variable (recommandé pour optimiser la consommation énergétique).",
+    { size: 9.5 });
+  y += 3;
+
+  y = subTitle(doc, y, "7.2  Système d'exhaure et d'évacuation des eaux");
+  y = paragraph(doc, y,
+    `Le rabattement de nappe induit un flux journalier d'eaux d'exhaure de l'ordre de ${r.V_jour != null ? fmtInt(r.V_jour) : "—"} m³/j. La gestion de ce volume doit être formalisée dans le dossier de déclaration.`,
+    { size: 9.5 });
+  y = paragraph(doc, y,
+    "Pré-traitement avant rejet :\n— Bassin de décantation dimensionné pour un temps de transit minimal de 24 à 48 h.\n— Déshuileur / séparateur à hydrocarbures si présence d'engins thermiques au droit du chantier.\n— Filtration complémentaire (sable, géotextile) si la teneur en MES excède les seuils de l'exutoire.\n— Contrôle des paramètres pH, conductivité, MES, hydrocarbures totaux avant rejet.\n\nModes d'évacuation envisageables (à arrêter dans le dossier) :\n— Rejet en milieu superficiel (fossé, cours d'eau) — rubrique 2.2.1.0.\n— Rejet en réseau pluvial communal sur convention écrite avec le gestionnaire — rubrique 2.1.5.0.\n— Infiltration via bassin tampon à fond perméable (sous réserve compatibilité ZRE et qualité des eaux).\n— Réinjection partielle dans la nappe — rubrique 2.3.1.0 (autorisation requise).",
+    { size: 9.5 });
+
+  newPage(doc, ctx);
+  y = M_TOP + 4;
+  y = subTitle(doc, y, "7.3  Suivi piézométrique");
+  y = paragraph(doc, y,
+    "Il est fortement recommandé de mettre en place un suivi régulier du niveau piézométrique de la nappe, notamment :\n— Mesure du niveau statique avant chaque campagne de pompage.\n— Suivi du niveau dynamique en cours de pompage (fréquence minimale : toutes les heures).\n— Mesure du niveau de remontée après arrêt du pompage.\n— Enregistrement et archivage des données sur une durée minimale de 5 ans.",
+    { size: 9.5 });
+  y += 3;
+
+  y = subTitle(doc, y, "7.4  Protection et tête de puits");
+  y = paragraph(doc, y,
+    "La tête d'ouvrage devra être protégée contre les pollutions superficielles par :\n— Une margelle bétonnée ou une dalle périphérique étanche (rayon minimal 0,5 m).\n— Un capot verrouillé étanche aux eaux de ruissellement.\n— Un espace annulaire cimenté sur au moins 2 m (bentonite ≥ 2 m).",
+    { size: 9.5 });
+  y = paragraph(doc, y,
+    `L'altimétrie de la tête d'ouvrage doit être supérieure au niveau des plus hautes eaux connues sur le site${r.inputs.alt_tete != null ? " (cote saisie : " + fmtN(r.inputs.alt_tete, 2) + " m NGF)" : ""}.`,
+    { size: 9.5 });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//          SECTION 8 — Conclusion
+// ═══════════════════════════════════════════════════════════════════════════
+
+function buildSection8(doc, ctx, r) {
+  let y = M_TOP + 4;
+  y = sectionBanner(doc, y, "8. CONCLUSION — SYNTHÈSE");
+  const sValid = r.s != null && r.s > 0;
+  y = paragraph(doc, y,
+    `Le présent dossier établit les paramètres de fonctionnement du projet de rabattement de nappe situé sur la commune de ${r.inputs.commune || "[ à compléter ]"}${r.inputs.dept ? " (département " + r.inputs.dept + ")" : ""}. Les calculs réalisés selon les méthodes de Theis (régime transitoire) et de Dupuit-Thiem (régime permanent), sur la base des paramètres hydrogéologiques du substrat « ${r.inputs.substrat || "—"} », montrent que le captage est compatible avec les ressources en eau disponibles dans les conditions hydrauliques définies.`,
+    { size: 10 });
+  y += 3;
+
+  y = paragraph(doc, y,
+    sValid
+      ? `Le volume annuel prévisionnel de ${fmtInt(r.V_an)} m³/an positionne le projet en régime ${r.iota_status} au titre de la nomenclature IOTA (article R.214-1 du Code de l'environnement).`
+      : "Le rabattement requis est nul ou négatif : le fond de fouille est situé au-dessus du niveau d'eau, aucun pompage gravitaire n'est physiquement requis. Le projet ne sollicite donc pas la ressource en eau souterraine et n'active aucune rubrique de la nomenclature IOTA liée au prélèvement.",
+    { size: 10, bold: true });
+  y += 3;
+
+  y = subTitle(doc, y, "Tableau de synthèse");
+  y = table2Col(doc, y, [
+    ["Substrat géologique",                  r.inputs.substrat || "—"],
+    ["Transmissivité calculée T",            r.T != null ? `${fmtExp(r.T)} m²/s` : "—"],
+    ["Conductivité hydraulique K",           r.geo && r.geo.K != null ? `${fmtExp(r.geo.K)} m/s` : "—"],
+    ["Coefficient d'emmagasinement S",       r.S != null ? fmtExp(r.S) : "—"],
+    ["Rabattement visé s",                   r.s != null ? `${fmtN(r.s, 2)} m` : "—"],
+    ["Débit Theis (transitoire) corrigé",    r.Q_theis_corr != null ? `${fmtN(r.Q_theis_corr, 2)} m³/h` : "—"],
+    ["Débit Dupuit-Thiem (permanent) corrigé", r.Q_dupuit_corr != null ? `${fmtN(r.Q_dupuit_corr, 2)} m³/h` : "—"],
+    ["Fourchette recommandée",               (r.Q_min != null && r.Q_max != null) ? `${fmtN(r.Q_min, 2)} à ${fmtN(r.Q_max, 2)} m³/h` : "—"],
+    ["Volume journalier",                    r.V_jour != null ? `${fmtInt(r.V_jour)} m³/j` : "—"],
+    ["Volume annuel estimé",                 r.V_an != null ? `${fmtInt(r.V_an)} m³/an` : "—"],
+    ["Statut IOTA retenu",                   r.iota_status]
+  ], { header: ["Paramètre", "Valeur"] });
+
+  // Bloc Visa
+  newPage(doc, ctx);
+  y = M_TOP + 4;
+  y = subTitle(doc, y, "Établi par et visa");
+  const w = pageW(doc);
+  const fullW = w - M_LEFT - M_RIGHT;
+  const halfW = (fullW - 4) / 2;
+  const boxH = 70;
+  // Gauche : Établi par
+  doc.setFillColor(255, 255, 255);
+  doc.setDrawColor(...BLUE);
+  doc.setLineWidth(0.4);
+  doc.rect(M_LEFT, y, halfW, boxH);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.setTextColor(...BLUE_D);
+  doc.text("Établi par :", M_LEFT + 4, y + 7);
+  doc.setTextColor(...BLACK);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9.5);
+  const estab = [
+    "SARL G.M.E.P",
+    "9 rue de la Marne",
+    "79400 Saint-Maixent-l'École",
+    "Tél : 05 49 16 53 82 / 06 97 73 72 33",
+    "gmep.france@gmail.com",
+    "SIRET 75309762500010",
+    "",
+    `Le ${ctx.date}`
+  ];
+  estab.forEach((line, i) => doc.text(safeText(line), M_LEFT + 4, y + 16 + i * 5.5));
+
+  // Droite : Visa
+  doc.rect(M_LEFT + halfW + 4, y, halfW, boxH);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...BLUE_D);
+  doc.text("Visa :", M_LEFT + halfW + 8, y + 7);
+  doc.setTextColor(...BLACK);
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(8);
+  doc.setTextColor(...GREY);
+  doc.text("[ Signature et cachet ]", M_LEFT + halfW + 4 + halfW / 2, y + boxH / 2, { align: "center" });
+  doc.setTextColor(...BLACK);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//          LEXIQUE
+// ═══════════════════════════════════════════════════════════════════════════
+
+function buildLexique(doc, ctx) {
+  let y = M_TOP + 4;
+  y = sectionBanner(doc, y, "LEXIQUE DES ABRÉVIATIONS");
+  y = paragraph(doc, y, "Liste des abréviations, acronymes et symboles utilisés dans le présent dossier, classés par thématique.", { size: 9, color: GREY });
+  y += 3;
+
+  y = subTitle(doc, y, "Réglementation — Loi sur l'Eau");
+  y = tableN(doc, y, [
+    ["IOTA",   "Installations, Ouvrages, Travaux et Activités (R.214-1 CE)"],
+    ["D",      "Déclaration au titre de la Loi sur l'Eau"],
+    ["A",      "Autorisation environnementale (R.181-13 CE)"],
+    ["ZRE",    "Zone de Répartition des Eaux (R.211-71 CE)"],
+    ["ICPE",   "Installation Classée pour la Protection de l'Environnement"],
+    ["DDT(M)", "Direction Départementale des Territoires (et de la Mer)"],
+    ["DREAL",  "Direction Régionale de l'Environnement, de l'Aménagement et du Logement"],
+    ["AELB",   "Agence de l'Eau Loire-Bretagne"],
+    ["SDAGE",  "Schéma Directeur d'Aménagement et de Gestion des Eaux"],
+    ["SAGE",   "Schéma d'Aménagement et de Gestion des Eaux"],
+    ["DCE",    "Directive Cadre sur l'Eau (2000/60/CE)"],
+    ["AEP",    "Alimentation en Eau Potable"]
+  ], { header: ["Abréviation", "Signification"], widths: [18, 82] });
+
+  newPage(doc, ctx);
+  y = M_TOP + 4;
+  y = subTitle(doc, y, "Hydrogéologie — Calculs de rabattement");
+  y = tableN(doc, y, [
+    ["NS",  "Niveau Statique de la nappe (cote du toit de la nappe au repos)"],
+    ["ND",  "Niveau Dynamique de la nappe (cote en cours de pompage)"],
+    ["TN",  "Terrain Naturel — cote de référence à la tête de l'ouvrage"],
+    ["NGF", "Nivellement Général de la France — référence altimétrique nationale"],
+    ["s",   "Rabattement de nappe (m) = NS - ND"],
+    ["R",   "Rayon d'influence du pompage (m)"],
+    ["Q",   "Débit de pompage (m³/h ou m³/s)"],
+    ["K",   "Conductivité hydraulique ou perméabilité de Darcy (m/s)"],
+    ["T",   "Transmissivité de l'aquifère (m²/s) — T = K × épaisseur"],
+    ["S",   "Coefficient d'emmagasinement (sans unité)"],
+    ["ne",  "Porosité efficace ou drainable (%)"],
+    ["u",   "Variable adimensionnelle de Theis : u = r².S / (4.T.t)"],
+    ["W(u)", "Fonction de puits de Theis (well function)"]
+  ], { header: ["Abréviation", "Signification"], widths: [18, 82] });
+
+  y += 4;
+  y = subTitle(doc, y, "Bases de données — géoréférentiels");
+  y = tableN(doc, y, [
+    ["BSS",     "Banque du Sous-Sol (BRGM — infoterre.brgm.fr)"],
+    ["BRGM",    "Bureau de Recherches Géologiques et Minières"],
+    ["BDLISA",  "Base de Données des Limites des Systèmes Aquifères (BRGM)"],
+    ["SANDRE",  "Service d'Administration Nationale des Données et Référentiels sur l'Eau"],
+    ["IGN",     "Institut National de l'Information Géographique et Forestière"],
+    ["INSEE",   "Institut National de la Statistique et des Études Économiques"],
+    ["Hub'Eau", "Plateforme nationale d'accès aux données de l'eau (api.hubeau.eaufrance.fr)"]
+  ], { header: ["Abréviation", "Signification"], widths: [18, 82] });
+
+  newPage(doc, ctx);
+  y = M_TOP + 4;
+  y = subTitle(doc, y, "Coordonnées géoréférencées");
+  y = tableN(doc, y, [
+    ["L93",   "Lambert 93 (EPSG:2154) — système de projection légal français"],
+    ["WGS84", "World Geodetic System 1984 (EPSG:4326) — latitude/longitude internationale"],
+    ["EPSG",  "European Petroleum Survey Group (codes officiels des systèmes géodésiques)"]
+  ], { header: ["Abréviation", "Signification"], widths: [18, 82] });
+
+  y += 4;
+  y = subTitle(doc, y, "Milieux et habitats naturels");
+  y = tableN(doc, y, [
+    ["ZNIEFF",   "Zone Naturelle d'Intérêt Écologique, Faunistique et Floristique"],
+    ["Natura 2000", "Réseau européen de sites protégés (Directives Habitats et Oiseaux)"],
+    ["ZSC",      "Zone Spéciale de Conservation (Natura 2000 — Directive Habitats)"],
+    ["ZPS",      "Zone de Protection Spéciale (Natura 2000 — Directive Oiseaux)"]
+  ], { header: ["Abréviation", "Signification"], widths: [18, 82] });
+
+  y += 4;
+  y = subTitle(doc, y, "Paramètres physico-chimiques (rejets)");
+  y = tableN(doc, y, [
+    ["MES",  "Matières En Suspension"],
+    ["DBO5", "Demande Biochimique en Oxygène sur 5 jours"],
+    ["DCO",  "Demande Chimique en Oxygène"],
+    ["pH",   "Potentiel hydrogène (acidité / basicité)"]
+  ], { header: ["Abréviation", "Signification"], widths: [18, 82] });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//                                ENTRY POINT
+// ═══════════════════════════════════════════════════════════════════════════
+
+async function generate(r) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+
+  // Monkey-patch doc.text pour sécuriser tous les textes (WinAnsi)
+  const _origText = doc.text.bind(doc);
+  doc.text = function(text, x, y, opts) {
+    if (Array.isArray(text)) text = text.map(safeText);
+    else text = safeText(text);
+    return _origText(text, x, y, opts);
+  };
+  const _origSplit = doc.splitTextToSize.bind(doc);
+  doc.splitTextToSize = function(text, width, opts) {
+    return _origSplit(safeText(text), width, opts);
+  };
+
+  const date = new Date().toLocaleDateString("fr-FR");
+
+  // Libellé dynamique du régime IOTA pour la garde + tous les en-têtes
+  let regimeLibelle, regimeUpper;
+  if (r.iota_status === "AUTORISATION") {
+    regimeLibelle = "Dossier de demande d'autorisation IOTA";
+    regimeUpper   = "DOSSIER DE DEMANDE D'AUTORISATION IOTA";
+  } else if (r.iota_status === "DÉCLARATION") {
+    regimeLibelle = "Dossier de déclaration IOTA";
+    regimeUpper   = "DOSSIER DE DÉCLARATION IOTA";
+  } else {
+    regimeLibelle = "Hors nomenclature IOTA";
+    regimeUpper   = "HORS NOMENCLATURE IOTA";
+  }
+
+  const ctx = {
+    ref: genRef(),
+    commune: r.inputs.commune || "—",
+    mo: r.inputs.mo || "—",
+    date: date,
+    regimeLibelle,
+    regimeUpper,
+    pageNum: 1  // page 1 = couverture, sans header/footer
+  };
+
+  // ──── PAGE 1 — Couverture
+  buildCover(doc, ctx, r);
+
+  // ──── PAGE 2 — Sommaire
+  newPage(doc, ctx);
+  buildToc(doc, ctx);
+
+  // ──── PAGE 3 — Section 1
+  newPage(doc, ctx);
+  buildSection1(doc, ctx, r);
+
+  // ──── PAGE 4 — Section 2.1
+  newPage(doc, ctx);
+  buildSection2_1(doc, ctx, r);
+
+  // ──── PAGE 5 — Section 2.2
+  newPage(doc, ctx);
+  buildSection2_2(doc, ctx, r);
+
+  // ──── PAGES 6-8 — Schémas
+  newPage(doc, ctx);
+  buildSchemas(doc, ctx, r);
+  // (les 2 autres pages internes sont créées par newPage à l'intérieur de buildSchemas)
+
+  // ──── PAGE 9 — Localisation
+  newPage(doc, ctx);
+  await buildLocation(doc, ctx, r);
+
+  // ──── PAGES 10-12 — Méthodes
+  newPage(doc, ctx);
+  buildSection3(doc, ctx, r);
+
+  // ──── PAGES 13-14 — Résultats
+  newPage(doc, ctx);
+  buildSection4(doc, ctx, r);
+
+  // ──── PAGES 15-19 — Vérification IOTA
+  newPage(doc, ctx);
+  buildSection5(doc, ctx, r);
+
+  // ──── PAGES 20-22 — Environnement
+  newPage(doc, ctx);
+  buildSection6(doc, ctx, r);
+
+  // ──── PAGES 23 — Préconisations
+  newPage(doc, ctx);
+  buildSection7(doc, ctx, r);
+
+  // ──── PAGES 24-25 — Conclusion
+  newPage(doc, ctx);
+  buildSection8(doc, ctx, r);
+
+  // ──── PAGES 26-28 — Lexique
+  newPage(doc, ctx);
+  buildLexique(doc, ctx);
+
+  // Sauvegarde
+  const safeName = (r.inputs.projet || "rabattement").replace(/[^a-zA-Z0-9\-_]/g, "_").substring(0, 40);
+  doc.save(`GMEP_Dossier_Rabattement_${ctx.ref}_${safeName}.pdf`);
+}
+
+window.GMEP_PDF = { generate };
+
+</script>
+<script>
+/* ── demo.js ── */
+/* ════════════════════════════════════════════════════════════
+   GMEP — UI de la démo interactive
+   - Gestion onglets, formulaire, calcul, carte Leaflet
+   - Branche le bouton "Générer PDF" sur pdf-generator.js
+   ════════════════════════════════════════════════════════════ */
+
+let LAST_RESULT = null;
+let LEAFLET_MAP = null;
+
+// ─── Remplissage des selects (substrat + département) ───
+function fillSelects() {
+  const sb = document.getElementById("inp-substrat");
+  const dp = document.getElementById("inp-dept");
+  if (sb && !sb.options.length) {
+    const ph = document.createElement("option");
+    ph.value = ""; ph.textContent = "— Sélectionner un substrat —"; ph.disabled = true; ph.selected = true;
+    sb.appendChild(ph);
+    Object.keys(BASE_GEO).forEach(name => {
+      const opt = document.createElement("option");
+      opt.value = name; opt.textContent = name;
+      sb.appendChild(opt);
+    });
+  }
+  if (dp && !dp.options.length) {
+    const ph = document.createElement("option");
+    ph.value = ""; ph.textContent = "— Sélectionner un département —"; ph.disabled = true; ph.selected = true;
+    dp.appendChild(ph);
+    Object.entries(CLIMAT).forEach(([code, info]) => {
+      const opt = document.createElement("option");
+      opt.value = code; opt.textContent = `${code} — ${info.dept}`;
+      dp.appendChild(opt);
+    });
+  }
+}
+
+// ─── Lecture du formulaire ───
+function readForm() {
+  const get = id => parseFloat(document.getElementById(id).value.replace(',', '.'));
+  const getStr = id => document.getElementById(id).value.trim();
+  return {
+    // identification
+    projet: getStr("inp-projet") || "Projet sans titre",
+    mo: getStr("inp-mo") || "—",
+    be: getStr("inp-be") || "GMEP",
+    commune: getStr("inp-commune") || "—",
+    dept: getStr("inp-dept"),
+    zre: getStr("inp-zre") || "auto",
+    // géo
+    substrat: getStr("inp-substrat"),
+    // ouvrage
+    ns: get("inp-ns"),
+    ff: get("inp-ff"),
+    prof_puits: get("inp-prof-puits"),
+    diam_int: get("inp-diam-int") / 1000, // mm → m
+    rayon_inf: get("inp-rayon-inf"),
+    t_pompage: get("inp-t-pompage"),
+    t_exp: get("inp-t-exp"),
+    // coords Lambert 93 (optionnel)
+    x_l93: get("inp-x"),
+    y_l93: get("inp-y"),
+    // identifications complémentaires (pour PDF dossier)
+    mo_adresse: getStr("inp-mo-adresse"),
+    mo_tel: getStr("inp-mo-tel"),
+    mo_email: getStr("inp-mo-email"),
+    travaux: getStr("inp-travaux"),
+    travaux_siret: getStr("inp-travaux-siret"),
+    travaux_adresse: getStr("inp-travaux-adresse"),
+    forage: getStr("inp-forage"),
+    forage_siret: getStr("inp-forage-siret"),
+    forage_adresse: getStr("inp-forage-adresse"),
+    // équipements ouvrage détaillés
+    diam_ext: get("inp-diam-ext"),
+    alt_tete: get("inp-alt-tete"),
+    alt_fond: get("inp-alt-fond"),
+    type_captage: getStr("inp-type-captage")
+  };
+}
+
+// ─── Onglets ───
+function activateTab(tab) {
+  document.querySelectorAll(".demo-tab").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+  document.querySelector(`.demo-tab[data-tab="${tab}"]`)?.classList.add("active");
+  document.getElementById(`panel-${tab}`)?.classList.add("active");
+  if (tab === "carte" && LAST_RESULT) renderMap();
+}
+
+// ─── Affichage des résultats ───
+function renderResults(r) {
+  const fmtSI = v => fmt(v, 6); // pour valeurs SI
+  const html = `
+    <div class="result-grid">
+      <div class="card">
+        <h4>Paramètres hydrauliques</h4>
+        <table class="kv">
+          <tr><td>Substrat</td><td><strong>${r.inputs.substrat}</strong></td></tr>
+          <tr><td>Type de nappe</td><td>${r.geo.type}</td></tr>
+          <tr><td>Transmissivité T</td><td>${fmtSI(r.T)} m²/s</td></tr>
+          <tr><td>Coefficient d'emmagasinement S</td><td>${fmtSI(r.S)}</td></tr>
+          <tr><td>Rabattement requis s</td><td><strong>${fmt(r.s, 2)} m</strong></td></tr>
+          <tr><td>Rayon puits r</td><td>${fmt(r.r_puits, 3)} m</td></tr>
+          <tr><td>Rayon d'influence R</td><td>${fmt(r.R, 1)} m</td></tr>
+          <tr><td>Durée pompage</td><td>${fmtInt(r.inputs.t_pompage)} h</td></tr>
+          <tr><td>u (Theis)</td><td>${fmtSI(r.u)}</td></tr>
+          <tr><td>W(u)</td><td>${fmt(r.Wu, 4)}</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h4>Débits calculés</h4>
+        <table class="kv">
+          <tr><td>Q Theis (brut)</td><td>${fmt(r.Q_theis, 2)} m³/h</td></tr>
+          <tr><td>Q Theis corrigé (η=0,70)</td><td><strong>${fmt(r.Q_theis_corr, 2)} m³/h</strong></td></tr>
+          <tr><td>Q Dupuit-Thiem (brut)</td><td>${fmt(r.Q_dupuit, 2)} m³/h</td></tr>
+          <tr><td>Q Dupuit corrigé</td><td><strong>${fmt(r.Q_dupuit_corr, 2)} m³/h</strong></td></tr>
+          <tr><td>Plage recommandée</td><td><strong>${fmt(r.Q_min, 2)} – ${fmt(r.Q_max, 2)} m³/h</strong></td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h4>Volumes prélevés</h4>
+        <table class="kv">
+          <tr><td>Volume jour (×${r.inputs.t_exp} h)</td><td>${fmtInt(r.V_jour)} m³/j</td></tr>
+          <tr><td>Volume mois</td><td>${fmtInt(r.V_mois)} m³/mois</td></tr>
+          <tr><td>Volume annuel</td><td><strong>${fmtInt(r.V_an)} m³/an</strong></td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h4>Bilan hydrique (zone d'influence)</h4>
+        <table class="kv">
+          <tr><td>Climat — station</td><td>${r.clim.station}</td></tr>
+          <tr><td>Pluie P / ETP / Recharge R</td><td>${r.clim.P} / ${r.clim.ETP} / ${r.clim.R} mm/an</td></tr>
+          <tr><td>Surface zone d'influence</td><td>${fmtInt(r.surface_inf)} m²</td></tr>
+          <tr><td>Volume recharge / an</td><td>${fmtInt(r.V_recharge)} m³</td></tr>
+          <tr><td>Ratio prélèvement / recharge</td><td>${fmt(r.ratio * 100, 1)} %</td></tr>
+        </table>
+      </div>
+
+      <div class="card iota-card iota-${r.iota_type}">
+        <h4>Classification IOTA — Article R.214-1 du Code de l'environnement</h4>
+        <div class="iota-status">${r.iota_status}</div>
+        <table class="iota-table">
+          <thead>
+            <tr><th>Rubrique</th><th>Libellé</th><th>Seuil</th><th>Statut</th></tr>
+          </thead>
+          <tbody>
+            ${r.iota_table.map(row => `
+              <tr>
+                <td><code>${row.code}</code></td>
+                <td>${row.libelle}</td>
+                <td>${row.seuil}</td>
+                <td><span class="iota-pill ${row.class_st}">${row.statut}</span></td>
+              </tr>`).join("")}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  document.getElementById("panel-resultats").innerHTML = html;
+}
+
+// ─── Carte Leaflet ───
+function renderMap() {
+  const r = LAST_RESULT;
+  if (!r || !r.inputs.x_l93 || !r.inputs.y_l93) {
+    document.getElementById("panel-carte").innerHTML =
+      `<div class="empty">Saisissez les coordonnées Lambert 93 (X, Y) pour afficher la carte.</div>`;
+    return;
+  }
+  const { lon, lat } = lambert93_to_wgs84(r.inputs.x_l93, r.inputs.y_l93);
+  document.getElementById("panel-carte").innerHTML = `<div id="map" style="height:480px;border-radius:12px;overflow:hidden;"></div>
+    <div class="map-legend">
+      <span><b>X L93</b> ${fmtInt(r.inputs.x_l93)} m</span>
+      <span><b>Y L93</b> ${fmtInt(r.inputs.y_l93)} m</span>
+      <span><b>WGS84</b> ${lat.toFixed(5)}, ${lon.toFixed(5)}</span>
+    </div>`;
+  if (LEAFLET_MAP) { LEAFLET_MAP.remove(); LEAFLET_MAP = null; }
+  LEAFLET_MAP = L.map("map").setView([lat, lon], 16);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "© OpenStreetMap",
+    maxZoom: 19
+  }).addTo(LEAFLET_MAP);
+  L.marker([lat, lon]).addTo(LEAFLET_MAP)
+    .bindPopup(`<b>${r.inputs.projet}</b><br>${r.inputs.commune}`).openPopup();
+  L.circle([lat, lon], { radius: r.R, color: "#2a7ab5", fillOpacity: 0.1 })
+    .addTo(LEAFLET_MAP).bindTooltip(`Zone d'influence ${fmt(r.R,0)} m`);
+}
+
+// ─── Trigger calcul ───
+function runCalcul() {
+  try {
+    const p = readForm();
+    if (!p.substrat || !p.dept) {
+      alert("Merci de sélectionner un substrat et un département.");
+      return;
+    }
+    if (isNaN(p.ns) || isNaN(p.ff) || isNaN(p.diam_int) || isNaN(p.rayon_inf) || isNaN(p.t_pompage)) {
+      alert("Merci de renseigner toutes les valeurs hydrauliques (NS, FF, diamètre, rayon d'influence, durée pompage).");
+      return;
+    }
+    LAST_RESULT = calculer(p);
+    renderResults(LAST_RESULT);
+    activateTab("resultats");
+  } catch (e) {
+    console.error(e);
+    alert("Erreur de calcul : " + e.message);
+  }
+}
+
+// ─── Trigger PDF (avec contrôle quota) ───
+async function runPdf() {
+  if (!LAST_RESULT) {
+    alert("Veuillez d'abord lancer le calcul.");
+    return;
+  }
+  try {
+    await window.GMEP_Quota.ensureCanGeneratePdf();
+  } catch(e) {
+    return; // utilisateur annule ou expiré
+  }
+  try {
+    const btn = document.getElementById("btn-pdf");
+    btn.disabled = true; btn.textContent = "Génération en cours…";
+    await window.GMEP_PDF.generate(LAST_RESULT);
+    btn.disabled = false; btn.textContent = "Télécharger le PDF de démonstration";
+    window.GMEP_Quota.refreshQuotaBanner();
+  } catch(e) {
+    console.error(e);
+    alert("Erreur génération PDF : " + e.message);
+    const btn = document.getElementById("btn-pdf");
+    btn.disabled = false; btn.textContent = "Télécharger le PDF de démonstration";
+  }
+}
+
+// ─── Vidage des champs pour que l'utilisateur saisisse SES propres valeurs ───
+function resetFormForOwnExample() {
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+  // Identification : à compléter par l'utilisateur
+  set("inp-projet", "");
+  set("inp-mo", "");
+  set("inp-be", "");
+  set("inp-commune", "");
+  // Paramètres hydrauliques : valeurs neutres par défaut, à ajuster
+  set("inp-ns", "");
+  set("inp-ff", "");
+  set("inp-prof-puits", "");
+  set("inp-diam-int", "");
+  set("inp-rayon-inf", "");
+  set("inp-t-pompage", "");
+  set("inp-t-exp", "");
+  // Coordonnées Lambert 93 : à saisir par l'utilisateur (confidentialité)
+  set("inp-x", "");
+  set("inp-y", "");
+  // Focus sur le 1er champ
+  document.getElementById("inp-projet")?.focus();
+  document.getElementById("inp-projet")?.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+// ─── Calcul TVA selon pays ───
+const PRICE_HT = 1100;
+const COUNTRY_VAT = {
+  "FR":     { rate: 0.20, label: "TVA 20 %",        note: "TVA française au taux normal de 20 % (art. 278 du CGI)." },
+  "FR-DOM": { rate: 0.00, label: "TVA non applicable", note: "TVA non applicable dans les DROM pour les prestations de services numériques (art. 294 du CGI)." },
+  "EU":     { rate: 0.00, label: "TVA non applicable", note: "Autoliquidation par le client professionnel (art. 196 directive 2006/112/CE — fournir un numéro de TVA intracommunautaire valide)." },
+  "INTL":   { rate: 0.00, label: "TVA non applicable", note: "Opération hors champ de la TVA française — prestation de service hors UE (art. 259-1 du CGI)." }
+};
+
+function fmtEUR(v) {
+  return v.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "\u00A0€";
+}
+
+function updatePricing() {
+  const sel = document.getElementById("buyer-country");
+  if (!sel) return;
+  const code = sel.value;
+  const info = COUNTRY_VAT[code] || COUNTRY_VAT.FR;
+  const ht = PRICE_HT;
+  const tva = ht * info.rate;
+  const ttc = ht + tva;
+
+  document.getElementById("pb-tva-label").textContent = info.label;
+  if (info.rate > 0) {
+    document.getElementById("pb-tva-val").textContent = fmtEUR(tva);
+    document.getElementById("pb-tva-row").style.display = "";
+  } else {
+    document.getElementById("pb-tva-val").textContent = "0,00\u00A0€";
+    document.getElementById("pb-tva-row").style.display = "";
+  }
+  document.getElementById("pb-ttc-val").textContent = fmtEUR(ttc);
+  document.getElementById("price-vat-note").textContent = info.note;
+
+  // CTA dynamique — Paiement en ligne via gmep-france.eu (Stripe Checkout)
+  // Le backend gmep-france.eu génère une session Stripe Checkout pour le plan rabattement_annual
+  // et ajuste la TVA côté Stripe selon le pays de facturation reçu en paramètre.
+  const CHECKOUT_BASE = "https://www.gmep-france.eu/#/register";
+  const PLAN_ID = "rabattement_annual";
+
+  const checkoutURL = `${CHECKOUT_BASE}?plan=${PLAN_ID}&country=${encodeURIComponent(code)}`;
+
+  const btn = document.getElementById("btn-souscrire");
+  if (btn) {
+    if (info.rate > 0) {
+      btn.textContent = `💳 Souscrire en ligne — ${fmtEUR(ttc)} TTC / an`;
+    } else {
+      btn.textContent = `💳 Souscrire en ligne — ${fmtEUR(ht)} HT / an`;
+    }
+    btn.href = checkoutURL;
+    btn.target = "_blank";
+    btn.rel = "noopener";
+  }
+
+  // Mise à jour des autres liens "Souscrire" du site (nav + bandeau bloqué)
+  const lockBtn = document.getElementById("lock-souscrire");
+  if (lockBtn) {
+    lockBtn.href = checkoutURL;
+  }
+  // Le lien nav .nav-cta pointe sur #souscrire (ancrage interne) — on le laisse, c'est OK :
+  // il amène l'utilisateur jusqu'à la carte tarif où il peut choisir son pays puis cliquer.
+}
+
+// ─── Init ───
+document.addEventListener("DOMContentLoaded", () => {
+  fillSelects();
+
+  // Sync pays → TVA
+  const countrySel = document.getElementById("buyer-country");
+  if (countrySel) {
+    countrySel.addEventListener("change", updatePricing);
+    updatePricing();
+  }
+
+  document.querySelectorAll(".demo-tab").forEach(t => {
+    t.addEventListener("click", () => activateTab(t.dataset.tab));
+  });
+  document.getElementById("btn-calc").addEventListener("click", runCalcul);
+  document.getElementById("btn-pdf").addEventListener("click", runPdf);
+  document.getElementById("btn-example").addEventListener("click", () => {
+    resetFormForOwnExample();
+  });
+
+  window.GMEP_Quota.refreshQuotaBanner();
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener("click", ev => {
+      const tgt = document.querySelector(a.getAttribute("href"));
+      if (tgt) { ev.preventDefault(); tgt.scrollIntoView({behavior:"smooth", block:"start"}); }
+    });
+  });
+});
+
+</script>
+</body>
+</html>

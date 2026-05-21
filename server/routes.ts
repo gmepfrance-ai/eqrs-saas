@@ -29,6 +29,17 @@ try {
   console.error("Warning: Could not load tsn-tool.html", e);
 }
 
+// Load Rabattement tool HTML at startup
+let rabattementToolHtml = "";
+try {
+  rabattementToolHtml = fs.readFileSync(
+    path.resolve(process.cwd(), "rabattement-tool.html"),
+    "utf-8"
+  );
+} catch (e) {
+  console.error("Warning: Could not load rabattement-tool.html", e);
+}
+
 // Stripe setup
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "sk_test_placeholder";
 const isStripeConfigured =
@@ -45,6 +56,8 @@ const STRIPE_PRICE_ANNUAL =
   process.env.STRIPE_PRICE_ANNUAL || "price_annual_placeholder";
 const STRIPE_PRICE_TSN_ANNUAL =
   process.env.STRIPE_PRICE_TSN_ANNUAL || "price_1TOK7o3A2g3lkch9UDnnjOWw";
+const STRIPE_PRICE_RABATTEMENT_ANNUAL =
+  process.env.STRIPE_PRICE_RABATTEMENT_ANNUAL || "price_1TZT293A2g3lkch9bGF7hcgA";
 const STRIPE_WEBHOOK_SECRET =
   process.env.STRIPE_WEBHOOK_SECRET || "whsec_placeholder";
 
@@ -122,6 +135,29 @@ async function requireTsnSubscription(
   }
   if (tsnSub.status === "trialing" && tsnSub.currentPeriodEnd) {
     if (new Date(tsnSub.currentPeriodEnd) < new Date()) {
+      return res.status(403).json({ message: "Votre période d'essai est terminée. Veuillez souscrire un abonnement." });
+    }
+  }
+  next();
+}
+
+// Middleware spécifique au tool Rabattement de nappe
+async function requireRabattementSubscription(
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) {
+  if (!req.user) return res.status(401).json({ message: "Authentification requise" });
+  const subs = await storage.getSubscriptionsByUserId(req.user.id);
+  const rabSub = subs.find(
+    (s) => (s.tool === "rabattement" || s.tool === "bundle") &&
+           (s.status === "active" || s.status === "trialing")
+  );
+  if (!rabSub) {
+    return res.status(403).json({ message: "Abonnement Rabattement de nappe requis pour accéder à cet outil" });
+  }
+  if (rabSub.status === "trialing" && rabSub.currentPeriodEnd) {
+    if (new Date(rabSub.currentPeriodEnd) < new Date()) {
       return res.status(403).json({ message: "Votre période d'essai est terminée. Veuillez souscrire un abonnement." });
     }
   }
@@ -600,10 +636,12 @@ export async function registerRoutes(
       const subs = await storage.getSubscriptionsByUserId(req.user!.id);
     const sub = subs.find(s => s.tool === "je" || s.tool === null) || subs[0];
     const tsnSub = subs.find(s => s.tool === "tsn");
+    const rabattementSub = subs.find(s => s.tool === "rabattement");
       return res.json({
         user: req.user,
         subscription: sub || null,
       tsnSubscription: tsnSub || null,
+      rabattementSubscription: rabattementSub || null,
       });
     }
   );
@@ -638,13 +676,17 @@ export async function registerRoutes(
       try {
         const { plan } = req.body;
         const priceId =
+          plan === "rabattement_annual" ? STRIPE_PRICE_RABATTEMENT_ANNUAL :
           plan === "tsn_annual" ? STRIPE_PRICE_TSN_ANNUAL :
           plan === "annual" ? STRIPE_PRICE_ANNUAL :
           STRIPE_PRICE_MONTHLY;
 
 
         // Déterminer le tool associé au plan
-        const tool = plan === "tsn_annual" ? "tsn" : "je";
+        const tool =
+          plan === "rabattement_annual" ? "rabattement" :
+          plan === "tsn_annual" ? "tsn" :
+          "je";
 
         // Chercher un abonnement existant pour ce tool (ou récupérer le customerId existant)
         const allSubs = await storage.getSubscriptionsByUserId(req.user!.id);
@@ -734,9 +776,13 @@ export async function registerRoutes(
           const customerId = subscription.customer as string;
           const priceIdFromStripe = subscription.items.data[0]?.price?.id;
           const plan =
+            priceIdFromStripe === STRIPE_PRICE_RABATTEMENT_ANNUAL ? "rabattement_annual" :
             priceIdFromStripe === STRIPE_PRICE_TSN_ANNUAL ? "tsn_annual" :
             priceIdFromStripe === STRIPE_PRICE_ANNUAL ? "annual" : "monthly";
-          const tool = plan === "tsn_annual" ? "tsn" : "je";
+          const tool =
+            plan === "rabattement_annual" ? "rabattement" :
+            plan === "tsn_annual" ? "tsn" :
+            "je";
 
           // Chercher d'abord par stripe_subscription_id (le plus précis)
           let sub = await storage.getSubscriptionByStripeSubscriptionId(subscription.id);
@@ -777,15 +823,16 @@ export async function registerRoutes(
                 if (user && resendKey) {
                   const { Resend } = require("resend");
                   const resend = new Resend(resendKey);
-                  const toolName = tool === "tsn"
-                    ? "TSN — Transfert Sol vers Nappe"
-                    : "EQRS — Johnson & Ettinger";
-                  const toolUrl = tool === "tsn"
-                    ? "https://www.gmep-france.eu/#/dashboard"
-                    : "https://www.gmep-france.eu/#/dashboard";
-                  const planLabel = plan === "tsn_annual" ? "Annuel — 1 100 € HT/an" :
-                                    plan === "annual" ? "Annuel — 2 499 € HT/an" :
-                                    "Mensuel — 245 € HT/mois";
+                  const toolName =
+                    tool === "rabattement" ? "Rabattement de nappe — Theis + Dupuit-Thiem" :
+                    tool === "tsn" ? "TSN — Transfert Sol vers Nappe" :
+                    "EQRS — Johnson & Ettinger";
+                  const toolUrl = "https://www.gmep-france.eu/#/dashboard";
+                  const planLabel =
+                    plan === "rabattement_annual" ? "Annuel — 1 100 € HT/an" :
+                    plan === "tsn_annual" ? "Annuel — 1 100 € HT/an" :
+                    plan === "annual" ? "Annuel — 2 499 € HT/an" :
+                    "Mensuel — 245 € HT/mois";
                   const periodEnd = new Date((subscription as any).current_period_end * 1000)
                     .toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
 
@@ -997,6 +1044,64 @@ export async function registerRoutes(
       res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       return res.send(protectToolHtml(trialHtml));
+    }
+  );
+
+  // ── Rabattement Tool Route (abonnés actifs) ───────────────────────
+  app.get(
+    "/api/rabattement-tool",
+    requireAuth as any,
+    requireRabattementSubscription as any,
+    (req: AuthRequest, res: Response) => {
+      if (!rabattementToolHtml) {
+        return res.status(500).json({ message: "Outil Rabattement non disponible" });
+      }
+
+      res.setHeader("X-Frame-Options", "SAMEORIGIN");
+      res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://*.tile.openstreetmap.org https://unpkg.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net"
+      );
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+
+      return res.send(protectToolHtml(rabattementToolHtml));
+    }
+  );
+
+  // ── Rabattement Trial : activer essai 8 jours ───────────────────────────
+  app.post(
+    "/api/rabattement-trial/activate",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      try {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const existing = subs.find(s => s.tool === "rabattement");
+        if (existing && (existing.status === "active" || existing.status === "trialing")) {
+          return res.status(409).json({ message: "Vous avez déjà un accès Rabattement actif ou en cours d'essai." });
+        }
+        const trialEnd = new Date();
+        trialEnd.setDate(trialEnd.getDate() + 8);
+        let sub;
+        if (existing) {
+          sub = await storage.updateSubscription(existing.id, {
+            status: "trialing",
+            plan: "rabattement_trial",
+            tool: "rabattement",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        } else {
+          sub = await storage.createSubscription(req.user!.id, {
+            status: "trialing",
+            plan: "rabattement_trial",
+            tool: "rabattement",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        }
+        return res.json({ message: "Essai Rabattement activé (8 jours)", subscription: sub });
+      } catch (err: any) {
+        return res.status(500).json({ message: err.message });
+      }
     }
   );
 

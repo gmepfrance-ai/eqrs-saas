@@ -19,6 +19,7 @@ interface AuthState {
   user: SafeUser | null;
   subscription: Subscription | null;
   tsnSubscription: Subscription | null;
+  rabattementSubscription: Subscription | null;
   loading: boolean;
 }
 
@@ -37,6 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user: null,
     subscription: null,
     tsnSubscription: null,
+    rabattementSubscription: null,
     loading: true,
   });
 
@@ -70,10 +72,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user: data.user,
         subscription: data.subscription,
         tsnSubscription: data.tsnSubscription || null,
+        rabattementSubscription: data.rabattementSubscription || null,
         loading: false,
       });
     } catch {
-      setState({ token: null, user: null, subscription: null, tsnSubscription: null, loading: false });
+      setState({ token: null, user: null, subscription: null, tsnSubscription: null,
+    rabattementSubscription: null, loading: false });
     }
   }
 
@@ -93,6 +97,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user: data.user,
       subscription: null,
       tsnSubscription: null,
+    rabattementSubscription: null,
       loading: true,
     });
     const pendingPlan = localStorage.getItem("pending_plan");
@@ -120,6 +125,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user: data.user,
       subscription: null,
       tsnSubscription: null,
+    rabattementSubscription: null,
       loading: true,
     });
     const pendingPlan = localStorage.getItem("pending_plan");
@@ -140,7 +146,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // ignore
       }
     }
-    setState({ token: null, user: null, subscription: null, tsnSubscription: null, loading: false });
+    setState({ token: null, user: null, subscription: null, tsnSubscription: null,
+    rabattementSubscription: null, loading: false });
     window.location.hash = "#/";
   }, [state.token]);
 
