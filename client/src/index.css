@@ -281,6 +281,19 @@
 .v2-page .container { max-width: var(--v2-container-max); margin: 0 auto; padding: 0 24px; }
 .v2-page a { color: var(--v2-blue-600); text-decoration: none; transition: color var(--v2-t-fast); }
 .v2-page a:hover { color: var(--v2-navy-800); }
+/* Les <a> stylisés en bouton conservent leur couleur de texte propre */
+.v2-page a.v2-btn,
+.v2-page a.v2-btn:hover,
+.v2-page a.v2-btn-header-outline,
+.v2-page a.v2-btn-header-outline:hover,
+.v2-page a.v2-btn-header-cta,
+.v2-page a.v2-btn-header-cta:hover { text-decoration: none; }
+.v2-page a.v2-btn-primary, .v2-page a.v2-btn-primary:hover { color: var(--v2-navy-900); }
+.v2-page a.v2-btn-blue, .v2-page a.v2-btn-blue:hover { color: #fff; }
+.v2-page a.v2-btn-outline, .v2-page a.v2-btn-outline:hover { color: #fff; }
+.v2-page a.v2-btn-ghost, .v2-page a.v2-btn-ghost:hover { color: var(--v2-text-dark); }
+.v2-page a.v2-btn-header-outline, .v2-page a.v2-btn-header-outline:hover { color: #fff; }
+.v2-page a.v2-btn-header-cta, .v2-page a.v2-btn-header-cta:hover { color: var(--v2-navy-900); }
 .v2-page h1, .v2-page h2, .v2-page h3, .v2-page h4 { color: var(--v2-text-dark); line-height: 1.2; margin: 0 0 16px; font-weight: 700; letter-spacing: -0.01em; }
 .v2-page h1 { font-size: clamp(2rem, 4vw + 1rem, 3.25rem); letter-spacing: -0.02em; }
 .v2-page h2 { font-size: clamp(1.6rem, 2vw + 1rem, 2.25rem); letter-spacing: -0.015em; }
