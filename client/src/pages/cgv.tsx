@@ -11,6 +11,17 @@ export default function CgvPage() {
             <article>
               <h1>Conditions générales de vente</h1>
               <p className="updated">Version en vigueur — janvier 2026</p>
+              <div style={{ margin: "16px 0 24px 0" }}>
+                <a
+                  href="/CGV_GMEP_2026.pdf"
+                  download="CGV_GMEP_2026.pdf"
+                  className="v2-btn v2-btn-blue"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none" }}
+                  data-testid="button-download-cgv"
+                >
+                  ⬇ Télécharger les CGV (PDF — 3 pages)
+                </a>
+              </div>
 
               <h2>1. Objet du contrat</h2>
               <p>

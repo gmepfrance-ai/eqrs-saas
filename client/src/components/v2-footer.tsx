@@ -34,6 +34,7 @@ export function V2Footer() {
               <li><a href="#/tarifs">Tarifs</a></li>
               <li><a href="#/mentions-legales">Mentions légales</a></li>
               <li><a href="#/cgv">CGV</a></li>
+              <li><a href="/CGV_GMEP_2026.pdf" download="CGV_GMEP_2026.pdf">CGV (PDF)</a></li>
               <li><a href="#/contact">Contact</a></li>
             </ul>
           </div>
