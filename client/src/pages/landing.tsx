@@ -103,6 +103,11 @@ export default function LandingPage() {
                 Intrusion de vapeurs dans les bâtiments. 74 substances (COV, HAP, métaux). Conforme
                 EPA 2004 / ANSES 2018.
               </p>
+              <p style={{ marginTop: "0.5rem", fontSize: "0.92rem", color: "#1a2b4a", fontWeight: 500 }}>
+                ✓ Rapport PDF 14 pages — notes de calcul, VTR à seuil &amp; sans seuil, détail QD/ERI<br />
+                ✓ Schéma conceptuel illustré (style BRGM/INERIS) — coupe géologique, voies a-h colorées<br />
+                ✓ Σ QD &amp; Σ ERI par organe cible (INERIS DRC-09-103096-09387C / US-EPA RAGS Part A)
+              </p>
               <div className="v2-tool-price">À partir de 208 € HT/mois</div>
               <a
                 href="#/app"
@@ -111,6 +116,31 @@ export default function LandingPage() {
               >
                 Découvrir →
               </a>
+              <div style={{ marginTop: "0.75rem", display: "flex", flexWrap: "wrap", gap: "0.5rem", justifyContent: "center" }}>
+                <a
+                  href="/Rapport_EQRS_Johnson_Ettinger.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}
+                >
+                  📄 Voir le rapport exemple (14 p.)
+                </a>
+                <a
+                  href="/Schema_Conceptuel_Illustre.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}
+                >
+                  🗺 Schéma conceptuel
+                </a>
+                <a
+                  href="/GMEP_EQRS_v2_Complet.zip"
+                  download="GMEP_EQRS_v2_Complet.zip"
+                  style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}
+                >
+                  📦 Pack complet (ZIP)
+                </a>
+              </div>
             </article>
 
             {/* Carte 2 : Domenico */}
