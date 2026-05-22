@@ -2615,9 +2615,9 @@ const M_TOP = 24;       // sous header
 const M_BOTTOM = 22;    // au-dessus footer
 
 // ─── Identité dossier ───
-const REF_PREFIX = "DE";
-
-function genRef() {
+// Préfixe défini dynamiquement par régime IOTA réel (v15.61g)
+// HN = Hors Nomenclature  /  AE = Autorisation Environnementale  /  DE = Déclaration
+function genRef(iotaStatus) {
   // 11 chiffres : YYYYMMDDHHM + random 1 chiffre
   const d = new Date();
   const stamp = d.getFullYear().toString()
@@ -2626,7 +2626,11 @@ function genRef() {
     + String(d.getHours()).padStart(2, "0")
     + String(d.getMinutes()).padStart(2, "0")
     + String(Math.floor(Math.random() * 10));
-  return REF_PREFIX + stamp;
+  let prefix = "DE";
+  if (iotaStatus === "AUTORISATION")            prefix = "AE";
+  else if (iotaStatus === "HORS NOMENCLATURE")  prefix = "HN";
+  else if (iotaStatus === "DÉCLARATION")        prefix = "DE";
+  return prefix + stamp;
 }
 
 // ─── Sanitization texte (WinAnsi safe) ───
@@ -4242,7 +4246,7 @@ async function generate(r) {
   }
 
   const ctx = {
-    ref: genRef(),
+    ref: genRef(r.iota_status),
     commune: r.inputs.commune || "—",
     mo: r.inputs.mo || "—",
     date: date,
