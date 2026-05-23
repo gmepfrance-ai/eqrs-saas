@@ -990,7 +990,7 @@ export async function registerRoutes(
       res.setHeader("X-Frame-Options", "SAMEORIGIN");
       res.setHeader(
         "Content-Security-Policy",
-        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com"
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://*.geopf.fr https://*.eaufrance.fr https://hubeau.eaufrance.fr https://api-adresse.data.gouv.fr https://geo.api.gouv.fr; img-src 'self' data: blob: https://*.geopf.fr https://*.tile.openstreetmap.org https://*.openstreetmap.org https://unpkg.com; connect-src 'self' https://*.geopf.fr https://hubeau.eaufrance.fr https://*.eaufrance.fr https://api-adresse.data.gouv.fr https://geo.api.gouv.fr"
       );
       res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
       res.setHeader("Content-Type", "text/html; charset=utf-8");
@@ -1044,7 +1044,7 @@ export async function registerRoutes(
       // Bypass admin: accès complet sans limite, mais via la route complète (pas mode essai)
       if (isAdminEmail((req.user as any).email)) {
         res.setHeader("X-Frame-Options", "SAMEORIGIN");
-        res.setHeader("Content-Security-Policy", "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://*.geopf.fr https://*.eaufrance.fr https://hubeau.eaufrance.fr; img-src 'self' data: blob: https://*.geopf.fr https://*.openstreetmap.org https://*.tile.openstreetmap.org; connect-src 'self' https://*.geopf.fr https://hubeau.eaufrance.fr https://*.eaufrance.fr");
+        res.setHeader("Content-Security-Policy", "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://*.geopf.fr https://*.eaufrance.fr https://hubeau.eaufrance.fr https://api-adresse.data.gouv.fr https://geo.api.gouv.fr; img-src 'self' data: blob: https://*.geopf.fr https://*.tile.openstreetmap.org https://*.openstreetmap.org https://unpkg.com; connect-src 'self' https://*.geopf.fr https://hubeau.eaufrance.fr https://*.eaufrance.fr https://api-adresse.data.gouv.fr https://geo.api.gouv.fr");
         res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
         res.setHeader("Content-Type", "text/html; charset=utf-8");
         return res.send(protectToolHtml(tsnToolHtml));
@@ -1060,7 +1060,7 @@ export async function registerRoutes(
         : 0;
       const trialHtml = injectTsnTrialMode(tsnToolHtml, daysLeft, req.query.token as string);
       res.setHeader("X-Frame-Options", "SAMEORIGIN");
-      res.setHeader("Content-Security-Policy", "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com");
+      res.setHeader("Content-Security-Policy", "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://*.geopf.fr https://*.eaufrance.fr https://hubeau.eaufrance.fr https://api-adresse.data.gouv.fr https://geo.api.gouv.fr; img-src 'self' data: blob: https://*.geopf.fr https://*.tile.openstreetmap.org https://*.openstreetmap.org https://unpkg.com; connect-src 'self' https://*.geopf.fr https://hubeau.eaufrance.fr https://*.eaufrance.fr https://api-adresse.data.gouv.fr https://geo.api.gouv.fr");
       res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       return res.send(protectToolHtml(trialHtml));
