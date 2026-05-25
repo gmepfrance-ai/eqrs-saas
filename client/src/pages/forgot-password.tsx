@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { V2Header } from "@/components/v2-header";
 import { V2Footer } from "@/components/v2-footer";
+import { useTranslation } from "@/lib/i18n";
 
 const API_BASE = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
 
 export default function ForgotPasswordPage() {
+  const { t } = useTranslation();
   const [step, setStep] = useState<"email" | "reset" | "done">("email");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -26,20 +28,18 @@ export default function ForgotPasswordPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.message || "Erreur");
+        setError(data.message || t("fp.errServer"));
       } else {
         if (data._code) {
           setCode(data._code);
-          setInfo(`Votre code de réinitialisation est : ${data._code}`);
+          setInfo(t("fp.infoCode").replace("{code}", data._code));
         } else {
-          setInfo(
-            "Un code de réinitialisation a été envoyé à votre adresse e-mail. Vérifiez votre boîte de réception (et les spams).",
-          );
+          setInfo(t("fp.infoSent"));
         }
         setStep("reset");
       }
     } catch {
-      setError("Erreur de connexion au serveur");
+      setError(t("fp.errServer"));
     } finally {
       setLoading(false);
     }
@@ -49,11 +49,11 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setError("");
     if (newPassword !== confirmPassword) {
-      setError("Les mots de passe ne correspondent pas");
+      setError(t("fp.errPwdMismatch"));
       return;
     }
     if (newPassword.length < 8) {
-      setError("Le mot de passe doit contenir au moins 8 caractères");
+      setError(t("fp.errPwdShort"));
       return;
     }
     setLoading(true);
@@ -64,10 +64,10 @@ export default function ForgotPasswordPage() {
         body: JSON.stringify({ email, code, newPassword }),
       });
       const data = await res.json();
-      if (!res.ok) setError(data.message || "Erreur");
+      if (!res.ok) setError(data.message || t("fp.errServer"));
       else setStep("done");
     } catch {
-      setError("Erreur de connexion au serveur");
+      setError(t("fp.errServer"));
     } finally {
       setLoading(false);
     }
@@ -80,19 +80,19 @@ export default function ForgotPasswordPage() {
         <div className="v2-auth-card">
           {step === "done" ? (
             <>
-              <h1>Mot de passe réinitialisé</h1>
-              <p className="sub">Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.</p>
+              <h1>{t("fp.doneTitle")}</h1>
+              <p className="sub">{t("fp.doneSub")}</p>
               <button
                 className="v2-btn v2-btn-primary v2-btn-block"
                 onClick={() => (window.location.hash = "#/login")}
               >
-                Se connecter
+                {t("fp.signIn")}
               </button>
             </>
           ) : step === "reset" ? (
             <>
-              <h1>Nouveau mot de passe</h1>
-              <p className="sub">Saisissez le code reçu par email et votre nouveau mot de passe.</p>
+              <h1>{t("fp.resetTitle")}</h1>
+              <p className="sub">{t("fp.resetSub")}</p>
               {info && (
                 <div
                   className="alert"
@@ -104,7 +104,7 @@ export default function ForgotPasswordPage() {
               {error && <div className="alert">{error}</div>}
               <form onSubmit={handleReset}>
                 <div className="v2-form-field">
-                  <label htmlFor="code">Code de vérification</label>
+                  <label htmlFor="code">{t("fp.code")}</label>
                   <input
                     type="text"
                     id="code"
@@ -117,7 +117,7 @@ export default function ForgotPasswordPage() {
                   />
                 </div>
                 <div className="v2-form-field">
-                  <label htmlFor="new-password">Nouveau mot de passe</label>
+                  <label htmlFor="new-password">{t("fp.newPwd")}</label>
                   <input
                     type="password"
                     id="new-password"
@@ -127,10 +127,10 @@ export default function ForgotPasswordPage() {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                   />
-                  <span className="hint">Au moins 8 caractères.</span>
+                  <span className="hint">{t("login.passwordHint")}</span>
                 </div>
                 <div className="v2-form-field">
-                  <label htmlFor="confirm-password">Confirmer le mot de passe</label>
+                  <label htmlFor="confirm-password">{t("fp.confirmPwd")}</label>
                   <input
                     type="password"
                     id="confirm-password"
@@ -147,18 +147,18 @@ export default function ForgotPasswordPage() {
                   data-testid="button-reset-password"
                   disabled={loading}
                 >
-                  {loading ? "Réinitialisation…" : "Réinitialiser"}
+                  {loading ? t("fp.resetting") : t("fp.reset")}
                 </button>
               </form>
             </>
           ) : (
             <>
-              <h1>Mot de passe oublié</h1>
-              <p className="sub">Saisissez votre email pour recevoir un code de réinitialisation.</p>
+              <h1>{t("fp.title")}</h1>
+              <p className="sub">{t("fp.sub")}</p>
               {error && <div className="alert">{error}</div>}
               <form onSubmit={handleRequestCode}>
                 <div className="v2-form-field">
-                  <label htmlFor="email">Adresse email</label>
+                  <label htmlFor="email">{t("fp.email")}</label>
                   <input
                     type="email"
                     id="email"
@@ -175,13 +175,13 @@ export default function ForgotPasswordPage() {
                   data-testid="button-send-code"
                   disabled={loading}
                 >
-                  {loading ? "Envoi…" : "Envoyer le code"}
+                  {loading ? t("fp.sending") : t("fp.send")}
                 </button>
               </form>
             </>
           )}
           <p className="form-foot">
-            <a href="#/login">Retour à la connexion</a>
+            <a href="#/login">{t("fp.back")}</a>
           </p>
         </div>
       </div>

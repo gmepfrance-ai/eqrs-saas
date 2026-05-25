@@ -2,9 +2,11 @@ import { useState } from "react";
 import { V2Header } from "@/components/v2-header";
 import { V2Footer } from "@/components/v2-footer";
 import { useAuth } from "@/lib/auth";
+import { useTranslation } from "@/lib/i18n";
 
 export default function LoginPage() {
   const { login } = useAuth();
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -22,12 +24,12 @@ export default function LoginPage() {
       if (match) {
         try {
           const parsed = JSON.parse(match[1]);
-          setError(parsed.message || "Erreur de connexion");
+          setError(parsed.message || t("login.errorDefault"));
         } catch {
-          setError(match[1] || "Erreur de connexion");
+          setError(match[1] || t("login.errorDefault"));
         }
       } else {
-        setError("Erreur de connexion. Veuillez réessayer.");
+        setError(t("login.errorGeneric"));
       }
     } finally {
       setLoading(false);
@@ -39,8 +41,8 @@ export default function LoginPage() {
       <V2Header />
       <div className="v2-auth-wrap" style={{ flex: 1 }}>
         <div className="v2-auth-card">
-          <h1>Connexion</h1>
-          <p className="sub">Accédez à votre espace abonné pour utiliser les logiciels GMEP.</p>
+          <h1>{t("login.title")}</h1>
+          <p className="sub">{t("login.sub")}</p>
 
           {error && (
             <div className="alert" data-testid="text-login-error">
@@ -50,7 +52,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit}>
             <div className="v2-form-field">
-              <label htmlFor="login-email">Adresse email</label>
+              <label htmlFor="login-email">{t("login.email")}</label>
               <input
                 type="email"
                 id="login-email"
@@ -63,7 +65,7 @@ export default function LoginPage() {
               />
             </div>
             <div className="v2-form-field">
-              <label htmlFor="login-password">Mot de passe</label>
+              <label htmlFor="login-password">{t("login.password")}</label>
               <input
                 type="password"
                 id="login-password"
@@ -74,7 +76,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <span className="hint">Au moins 8 caractères.</span>
+              <span className="hint">{t("login.passwordHint")}</span>
             </div>
             <button
               type="submit"
@@ -82,19 +84,19 @@ export default function LoginPage() {
               data-testid="button-login"
               disabled={loading}
             >
-              {loading ? "Connexion…" : "Se connecter"}
+              {loading ? t("login.submitting") : t("login.submit")}
             </button>
           </form>
 
           <p className="form-foot">
             <a href="#/forgot-password" data-testid="link-forgot-password">
-              Mot de passe oublié ?
+              {t("login.forgot")}
             </a>
           </p>
           <p className="form-foot">
-            Pas encore de compte ?{" "}
+            {t("login.noAccount")}{" "}
             <a href="#/register" data-testid="link-to-register">
-              Créer un compte
+              {t("login.createAccount")}
             </a>
           </p>
         </div>

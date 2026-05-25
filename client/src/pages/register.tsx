@@ -2,9 +2,11 @@ import { useState } from "react";
 import { V2Header } from "@/components/v2-header";
 import { V2Footer } from "@/components/v2-footer";
 import { useAuth } from "@/lib/auth";
+import { useTranslation } from "@/lib/i18n";
 
 export default function RegisterPage() {
   const { register } = useAuth();
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [societe, setSociete] = useState("");
@@ -18,11 +20,11 @@ export default function RegisterPage() {
     setError("");
 
     if (!cgu) {
-      setError("Veuillez accepter les CGV et la politique de confidentialité.");
+      setError(t("register.errCgu"));
       return;
     }
     if (password.length < 8) {
-      setError("Le mot de passe doit contenir au moins 8 caractères.");
+      setError(t("register.errPwd"));
       return;
     }
 
@@ -36,12 +38,12 @@ export default function RegisterPage() {
       if (match) {
         try {
           const parsed = JSON.parse(match[1]);
-          setError(parsed.message || "Erreur lors de l'inscription");
+          setError(parsed.message || t("register.errDefault"));
         } catch {
-          setError(match[1] || "Erreur lors de l'inscription");
+          setError(match[1] || t("register.errDefault"));
         }
       } else {
-        setError("Erreur lors de l'inscription. Veuillez réessayer.");
+        setError(t("register.errGeneric"));
       }
     } finally {
       setLoading(false);
@@ -53,8 +55,8 @@ export default function RegisterPage() {
       <V2Header />
       <div className="v2-auth-wrap" style={{ flex: 1 }}>
         <div className="v2-auth-card">
-          <h1>Créer un compte</h1>
-          <p className="sub">Essai gratuit 8 à 14 jours, aucune carte bancaire requise.</p>
+          <h1>{t("register.title")}</h1>
+          <p className="sub">{t("register.sub")}</p>
 
           {error && (
             <div className="alert" data-testid="text-register-error">
@@ -64,7 +66,7 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit}>
             <div className="v2-form-field">
-              <label htmlFor="reg-nom">Nom complet</label>
+              <label htmlFor="reg-nom">{t("register.name")}</label>
               <input
                 type="text"
                 id="reg-nom"
@@ -75,7 +77,7 @@ export default function RegisterPage() {
               />
             </div>
             <div className="v2-form-field">
-              <label htmlFor="reg-email">Adresse email professionnelle</label>
+              <label htmlFor="reg-email">{t("register.email")}</label>
               <input
                 type="email"
                 id="reg-email"
@@ -88,7 +90,7 @@ export default function RegisterPage() {
               />
             </div>
             <div className="v2-form-field">
-              <label htmlFor="reg-societe">Société / bureau d'études</label>
+              <label htmlFor="reg-societe">{t("register.company")}</label>
               <input
                 type="text"
                 id="reg-societe"
@@ -97,7 +99,7 @@ export default function RegisterPage() {
               />
             </div>
             <div className="v2-form-field">
-              <label htmlFor="reg-password">Mot de passe</label>
+              <label htmlFor="reg-password">{t("register.password")}</label>
               <input
                 type="password"
                 id="reg-password"
@@ -108,7 +110,7 @@ export default function RegisterPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <span className="hint">Au moins 8 caractères, incluant lettres et chiffres.</span>
+              <span className="hint">{t("register.passwordHint")}</span>
             </div>
             <div className="v2-form-field">
               <label
@@ -128,8 +130,10 @@ export default function RegisterPage() {
                   style={{ width: "auto", marginTop: 3 }}
                 />
                 <span>
-                  J'accepte les <a href="#/cgv">CGV</a> et la politique de confidentialité (
-                  <a href="#/mentions-legales">mentions légales</a>).
+                  {t("register.cgu.before")}<a href="#/cgv">{t("register.cgu.cgvLink")}</a>
+                  {t("register.cgu.middle")}
+                  <a href="#/mentions-legales">{t("register.cgu.mlLink")}</a>
+                  {t("register.cgu.after")}
                 </span>
               </label>
             </div>
@@ -139,14 +143,14 @@ export default function RegisterPage() {
               data-testid="button-register"
               disabled={loading}
             >
-              {loading ? "Création en cours…" : "Créer mon compte"}
+              {loading ? t("register.submitting") : t("register.submit")}
             </button>
           </form>
 
           <p className="form-foot">
-            Déjà inscrit ?{" "}
+            {t("register.already")}{" "}
             <a href="#/login" data-testid="link-to-login">
-              Se connecter
+              {t("register.signIn")}
             </a>
           </p>
         </div>

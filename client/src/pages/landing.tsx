@@ -1,8 +1,10 @@
 import { V2Header } from "@/components/v2-header";
 import { V2Footer } from "@/components/v2-footer";
+import { useTranslation } from "@/lib/i18n";
 
 /** Landing page v2 — design marketing GMEP repris du site v2 */
 export default function LandingPage() {
+  const { t } = useTranslation();
   return (
     <div className="v2-page" style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <V2Header />
@@ -12,16 +14,12 @@ export default function LandingPage() {
         <div className="container">
           <div className="v2-hero-grid">
             <div>
-              <span className="v2-hero-badge">Conformité EPA · ANSES · Loi sur l'Eau</span>
+              <span className="v2-hero-badge">{t("v2.hero.badge")}</span>
               <h1>
-                Trois outils de <span className="accent">modélisation environnementale</span>{" "}
-                professionnelle
+                {t("v2.hero.title.part1")} <span className="accent">{t("v2.hero.title.accent")}</span>{" "}
+                {t("v2.hero.title.part2")}
               </h1>
-              <p className="lead">
-                Logiciels SaaS conformes EPA, ANSES et Loi sur l'Eau, pour bureaux d'études
-                environnementaux et hydrogéologues. Calculs en temps réel, dossiers PDF prêts à
-                déposer.
-              </p>
+              <p className="lead">{t("v2.hero.lead")}</p>
               <div className="v2-hero-cta">
                 <a
                   href="#/tarifs"
@@ -31,10 +29,10 @@ export default function LandingPage() {
                     document.getElementById("v2-outils")?.scrollIntoView({ behavior: "smooth" });
                   }}
                 >
-                  Découvrir nos outils
+                  {t("v2.hero.cta.discover")}
                 </a>
                 <a href="#/register" className="v2-btn v2-btn-outline">
-                  Essai gratuit
+                  {t("v2.hero.cta.trial")}
                 </a>
               </div>
             </div>
@@ -46,24 +44,24 @@ export default function LandingPage() {
                 <span className="label">gmep · console</span>
               </div>
               <div className="v2-hero-mock-row">
-                <span className="l">Substance</span>
+                <span className="l">{t("v2.hero.mock.substance")}</span>
                 <span className="v">Trichloroéthylène</span>
               </div>
               <div className="v2-hero-mock-row">
-                <span className="l">α (facteur d'atténuation)</span>
+                <span className="l">{t("v2.hero.mock.alpha")}</span>
                 <span className="v">2,4 × 10⁻⁴</span>
               </div>
               <div className="v2-hero-mock-row">
-                <span className="l">Cc(x) à 100 m</span>
+                <span className="l">{t("v2.hero.mock.cc")}</span>
                 <span className="v">12,8 µg/L</span>
               </div>
               <div className="v2-hero-mock-row">
-                <span className="l">Q Theis corrigé</span>
+                <span className="l">{t("v2.hero.mock.qtheis")}</span>
                 <span className="v">106,22 m³/h</span>
               </div>
               <div className="v2-hero-mock-result">
-                <strong>STATUT IOTA</strong>
-                <span>AUTORISATION</span>
+                <strong>{t("v2.hero.mock.status")}</strong>
+                <span>{t("v2.hero.mock.statusValue")}</span>
               </div>
             </div>
           </div>
@@ -74,12 +72,9 @@ export default function LandingPage() {
       <section className="v2-section" id="v2-outils">
         <div className="container">
           <div className="v2-section-head">
-            <span className="v2-section-eyebrow">Catalogue</span>
-            <h2>Nos trois logiciels</h2>
-            <p>
-              Trois moteurs de calcul indépendants, conçus pour les contraintes réelles du terrain.
-              Démos interactives disponibles dans le navigateur, sans installation.
-            </p>
+            <span className="v2-section-eyebrow">{t("v2.tools.eyebrow")}</span>
+            <h2>{t("v2.tools.title")}</h2>
+            <p>{t("v2.tools.subtitle")}</p>
           </div>
           <div className="v2-tools-grid">
             {/* Carte 1 : EQRS J&E */}
@@ -98,23 +93,20 @@ export default function LandingPage() {
                   />
                 </svg>
               </div>
-              <h3>EQRS Johnson &amp; Ettinger</h3>
-              <p>
-                Intrusion de vapeurs dans les bâtiments. 74 substances (COV, HAP, métaux). Conforme
-                EPA 2004 / ANSES 2018.
-              </p>
+              <h3>{t("v2.tools.eqrs.title")}</h3>
+              <p>{t("v2.tools.eqrs.desc")}</p>
               <p style={{ marginTop: "0.5rem", fontSize: "0.92rem", color: "#1a2b4a", fontWeight: 500 }}>
-                ✓ Rapport PDF 14 pages — notes de calcul, VTR à seuil &amp; sans seuil, détail QD/ERI<br />
-                ✓ Schéma conceptuel illustré (style BRGM/INERIS) — coupe géologique, voies a-h colorées<br />
-                ✓ Σ QD &amp; Σ ERI par organe cible (INERIS DRC-09-103096-09387C / US-EPA RAGS Part A)
+                ✓ {t("v2.tools.eqrs.feat1")}<br />
+                ✓ {t("v2.tools.eqrs.feat2")}<br />
+                ✓ {t("v2.tools.eqrs.feat3")}
               </p>
-              <div className="v2-tool-price">À partir de 208 € HT/mois</div>
+              <div className="v2-tool-price">{t("v2.tools.eqrs.price")}</div>
               <a
                 href="#/app"
                 className="v2-btn v2-btn-blue"
                 onClick={() => localStorage.setItem("pending_plan", "monthly")}
               >
-                Découvrir →
+                {t("v2.tools.eqrs.cta")}
               </a>
               <div style={{ marginTop: "0.75rem", display: "flex", flexWrap: "wrap", gap: "0.5rem", justifyContent: "center" }}>
                 <a
@@ -123,7 +115,7 @@ export default function LandingPage() {
                   rel="noopener noreferrer"
                   style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}
                 >
-                  📄 Voir le rapport exemple (14 p.)
+                  {t("v2.tools.eqrs.linkReport")}
                 </a>
                 <a
                   href="/Schema_Conceptuel_Illustre.pdf"
@@ -131,14 +123,14 @@ export default function LandingPage() {
                   rel="noopener noreferrer"
                   style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}
                 >
-                  🗺 Schéma conceptuel
+                  {t("v2.tools.eqrs.linkSchema")}
                 </a>
                 <a
                   href="/GMEP_EQRS_v2_Complet.zip"
                   download="GMEP_EQRS_v2_Complet.zip"
                   style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}
                 >
-                  📦 Pack complet (ZIP)
+                  {t("v2.tools.eqrs.linkZip")}
                 </a>
               </div>
             </article>
@@ -154,20 +146,17 @@ export default function LandingPage() {
                   <circle cx="22" cy="20" r="2" fill="#3ddc84" />
                 </svg>
               </div>
-              <h3>Transfert Sol → Nappe → Captage</h3>
-              <p>
-                Modèle Domenico 1987. 24 polluants (BTEX, HAP, PFAS, métaux). Courbe d'atténuation
-                Cc(x), DAF, gradient hydraulique.
-              </p>
-              <div className="v2-tool-price">850 € HT/an</div>
+              <h3>{t("v2.tools.tsn.title")}</h3>
+              <p>{t("v2.tools.tsn.desc")}</p>
+              <div className="v2-tool-price">{t("v2.tools.tsn.price")}</div>
               <a href="#/subscribe-tsn" className="v2-btn v2-btn-blue">
-                Découvrir →
+                {t("v2.tools.eqrs.cta")}
               </a>
             </article>
 
             {/* Carte 3 : Rabattement (NOUVEAU) */}
             <article className="v2-tool-card">
-              <span className="v2-badge">NOUVEAU</span>
+              <span className="v2-badge">{t("v2.tools.rabattement.badgeNew")}</span>
               <div className="v2-tool-icon" aria-hidden="true">
                 <svg viewBox="0 0 32 32" fill="none">
                   <path d="M3 14h26" stroke="#2563eb" strokeWidth="1.5" strokeDasharray="2 2" />
@@ -185,14 +174,11 @@ export default function LandingPage() {
                   />
                 </svg>
               </div>
-              <h3>Rabattement de nappe</h3>
-              <p>
-                Theis + Dupuit-Thiem. Classification IOTA automatique (R.214-1). Carte OpenStreetMap
-                + dossier DDT 27 pages.
-              </p>
-              <div className="v2-tool-price">1 100 € HT/an</div>
+              <h3>{t("v2.tools.rabattement.title")}</h3>
+              <p>{t("v2.tools.rabattement.desc")}</p>
+              <div className="v2-tool-price">{t("v2.tools.rabattement.price")}</div>
               <a href="#/subscribe-rabattement" className="v2-btn v2-btn-blue">
-                Découvrir →
+                {t("v2.tools.eqrs.cta")}
               </a>
             </article>
           </div>
@@ -203,8 +189,8 @@ export default function LandingPage() {
       <section className="v2-section bg-soft">
         <div className="container">
           <div className="v2-section-head">
-            <span className="v2-section-eyebrow">Pourquoi GMEP</span>
-            <h2>Pensé par et pour les bureaux d'études</h2>
+            <span className="v2-section-eyebrow">{t("v2.why.eyebrow")}</span>
+            <h2>{t("v2.why.title")}</h2>
           </div>
           <div className="v2-why-grid">
             <div className="v2-why-item">
@@ -225,8 +211,8 @@ export default function LandingPage() {
                   />
                 </svg>
               </div>
-              <h3>Conformité réglementaire</h3>
-              <p>EPA 2004, ANSES 2018, articles L.214-1 et R.214-1 du Code de l'environnement.</p>
+              <h3>{t("v2.why.compliance.title")}</h3>
+              <p>{t("v2.why.compliance.desc")}</p>
             </div>
             <div className="v2-why-item">
               <div className="v2-why-icon" aria-hidden="true">
@@ -240,8 +226,8 @@ export default function LandingPage() {
                   />
                 </svg>
               </div>
-              <h3>Calculs en temps réel</h3>
-              <p>Saisie → résultat instantané. Étude paramétrique sur 8 variables pour J&amp;E.</p>
+              <h3>{t("v2.why.realtime.title")}</h3>
+              <p>{t("v2.why.realtime.desc")}</p>
             </div>
             <div className="v2-why-item">
               <div className="v2-why-icon" aria-hidden="true">
@@ -260,8 +246,8 @@ export default function LandingPage() {
                   />
                 </svg>
               </div>
-              <h3>PDF prêts à déposer</h3>
-              <p>Dossiers de 27 pages pour DDT, IEM sites pollués, rapports d'étude.</p>
+              <h3>{t("v2.why.pdf.title")}</h3>
+              <p>{t("v2.why.pdf.desc")}</p>
             </div>
             <div className="v2-why-item">
               <div className="v2-why-icon" aria-hidden="true">
@@ -276,8 +262,8 @@ export default function LandingPage() {
                   />
                 </svg>
               </div>
-              <h3>Essai gratuit sans CB</h3>
-              <p>8 à 14 jours d'accès complet, aucune carte bancaire requise.</p>
+              <h3>{t("v2.why.trial.title")}</h3>
+              <p>{t("v2.why.trial.desc")}</p>
             </div>
           </div>
         </div>
@@ -298,20 +284,21 @@ export default function LandingPage() {
             }}
           >
             <h2 style={{ margin: "0 0 16px 0", color: "#92400e", fontSize: 22 }}>
-              Conditions de licence — mono-poste
+              {t("v2.license.title")}
             </h2>
             <p style={{ margin: "0 0 12px 0", fontSize: 15, color: "#451a03", lineHeight: 1.65 }}>
-              Le tarif indiqué pour chaque logiciel correspond à{" "}
-              <strong>une seule licence mono-poste</strong> : 1 clé d'activation = 1 ordinateur.
-              La clé d'activation est <strong>personnelle, incessible et non partageable</strong>{" "}
-              entre plusieurs postes.
+              {t("v2.license.p1.before")}
+              <strong>{t("v2.license.p1.strong1")}</strong>
+              {t("v2.license.p1.middle")}
+              <strong>{t("v2.license.p1.strong2")}</strong>
+              {t("v2.license.p1.after")}
             </p>
             <p style={{ margin: 0, fontSize: 15, color: "#451a03", lineHeight: 1.65 }}>
-              Pour équiper <strong>plusieurs postes</strong> au sein d'une même entreprise (par
-              exemple 3 ou 4 collaborateurs), l'entreprise doit souscrire{" "}
-              <strong>autant d'abonnements que de postes</strong>, chacun avec sa propre clé
-              d'activation et sa durée (mensuelle ou annuelle). Chaque licence supplémentaire est
-              facturée au même tarif unitaire.
+              {t("v2.license.p2.before")}
+              <strong>{t("v2.license.p2.strong1")}</strong>
+              {t("v2.license.p2.middle")}
+              <strong>{t("v2.license.p2.strong2")}</strong>
+              {t("v2.license.p2.after")}
             </p>
           </div>
         </div>
@@ -321,13 +308,10 @@ export default function LandingPage() {
       <section className="v2-section">
         <div className="container">
           <div className="v2-cta-band">
-            <h2>Essai gratuit 8 à 14 jours</h2>
-            <p>
-              Testez les démos interactives dans votre navigateur. Aucune installation, aucune carte
-              bancaire.
-            </p>
+            <h2>{t("v2.cta.title")}</h2>
+            <p>{t("v2.cta.desc")}</p>
             <a href="#/register" className="v2-btn v2-btn-primary">
-              Créer mon compte
+              {t("v2.cta.btn")}
             </a>
           </div>
         </div>

@@ -1,8 +1,11 @@
 import { V2Header } from "@/components/v2-header";
 import { V2Footer } from "@/components/v2-footer";
+import { useTranslation } from "@/lib/i18n";
 
 /** Tarifs v2 — 4 cartes simples avec lien vers register / subscribe */
 export default function TarifsPage() {
+  const { t } = useTranslation();
+
   function startPlan(plan: string, hash: string) {
     localStorage.setItem("pending_plan", plan);
     window.location.hash = hash;
@@ -21,10 +24,9 @@ export default function TarifsPage() {
         }}
       >
         <div className="container" style={{ textAlign: "center" }}>
-          <h1 style={{ color: "#fff" }}>Tarifs et abonnements</h1>
+          <h1 style={{ color: "#fff" }}>{t("tarifs.hero.title")}</h1>
           <p className="lead" style={{ color: "rgba(255,255,255,0.85)", maxWidth: 720, margin: "0 auto" }}>
-            Quatre offres simples, sans engagement de durée et sans renouvellement automatique. Paiement
-            sécurisé par Stripe.
+            {t("tarifs.hero.lead")}
           </p>
         </div>
       </section>
@@ -35,104 +37,104 @@ export default function TarifsPage() {
           <div className="v2-pricing-grid">
             {/* J&E Mensuel */}
             <div className="v2-price-card">
-              <h3>EQRS Johnson &amp; Ettinger</h3>
-              <p className="sub">Abonnement mensuel — flexibilité maximale</p>
+              <h3>{t("v2.tools.eqrs.title")}</h3>
+              <p className="sub">{t("tarifs.eqrsMonthly.sub")}</p>
               <div className="v2-price-amount">
                 <span className="currency">€</span>245
               </div>
-              <div className="v2-price-period">HT / mois — résiliable à tout moment</div>
+              <div className="v2-price-period">{t("tarifs.eqrsMonthly.period")}</div>
               <ul className="v2-price-features">
-                <li>74 substances (COV, HAP, métaux)</li>
-                <li>Calculs QD, ERI (adulte, enfant ADAF=3, salarié)</li>
-                <li>Étude paramétrique 8 variables</li>
-                <li>Conforme EPA 2004 / ANSES 2018</li>
-                <li>Génération PDF</li>
-                <li>Résiliable à tout moment</li>
+                <li>{t("tarifs.eqrsMonthly.f1")}</li>
+                <li>{t("tarifs.eqrsMonthly.f2")}</li>
+                <li>{t("tarifs.eqrsMonthly.f3")}</li>
+                <li>{t("tarifs.eqrsMonthly.f4")}</li>
+                <li>{t("tarifs.eqrsMonthly.f5")}</li>
+                <li>{t("tarifs.eqrsMonthly.f6")}</li>
               </ul>
               <button
                 className="v2-btn v2-btn-blue v2-btn-block"
                 onClick={() => startPlan("monthly", "#/register")}
               >
-                S'abonner
+                {t("tarifs.subscribe")}
               </button>
             </div>
 
             {/* J&E Annuel */}
             <div className="v2-price-card featured">
-              <span className="v2-badge">Économisez 15 %</span>
-              <h3>EQRS Johnson &amp; Ettinger</h3>
-              <p className="sub">Abonnement annuel — meilleure valeur</p>
+              <span className="v2-badge">{t("tarifs.eqrsAnnual.badge")}</span>
+              <h3>{t("v2.tools.eqrs.title")}</h3>
+              <p className="sub">{t("tarifs.eqrsAnnual.sub")}</p>
               <div className="v2-price-amount">
                 <span className="currency">€</span>2 499
               </div>
-              <div className="v2-price-period">HT / an (~208 € HT/mois)</div>
+              <div className="v2-price-period">{t("tarifs.eqrsAnnual.period")}</div>
               <ul className="v2-price-features">
-                <li>Toutes les fonctions du plan mensuel</li>
-                <li>Économie de 441 € sur l'année</li>
-                <li>Support prioritaire par email</li>
-                <li>Mises à jour réglementaires incluses</li>
-                <li>Facture annuelle unique</li>
+                <li>{t("tarifs.eqrsAnnual.f1")}</li>
+                <li>{t("tarifs.eqrsAnnual.f2")}</li>
+                <li>{t("tarifs.eqrsAnnual.f3")}</li>
+                <li>{t("tarifs.eqrsAnnual.f4")}</li>
+                <li>{t("tarifs.eqrsAnnual.f5")}</li>
               </ul>
               <button
                 className="v2-btn v2-btn-primary v2-btn-block"
                 onClick={() => startPlan("annual", "#/register")}
               >
-                S'abonner
+                {t("tarifs.subscribe")}
               </button>
             </div>
 
             {/* Domenico */}
             <div className="v2-price-card">
-              <h3>Transfert Sol → Nappe → Captage</h3>
-              <p className="sub">Modèle Domenico — licence annuelle</p>
+              <h3>{t("v2.tools.tsn.title")}</h3>
+              <p className="sub">{t("tarifs.tsn.sub")}</p>
               <div className="v2-price-amount">
                 <span className="currency">€</span>850
               </div>
-              <div className="v2-price-period">HT / an</div>
+              <div className="v2-price-period">{t("tarifs.tsn.period")}</div>
               <ul className="v2-price-features">
-                <li>24 polluants (COHV, BTEX, HAP, PFAS, métaux)</li>
-                <li>24 types de sols paramétrés</li>
-                <li>Courbe d'atténuation Cc(x), DAF</li>
-                <li>Éditeur PDF intégré</li>
-                <li>Schéma conceptuel automatique</li>
+                <li>{t("tarifs.tsn.f1")}</li>
+                <li>{t("tarifs.tsn.f2")}</li>
+                <li>{t("tarifs.tsn.f3")}</li>
+                <li>{t("tarifs.tsn.f4")}</li>
+                <li>{t("tarifs.tsn.f5")}</li>
               </ul>
               <button
                 className="v2-btn v2-btn-blue v2-btn-block"
                 onClick={() => (window.location.hash = "#/subscribe-tsn")}
               >
-                S'abonner
+                {t("tarifs.subscribe")}
               </button>
             </div>
 
             {/* Rabattement */}
             <div className="v2-price-card">
               <span className="v2-badge" style={{ background: "#2563eb", color: "#fff" }}>
-                Nouveau
+                {t("tarifs.rabattement.badge")}
               </span>
-              <h3>Rabattement de nappe</h3>
-              <p className="sub">Theis + Dupuit-Thiem — licence annuelle</p>
+              <h3>{t("v2.tools.rabattement.title")}</h3>
+              <p className="sub">{t("tarifs.rabattement.sub")}</p>
               <div className="v2-price-amount">
                 <span className="currency">€</span>1 100
               </div>
-              <div className="v2-price-period">HT / an</div>
+              <div className="v2-price-period">{t("tarifs.tsn.period")}</div>
               <ul className="v2-price-features">
-                <li>Modèles Theis (transitoire) et Dupuit-Thiem (permanent)</li>
-                <li>Classification IOTA automatique (R.214-1)</li>
-                <li>Cartographie OpenStreetMap</li>
-                <li>Dossier Loi sur l'Eau prêt à déposer</li>
-                <li>Essai gratuit 8 jours</li>
+                <li>{t("tarifs.rabattement.f1")}</li>
+                <li>{t("tarifs.rabattement.f2")}</li>
+                <li>{t("tarifs.rabattement.f3")}</li>
+                <li>{t("tarifs.rabattement.f4")}</li>
+                <li>{t("tarifs.rabattement.f5")}</li>
               </ul>
               <button
                 className="v2-btn v2-btn-blue v2-btn-block"
                 onClick={() => (window.location.hash = "#/subscribe-rabattement")}
               >
-                S'abonner
+                {t("tarifs.subscribe")}
               </button>
             </div>
           </div>
 
           <p style={{ textAlign: "center", marginTop: 32, fontSize: 13.5, color: "#6b7280" }}>
-            TVA française au taux normal de 20 % (art. 278 du CGI). Facturation sécurisée par Stripe.
+            {t("tarifs.vatNote")}
           </p>
 
           {/* Conditions de licence — mono-poste */}
@@ -148,26 +150,17 @@ export default function TarifsPage() {
             }}
           >
             <h3 style={{ margin: "0 0 12px 0", fontSize: 17, color: "#9a3412" }}>
-              Conditions de licence — mono-poste
+              {t("tarifs.license.title")}
             </h3>
             <ul style={{ margin: 0, paddingLeft: 20, fontSize: 14, color: "#7c2d12", lineHeight: 1.7 }}>
               <li>
-                Chaque tarif indiqué correspond à <strong>une licence mono-poste</strong> : 1 clé
-                d'activation = 1 ordinateur.
+                {t("tarifs.license.b1.before")}<strong>{t("tarifs.license.b1.strong")}</strong>{t("tarifs.license.b1.after")}
               </li>
+              <li>{t("tarifs.license.b2")}</li>
               <li>
-                La clé d'activation est strictement personnelle et incessible. Elle ne peut être
-                partagée, transférée ou utilisée simultanément sur plusieurs postes.
+                {t("tarifs.license.b3.before")}<strong>{t("tarifs.license.b3.strong")}</strong>{t("tarifs.license.b3.after")}
               </li>
-              <li>
-                Pour équiper <strong>2, 3 ou 4 postes</strong> au sein d'une même entreprise,
-                souscrivez le nombre de licences correspondant (un abonnement et une clé
-                d'activation par poste).
-              </li>
-              <li>
-                Chaque licence supplémentaire ouvre droit au même tarif unitaire (mensuel ou
-                annuel) pour la durée souscrite.
-              </li>
+              <li>{t("tarifs.license.b4")}</li>
             </ul>
           </div>
         </div>
