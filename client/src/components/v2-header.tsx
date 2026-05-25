@@ -1,11 +1,19 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
+import { useTranslation, type Lang } from "@/lib/i18n";
 
 /** Header v2 — design marine sombre, menu Accueil/Outils/Tarifs/Contact */
 export function V2Header() {
   const { user, token, logout } = useAuth();
+  const { lang, setLang, t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const LANGUAGES: { code: Lang; label: string; title: string }[] = [
+    { code: "fr", label: "FR", title: "Français" },
+    { code: "en", label: "GB", title: "English" },
+    { code: "es", label: "ES", title: "Español" },
+  ];
 
   // Ferme les menus quand on clique en dehors
   useEffect(() => {
@@ -57,11 +65,11 @@ export function V2Header() {
               G.M.E.P
             </text>
           </svg>
-          <span className="v2-brand-tag">Bureau d'études environnement &amp; hydrogéologie</span>
+          <span className="v2-brand-tag">{t("nav.brandTag")}</span>
         </a>
 
-        <nav className="v2-nav-center" aria-label="Navigation principale">
-          <a href="#/">Accueil</a>
+        <nav className="v2-nav-center" aria-label={t("nav.home")}>
+          <a href="#/">{t("nav.home")}</a>
           <div className={`v2-nav-dropdown ${dropdownOpen ? "open" : ""}`}>
             <button
               className="v2-nav-trigger"
@@ -72,7 +80,7 @@ export function V2Header() {
                 setDropdownOpen((v) => !v);
               }}
             >
-              Outils
+              {t("nav.tools")}
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
                 <path
                   d="M2 4l3 3 3-3"
@@ -85,29 +93,39 @@ export function V2Header() {
             </button>
             <div className="v2-nav-dropdown-menu" role="menu">
               <a href="#/app" onClick={() => setDropdownOpen(false)}>
-                EQRS Johnson &amp; Ettinger
-                <span className="v2-nav-mi-desc">Intrusion de vapeurs — EPA 2004</span>
+                {t("nav.tools.eqrs")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.eqrs.desc")}</span>
               </a>
               <a href="#/subscribe-tsn" onClick={() => setDropdownOpen(false)}>
-                Transfert Sol → Nappe → Captage
-                <span className="v2-nav-mi-desc">Modèle Domenico 1987</span>
+                {t("nav.tools.tsn")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.tsn.desc")}</span>
               </a>
               <a href="#/subscribe-rabattement" onClick={() => setDropdownOpen(false)}>
-                Rabattement de nappe
-                <span className="v2-nav-mi-desc">Theis + IOTA — NOUVEAU</span>
+                {t("nav.tools.rabattement")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.rabattement.desc")}</span>
               </a>
             </div>
           </div>
-          <a href="#/tarifs">Tarifs</a>
-          <a href="#/cgv">CGV</a>
-          <a href="#/contact">Contact</a>
+          <a href="#/tarifs">{t("nav.pricing")}</a>
+          <a href="#/cgv">{t("nav.cgv")}</a>
+          <a href="#/contact">{t("nav.contact")}</a>
         </nav>
 
         <div className="v2-nav-right">
           <div className="v2-lang-switcher" role="group" aria-label="Choix de langue">
-            <button className="v2-lang-btn active" data-lang="fr" title="Français">FR</button>
-            <button className="v2-lang-btn" data-lang="en" title="English">GB</button>
-            <button className="v2-lang-btn" data-lang="es" title="Español">ES</button>
+            {LANGUAGES.map((l) => (
+              <button
+                key={l.code}
+                type="button"
+                className={`v2-lang-btn${lang === l.code ? " active" : ""}`}
+                data-lang={l.code}
+                title={l.title}
+                aria-pressed={lang === l.code}
+                onClick={() => setLang(l.code)}
+              >
+                {l.label}
+              </button>
+            ))}
           </div>
           {user ? (
             <>
@@ -122,7 +140,7 @@ export function V2Header() {
                   goDashboard();
                 }}
               >
-                Mon espace
+                {t("nav.myArea")}
               </a>
               <button
                 onClick={logout}
@@ -130,16 +148,16 @@ export function V2Header() {
                 style={{ cursor: "pointer", border: "none" }}
                 data-testid="button-logout"
               >
-                Déconnexion
+                {t("header.logout")}
               </button>
             </>
           ) : (
             <>
               <a href="#/login" className="v2-btn-header-outline" data-testid="link-login">
-                Connexion
+                {t("header.login")}
               </a>
               <a href="#/register" className="v2-btn-header-cta" data-testid="link-register">
-                Inscription
+                {t("header.register")}
               </a>
             </>
           )}

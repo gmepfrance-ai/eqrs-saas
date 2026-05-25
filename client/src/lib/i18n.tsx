@@ -11,6 +11,21 @@ const translations = {
     "header.subtitle": "J&E + Transfert Sol→Nappe",
     "header.subtext": "Modélisation environnementale professionnelle • Sites & Sols Pollués",
 
+    // Navigation V2
+    "nav.home": "Accueil",
+    "nav.tools": "Outils",
+    "nav.tools.eqrs": "EQRS Johnson & Ettinger",
+    "nav.tools.eqrs.desc": "Intrusion de vapeurs — EPA 2004",
+    "nav.tools.tsn": "Transfert Sol → Nappe → Captage",
+    "nav.tools.tsn.desc": "Modèle Domenico 1987",
+    "nav.tools.rabattement": "Rabattement de nappe",
+    "nav.tools.rabattement.desc": "Theis + IOTA — NOUVEAU",
+    "nav.pricing": "Tarifs",
+    "nav.cgv": "CGV",
+    "nav.contact": "Contact",
+    "nav.myArea": "Mon espace",
+    "nav.brandTag": "Bureau d'études environnement & hydrogéologie",
+
     // Footer
     "footer.rights": "Tous droits réservés.",
     "footer.legal":
@@ -180,6 +195,21 @@ const translations = {
     "header.subtitle": "EQRS — Johnson & Ettinger Model",
     "header.subtext": "Quantitative Health Risk Assessment • Vapor Intrusion",
 
+    // Navigation V2
+    "nav.home": "Home",
+    "nav.tools": "Tools",
+    "nav.tools.eqrs": "EQRS Johnson & Ettinger",
+    "nav.tools.eqrs.desc": "Vapor intrusion — EPA 2004",
+    "nav.tools.tsn": "Soil → Groundwater → Well Transfer",
+    "nav.tools.tsn.desc": "Domenico 1987 model",
+    "nav.tools.rabattement": "Groundwater drawdown",
+    "nav.tools.rabattement.desc": "Theis + IOTA — NEW",
+    "nav.pricing": "Pricing",
+    "nav.cgv": "Terms",
+    "nav.contact": "Contact",
+    "nav.myArea": "My account",
+    "nav.brandTag": "Environmental & hydrogeology consultancy",
+
     // Footer
     "footer.rights": "All rights reserved.",
     "footer.legal":
@@ -343,6 +373,21 @@ const translations = {
     "header.logout": "Cerrar sesión",
     "header.subtitle": "EQRS — Modelo Johnson & Ettinger",
     "header.subtext": "Evaluación Cuantitativa de Riesgos Sanitarios • Intrusión de vapores",
+
+    // Navigation V2
+    "nav.home": "Inicio",
+    "nav.tools": "Herramientas",
+    "nav.tools.eqrs": "EQRS Johnson & Ettinger",
+    "nav.tools.eqrs.desc": "Intrusión de vapores — EPA 2004",
+    "nav.tools.tsn": "Transferencia Suelo → Acuífero → Captación",
+    "nav.tools.tsn.desc": "Modelo Domenico 1987",
+    "nav.tools.rabattement": "Abatimiento del nivel freático",
+    "nav.tools.rabattement.desc": "Theis + IOTA — NUEVO",
+    "nav.pricing": "Tarifas",
+    "nav.cgv": "CGV",
+    "nav.contact": "Contacto",
+    "nav.myArea": "Mi cuenta",
+    "nav.brandTag": "Consultoría medioambiental e hidrogeológica",
 
     // Footer
     "footer.rights": "Todos los derechos reservados.",
@@ -516,8 +561,39 @@ const LanguageContext = createContext<LanguageContextValue>({
   t: (key) => key,
 });
 
+const LANG_STORAGE_KEY = "gmep_lang";
+
+function readInitialLang(): Lang {
+  if (typeof window === "undefined") return "fr";
+  try {
+    const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
+    if (stored === "fr" || stored === "en" || stored === "es") return stored;
+  } catch {
+    // localStorage indisponible (mode privé strict), on retombe sur fr
+  }
+  return "fr";
+}
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Lang>("fr");
+  const [lang, setLangState] = useState<Lang>(readInitialLang);
+
+  const setLang = React.useCallback((next: Lang) => {
+    setLangState(next);
+    try {
+      window.localStorage.setItem(LANG_STORAGE_KEY, next);
+    } catch {
+      // ignore
+    }
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = next;
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = lang;
+    }
+  }, [lang]);
 
   function t(key: TranslationKey, vars?: Record<string, string>): string {
     const dict = translations[lang] as Record<string, string>;
