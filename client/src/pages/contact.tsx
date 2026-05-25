@@ -110,7 +110,7 @@ export default function ContactPage() {
                 <dd style={{ margin: "4px 0 0", color: "#4b5563" }}>
                   <a href="tel:+33607737233">06 07 73 72 33</a> ({t("contact.info.phoneManager")})
                   <br />
-                  <a href="tel:+33549165382">05 49 16 53 82</a> ({t("contact.info.phoneOffice")})
+                  <a href="tel:+33549168382">05 49 16 83 82</a> ({t("contact.info.phoneOffice")})
                 </dd>
                 <dt style={dtStyle}>{t("contact.info.email")}</dt>
                 <dd style={{ margin: "4px 0 0", color: "#4b5563" }}>
