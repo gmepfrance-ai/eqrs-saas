@@ -2018,30 +2018,153 @@ window.addCiblesToPDF = function(doc, startY) {
   y += 4;
   doc.text(tsnCibles.length + ' cible(s) Hub\'eau identifiée(s) dans le rayon. Cc(x) calculé par modèle Domenico (1987).', 16, y);
   y += 6;
+  // ═══ CARTOGRAPHIE : canvas natif (CORS-safe, sans tuiles) ═══
+  try {
+    pageBreakIfNeeded(115);
+    const mapCanvas = document.createElement('canvas');
+    mapCanvas.width = 1200; mapCanvas.height = 640;
+    const mctx = mapCanvas.getContext('2d');
+    const cx = 600, cy = 320;
+    const halfWidthM = Math.max(3500, (window.tsnRadiusUsedKm || 1.5) * 1000 * 1.15);
+    const scaleMperPx = halfWidthM / 600;
+    // Fond
+    mctx.fillStyle = '#f0f5f9'; mctx.fillRect(0, 0, 1200, 640);
+    // Grille discrète
+    mctx.strokeStyle = '#dbe5ec'; mctx.lineWidth = 1; mctx.setLineDash([]);
+    for (let i = 0; i <= 12; i++) { mctx.beginPath(); mctx.moveTo(i*100,0); mctx.lineTo(i*100,640); mctx.stroke(); }
+    for (let j = 0; j <= 6; j++) { mctx.beginPath(); mctx.moveTo(0,j*107); mctx.lineTo(1200,j*107); mctx.stroke(); }
+    // Cercles isodistances
+    const cercles = [
+      { r: 500,  c: '#dc2626', ld: [],       lw: 1.8 },
+      { r: 1000, c: '#ea580c', ld: [],       lw: 1.8 },
+      { r: 1500, c: '#1d4ed8', ld: [10, 3],  lw: 2.5 },
+      { r: 2000, c: '#7c3aed', ld: [6, 4],   lw: 1.6 },
+      { r: 2500, c: '#0891b2', ld: [6, 4],   lw: 1.6 },
+      { r: 3000, c: '#475569', ld: [6, 4],   lw: 1.6 }
+    ];
+    cercles.forEach(p => {
+      const pxR = p.r / scaleMperPx;
+      if (pxR > 620) return;
+      mctx.strokeStyle = p.c; mctx.lineWidth = p.lw; mctx.setLineDash(p.ld);
+      mctx.beginPath(); mctx.arc(cx, cy, pxR, 0, 2 * Math.PI); mctx.stroke();
+      // Étiquette distance
+      mctx.fillStyle = p.c; mctx.font = 'bold 14px Arial'; mctx.setLineDash([]);
+      mctx.fillText(p.r + ' m', cx + pxR - 38, cy - 6);
+    });
+    // Flèche azimut
+    const azDeg = parseFloat(document.getElementById('p-azimut').value) || 180;
+    const azRad = (azDeg - 90) * Math.PI / 180;
+    const arrowLen = Math.min(280, (window.tsnRadiusUsedKm || 1.5) * 1000 / scaleMperPx * 0.95);
+    const fx = cx + Math.cos(azRad) * arrowLen;
+    const fy = cy + Math.sin(azRad) * arrowLen;
+    mctx.strokeStyle = '#0891b2'; mctx.lineWidth = 4; mctx.setLineDash([8, 5]);
+    mctx.beginPath(); mctx.moveTo(cx, cy); mctx.lineTo(fx, fy); mctx.stroke();
+    mctx.setLineDash([]);
+    // Pointe flèche
+    const headLen = 18;
+    mctx.fillStyle = '#0891b2';
+    mctx.beginPath();
+    mctx.moveTo(fx, fy);
+    mctx.lineTo(fx - headLen * Math.cos(azRad - Math.PI / 6), fy - headLen * Math.sin(azRad - Math.PI / 6));
+    mctx.lineTo(fx - headLen * Math.cos(azRad + Math.PI / 6), fy - headLen * Math.sin(azRad + Math.PI / 6));
+    mctx.closePath(); mctx.fill();
+    // Source au centre
+    mctx.fillStyle = '#b05000';
+    mctx.beginPath(); mctx.arc(cx, cy, 11, 0, 2 * Math.PI); mctx.fill();
+    mctx.strokeStyle = '#ffffff'; mctx.lineWidth = 3; mctx.stroke();
+    mctx.fillStyle = '#1f2937'; mctx.font = 'bold 13px Arial';
+    mctx.fillText('Source', cx + 14, cy - 10);
+    // Conversion lat/lon source depuis info-wgs84
+    const wgsText = document.getElementById('info-wgs84').textContent || '0,0';
+    const wgsParts = wgsText.split(',').map(s => parseFloat(s.trim()));
+    const srcLat = wgsParts[0] || 0;
+    const srcLon = wgsParts[1] || 0;
+    // Projection des cibles
+    tsnCibles.forEach(c => {
+      if (c.lat == null || c.lon == null) return;
+      const dx = (c.lon - srcLon) * 111320 * Math.cos(srcLat * Math.PI / 180);
+      const dy = -(c.lat - srcLat) * 111320;
+      const px = cx + dx / scaleMperPx;
+      const py = cy + dy / scaleMperPx;
+      if (px < 8 || px > 1192 || py < 8 || py > 632) return;
+      const col = c.criticite === 'haute' ? '#A12C2C' : c.criticite === 'moyenne' ? '#d97706' : '#1a6b3a';
+      mctx.fillStyle = col;
+      mctx.beginPath(); mctx.arc(px, py, 8, 0, 2 * Math.PI); mctx.fill();
+      mctx.strokeStyle = '#ffffff'; mctx.lineWidth = 2; mctx.stroke();
+    });
+    // Nord (flèche en haut-droite)
+    const nx = 1140, ny = 60;
+    mctx.fillStyle = '#1f2937'; mctx.strokeStyle = '#1f2937'; mctx.lineWidth = 2;
+    mctx.beginPath(); mctx.moveTo(nx, ny - 22); mctx.lineTo(nx - 9, ny + 6); mctx.lineTo(nx, ny - 2); mctx.lineTo(nx + 9, ny + 6); mctx.closePath(); mctx.fill();
+    mctx.font = 'bold 16px Arial'; mctx.fillText('N', nx - 6, ny + 26);
+    // Échelle (barre en bas-gauche)
+    const scaleM = halfWidthM >= 5000 ? 1000 : halfWidthM >= 2500 ? 500 : 250;
+    const scalePx = scaleM / scaleMperPx;
+    const sx = 40, sy = 600;
+    mctx.strokeStyle = '#1f2937'; mctx.lineWidth = 3; mctx.setLineDash([]);
+    mctx.beginPath(); mctx.moveTo(sx, sy); mctx.lineTo(sx + scalePx, sy); mctx.stroke();
+    mctx.beginPath(); mctx.moveTo(sx, sy - 6); mctx.lineTo(sx, sy + 6); mctx.stroke();
+    mctx.beginPath(); mctx.moveTo(sx + scalePx, sy - 6); mctx.lineTo(sx + scalePx, sy + 6); mctx.stroke();
+    mctx.fillStyle = '#1f2937'; mctx.font = 'bold 14px Arial';
+    mctx.fillText(scaleM + ' m', sx + scalePx / 2 - 22, sy - 10);
+    // Légende (bas-droite)
+    const lx = 900, ly = 540;
+    mctx.fillStyle = 'rgba(255,255,255,0.92)';
+    mctx.fillRect(lx - 8, ly - 22, 280, 92);
+    mctx.strokeStyle = '#94a3b8'; mctx.lineWidth = 1; mctx.strokeRect(lx - 8, ly - 22, 280, 92);
+    mctx.fillStyle = '#1f2937'; mctx.font = 'bold 13px Arial';
+    mctx.fillText('Légende cibles', lx, ly - 6);
+    mctx.font = '12px Arial';
+    const lgd = [
+      { c: '#A12C2C', t: 'Criticité haute' },
+      { c: '#d97706', t: 'Criticité moyenne' },
+      { c: '#1a6b3a', t: 'Criticité faible' },
+      { c: '#b05000', t: 'Source (origine)' }
+    ];
+    lgd.forEach((l, i) => {
+      mctx.fillStyle = l.c;
+      mctx.beginPath(); mctx.arc(lx + 8, ly + 12 + i * 16, 6, 0, 2 * Math.PI); mctx.fill();
+      mctx.fillStyle = '#1f2937'; mctx.fillText(l.t, lx + 22, ly + 16 + i * 16);
+    });
+    // Titre carte
+    mctx.fillStyle = '#01696F'; mctx.font = 'bold 18px Arial';
+    mctx.fillText('Cartographie des cibles — puits & forages identifiés', 30, 35);
+    mctx.fillStyle = '#475569'; mctx.font = '12px Arial';
+    mctx.fillText('Projection locale équirectangulaire centrée sur la source · Azimut écoulement : ' + azDeg.toFixed(0) + '°', 30, 56);
+    // Insertion dans le PDF
+    doc.addImage(mapCanvas.toDataURL('image/png'), 'PNG', 14, y, 182, 97);
+    y += 102;
+  } catch (eMap) {
+    console.error('Erreur cartographie PDF', eMap);
+  }
   if (window.tsnRadiusIsWide) {
     doc.setFillColor(254, 243, 199); doc.rect(14, y, 182, 8, 'F');
     doc.setTextColor(146, 64, 14); doc.setFont(undefined, 'bold'); doc.setFontSize(8.5);
     doc.text('/!\\ Donnees eloignees - a valider par reperage de terrain (aucune cible dans 1500 m)', 17, y + 5.5);
     y += 11; doc.setTextColor(30, 30, 28); doc.setFont(undefined, 'normal');
   }
-  // Tableau via autoTable
+  // Tableau via autoTable — avec coordonnées Lambert 93 par cible
   const seuil = currentPolluant ? currentPolluant.seuil : 0.01;
-  const head = [['Cible', 'Type', 'Distance', 'Cc(x) mg/L', 'vs seuil', 'Périm.', 'Panache']];
+  let WGS_TO_L93 = null;
+  try { WGS_TO_L93 = proj4("WGS84", "EPSG:2154"); } catch(eP) { console.error('proj4 init L93 KO', eP); }
+  const head = [['Cible', 'Type', 'X L93', 'Y L93', 'Dist.', 'Cc(x) mg/L', 'vs seuil']];
   const body = tsnCibles.map(c => {
     let verdict = 'Conforme';
     if (!c.dansPanache) verdict = 'Hors panache';
     else if (c.ccCalcule == null) verdict = '—';
     else if (c.ccCalcule > seuil) verdict = 'DÉPASSE';
     else if (c.ccCalcule > seuil * 0.5) verdict = 'Surveillance';
-    const perim = c.distance <= 500 ? '500 m' :
-                  c.distance <= 1000 ? '1000 m' :
-                  c.distance <= 1500 ? '1500 m' :
-                  c.distance <= 2000 ? '2000 m' :
-                  c.distance <= 2500 ? '2500 m' :
-                  c.distance <= 3000 ? '3000 m' : '> 3000 m';
     const ccStr = c.ccCalcule != null ? c.ccCalcule.toExponential(2) : '—';
     const nom = (c.nom || 'Ouvrage') + (c.codeBSS ? ' [' + c.codeBSS + ']' : '');
-    return [nom, c.type + (c.eloignee ? ' (él.)' : ''), c.distance.toFixed(0) + ' m', ccStr, verdict, perim, c.dansPanache ? 'Aval' : 'Lat./amont'];
+    let xL93str = '—', yL93str = '—';
+    if (WGS_TO_L93 && c.lat != null && c.lon != null) {
+      try {
+        const xy = WGS_TO_L93.forward([c.lon, c.lat]);
+        xL93str = Math.round(xy[0]).toString();
+        yL93str = Math.round(xy[1]).toString();
+      } catch(eC) { /* keep dashes */ }
+    }
+    return [nom, c.type + (c.eloignee ? ' (él.)' : ''), xL93str, yL93str, c.distance.toFixed(0) + ' m', ccStr, verdict];
   });
   try {
     doc.autoTable({
@@ -2049,9 +2172,9 @@ window.addCiblesToPDF = function(doc, startY) {
       theme: 'grid', styles: { fontSize: 7.5, cellPadding: 2 },
       headStyles: { fillColor: [1, 105, 111], textColor: 255, fontSize: 8 },
       margin: { left: 14, right: 14 },
-      columnStyles: { 0: { cellWidth: 55 }, 1: { cellWidth: 22 }, 2: { cellWidth: 18 }, 3: { cellWidth: 22 }, 4: { cellWidth: 25 }, 5: { cellWidth: 18 }, 6: { cellWidth: 22 } },
+      columnStyles: { 0: { cellWidth: 48 }, 1: { cellWidth: 20 }, 2: { cellWidth: 22, halign: 'right' }, 3: { cellWidth: 22, halign: 'right' }, 4: { cellWidth: 18, halign: 'right' }, 5: { cellWidth: 24, halign: 'right' }, 6: { cellWidth: 28 } },
       didParseCell: (data) => {
-        if (data.section === 'body' && data.column.index === 4) {
+        if (data.section === 'body' && data.column.index === 6) {
           const v = data.cell.text[0];
           if (v === 'DÉPASSE') { data.cell.styles.fillColor = [161, 44, 44]; data.cell.styles.textColor = 255; data.cell.styles.fontStyle = 'bold'; }
           else if (v === 'Surveillance') { data.cell.styles.fillColor = [217, 119, 6]; data.cell.styles.textColor = 255; }
