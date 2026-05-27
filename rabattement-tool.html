@@ -1750,7 +1750,7 @@ table.kv td:last-child { text-align: right; font-family: var(--font-mono); font-
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M3 17l5-5 4 4 9-9" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <h3>Base géologique intégrée</h3>
-        <p>13 substrats paramétrés (calcaires, alluvions, granites, schistes, marnes, remblais…) avec K, T, S, ne, épaisseur.</p>
+        <p>26 substrats paramétrés (calcaires, alluvions, granites, schistes, marnes, remblais, formations régionales : Beauce, Fontainebleau, Lutétien, urgonien…) avec K, T, S, ne, épaisseur.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">
@@ -2035,7 +2035,7 @@ table.kv td:last-child { text-align: right; font-family: var(--font-mono); font-
 
         <ul class="price-features">
           <li>Projets et calculs illimités</li>
-          <li>13 substrats hydrogéologiques + 15 départements</li>
+          <li>26 substrats hydrogéologiques + 15 départements</li>
           <li>Génération dossier Loi sur l'Eau (PDF officiel sans filigrane)</li>
           <li>Tableau IOTA conforme R.214-1</li>
           <li>Carte OpenStreetMap intégrée</li>
@@ -2170,7 +2170,22 @@ const BASE_GEO = {
   "Granite fissuré":              { famille: "Cristalline", type: "Libre",   K: 1e-6,  T: 3e-5,  Sc: 5e-5, Sl: 0.005,ne: 0.005,ep: 30 },
   "Schistes":                     { famille: "Cristalline", type: "Captive", K: 1e-7,  T: 3e-6,  Sc: 1e-5, Sl: 0.01, ne: 0.01, ep: 25 },
   "Basalte":                      { famille: "Volcanique",  type: "Libre",   K: 5e-5,  T: 1.5e-3,Sc: 1e-4, Sl: 0.05, ne: 0.05, ep: 30 },
-  "Remblais"                    : { famille: "Anthropique", type: "Libre",   K: 1e-4,  T: 3e-3,  Sc: 1e-4, Sl: 0.10, ne: 0.12, ep: 5  }
+  "Remblais":                     { famille: "Anthropique", type: "Libre",   K: 1e-4,  T: 3e-3,  Sc: 1e-4, Sl: 0.10, ne: 0.12, ep: 5  },
+  // ── v15.76 : ajouts marnes calcaires ──
+  "Marne calcaire":               { famille: "Semi-perméable",type:"Captive",K: 5e-8,  T: 1.5e-6,Sc: 1e-5, Sl: 0.02, ne: 0.02, ep: 25 },
+  "Marno-calcaire fissuré":       { famille: "Carbonatée",  type: "Libre",   K: 1e-6,  T: 3e-5,  Sc: 5e-5, Sl: 0.02, ne: 0.02, ep: 25 },
+  // ── v15.77 : Pack France entier — 11 formations régionales ──
+  "Marnes à meulières":           { famille: "Semi-perméable",type:"Captive",K: 5e-7,  T: 1e-5,  Sc: 1e-5, Sl: 0.02, ne: 0.02, ep: 20 },
+  "Calcaire de Beauce":           { famille: "Carbonatée",  type: "Libre",   K: 5e-4,  T: 1.5e-2,Sc: 1e-4, Sl: 0.04, ne: 0.04, ep: 50 },
+  "Calcaire de Saint-Ouen":       { famille: "Carbonatée",  type: "Captive", K: 1e-5,  T: 3e-4,  Sc: 5e-5, Sl: 0.03, ne: 0.03, ep: 20 },
+  "Calcaire grossier du Lutétien":{ famille: "Carbonatée",  type: "Captive", K: 5e-5,  T: 1.5e-3,Sc: 5e-5, Sl: 0.04, ne: 0.04, ep: 30 },
+  "Sables de Fontainebleau":      { famille: "Détritique",  type: "Libre",   K: 5e-4,  T: 1.5e-2,Sc: 1e-4, Sl: 0.15, ne: 0.18, ep: 40 },
+  "Sables du Sparnacien":         { famille: "Détritique",  type: "Captive", K: 1e-5,  T: 2e-4,  Sc: 5e-5, Sl: 0.10, ne: 0.12, ep: 15 },
+  "Argile à silex":               { famille: "Imperméable", type: "Libre",   K: 1e-8,  T: 3e-7,  Sc: 1e-5, Sl: 0.01, ne: 0.01, ep: 15 },
+  "Schistes altérés":             { famille: "Cristalline", type: "Libre",   K: 1e-6,  T: 2e-5,  Sc: 5e-5, Sl: 0.01, ne: 0.01, ep: 20 },
+  "Conglomérat (poudingue)":      { famille: "Détritique",  type: "Captive", K: 5e-6,  T: 1e-4,  Sc: 5e-5, Sl: 0.03, ne: 0.03, ep: 25 },
+  "Molasse miocène":              { famille: "Détritique",  type: "Captive", K: 5e-5,  T: 1.5e-3,Sc: 5e-5, Sl: 0.05, ne: 0.05, ep: 40 },
+  "Calcaire urgonien":            { famille: "Carbonatée",  type: "Libre",   K: 5e-3,  T: 1.5e-1,Sc: 1e-4, Sl: 0.06, ne: 0.06, ep: 100 }
 };
 
 // ─── Climat par département (extrait Climat.csv tableur) ───
@@ -2255,18 +2270,18 @@ function calculer(p) {
   // Débit de cycle éventuel (cycle marche/arrêt imposé), facultatif
   const Q_cycle = (p.q_cycle && isFinite(p.q_cycle) && p.q_cycle > 0) ? p.q_cycle : 0;
 
-  // Débits recommandés ± 15 % — la base inclut le plancher journalier
-  // (V_jour_retenu / t_exploit) ainsi qu'un éventuel Q_cycle imposé,
-  // de sorte qu'un débit Theis/Dupuit très faible (petit diamètre,
-  // faible transmissivité) n'aboutisse pas à une pompe sous-dimensionnée.
-  const Q_base = Math.max(Q_theis_corr, Q_dupuit_corr, Q_cycle, Q_plancher);
+  // v15.75 : suppression du plancher journalier — la nature géologique des sols
+  // impacte directement le débit ; imposer un plancher rendrait le calcul
+  // incohérent avec la réalité (cf. demande utilisateur 2026-05-27).
+  // Le débit recommandé reste borné par Theis, Dupuit-Thiem et éventuel Q_cycle.
+  const Q_base = Math.max(Q_theis_corr, Q_dupuit_corr, Q_cycle);
   const Q_min = Q_base * 0.85;
   const Q_max = Q_base * 1.15;
 
-  // Volume journalier exploité : on retient le maximum entre le débit
-  // hydraulique (Theis corrigé × t_exp) et le plancher imposé.
+  // Volume journalier exploité : strictement le débit hydraulique × t_exp,
+  // sans plancher (cohérence avec la perméabilité réelle du substrat).
   const V_jour_hydro = Q_theis_corr * t_exp;
-  const V_jour = Math.max(V_jour_hydro, V_jour_retenu);
+  const V_jour = V_jour_hydro;
   const V_mois = V_jour * 30;
   const V_an = V_jour * 365;
 
