@@ -1874,12 +1874,21 @@ table.kv td:last-child { text-align: right; font-family: var(--font-mono); font-
               <input type="text" id="inp-t-pompage" placeholder="ex. 72" value="">
             </div>
           </div>
-          <div class="field-row-2">
+          <div class="field-row-3">
             <div class="field-grp">
               <label>Heures d'exploitation / jour</label>
               <input type="text" id="inp-t-exp" placeholder="ex. 10" value="">
             </div>
-            <div class="field-grp"></div>
+            <div class="field-grp">
+              <label>Volume journalier retenu / plancher (m³/j)</label>
+              <input type="text" id="inp-v-jour-retenu" placeholder="ex. 20,55" value="">
+              <span class="hint">Facultatif — impose un plancher au dimensionnement de la pompe</span>
+            </div>
+            <div class="field-grp">
+              <label>Débit de cycle Q_cycle (m³/h)</label>
+              <input type="text" id="inp-q-cycle" placeholder="ex. 0,80" value="">
+              <span class="hint">Facultatif — débit imposé par le cycle de pompage</span>
+            </div>
           </div>
 
           <div class="section-label">Coordonnées (Lambert 93) — facultatif</div>
@@ -2234,13 +2243,30 @@ function calculer(p) {
   const Q_theis_corr = Q_theis * eta;
   const Q_dupuit_corr = Q_dupuit * eta;
 
-  // Débits recommandés ± 15 %
-  const Q_min = Math.max(Q_theis_corr, Q_dupuit_corr) * 0.85;
-  const Q_max = Math.max(Q_theis_corr, Q_dupuit_corr) * 1.15;
-
   // Volumes
   const t_exp = p.t_exp || 24;              // heures/j
-  const V_jour = Q_theis_corr * t_exp;
+
+  // Débit dérivé du volume journalier retenu (plancher imposé par les
+  // besoins du chantier : exhaure cumulée, capacité de stockage, etc.).
+  // Sans plancher fourni, la valeur reste à 0 et n'influe pas sur la borne.
+  const V_jour_retenu = (p.v_jour_retenu && isFinite(p.v_jour_retenu) && p.v_jour_retenu > 0) ? p.v_jour_retenu : 0;
+  const Q_plancher = (V_jour_retenu > 0 && t_exp > 0) ? (V_jour_retenu / t_exp) : 0;
+
+  // Débit de cycle éventuel (cycle marche/arrêt imposé), facultatif
+  const Q_cycle = (p.q_cycle && isFinite(p.q_cycle) && p.q_cycle > 0) ? p.q_cycle : 0;
+
+  // Débits recommandés ± 15 % — la base inclut le plancher journalier
+  // (V_jour_retenu / t_exploit) ainsi qu'un éventuel Q_cycle imposé,
+  // de sorte qu'un débit Theis/Dupuit très faible (petit diamètre,
+  // faible transmissivité) n'aboutisse pas à une pompe sous-dimensionnée.
+  const Q_base = Math.max(Q_theis_corr, Q_dupuit_corr, Q_cycle, Q_plancher);
+  const Q_min = Q_base * 0.85;
+  const Q_max = Q_base * 1.15;
+
+  // Volume journalier exploité : on retient le maximum entre le débit
+  // hydraulique (Theis corrigé × t_exp) et le plancher imposé.
+  const V_jour_hydro = Q_theis_corr * t_exp;
+  const V_jour = Math.max(V_jour_hydro, V_jour_retenu);
   const V_mois = V_jour * 30;
   const V_an = V_jour * 365;
 
@@ -2338,6 +2364,7 @@ function calculer(p) {
     s, T, S, r_puits, R, t_s, u, Wu,
     zre_applicable, zre_regime,
     Q_theis, Q_dupuit, Q_theis_corr, Q_dupuit_corr,
+    Q_cycle, Q_plancher, Q_base, V_jour_retenu,
     Q_min, Q_max,
     V_jour, V_mois, V_an,
     P_eff, R_eff, surface_inf, V_recharge, ratio,
@@ -3758,12 +3785,18 @@ function buildSection4(doc, ctx, r) {
     { size: 10 });
   y += 2;
 
-  y = table2Col(doc, y, [
+  const rows41 = [
     ["Rabattement requis s",            r.s != null ? `${fmtN(r.s, 2)} m` : "—"],
     ["Débit Theis corrigé",             r.Q_theis_corr != null ? `${fmtN(r.Q_theis_corr, 2)} m³/h` : "—"],
-    ["Débit Dupuit-Thiem corrigé",      r.Q_dupuit_corr != null ? `${fmtN(r.Q_dupuit_corr, 2)} m³/h` : "—"],
+    ["Débit Dupuit-Thiem corrigé",      r.Q_dupuit_corr != null ? `${fmtN(r.Q_dupuit_corr, 2)} m³/h` : "—"]
+  ];
+  if (r.Q_cycle > 0)    rows41.push(["Débit cycle Q_cycle (saisi)", `${fmtN(r.Q_cycle, 2)} m³/h`]);
+  if (r.Q_plancher > 0) rows41.push(["Débit plancher (V_jour retenu / t_exp)", `${fmtN(r.Q_plancher, 2)} m³/h`]);
+  rows41.push(
+    ["Débit recommandé — base pompe",   r.Q_base != null ? `${fmtN(r.Q_base, 2)} m³/h` : "—"],
     ["Plage Q recommandée (±15 %)",     (r.Q_min != null && r.Q_max != null) ? `${fmtN(r.Q_min, 2)} — ${fmtN(r.Q_max, 2)} m³/h` : "—"]
-  ], { header: ["Résultat hydraulique", "Valeur"] });
+  );
+  y = table2Col(doc, y, rows41, { header: ["Résultat hydraulique", "Valeur"] });
 
   y += 3;
   y = subTitle(doc, y, "4.2  Bilan volumétrique");
@@ -4011,7 +4044,7 @@ function buildSection7(doc, ctx, r) {
   y = sectionBanner(doc, y, "7. PRÉCONISATIONS TECHNIQUES");
 
   y = subTitle(doc, y, "7.1  Équipement de pompage");
-  const qMin = r.Q_min, qMax = r.Q_max, qNom = r.Q_theis_corr;
+  const qMin = r.Q_min, qMax = r.Q_max, qNom = (r.Q_base != null ? r.Q_base : r.Q_theis_corr);
   y = paragraph(doc, y,
     `Le débit de dimensionnement de la pompe est compris dans la fourchette suivante : ${qMin != null ? fmtN(qMin, 2) : "—"} m³/h à ${qMax != null ? fmtN(qMax, 2) : "—"} m³/h. Il est recommandé de choisir une pompe immergée de débit nominal de ${qNom != null ? fmtN(qNom, 2) : "—"} m³/h, avec une marge de sécurité de ±15 %.`,
     { size: 9.5 });
@@ -4074,7 +4107,8 @@ function buildSection8(doc, ctx, r) {
     ["Rabattement visé s",                   r.s != null ? `${fmtN(r.s, 2)} m` : "—"],
     ["Débit Theis (transitoire) corrigé",    r.Q_theis_corr != null ? `${fmtN(r.Q_theis_corr, 2)} m³/h` : "—"],
     ["Débit Dupuit-Thiem (permanent) corrigé", r.Q_dupuit_corr != null ? `${fmtN(r.Q_dupuit_corr, 2)} m³/h` : "—"],
-    ["Fourchette recommandée",               (r.Q_min != null && r.Q_max != null) ? `${fmtN(r.Q_min, 2)} à ${fmtN(r.Q_max, 2)} m³/h` : "—"],
+    ["Débit recommandé (base pompe)",        r.Q_base != null ? `${fmtN(r.Q_base, 2)} m³/h` : "—"],
+    ["Fourchette recommandée (±15 %)",       (r.Q_min != null && r.Q_max != null) ? `${fmtN(r.Q_min, 2)} à ${fmtN(r.Q_max, 2)} m³/h` : "—"],
     ["Volume journalier",                    r.V_jour != null ? `${fmtInt(r.V_jour)} m³/j` : "—"],
     ["Volume annuel estimé",                 r.V_an != null ? `${fmtInt(r.V_an)} m³/an` : "—"],
     ["Statut IOTA retenu",                   r.iota_status]
@@ -4378,6 +4412,8 @@ function readForm() {
     rayon_inf: get("inp-rayon-inf"),
     t_pompage: get("inp-t-pompage"),
     t_exp: get("inp-t-exp"),
+    v_jour_retenu: get("inp-v-jour-retenu"),
+    q_cycle: get("inp-q-cycle"),
     // coords Lambert 93 (optionnel)
     x_l93: get("inp-x"),
     y_l93: get("inp-y"),
@@ -4436,7 +4472,10 @@ function renderResults(r) {
           <tr><td>Q Theis corrigé (η=0,70)</td><td><strong>${fmt(r.Q_theis_corr, 2)} m³/h</strong></td></tr>
           <tr><td>Q Dupuit-Thiem (brut)</td><td>${fmt(r.Q_dupuit, 2)} m³/h</td></tr>
           <tr><td>Q Dupuit corrigé</td><td><strong>${fmt(r.Q_dupuit_corr, 2)} m³/h</strong></td></tr>
-          <tr><td>Plage recommandée</td><td><strong>${fmt(r.Q_min, 2)} – ${fmt(r.Q_max, 2)} m³/h</strong></td></tr>
+          ${r.Q_cycle > 0 ? `<tr><td>Q cycle (saisi)</td><td>${fmt(r.Q_cycle, 2)} m³/h</td></tr>` : ""}
+          ${r.Q_plancher > 0 ? `<tr><td>Q plancher (V<sub>jour retenu</sub> / t<sub>exp</sub>)</td><td>${fmt(r.Q_plancher, 2)} m³/h</td></tr>` : ""}
+          <tr><td>Q recommandé (base pompe)</td><td><strong>${fmt(r.Q_base, 2)} m³/h</strong></td></tr>
+          <tr><td>Plage recommandée (±15 %)</td><td><strong>${fmt(r.Q_min, 2)} – ${fmt(r.Q_max, 2)} m³/h</strong></td></tr>
         </table>
       </div>
 
@@ -4572,6 +4611,8 @@ function resetFormForOwnExample() {
   set("inp-rayon-inf", "");
   set("inp-t-pompage", "");
   set("inp-t-exp", "");
+  set("inp-v-jour-retenu", "");
+  set("inp-q-cycle", "");
   // Coordonnées Lambert 93 : à saisir par l'utilisateur (confidentialité)
   set("inp-x", "");
   set("inp-y", "");
