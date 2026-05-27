@@ -104,7 +104,7 @@ export default function SubscribeRabattementPage() {
           <ul className="space-y-2 mb-6 text-sm">
             <PricingItem>Calcul Theis (régime transitoire) + Dupuit-Thiem (permanent)</PricingItem>
             <PricingItem>Classification IOTA automatique (R.214-1)</PricingItem>
-            <PricingItem>13 substrats hydrogéologiques + 15 départements</PricingItem>
+            <PricingItem>26 substrats hydrogéologiques + 15 départements</PricingItem>
             <PricingItem>Carte OpenStreetMap intégrée (Lambert 93)</PricingItem>
             <PricingItem>Dossier PDF 27 pages prêt pour la DDT</PricingItem>
             <PricingItem>Bilan hydrique départemental + ETP</PricingItem>
