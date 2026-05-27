@@ -1,1 +1,1 @@
-v15.61g - Fri May 22 23:24:48 UTC 2026
+v15.77 - Wed May 27 19:38:47 UTC 2026 - 26 substrats + plancher supprimé
