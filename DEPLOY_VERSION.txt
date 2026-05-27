@@ -1,1 +1,1 @@
-v15.77 - Wed May 27 19:38:47 UTC 2026 - 26 substrats + plancher supprimé
+v15.78 - Wed May 27 20:15:00 UTC 2026 - Fix bug ouverture PDF (hyperlink B25 interne) + 42 formations desktop
