@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rabattement de nappe — GMEP</title>
-<meta name="description" content="Logiciel professionnel de modélisation du rabattement de nappe — Theis, Dupuit-Thiem, classification IOTA. Démo gratuite 8 jours. 1 100 € HT / an.">
+<title>Rabattement de nappe — GMEP v15.82 Multicouche</title>
+<meta name="description" content="Logiciel professionnel de modélisation du rabattement de nappe — Theis, Dupuit-Thiem, Forchheimer/Dupuit multicouche, classification IOTA — v15.82. Démo gratuite 8 jours. 1 100 € HT / an.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
@@ -1670,6 +1670,30 @@ table.kv td:last-child { text-align: right; font-family: var(--font-mono); font-
 }
 .pb-total .pb-val { color: var(--accent-dark); font-size: 16px; }
 
+
+/* ── v15.82 Multicouche ── */
+.mc-section { margin-top: 24px; border: 2px solid #1a2b4a; border-radius: 10px; overflow: hidden; }
+.mc-section-hdr { background: #1a2b4a; color: #fff; font-weight: 700; font-size: 13px; padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
+.mc-section-body { padding: 16px; background: #f8fafc; }
+.mc-toggle { cursor: pointer; user-select: none; }
+.mc-toggle .caret { transition: transform 0.2s; display: inline-block; }
+.mc-toggle.open .caret { transform: rotate(90deg); }
+.mc-collapsed { display: none; }
+.mc-layer-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.mc-layer-table th { background: #2c3e50; color: #fff; padding: 6px 8px; text-align: center; }
+.mc-layer-table td { border: 1px solid #d1d5db; padding: 5px 8px; vertical-align: middle; }
+.mc-layer-table td input, .mc-layer-table td select { width: 100%; border: 1px solid #d1d5db; border-radius: 4px; padding: 3px 6px; font-size: 12px; background: #fff9e6; }
+.mc-layer-table tr:nth-child(even) td { background: #f0f4f8; }
+.mc-layer-table tr:nth-child(even) td input, .mc-layer-table tr:nth-child(even) td select { background: #eff8ff; }
+.mc-results { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.mc-result-card { background: #fff; border: 1.5px solid #20808d; border-radius: 8px; padding: 10px 14px; }
+.mc-result-card .mc-val { font-size: 20px; font-weight: 700; color: #1a2b4a; }
+.mc-result-card .mc-lbl { font-size: 11px; color: #6b7280; margin-top: 2px; }
+.mc-svg-container { margin-top: 16px; border: 1px solid #d1d5db; border-radius: 8px; overflow: hidden; background: #fff; }
+.mc-mode-selector { display: flex; gap: 12px; margin-bottom: 12px; }
+.mc-mode-btn { flex: 1; padding: 8px; border: 2px solid #e5e7eb; border-radius: 6px; cursor: pointer; text-align: center; font-size: 13px; font-weight: 600; transition: all 0.2s; background: #fff; }
+.mc-mode-btn.active { border-color: #1a2b4a; background: #1a2b4a; color: #fff; }
+.mc-piezо-note { background: #e3f2fd; border-left: 4px solid #1565c0; padding: 8px 12px; font-size: 12px; color: #0d47a1; margin-bottom: 12px; border-radius: 0 6px 6px 0; }
 </style>
 </head>
 <body>
@@ -1971,6 +1995,153 @@ table.kv td:last-child { text-align: right; font-family: var(--font-mono); font-
               <input type="text" id="inp-type-captage" placeholder="Puits foré tubage PVC crépiné" value="">
             </div>
             <div class="field-grp"></div>
+          </div>
+
+
+          <!-- ══════════════════════════════════════════════════════════
+               v15.82 — SECTION COUPE GÉOLOGIQUE G.M.E.P MULTICOUCHE FORCHHEIMER
+               ══════════════════════════════════════════════════════════ -->
+
+          <!-- EN-TÊTE COUPE GÉOLOGIQUE G.M.E.P -->
+          <div class="mc-section" id="mc-entete-section" style="margin-bottom:12px">
+            <div class="mc-section-hdr" style="background:#0D3761; display:flex; align-items:center; gap:8px">
+              📋  EN-TÊTE COUPE GÉOLOGIQUE G.M.E.P — Module propriétaire
+              <span style="margin-left:auto;font-size:11px;font-weight:400;opacity:0.8">Coordonnées Lambert 93, adresse projet, date forage</span>
+            </div>
+            <div style="padding:14px 16px; background:#f5f7fa; border:1px solid #c8d4e8; border-top:none">
+              <div class="field-row-3" style="margin-bottom:10px">
+                <div class="field-grp">
+                  <label>Nom du forage / piézomètre</label>
+                  <input type="text" id="mc-nom-forage" placeholder="ex: Forage F1" value="">
+                </div>
+                <div class="field-grp">
+                  <label>Adresse du projet (rue)</label>
+                  <input type="text" id="mc-adresse-rue" placeholder="ex: 195 rue de Claye" value="">
+                </div>
+                <div class="field-grp">
+                  <label>Code postal + Ville</label>
+                  <input type="text" id="mc-adresse-cpville" placeholder="ex: 77400 THORIGNY SUR MARNE" value="">
+                </div>
+              </div>
+              <div class="field-row-3" style="margin-bottom:10px">
+                <div class="field-grp">
+                  <label>Date du forage</label>
+                  <input type="text" id="mc-date-forage" placeholder="ex: 10/06/2025" value="">
+                </div>
+                <div class="field-grp">
+                  <label>X Lambert 93 (m)</label>
+                  <input type="text" id="mc-x-l93" placeholder="ex: 678658" value="">
+                </div>
+                <div class="field-grp">
+                  <label>Y Lambert 93 (m)</label>
+                  <input type="text" id="mc-y-l93" placeholder="ex: 6866259" value="">
+                </div>
+              </div>
+              <div class="field-row-3">
+                <div class="field-grp">
+                  <label>Z altitude TN (m NGF)</label>
+                  <input type="text" id="mc-z-alt" placeholder="ex: 100.26" value="">
+                </div>
+                <div class="field-grp">
+                  <label>Profondeur arrivée d'eau constatée (m/TN)</label>
+                  <input type="text" id="mc-arrivee-eau" placeholder="ex: 2.60" value="">
+                  <span class="hint">Matérialisée par une flèche bleue sur la coupe</span>
+                </div>
+                <div class="field-grp"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mc-section" id="mc-section">
+            <div class="mc-section-hdr mc-toggle" id="mc-toggle" onclick="toggleMC()">
+              <span class="caret">▶</span>
+              🪨  Coupe Géologique Multicouche — Forchheimer/Dupuit (v15.82)
+              <span style="margin-left:auto;font-size:11px;font-weight:400;opacity:0.8">Optionnel — enrichit le calcul avec la stratigraphie réelle</span>
+            </div>
+            <div class="mc-section-body" id="mc-body">
+
+              <div class="mc-piezо-note">
+                📍 <strong>Recalage piézométrique terrain :</strong> Le niveau piézométrique mesuré in situ (NS ci-dessus) est 
+                <strong>prioritaire sur BRGM</strong>. Saisissez vos couches ci-dessous — K se remplit automatiquement.
+              </div>
+
+              <!-- Mode A / Mode B -->
+              <div class="mc-mode-selector">
+                <div class="mc-mode-btn active" id="mc-mode-b" onclick="setMCMode('B')">
+                  Mode B — Rabattement → Q et Volume calculés
+                </div>
+                <div class="mc-mode-btn" id="mc-mode-a" onclick="setMCMode('A')">
+                  Mode A — Q imposé → Rabattement calculé
+                </div>
+              </div>
+              
+              <div id="mc-mode-a-input" style="display:none; margin-bottom:12px">
+                <div class="field-grp" style="max-width:300px">
+                  <label>Débit imposé Q (m³/h) — Mode A</label>
+                  <input type="text" id="mc-q-impose" placeholder="ex. 5.0" value="5.0">
+                </div>
+              </div>
+
+              <!-- Tableau couches -->
+              <label style="font-weight:600; font-size:13px; color:#1a2b4a; display:block; margin-bottom:6px">
+                Coupe lithologique (15 couches max) — saisir De/À et choisir lithologie
+              </label>
+              <table class="mc-layer-table" id="mc-table">
+                <thead>
+                  <tr>
+                    <th style="width:28px">N°</th>
+                    <th>De (m)</th>
+                    <th>À (m)</th>
+                    <th style="min-width:200px">Lithologie</th>
+                    <th>K (m/s)</th>
+                    <th>Saturée?</th>
+                    <th>e_sat (m)</th>
+                    <th>Q_i (m³/h)</th>
+                  </tr>
+                </thead>
+                <tbody id="mc-tbody">
+                  <!-- rows generated by JS -->
+                </tbody>
+              </table>
+
+              <div style="display:flex; gap:10px; margin-top:10px">
+                <button class="btn btn-secondary" style="font-size:12px; padding:6px 14px" onclick="addMCLayer()">+ Ajouter une couche</button>
+                <button class="btn btn-secondary" style="font-size:12px; padding:6px 14px" onclick="resetMCLayers()">Réinitialiser couches</button>
+                <button class="btn btn-primary" style="font-size:12px; padding:6px 14px" onclick="calcMC()">⚡ Calculer multicouche</button>
+              </div>
+
+              <!-- Résultats multicouche -->
+              <div id="mc-results-area" style="display:none">
+                <div class="mc-results">
+                  <div class="mc-result-card">
+                    <div class="mc-val" id="mc-r-qtotal">—</div>
+                    <div class="mc-lbl">Q total multicouche Σ Qᵢ (m³/h) — Mode B</div>
+                  </div>
+                  <div class="mc-result-card">
+                    <div class="mc-val" id="mc-r-teq">—</div>
+                    <div class="mc-lbl">T équivalente (m²/s)</div>
+                  </div>
+                  <div class="mc-result-card">
+                    <div class="mc-val" id="mc-r-san">—</div>
+                    <div class="mc-lbl">Rabattement calculé s_A — Mode A (m)</div>
+                  </div>
+                  <div class="mc-result-card">
+                    <div class="mc-val" id="mc-r-van">—</div>
+                    <div class="mc-lbl">Volume annuel estimé (m³/an)</div>
+                  </div>
+                </div>
+                <div id="mc-iota-note" style="margin-top:10px; padding:8px 12px; border-radius:6px; font-size:12px; font-weight:600;"></div>
+
+                <!-- SVG Coupe G.M.E.P -->
+                <div class="mc-svg-container" style="margin-top:16px">
+                  <div style="background:#1a2b4a; color:#fff; padding:8px 12px; font-size:12px; font-weight:700;">
+                    📊 Coupe Géologique G.M.E.P — Niveau Statique (n.s.)
+                  </div>
+                  <div id="mc-svg-area"></div>
+                </div>
+              </div>
+
+            </div>
           </div>
 
           <div class="demo-actions">
@@ -4360,9 +4531,136 @@ async function generate(r) {
   newPage(doc, ctx);
   buildLexique(doc, ctx);
 
+  // ──── PAGE COUPE GÉOLOGIQUE G.M.E.P (v15.82)
+  const mcLayers_pdf = window.mcLayers || [];
+  if (mcLayers_pdf.length > 0) {
+    newPage(doc, ctx);
+    buildPageCoupeGeologique(doc, ctx, r);
+  }
+
   // Sauvegarde
   const safeName = (r.inputs.projet || "rabattement").replace(/[^a-zA-Z0-9\-_]/g, "_").substring(0, 40);
   doc.save(`GMEP_Dossier_Rabattement_${ctx.ref}_${safeName}.pdf`);
+}
+
+// ─── Page Coupe Géologique G.M.E.P ────────────────────────────────────────────
+function buildPageCoupeGeologique(doc, ctx, r) {
+  const PW = 210, PH = 297;
+  let y = ctx.y || 40;
+  
+  // Récupérer les données en-tête
+  const nomForage  = (document.getElementById('mc-nom-forage')?.value||'Forage F1').trim();
+  const adresseRue = (document.getElementById('mc-adresse-rue')?.value||'').trim();
+  const adresseCpv = (document.getElementById('mc-adresse-cpville')?.value||'').trim();
+  const dateForage = (document.getElementById('mc-date-forage')?.value||'').trim();
+  const xL93val    = (document.getElementById('mc-x-l93')?.value||'').trim();
+  const yL93val    = (document.getElementById('mc-y-l93')?.value||'').trim();
+  const zAlt       = (document.getElementById('mc-z-alt')?.value||'').trim();
+  const arriveeRaw = (document.getElementById('mc-arrivee-eau')?.value||'').replace(',','.');
+  const arriveeEau = arriveeRaw ? parseFloat(arriveeRaw) : null;
+  
+  // Bandeau titre
+  doc.setFillColor(13, 55, 97);
+  doc.rect(10, 10, PW - 20, 20, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(13);
+  doc.text("COUPE GÉOLOGIQUE G.M.E.P — " + nomForage, 14, 23);
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "italic");
+  doc.text("Coupe Géologique G.M.E.P — Document propriétaire v15.82", PW - 14, 23, { align: "right" });
+  
+  y = 36;
+  
+  // Adresse + coordonnées
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(30, 30, 30);
+  if (adresseRue || adresseCpv) {
+    doc.text("Adresse : " + [adresseRue, adresseCpv].filter(Boolean).join(", "), 14, y);
+    y += 5;
+  }
+  const coordParts = [];
+  if (dateForage) coordParts.push("Date forage : " + dateForage);
+  if (xL93val)    coordParts.push("X L93 : " + xL93val + " m");
+  if (yL93val)    coordParts.push("Y L93 : " + yL93val + " m");
+  if (zAlt)       coordParts.push("Z TN : " + zAlt + " m NGF");
+  if (coordParts.length) { doc.text(coordParts.join("   |   "), 14, y); y += 5; }
+  y += 3;
+  
+  // Séparateur
+  doc.setDrawColor(13, 55, 97);
+  doc.setLineWidth(0.4);
+  doc.line(10, y, PW - 10, y);
+  y += 5;
+  
+  // Tableau lithologie
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.setTextColor(13, 55, 97);
+  doc.text("Tableau lithologique", 14, y);
+  y += 4;
+  
+  const mcL = window.mcLayers || [];
+  const colsW = [12, 12, 12, 60, 22, 18, 20];
+  const colsH = ["N°", "De (m)", "À (m)", "Lithologie", "K (m/s)", "e_sat (m)", "Qi (m³/h)"];
+  const startX = 10;
+  let cx = startX;
+  doc.setFillColor(44, 62, 80);
+  doc.rect(startX, y, PW - 20, 6, 'F');
+  doc.setTextColor(255);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7.5);
+  colsH.forEach((h, i) => {
+    doc.text(h, cx + 1, y + 4.2);
+    cx += colsW[i];
+  });
+  y += 6;
+  
+  mcL.forEach((layer, idx) => {
+    if (y > PH - 30) { doc.addPage(); y = 20; }
+    const esat = layer.e_sat != null ? layer.e_sat.toFixed(2) : '—';
+    const qi   = layer.Q_i   != null ? layer.Q_i.toFixed(4)  : '—';
+    const kStr = layer.K     != null ? layer.K.toExponential(1) : '—';
+    const row  = [String(idx+1), layer.de.toFixed(2), layer.a.toFixed(2), layer.litho||'', kStr, esat, qi];
+    doc.setFillColor(idx % 2 === 0 ? 247 : 240, idx % 2 === 0 ? 247 : 244, idx % 2 === 0 ? 252 : 248);
+    doc.rect(startX, y, PW - 20, 5.5, 'F');
+    doc.setTextColor(30, 30, 30);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    cx = startX;
+    row.forEach((val, i) => {
+      doc.text(String(val).substring(0, 28), cx + 1, y + 3.8);
+      cx += colsW[i];
+    });
+    y += 5.5;
+  });
+  y += 4;
+  
+  // Arrivées d'eau
+  if (arriveeEau && !isNaN(arriveeEau)) {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(13, 55, 97);
+    doc.text("Arrivée d'eau constatée", 14, y);
+    y += 4;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(0, 86, 179);
+    doc.text("↘ Profondeur : " + arriveeEau.toFixed(2) + " m/TN", 14, y);
+    y += 6;
+  }
+  
+  // Footer
+  doc.setFillColor(247, 246, 242);
+  doc.rect(0, PH - 12, PW, 12, 'F');
+  doc.setTextColor(120, 120, 120);
+  doc.setFontSize(7.5);
+  doc.setFont("helvetica", "normal");
+  doc.text("Coupe Géologique G.M.E.P — Document propriétaire — gmep.france@gmail.com", 14, PH - 4);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(13, 55, 97);
+  doc.text("Lambert-93 métrique   Long.: " + (xL93val||"—") + "   Lat.: " + (yL93val||"—") + "   Alt.: " + (zAlt ? "+" + zAlt + " m NGF" : "—"), PW/2, PH - 4, { align: "center" });
 }
 
 window.GMEP_PDF = { generate };
@@ -4727,6 +5025,454 @@ document.addEventListener("DOMContentLoaded", () => {
       if (tgt) { ev.preventDefault(); tgt.scrollIntoView({behavior:"smooth", block:"start"}); }
     });
   });
+});
+
+
+
+/* ════════════════════════════════════════════════════════════════════
+   GMEP v15.82 — Moteur de calcul MULTICOUCHE Forchheimer/Dupuit
+   Q_total = Σ 2π·k_i·e_sat_i·s / ln(R/r)
+   Mode A : Q imposé → s_A
+   Mode B : s = FF−NS → Q_total et volume
+   Références : Dupuit 1863, Forchheimer 1898, BRGM, Domenico
+   Logique IOTA R.214-1 invariante — Theis/Dupuit monocouche PRÉSERVÉS
+   ════════════════════════════════════════════════════════════════════ */
+
+// ─── Dictionnaire 42 lithologies → K (m/s) + famille ───────────────────────
+const LITHO_DB = {
+  "Argile compacte":              { K: 1e-10, fam: "Argile" },
+  "Argile sableuse":              { K: 5e-9,  fam: "Argile" },
+  "Marne argileuse":              { K: 1e-9,  fam: "Argile" },
+  "Limon éolien (lœss)":         { K: 1e-7,  fam: "Limon" },
+  "Limon alluvial":               { K: 5e-7,  fam: "Limon" },
+  "Sable fin argileux":           { K: 1e-6,  fam: "Sable fin" },
+  "Sable fin quaternaire":        { K: 5e-6,  fam: "Sable fin" },
+  "Sable fin à moyen":            { K: 1e-5,  fam: "Sable fin" },
+  "Sable moyen propre":           { K: 5e-5,  fam: "Sable moyen" },
+  "Sable grossier propre":        { K: 1e-4,  fam: "Sable grossier" },
+  "Sable grossier argileux":      { K: 5e-5,  fam: "Sable grossier" },
+  "Gravier sableux":              { K: 1e-3,  fam: "Gravier" },
+  "Gravier propre":               { K: 1e-2,  fam: "Gravier" },
+  "Alluvions grossières":         { K: 5e-3,  fam: "Gravier" },
+  "Gravier argileux":             { K: 1e-4,  fam: "Gravier" },
+  "Calcaire compact fissuré":     { K: 1e-6,  fam: "Calcaire" },
+  "Calcaire karstifié":           { K: 1e-3,  fam: "Calcaire" },
+  "Craie":                        { K: 1e-6,  fam: "Craie" },
+  "Tuffeau (Val de Loire)":       { K: 5e-6,  fam: "Calcaire" },
+  "Calcaire gréseux":             { K: 1e-5,  fam: "Calcaire" },
+  "Grès fin consolidé":           { K: 1e-7,  fam: "Grès" },
+  "Grès poreux peu consolidé":    { K: 1e-5,  fam: "Grès" },
+  "Grès argileux":                { K: 1e-8,  fam: "Grès" },
+  "Arène granitique":             { K: 1e-5,  fam: "Altérite" },
+  "Altérite de schiste":          { K: 5e-7,  fam: "Altérite" },
+  "Granite fissuré":              { K: 1e-7,  fam: "Socle" },
+  "Basalte fissuré":              { K: 1e-6,  fam: "Socle" },
+  "Remblai hétérogène":           { K: 1e-5,  fam: "Remblai" },
+  "Grave de route / concassé":    { K: 1e-3,  fam: "Remblai" },
+  "Marne calcaire":               { K: 5e-8,  fam: "Marne" },
+  "Marno-calcaire fissuré":       { K: 1e-6,  fam: "Marne" },
+  "Marnes à meulières":           { K: 5e-7,  fam: "Marne" },
+  "Calcaire de Beauce":           { K: 5e-4,  fam: "Calcaire" },
+  "Calcaire de Saint-Ouen":       { K: 1e-5,  fam: "Calcaire" },
+  "Calcaire grossier du Lutétien":{ K: 5e-5,  fam: "Calcaire" },
+  "Sables de Fontainebleau":      { K: 5e-4,  fam: "Sable moyen" },
+  "Sables du Sparnacien":         { K: 1e-5,  fam: "Sable fin" },
+  "Argile à silex":               { K: 1e-8,  fam: "Argile" },
+  "Schistes altérés":             { K: 1e-6,  fam: "Altérite" },
+  "Conglomérat (poudingue)":      { K: 5e-6,  fam: "Grès" },
+  "Molasse miocène":              { K: 5e-5,  fam: "Grès" },
+  "Calcaire urgonien":            { K: 5e-3,  fam: "Calcaire" },
+};
+
+// ─── Couleurs lithologiques (palette G.M.E.P) ─────────────────────────────────
+const LITHO_COLORS = {
+  "Argile":         "#A0522D",
+  "Limon":          "#DEB887",
+  "Sable fin":      "#F5DEB3",
+  "Sable moyen":    "#DAA520",
+  "Sable grossier": "#CD853F",
+  "Gravier":        "#808080",
+  "Calcaire":       "#D4D0B0",
+  "Craie":          "#FFFFF0",
+  "Grès":           "#BC8F5F",
+  "Altérite":       "#A0826D",
+  "Socle":          "#696969",
+  "Remblai":        "#778899",
+  "Marne":          "#B8B0C8",
+};
+
+// ─── État multicouche ────────────────────────────────────────────────────────
+let mcMode = "B";  // "A" ou "B"
+let mcLayers = [];  // [{de, a, litho}]
+let mcVisible = false;
+
+function toggleMC() {
+  const body = document.getElementById("mc-body");
+  const toggle = document.getElementById("mc-toggle");
+  if (!mcVisible) {
+    body.style.display = "block";
+    toggle.classList.add("open");
+    mcVisible = true;
+    if (mcLayers.length === 0) initMCDefaultLayers();
+  } else {
+    body.style.display = "none";
+    toggle.classList.remove("open");
+    mcVisible = false;
+  }
+}
+
+function setMCMode(mode) {
+  mcMode = mode;
+  document.getElementById("mc-mode-a").classList.toggle("active", mode === "A");
+  document.getElementById("mc-mode-b").classList.toggle("active", mode === "B");
+  document.getElementById("mc-mode-a-input").style.display = mode === "A" ? "block" : "none";
+}
+
+function initMCDefaultLayers() {
+  mcLayers = [
+    { de: 0.0, a: 2.0, litho: "Argile sableuse" },
+    { de: 2.0, a: 3.0, litho: "Marne argileuse" },
+    { de: 3.0, a: 5.0, litho: "Marno-calcaire fissuré" },
+  ];
+  renderMCTable();
+}
+
+function addMCLayer() {
+  if (mcLayers.length >= 15) { alert("Maximum 15 couches atteint."); return; }
+  const last = mcLayers[mcLayers.length - 1];
+  const newDe = last ? last.a : 0;
+  mcLayers.push({ de: newDe, a: newDe + 2, litho: "Argile sableuse" });
+  renderMCTable();
+}
+
+function resetMCLayers() {
+  mcLayers = [];
+  initMCDefaultLayers();
+  document.getElementById("mc-results-area").style.display = "none";
+}
+
+function renderMCTable() {
+  const lithoNames = Object.keys(LITHO_DB);
+  const lithoOpts = lithoNames.map(n => `<option value="${n}">${n}</option>`).join("");
+  
+  const tbody = document.getElementById("mc-tbody");
+  tbody.innerHTML = "";
+  
+  const ns = parseFloat((document.getElementById("inp-ns")||{}).value||"2") || 2;
+  const ff = parseFloat((document.getElementById("inp-ff")||{}).value||"4") || 4;
+  const r_puits = (parseFloat((document.getElementById("inp-diam-int")||{}).value||"112") || 112) / 1000 / 2;
+  const R = parseFloat((document.getElementById("inp-rayon-inf")||{}).value||"30") || 30;
+  const s = Math.max(0, ff - ns);
+  const lnRr = (R > r_puits && r_puits > 0) ? Math.log(R / r_puits) : Math.log(30 / 0.056);
+  
+  mcLayers.forEach((layer, i) => {
+    const ld = LITHO_DB[layer.litho] || { K: 0, fam: "?" };
+    const K = ld.K;
+    const fam = ld.fam;
+    const color = LITHO_COLORS[fam] || "#eee";
+    
+    const e_tot = layer.a - layer.de;
+    const isSat = layer.a > ns;
+    const e_sat = isSat ? Math.max(0, Math.min(layer.a, ff) - Math.max(layer.de, ns)) : 0;
+    const Q_i = (K > 1e-10 && e_sat > 0 && s > 0 && lnRr > 0) 
+                ? 2 * Math.PI * K * e_sat * s / lnRr * 3600 : 0;
+    
+    const selectOpts = lithoNames.map(n => 
+      `<option value="${n}" ${n === layer.litho ? "selected" : ""}>${n}</option>`
+    ).join("");
+    
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td style="text-align:center;color:#888">${i+1}</td>
+      <td><input type="number" step="0.1" value="${layer.de}" onchange="updateMCLayer(${i},'de',this.value)"></td>
+      <td><input type="number" step="0.1" value="${layer.a}" onchange="updateMCLayer(${i},'a',this.value)"></td>
+      <td style="background:${color}20"><select onchange="updateMCLayer(${i},'litho',this.value)">${selectOpts}</select></td>
+      <td style="text-align:center;color:#666;font-size:11px">${K > 0 ? K.toExponential(1) : "—"}</td>
+      <td style="text-align:center;font-weight:600;color:${isSat?'#1565c0':'#888'}">${layer.a > ns ? "OUI" : "NON"}</td>
+      <td style="text-align:center">${e_sat.toFixed(2)}</td>
+      <td style="text-align:center;font-weight:600;color:${Q_i>0?'#2E7D32':'#888'}">${Q_i.toFixed(4)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function updateMCLayer(idx, field, value) {
+  if (field === "de" || field === "a") {
+    mcLayers[idx][field] = parseFloat(value) || 0;
+  } else {
+    mcLayers[idx][field] = value;
+  }
+  renderMCTable();
+}
+
+// ─── Calcul multicouche principal ────────────────────────────────────────────
+function calcMC() {
+  const ns = parseFloat((document.getElementById("inp-ns")||{}).value||"2") || 2;
+  const ff = parseFloat((document.getElementById("inp-ff")||{}).value||"4") || 4;
+  const r_puits = (parseFloat((document.getElementById("inp-diam-int")||{}).value||"112") || 112) / 1000 / 2;
+  let R = parseFloat((document.getElementById("inp-rayon-inf")||{}).value||"30") || 30;
+  const s = Math.max(0, ff - ns);
+  
+  if (s <= 0) {
+    alert("Rabattement nul ou négatif (FF ≤ NS). Vérifiez NS et FF.");
+    return;
+  }
+  
+  // Calcul Σ k_i·e_sat_i (transmissivité équivalente)
+  let T_eq = 0;
+  let Q_total = 0;
+  
+  // Rayon d'influence Sichardt : R = 3000·s·√(K_max)
+  let K_max = 0;
+  mcLayers.forEach(l => {
+    const ld = LITHO_DB[l.litho] || { K: 0 };
+    if (ld.K > K_max) K_max = ld.K;
+  });
+  const R_sich = K_max > 0 ? 3000 * s * Math.sqrt(K_max) : R;
+  R = Math.max(R, R_sich);  // prend le max entre saisi et Sichardt
+  
+  const lnRr = (R > r_puits && r_puits > 0) ? Math.log(R / r_puits) : Math.log(R / 0.056);
+  
+  const layerResults = [];
+  mcLayers.forEach((layer, i) => {
+    const ld = LITHO_DB[layer.litho] || { K: 0, fam: "?" };
+    const K = ld.K;
+    const fam = ld.fam;
+    const color = LITHO_COLORS[fam] || "#eee";
+    
+    const isSat = layer.a > ns;
+    const e_sat = isSat ? Math.max(0, Math.min(layer.a, ff) - Math.max(layer.de, ns)) : 0;
+    const permeable = K > 1e-10;
+    
+    // Q_i = 2π·k_i·e_sat_i·s / ln(R/r) × 3600  [m³/h]
+    const Q_i = (permeable && e_sat > 0 && s > 0 && lnRr > 0) 
+                ? 2 * Math.PI * K * e_sat * s / lnRr * 3600 : 0;
+    
+    T_eq += K * e_sat;  // [m²/s]
+    Q_total += Q_i;
+    
+    layerResults.push({ ...layer, K, fam, color, e_sat, isSat, permeable, Q_i });
+  });
+  
+  // Mode A : Q imposé → rabattement
+  const Q_impose = parseFloat((document.getElementById("mc-q-impose")||{}).value||"5") || 5;
+  const s_A = (T_eq > 0 && lnRr > 0) 
+              ? Q_impose / 3600 * lnRr / (2 * Math.PI * T_eq) : 0;
+  
+  // Volumes
+  const V_jour = Q_total * 24;
+  const V_an = V_jour * 365;
+  
+  // Statut IOTA
+  let iotaColor, iotaText;
+  if (V_an >= 200000) { iotaColor = "#b00020"; iotaText = "⚠ AUTORISATION 1.1.2.0 (V ≥ 200 000 m³/an)"; }
+  else if (V_an >= 10000) { iotaColor = "#f5b94d"; iotaText = "⚡ DÉCLARATION 1.1.1.0 (10 000 ≤ V < 200 000 m³/an)"; }
+  else { iotaColor = "#22c55e"; iotaText = "✓ HORS NOMENCLATURE (V < 10 000 m³/an) — Logique IOTA R.214-1 stricte invariante"; }
+  
+  // Affichage résultats
+  document.getElementById("mc-r-qtotal").textContent = Q_total.toFixed(4) + " m³/h";
+  document.getElementById("mc-r-teq").textContent = T_eq.toExponential(3) + " m²/s";
+  document.getElementById("mc-r-san").textContent = s_A > 0 ? s_A.toFixed(3) + " m" : "—";
+  document.getElementById("mc-r-van").textContent = V_an.toLocaleString("fr-FR", {maximumFractionDigits:0}) + " m³/an";
+  
+  const iotaDiv = document.getElementById("mc-iota-note");
+  iotaDiv.style.background = iotaColor + "22";
+  iotaDiv.style.color = iotaColor;
+  iotaDiv.style.border = "1.5px solid " + iotaColor;
+  iotaDiv.textContent = iotaText;
+  
+  document.getElementById("mc-results-area").style.display = "block";
+  
+  // Render SVG coupe G.M.E.P
+  renderCoupeSVG(layerResults, ns, ff, s, R, Q_total);
+  
+  // Refresh table to show updated values
+  renderMCTable();
+}
+
+// ─── Rendu SVG coupe lithologique G.M.E.P ────────────────────────────────
+function renderCoupeSVG(layers, ns, ff, s, R, Q_total) {
+  const svgArea = document.getElementById("mc-svg-area");
+  if (!svgArea) return;
+  
+  // Récupérer les données en-tête G.M.E.P
+  const nomForage   = (document.getElementById('mc-nom-forage')?.value||'').trim() || 'Forage';
+  const adresseRue  = (document.getElementById('mc-adresse-rue')?.value||'').trim();
+  const adresseCpv  = (document.getElementById('mc-adresse-cpville')?.value||'').trim();
+  const dateForage  = (document.getElementById('mc-date-forage')?.value||'').trim();
+  const xL93val     = (document.getElementById('mc-x-l93')?.value||'').trim();
+  const yL93val     = (document.getElementById('mc-y-l93')?.value||'').trim();
+  const zAlt        = (document.getElementById('mc-z-alt')?.value||'').trim();
+  const arriveeRaw  = (document.getElementById('mc-arrivee-eau')?.value||'').replace(',','.');
+  const arriveeEau  = arriveeRaw ? parseFloat(arriveeRaw) : null;
+  
+  const hdrH = 62; // hauteur en-tête
+  const W = 700, H = 450 + hdrH;
+  const marginL = 70, marginR = 20, marginT = 30 + hdrH, marginB = 40;
+  const drawW = W - marginL - marginR;
+  const drawH = H - marginT - marginB;
+  
+  // Depth scale
+  const depths = layers.map(l => l.a).filter(v => v > 0);
+  const maxDepth = Math.max(...depths, ff + 1, 6);
+  const depthScale = drawH / maxDepth;
+  
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" style="font-family:Calibri,Arial,sans-serif">`;
+  
+  // Background
+  svg += `<rect width="${W}" height="${H}" fill="#fafafa"/>`;
+  
+  // ── En-tête G.M.E.P ──
+  svg += `<rect x="0" y="0" width="${W}" height="${hdrH}" fill="#0D3761"/>`;
+  svg += `<text x="12" y="16" font-size="13" font-weight="bold" fill="#fff">COUPE GÉOLOGIQUE G.M.E.P — ${escSVG(nomForage)}</text>`;
+  if (adresseRue || adresseCpv) {
+    const adrText = [adresseRue, adresseCpv].filter(Boolean).join(' — ');
+    svg += `<text x="12" y="30" font-size="10" fill="#AAD4D6">${escSVG(adrText)}</text>`;
+  }
+  const hdrItems = [];
+  if (dateForage) hdrItems.push('Date : ' + dateForage);
+  if (xL93val)    hdrItems.push('X L93 : ' + xL93val + ' m');
+  if (yL93val)    hdrItems.push('Y L93 : ' + yL93val + ' m');
+  if (zAlt)       hdrItems.push('Z TN : ' + zAlt + ' m NGF');
+  if (hdrItems.length) svg += `<text x="12" y="44" font-size="9" fill="#c8d4e8">${escSVG(hdrItems.join('   |   '))}</text>`;
+  svg += `<text x="${W-8}" y="16" text-anchor="end" font-size="9" fill="#AAD4D6" font-style="italic">Coupe Géologique G.M.E.P — Document propriétaire</text>`;
+  svg += `<text x="${W-8}" y="30" text-anchor="end" font-size="9" fill="#7ab" font-style="italic">v15.82</text>`;
+  
+  // Title
+  svg += `<text x="${W/2}" y="${marginT - 8}" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a2b4a">Coupe Géologique G.M.E.P — v15.82</text>`;
+  
+  // Column headers
+  const colX = marginL;
+  const colW = drawW * 0.5;
+  const annuX = colX + colW + 5;
+  const annuW = drawW * 0.5 - 5;
+  
+  svg += `<rect x="${colX}" y="${marginT}" width="${colW}" height="16" fill="#2c3e50"/>`;
+  svg += `<text x="${colX + colW/2}" y="${marginT + 11}" text-anchor="middle" font-size="10" fill="white" font-weight="bold">Coupe Lithologique</text>`;
+  
+  svg += `<rect x="${annuX}" y="${marginT}" width="${annuW/2}" height="16" fill="#1565c0"/>`;
+  svg += `<text x="${annuX + annuW/4}" y="${marginT + 11}" text-anchor="middle" font-size="10" fill="white" font-weight="bold">Venues d'eau</text>`;
+  
+  svg += `<rect x="${annuX + annuW/2}" y="${marginT}" width="${annuW/2}" height="16" fill="#37474f"/>`;
+  svg += `<text x="${annuX + annuW*3/4}" y="${marginT + 11}" text-anchor="middle" font-size="10" fill="white" font-weight="bold">Qi (m³/h)</text>`;
+  
+  // Draw layers
+  layers.forEach((layer, i) => {
+    const yTop = marginT + 16 + layer.de * depthScale;
+    const yBot = marginT + 16 + layer.a * depthScale;
+    const height = yBot - yTop;
+    if (height <= 0) return;
+    
+    // Fill with pattern based on family
+    const fillColor = layer.color;
+    svg += `<rect x="${colX}" y="${yTop}" width="${colW}" height="${height}" fill="${fillColor}" stroke="#666" stroke-width="0.5"/>`;
+    
+    // Layer label
+    if (height > 14) {
+      const labelY = yTop + height / 2 + 4;
+      svg += `<text x="${colX + colW/2}" y="${labelY}" text-anchor="middle" font-size="9" fill="#1a1a1a">${escSVG(layer.litho.substring(0, 22))}</text>`;
+    }
+    
+    // Depth labels on Y axis
+    svg += `<line x1="${colX - 5}" y1="${yTop}" x2="${colX}" y2="${yTop}" stroke="#444" stroke-width="1"/>`;
+    svg += `<text x="${colX - 7}" y="${yTop + 4}" text-anchor="end" font-size="9" fill="#444">${layer.de.toFixed(1)}</text>`;
+    if (i === layers.length - 1) {
+      svg += `<line x1="${colX - 5}" y1="${yBot}" x2="${colX}" y2="${yBot}" stroke="#444" stroke-width="1"/>`;
+      svg += `<text x="${colX - 7}" y="${yBot + 4}" text-anchor="end" font-size="9" fill="#444">${layer.a.toFixed(1)}</text>`;
+    }
+    
+    // Water venues (if saturated)
+    if (layer.isSat && layer.Q_i > 0) {
+      const yWater = marginT + 16 + (Math.max(layer.de, ns) + (Math.min(layer.a, ff) - Math.max(layer.de, ns))/2) * depthScale;
+      svg += `<circle cx="${annuX + annuW/4}" cy="${yWater}" r="5" fill="#1565c0" opacity="0.8"/>`;
+      svg += `<text x="${annuX + annuW/4}" y="${yWater + 4}" text-anchor="middle" font-size="8" fill="#0d47a1">${layer.Q_i.toFixed(3)}</text>`;
+      // Qi text
+      svg += `<text x="${annuX + annuW*3/4}" y="${yWater + 4}" text-anchor="middle" font-size="9" fill="#2E7D32" font-weight="bold">${layer.Q_i.toFixed(4)}</text>`;
+    }
+  });
+  
+  // Niveau statique (NS) — flèche bleue ▽
+  const nsY = marginT + 16 + ns * depthScale;
+  svg += `<line x1="${colX - 10}" y1="${nsY}" x2="${colX + colW}" y2="${nsY}" stroke="#1565c0" stroke-width="2" stroke-dasharray="5,3"/>`;
+  svg += `<polygon points="${colX-10},${nsY} ${colX-18},${nsY-5} ${colX-18},${nsY+5}" fill="#1565c0"/>`;
+  svg += `<text x="${colX - 20}" y="${nsY + 4}" text-anchor="end" font-size="9" fill="#1565c0" font-weight="bold">▽ n.s. ${ns.toFixed(2)}m</text>`;
+  
+  // Arrivée d'eau constatée — flèche bleue (si renseignée)
+  if (arriveeEau !== null && !isNaN(arriveeEau) && arriveeEau > 0) {
+    const aeY = marginT + 16 + arriveeEau * depthScale;
+    // Ligne pointillée bleue plus foncée
+    svg += `<line x1="${colX - 10}" y1="${aeY}" x2="${colX + colW + 60}" y2="${aeY}" stroke="#0056b3" stroke-width="1.5" stroke-dasharray="3,2"/>`;
+    // Triangle flèche
+    svg += `<polygon points="${colX + colW + 62},${aeY} ${colX + colW + 54},${aeY-5} ${colX + colW + 54},${aeY+5}" fill="#0056b3"/>`;
+    // Texte
+    svg += `<text x="${colX + colW + 66}" y="${aeY + 4}" font-size="9" fill="#0056b3" font-weight="bold">↘ arrivée d'eau ${arriveeEau.toFixed(2)} m</text>`;
+    // Symbole côté Y axis
+    svg += `<text x="${colX - 20}" y="${aeY + 4}" text-anchor="end" font-size="9" fill="#0056b3" font-weight="bold">↘ ${arriveeEau.toFixed(2)}m</text>`;
+  }
+  
+  // Fond de fouille (FF)
+  const ffY = marginT + 16 + ff * depthScale;
+  svg += `<line x1="${colX}" y1="${ffY}" x2="${colX + colW}" y2="${ffY}" stroke="#b00020" stroke-width="2" stroke-dasharray="4,2"/>`;
+  svg += `<text x="${colX + colW + 3}" y="${ffY + 4}" font-size="9" fill="#b00020" font-weight="bold">FF ${ff.toFixed(2)}m</text>`;
+  
+  // Zone saturée fill
+  if (ff > ns) {
+    const satTopY = nsY;
+    const satBotY = ffY;
+    svg += `<rect x="${colX}" y="${satTopY}" width="${colW}" height="${satBotY - satTopY}" fill="#1565c0" opacity="0.12"/>`;
+  }
+  
+  // Q total legend
+  svg += `<rect x="${marginL}" y="${H - marginB + 8}" width="${W - marginL - marginR}" height="24" fill="#e3f2fd" rx="4"/>`;
+  svg += `<text x="${W/2}" y="${H - marginB + 24}" text-anchor="middle" font-size="10" fill="#0d47a1" font-weight="bold">Q total multicouche = ${Q_total.toFixed(4)} m³/h — s = ${s.toFixed(2)} m — R = ${R.toFixed(1)} m</text>`;
+  
+  // Y axis label
+  svg += `<text x="12" y="${H/2}" text-anchor="middle" font-size="10" fill="#444" transform="rotate(-90, 12, ${H/2})">Profondeur / TN (m)</text>`;
+  
+  svg += `</svg>`;
+  svgArea.innerHTML = svg;
+}
+
+function escSVG(str) {
+  return (str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+
+// ─── v15.82 : Synchronisation bidirectionnelle X/Y Lambert 93 ──────────────
+// inp-x / inp-y (bloc carte principale) ↔ mc-x-l93 / mc-y-l93 (en-tête Coupe G.M.E.P)
+document.addEventListener("DOMContentLoaded", function () {
+  function syncXY(fromX, fromY, toX, toY) {
+    var elFX = document.getElementById(fromX);
+    var elFY = document.getElementById(fromY);
+    var elTX = document.getElementById(toX);
+    var elTY = document.getElementById(toY);
+    if (!elFX || !elFY || !elTX || !elTY) return;
+
+    function doSync(src, dst) {
+      dst.value = src.value;
+      // Déclencher un événement input sur la destination pour màj d'autres listeners
+      dst.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+
+    elFX.addEventListener("input", function () { doSync(elFX, elTX); });
+    elFY.addEventListener("input", function () { doSync(elFY, elTY); });
+    elTX.addEventListener("input", function () { doSync(elTX, elFX); });
+    elTY.addEventListener("input", function () { doSync(elTY, elFY); });
+
+    elFX.addEventListener("change", function () { doSync(elFX, elTX); });
+    elFY.addEventListener("change", function () { doSync(elFY, elTY); });
+    elTX.addEventListener("change", function () { doSync(elTX, elFX); });
+    elTY.addEventListener("change", function () { doSync(elTY, elFY); });
+  }
+
+  // Synchroniser les deux paires de champs Lambert 93
+  syncXY("inp-x", "inp-y", "mc-x-l93", "mc-y-l93");
+});
+
+// Initialise la section MC (corps caché par défaut)
+document.addEventListener("DOMContentLoaded", function() {
+  const body = document.getElementById("mc-body");
+  if (body) body.style.display = "none";
 });
 
 </script>

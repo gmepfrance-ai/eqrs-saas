@@ -1,1 +1,1 @@
-v15.78 - Wed May 27 20:15:00 UTC 2026 - Fix bug ouverture PDF (hyperlink B25 interne) + 42 formations desktop
+v15.82 - Thu May 28 18:24:00 UTC 2026 - Coupe Géologique multicouche : C45 R_Sichardt corrigé (MAX simple non-matriciel), Q_i par couche fonctionnel, coupe PDF Loi sur l'Eau cohérente avec forage réel
