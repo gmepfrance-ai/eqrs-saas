@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rabattement de nappe — GMEP v15.82 Multicouche</title>
-<meta name="description" content="Logiciel professionnel de modélisation du rabattement de nappe — Theis, Dupuit-Thiem, Forchheimer/Dupuit multicouche, classification IOTA — v15.82. Démo gratuite 8 jours. 1 100 € HT / an.">
+<title>Rabattement de nappe — GMEP v15.83 Multicouche</title>
+<meta name="description" content="Logiciel professionnel de modélisation du rabattement de nappe — Theis, Dupuit-Thiem, Forchheimer/Dupuit multicouche, classification IOTA — v15.83. Démo gratuite 8 jours. 1 100 € HT / an.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
@@ -1671,7 +1671,7 @@ table.kv td:last-child { text-align: right; font-family: var(--font-mono); font-
 .pb-total .pb-val { color: var(--accent-dark); font-size: 16px; }
 
 
-/* ── v15.82 Multicouche ── */
+/* ── v15.83 Multicouche ── */
 .mc-section { margin-top: 24px; border: 2px solid #1a2b4a; border-radius: 10px; overflow: hidden; }
 .mc-section-hdr { background: #1a2b4a; color: #fff; font-weight: 700; font-size: 13px; padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
 .mc-section-body { padding: 16px; background: #f8fafc; }
@@ -1890,8 +1890,9 @@ table.kv td:last-child { text-align: right; font-family: var(--font-mono); font-
               <input type="text" id="inp-diam-int" placeholder="ex. 200" value="">
             </div>
             <div class="field-grp">
-              <label>Rayon d'influence R (m)</label>
-              <input type="text" id="inp-rayon-inf" placeholder="ex. 50" value="">
+              <label>Rayon d'influence R (m) <span id="lbl-r-auto" style="color:#01696F;font-size:0.85em;font-weight:normal">— auto Sichardt</span></label>
+              <input type="text" id="inp-rayon-inf" placeholder="auto (Sichardt)" value="">
+              <span class="hint">Laisser vide = calcul automatique Sichardt (3 000·s·√K). Saisir pour forcer manuellement.</span>
             </div>
             <div class="field-grp">
               <label>Durée pompage (h)</label>
@@ -1999,7 +2000,7 @@ table.kv td:last-child { text-align: right; font-family: var(--font-mono); font-
 
 
           <!-- ══════════════════════════════════════════════════════════
-               v15.82 — SECTION COUPE GÉOLOGIQUE G.M.E.P MULTICOUCHE FORCHHEIMER
+               v15.83 — SECTION COUPE GÉOLOGIQUE G.M.E.P MULTICOUCHE FORCHHEIMER
                ══════════════════════════════════════════════════════════ -->
 
           <!-- EN-TÊTE COUPE GÉOLOGIQUE G.M.E.P -->
@@ -2055,7 +2056,7 @@ table.kv td:last-child { text-align: right; font-family: var(--font-mono); font-
           <div class="mc-section" id="mc-section">
             <div class="mc-section-hdr mc-toggle" id="mc-toggle" onclick="toggleMC()">
               <span class="caret">▶</span>
-              🪨  Coupe Géologique Multicouche — Forchheimer/Dupuit (v15.82)
+              🪨  Coupe Géologique Multicouche — Forchheimer/Dupuit (v15.83)
               <span style="margin-left:auto;font-size:11px;font-weight:400;opacity:0.8">Optionnel — enrichit le calcul avec la stratigraphie réelle</span>
             </div>
             <div class="mc-section-body" id="mc-body">
@@ -2402,7 +2403,13 @@ function calculer(p) {
   const ns = p.ns;                          // niveau statique
   const ff = p.ff;                          // fond de fouille (ou NDC pour AEP)
   const r_puits = p.diam_int / 2;           // rayon puits
-  const R = p.rayon_inf;                    // rayon d'influence
+  const K_geo = geo.K;                      // conductivité hydraulique (m/s)
+  // Rayon d'influence : Sichardt automatique si non saisi
+  const s_pour_R = Math.max(0, ff - ns);
+  const R_sichardt = (K_geo > 0 && s_pour_R > 0) ? 3000 * s_pour_R * Math.sqrt(K_geo) : 0;
+  const R_saisi = p.rayon_inf;              // valeur saisie (peut être NaN si champ vide)
+  const R = (R_saisi > 0 && !isNaN(R_saisi)) ? R_saisi : (R_sichardt > 0 ? R_sichardt : 30);
+  const R_auto = !(R_saisi > 0 && !isNaN(R_saisi)); // true si calcul auto
   const t_h = p.t_pompage;                  // temps pompage en h
   const t_s = t_h * 3600;                   // en secondes
   const T = geo.T;                          // transmissivité (m²/s)
@@ -2547,7 +2554,7 @@ function calculer(p) {
     inputs: p,
     geo,
     clim,
-    s, T, S, r_puits, R, t_s, u, Wu,
+    s, T, S, r_puits, R, R_sichardt, R_auto, t_s, u, Wu,
     zre_applicable, zre_regime,
     Q_theis, Q_dupuit, Q_theis_corr, Q_dupuit_corr,
     Q_cycle, Q_plancher, Q_base, V_jour_retenu,
@@ -3731,7 +3738,7 @@ function buildSection2_1(doc, ctx, r) {
     ["Niveau statique (NS / TN)",     inp.ns != null && !isNaN(inp.ns) ? `${fmtN(inp.ns, 2)} m` : "[ à compléter ]"],
     ["Fond de fouille (FF / TN)",     inp.ff != null && !isNaN(inp.ff) ? `${fmtN(inp.ff, 2)} m` : "[ à compléter ]"],
     ["Rabattement requis s = FF - NS", r.s != null && !isNaN(r.s) ? `${fmtN(r.s, 2)} m` : "—"],
-    ["Rayon d'influence R (saisie)",  inp.rayon_inf != null && !isNaN(inp.rayon_inf) ? `${fmtN(inp.rayon_inf, 1)} m` : "—"],
+    ["Rayon d'influence R",  r.R_auto ? `${fmtN(r.R, 1)} m \u2713 Sichardt automatique (3\u202f000·s·√K)` : `${fmtN(r.R, 1)} m (saisie manuelle)`],
     ["Durée de pompage prévue",       inp.t_pompage != null && !isNaN(inp.t_pompage) ? `${fmtN(inp.t_pompage, 0)} h` : "[ à compléter ]"]
   ];
   y = table2Col(doc, y, rows, { header: ["Paramètre", "Valeur"] });
@@ -3777,7 +3784,7 @@ function buildSection2_2(doc, ctx, r) {
     ["Niveau statique NS",    r.inputs.ns != null ? `${fmtN(r.inputs.ns, 2)} m / TN` : "—"],
     ["Fond de fouille FF",    r.inputs.ff != null ? `${fmtN(r.inputs.ff, 2)} m / TN` : "—"],
     ["Rabattement s",         r.s  != null ? `${fmtN(r.s, 2)} m` : "—"],
-    ["Rayon d'influence R",   r.R  != null ? `${fmtN(r.R, 1)} m` : "—"],
+    ["Rayon d'influence R",   r.R != null ? (r.R_auto ? `${fmtN(r.R, 1)} m (Sichardt auto)` : `${fmtN(r.R, 1)} m (manuel)`) : "—"],
     ["Durée pompage",         r.inputs.t_pompage != null ? `${fmtN(r.inputs.t_pompage, 0)} h` : "—"],
     ["Heures d'exploitation/jour", r.inputs.t_exp != null ? `${fmtN(r.inputs.t_exp, 0)} h/j` : "—"]
   ];
@@ -3951,7 +3958,7 @@ function buildSection3(doc, ctx, r) {
   y += 10;
 
   y = table2Col(doc, y, [
-    ["Rayon d'influence R",        r.R != null ? `${fmtN(r.R, 1)} m` : "—"],
+    ["Rayon d'influence R",        r.R != null ? (r.R_auto ? `${fmtN(r.R, 1)} m (Sichardt auto)` : `${fmtN(r.R, 1)} m (manuel)`) : "—"],
     ["Débit Dupuit brut Q",        r.Q_dupuit != null ? `${fmtN(r.Q_dupuit, 2)} m³/h` : "—"],
     ["Débit Dupuit corrigé Q × η", r.Q_dupuit_corr != null ? `${fmtN(r.Q_dupuit_corr, 2)} m³/h` : "—"]
   ], { header: ["Paramètre Dupuit-Thiem", "Valeur"] });
@@ -4531,7 +4538,7 @@ async function generate(r) {
   newPage(doc, ctx);
   buildLexique(doc, ctx);
 
-  // ──── PAGE COUPE GÉOLOGIQUE G.M.E.P (v15.82)
+  // ──── PAGE COUPE GÉOLOGIQUE G.M.E.P (v15.83)
   const mcLayers_pdf = window.mcLayers || [];
   if (mcLayers_pdf.length > 0) {
     newPage(doc, ctx);
@@ -4568,7 +4575,7 @@ function buildPageCoupeGeologique(doc, ctx, r) {
   doc.text("COUPE GÉOLOGIQUE G.M.E.P — " + nomForage, 14, 23);
   doc.setFontSize(8);
   doc.setFont("helvetica", "italic");
-  doc.text("Coupe Géologique G.M.E.P — Document propriétaire v15.82", PW - 14, 23, { align: "right" });
+  doc.text("Coupe Géologique G.M.E.P — Document propriétaire v15.83", PW - 14, 23, { align: "right" });
   
   y = 36;
   
@@ -4870,8 +4877,8 @@ function runCalcul() {
       alert("Merci de sélectionner un substrat et un département.");
       return;
     }
-    if (isNaN(p.ns) || isNaN(p.ff) || isNaN(p.diam_int) || isNaN(p.rayon_inf) || isNaN(p.t_pompage)) {
-      alert("Merci de renseigner toutes les valeurs hydrauliques (NS, FF, diamètre, rayon d'influence, durée pompage).");
+    if (isNaN(p.ns) || isNaN(p.ff) || isNaN(p.diam_int) || isNaN(p.t_pompage)) {
+      alert("Merci de renseigner toutes les valeurs hydrauliques (NS, FF, diamètre, durée pompage). Le rayon R peut être laissé vide pour calcul automatique Sichardt.");
       return;
     }
     LAST_RESULT = calculer(p);
@@ -5018,6 +5025,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.GMEP_Quota.refreshQuotaBanner();
 
+  // ─── Calcul Sichardt en temps réel ───────────────────────────────────────
+  function updateSichardtHint() {
+    const ns = parseFloat((document.getElementById("inp-ns")||{}).value);
+    const ff = parseFloat((document.getElementById("inp-ff")||{}).value);
+    const substrat = (document.getElementById("inp-substrat")||{}).value;
+    const rayonField = document.getElementById("inp-rayon-inf");
+    const lblAuto = document.getElementById("lbl-r-auto");
+    if (!rayonField || !lblAuto) return;
+    const geo = BASE_GEO[substrat];
+    if (geo && !isNaN(ns) && !isNaN(ff) && ff > ns) {
+      const s = ff - ns;
+      const R_sich = 3000 * s * Math.sqrt(geo.K);
+      const manualR = parseFloat(rayonField.value);
+      if (isNaN(manualR) || manualR <= 0) {
+        lblAuto.textContent = `\u2014 Sichardt auto : ${R_sich.toFixed(0)} m`;
+        lblAuto.style.color = "#01696F";
+        rayonField.placeholder = `auto ${R_sich.toFixed(0)} m (Sichardt)`;
+      } else {
+        lblAuto.textContent = `\u2014 Sichardt : ${R_sich.toFixed(0)} m | saisi : ${manualR.toFixed(0)} m`;
+        lblAuto.style.color = "#964219";
+      }
+    } else {
+      lblAuto.textContent = "\u2014 Sichardt (saisir NS/FF/substrat)";
+      lblAuto.style.color = "#7A7974";
+    }
+  }
+  ["inp-ns","inp-ff","inp-substrat","inp-rayon-inf"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("input", updateSichardtHint);
+    if (el) el.addEventListener("change", updateSichardtHint);
+  });
+  updateSichardtHint();
+  // ─────────────────────────────────────────────────────────────────────────
+
   // Smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener("click", ev => {
@@ -5030,7 +5071,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 /* ════════════════════════════════════════════════════════════════════
-   GMEP v15.82 — Moteur de calcul MULTICOUCHE Forchheimer/Dupuit
+   GMEP v15.83 — Moteur de calcul MULTICOUCHE Forchheimer/Dupuit
    Q_total = Σ 2π·k_i·e_sat_i·s / ln(R/r)
    Mode A : Q imposé → s_A
    Mode B : s = FF−NS → Q_total et volume
@@ -5336,10 +5377,10 @@ function renderCoupeSVG(layers, ns, ff, s, R, Q_total) {
   if (zAlt)       hdrItems.push('Z TN : ' + zAlt + ' m NGF');
   if (hdrItems.length) svg += `<text x="12" y="44" font-size="9" fill="#c8d4e8">${escSVG(hdrItems.join('   |   '))}</text>`;
   svg += `<text x="${W-8}" y="16" text-anchor="end" font-size="9" fill="#AAD4D6" font-style="italic">Coupe Géologique G.M.E.P — Document propriétaire</text>`;
-  svg += `<text x="${W-8}" y="30" text-anchor="end" font-size="9" fill="#7ab" font-style="italic">v15.82</text>`;
+  svg += `<text x="${W-8}" y="30" text-anchor="end" font-size="9" fill="#7ab" font-style="italic">v15.83</text>`;
   
   // Title
-  svg += `<text x="${W/2}" y="${marginT - 8}" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a2b4a">Coupe Géologique G.M.E.P — v15.82</text>`;
+  svg += `<text x="${W/2}" y="${marginT - 8}" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a2b4a">Coupe Géologique G.M.E.P — v15.83</text>`;
   
   // Column headers
   const colX = marginL;
@@ -5438,7 +5479,7 @@ function escSVG(str) {
 }
 
 
-// ─── v15.82 : Synchronisation bidirectionnelle X/Y Lambert 93 ──────────────
+// ─── v15.83 : Synchronisation bidirectionnelle X/Y Lambert 93 ──────────────
 // inp-x / inp-y (bloc carte principale) ↔ mc-x-l93 / mc-y-l93 (en-tête Coupe G.M.E.P)
 document.addEventListener("DOMContentLoaded", function () {
   function syncXY(fromX, fromY, toX, toY) {

@@ -1,1 +1,1 @@
-v15.82 - Thu May 28 18:24:00 UTC 2026 - Coupe Géologique multicouche : C45 R_Sichardt corrigé (MAX simple non-matriciel), Q_i par couche fonctionnel, coupe PDF Loi sur l'Eau cohérente avec forage réel
+v15.83 - Thu May 28 19:05:00 UTC 2026 - R Sichardt automatique (C65 formule) + cellule R imposé optionnelle (C70) + décomposition V_aquif+V_pluie explicitée dans Note Méthodo (4.1.ter) et Dossier Loi sur l'Eau
