@@ -1,1 +1,1 @@
-v15.83 - Thu May 28 19:05:00 UTC 2026 - R Sichardt automatique (C65 formule) + cellule R imposé optionnelle (C70) + décomposition V_aquif+V_pluie explicitée dans Note Méthodo (4.1.ter) et Dossier Loi sur l'Eau
+v15.84 - Fri May 29 07:55:00 UTC 2026 - Correctif coupe lithologique : algorithme anti-chevauchement annotations NGF + axe profondeur repositionné à gauche + tiret cadratin séparateur cote/libellé. Aucun changement métier, invariants IOTA et modèle multicouche préservés.
