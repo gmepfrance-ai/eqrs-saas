@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EQRS — Modèle Johnson & Ettinger</title>
+<title>EQRS V7 — Modèle Johnson & Ettinger + 5 modules avancés</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -1495,6 +1495,11 @@ const TABS = [
   {id:'resultats_eri', label:'Résultats ERI', input:false},
   {id:'vlep', label:'VLEP', input:false},
   {id:'graphiques', label:'Graphiques J&E', input:false},
+  {id:'calcul_inverse', label:'Calcul Inverse', input:true},
+  {id:'monte_carlo', label:'Monte-Carlo', input:false},
+  {id:'temporel', label:'Temporel 70 ans', input:true},
+  {id:'trophique', label:'Chaîne Trophique', input:false},
+  {id:'melange_organe', label:'Mélange Organe', input:false},
 ];
 
 let activeTab = 'sommaire';
@@ -1596,6 +1601,11 @@ sheetRenderers.sommaire = function() {
     ['resultats_eri','Résultats ERI','Excès de Risque Individuel (ERI) — effets sans seuil'],
     ['vlep','VLEP',"Comparaison aux Valeurs Limites d'Exposition Professionnelle"],
     ['graphiques','Graphiques J&E','Analyse de sensibilité — variation de α avec la distance'],
+    ['calcul_inverse','Calcul Inverse','Concentration source admissible pour QD/ERI cible (cleanup level)'],
+    ['monte_carlo','Monte-Carlo','Propagation probabiliste des incertitudes — 1000 tirages'],
+    ['temporel','Temporel 70 ans',"Simulation temporelle avec déplétion mass-balance et biodégradation 1er ordre"],
+    ['trophique','Chaîne Trophique','Transfert sol → végétaux → animaux → ingestion humaine (Trapp & Matthies, Travis & Arms)'],
+    ['melange_organe','Mélange Organe','Index de Danger (HI) par organe-cible — US EPA Mixture Risk Assessment'],
   ];
 
   items.forEach(([id,label,desc]) => {
@@ -2498,6 +2508,757 @@ function init() {
   initTabs();
   renderActiveSheet();
 }
+
+// ============================================================
+// EQRS V7 — MODULES AVANCÉS (Calcul inverse, Monte-Carlo, Temporel, Trophique, Mélange)
+// ============================================================
+
+// --- État pour les modules avancés ---
+state.v7 = {
+  // Calcul inverse
+  inv_substance: 'Benzène',
+  inv_cible: 'adulte',
+  inv_QD: 1,
+  inv_ERI: 1e-6,
+  inv_results: {},
+
+  // Monte-Carlo
+  mc_runs: 1000,
+  mc_c0_median: 100,
+  mc_c0_gsd: 0.5,
+  mc_results: null,
+
+  // Temporel
+  tp_substance: 'Benzène',
+  tp_C0: 100,
+  tp_kbio: 0.10,
+  tp_Vsource: 100,
+  tp_series: [],
+
+  // Chaîne trophique
+  tr_substance: 'Benzène',
+  tr_Csol: 10,
+  tr_results: {},
+
+  // Mélange organe
+  org_results: {}
+};
+
+// ============================================================
+// MAPPING SUBSTANCE → ORGANES CIBLES (US EPA IRIS / ATSDR / EFSA)
+// ============================================================
+const ORGANES_CIBLES = {
+  'Benzène':                  ['Sang/Moelle osseuse','Système immunitaire'],
+  'Toluène':                  ['Système nerveux','Système reproducteur'],
+  'Éthylbenzène':             ['Foie','Rein'],
+  'Xylènes (mélange)':        ['Système nerveux','—'],
+  'Styrène':                  ['Système nerveux','Système auditif'],
+  'Cumène':                   ['Rein','—'],
+  'Naphtalène':               ['Système respiratoire','—'],
+  'Acénaphtène':              ['Foie','—'],
+  'Anthracène':               ['Foie','—'],
+  'Fluoranthène':             ['Foie','Rein'],
+  'Pyrène':                   ['Rein','—'],
+  'Benzo(a)pyrène':           ['Cancer cutané/poumon','—'],
+  'Plomb':                    ['Système nerveux','Sang/Moelle osseuse'],
+  'Arsenic (inorganique)':    ['Peau','Système cardiovasculaire'],
+  'Cadmium':                  ['Rein','Os'],
+  'Chrome VI':                ['Tractus digestif','—'],
+  'Mercure inorganique':      ['Rein','Système nerveux'],
+  'Méthylmercure':            ['Système nerveux','Système reproducteur'],
+  'Nickel':                   ['Rein','Système respiratoire'],
+  'Trichloroéthylène':        ['Rein','Foie'],
+  'Tétrachloroéthylène':      ['Foie','Système nerveux'],
+  'Chlorure de vinyle':       ['Foie','—'],
+  'Dichlorométhane':          ['Foie','Système respiratoire'],
+  'Chloroforme':              ['Foie','Rein'],
+  'Tétrachlorure de carbone': ['Foie','—'],
+  '1,2-Dichloroéthane':       ['Foie','Système immunitaire'],
+  'MTBE':                     ['Rein','Foie'],
+  'Formaldéhyde':             ['Système respiratoire','—'],
+  'Acétone':                  ['Rein','—']
+};
+
+// ============================================================
+// COEFFICIENTS DE BIODÉGRADATION 1ER ORDRE (DeVaull 2007, EPA)
+// ============================================================
+const K_BIO = {
+  'Benzène': 0.10, 'Toluène': 0.30, 'Éthylbenzène': 0.25, 'Xylènes (mélange)': 0.20,
+  'Naphtalène': 0.05, 'Trichloroéthylène': 0, 'Tétrachloroéthylène': 0,
+  'Chlorure de vinyle': 0, 'Dichlorométhane': 0.05, 'Chloroforme': 0,
+  'Styrène': 0.20, 'Cumène': 0.15, 'MTBE': 0.05, 'Formaldéhyde': 0.30
+};
+
+// ============================================================
+// CALCUL INVERSE
+// ============================================================
+function computeInverse() {
+  const subname = state.v7.inv_substance;
+  const cibleKey = state.v7.inv_cible;
+  const QDc = state.v7.inv_QD;
+  const ERIc = state.v7.inv_ERI;
+  const p = state.params[cibleKey] || state.params.adulte;
+  const vtr = VTR_SEUIL[subname] || {};
+  const eru = VTR_SANSSEUIL[subname] || {};
+  const prop = PROPRIETES[subname] || {};
+  const alpha_eff = state.modeleJE.alpha_eff || 0;
+  const Hprime = prop.H || 0;
+
+  const VTR_inhal = vtr.inhal || 0;
+  const VTR_oral = vtr.oral || 0;
+  const ERU_inhal = eru.inhal || 0;
+  const ERU_oral = eru.oral || 0;
+
+  // Cair_max (effets seuil) = QDc * VTR_inhal * 1000 * AT * 365 / (Fi * EF * ED)
+  const AT_s = p.AT_seuil || p.ED || 30;
+  const AT_ss = p.AT_sansseuil || 70;
+  const Cair_max_s = (VTR_inhal > 0 && p.Fi > 0 && p.EF > 0 && p.ED > 0)
+    ? (QDc * VTR_inhal * 1000 * AT_s * 365) / (p.Fi * p.EF * p.ED) : null;
+  const Cair_max_ss = (ERU_inhal > 0 && p.Fi > 0 && p.EF > 0 && p.ED > 0)
+    ? (ERIc * AT_ss * 365) / (ERU_inhal * p.Fi * p.EF * p.ED) : null;
+
+  // Csol_gaz_max via alpha_eff
+  const Csg_max_s = (Cair_max_s !== null && alpha_eff > 0) ? Cair_max_s / alpha_eff : null;
+  const Csg_max_ss = (Cair_max_ss !== null && alpha_eff > 0) ? Cair_max_ss / alpha_eff : null;
+
+  // Cnappe_max via Henry
+  const Cnp_max_s = (Csg_max_s !== null && Hprime > 0) ? Csg_max_s / (Hprime * 1000) : null;
+  const Cnp_max_ss = (Csg_max_ss !== null && Hprime > 0) ? Csg_max_ss / (Hprime * 1000) : null;
+
+  // Csol_max via ingestion
+  const IRs = p.IRs || 3e-5;
+  const Csol_max_s = (VTR_oral > 0 && IRs > 0 && p.EF > 0 && p.ED > 0)
+    ? (QDc * p.P * VTR_oral * AT_s * 365) / (IRs * p.EF * p.ED) : null;
+  const Csol_max_ss = (ERU_oral > 0 && IRs > 0 && p.EF > 0 && p.ED > 0)
+    ? (ERIc * p.P * AT_ss * 365) / (IRs * p.EF * p.ED * ERU_oral) : null;
+
+  state.v7.inv_results = {
+    VTR_inhal, VTR_oral, ERU_inhal, ERU_oral, alpha_eff, Hprime,
+    Cair_max_s, Cair_max_ss, Csg_max_s, Csg_max_ss,
+    Cnp_max_s, Cnp_max_ss, Csol_max_s, Csol_max_ss
+  };
+}
+
+// ============================================================
+// MONTE-CARLO (1000 tirages — propagation des incertitudes)
+// ============================================================
+function rngNorm() {
+  let u = 0, v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+function rngTriangular(min, max) { return min + Math.random() * (max - min); }
+
+function computeMonteCarlo() {
+  const N = state.v7.mc_runs;
+  const C0_median = state.v7.mc_c0_median;
+  const C0_gsd = state.v7.mc_c0_gsd;
+  const samples = [];
+
+  for (let i = 0; i < N; i++) {
+    // Tirages
+    const C0 = Math.exp(Math.log(C0_median) + rngNorm() * C0_gsd);
+    const n = rngTriangular(0.30, 0.45);
+    const tw = rngTriangular(0.10, 0.25);
+    const kv = Math.pow(10, -12 + rngNorm() * 1.0);
+    const lcrack = rngTriangular(0.10, 0.20);
+    const eta = Math.pow(10, -3.7 + rngNorm() * 0.5);
+    const er = rngTriangular(0.20, 0.70);
+
+    // Approximation de alpha avec sensibilités
+    const alpha_base = state.modeleJE.alpha || 3.67e-4;
+    const var_factor = (eta / 0.0002) * (0.45 / er) * (0.15 / lcrack) * Math.pow(n / 0.35, -2);
+    const alpha_mc = alpha_base * var_factor;
+    const Cindoor = C0 * alpha_mc;
+    samples.push(Cindoor);
+  }
+
+  samples.sort((a, b) => a - b);
+  const min = samples[0];
+  const p5 = samples[Math.floor(N * 0.05)];
+  const p50 = samples[Math.floor(N * 0.50)];
+  const mean = samples.reduce((a, b) => a + b, 0) / N;
+  const p95 = samples[Math.floor(N * 0.95)];
+  const max = samples[N - 1];
+  const std = Math.sqrt(samples.reduce((s, x) => s + Math.pow(x - mean, 2), 0) / N);
+  const cv = std / mean;
+  const ratio = p95 / p50;
+
+  state.v7.mc_results = { samples, min, p5, p50, mean, p95, max, std, cv, ratio };
+}
+
+// ============================================================
+// SIMULATION TEMPORELLE (déplétion + biodégradation 1er ordre)
+// ============================================================
+function computeTemporel() {
+  const subname = state.v7.tp_substance;
+  const C0 = state.v7.tp_C0;
+  const k_bio = state.v7.tp_kbio;
+  const Vsource = state.v7.tp_Vsource;
+  const Qsoil = state.modeleJE.Qsoil || 0;
+  const alpha_eff = state.modeleJE.alpha_eff || 0;
+  const vtr = VTR_SEUIL[subname] || {};
+  const eru = VTR_SANSSEUIL[subname] || {};
+  const p = state.params.adulte;
+
+  const lambda_depl = (Qsoil * 31536000) / Math.max(Vsource, 0.01);
+  const lambda_total = lambda_depl + k_bio;
+
+  const series = [];
+  let eri_cumul = 0;
+  for (let t = 0; t <= 70; t++) {
+    const Cs = C0 * Math.exp(-lambda_total * t);
+    const Ci = alpha_eff * Cs;
+    const QD = (vtr.inhal > 0) ? Ci * p.Fi * p.IRa * p.EF / (365 * (p.AT_seuil || 30) * p.P * 1000 * vtr.inhal) : null;
+    const ERI_annuel = (eru.inhal > 0) ? Ci * eru.inhal * p.Fi / 70 : 0;
+    eri_cumul += ERI_annuel;
+    series.push({ t, Cs, Ci, QD, ERI: eri_cumul, pct: Cs / C0 });
+  }
+  const T_demi = Math.log(2) / Math.max(lambda_total, 1e-9);
+  state.v7.tp_series = series;
+  state.v7.tp_lambda_depl = lambda_depl;
+  state.v7.tp_lambda_total = lambda_total;
+  state.v7.tp_T_demi = T_demi;
+}
+
+// ============================================================
+// CHAÎNE TROPHIQUE (sol → végétaux → animaux → humain)
+// ============================================================
+function computeTrophique() {
+  const subname = state.v7.tr_substance;
+  const Csol = state.v7.tr_Csol;
+  const prop = PROPRIETES[subname] || {};
+  const vtr = VTR_SEUIL[subname] || {};
+  const eru = VTR_SANSSEUIL[subname] || {};
+  const p = state.params.adulte;
+  const foc = state.bat.foc || 0.006;
+
+  const logKow = prop.logKow || 2;
+  const Koc = prop.Koc || 100;
+  const Kd = Koc * foc;
+  const Cwater = Kd > 0 ? Csol / Kd : 0;
+
+  const Kow = Math.pow(10, logKow);
+  const BCF_racines = 0.82 + 0.0303 * Math.pow(Kow, 0.77);
+  const BCF_feuilles = Math.pow(10, 1.588 - 0.578 * logKow);
+  const BTF_viande = Math.pow(10, logKow - 7.6);
+  const BTF_lait = Math.pow(10, logKow - 8.1);
+  const BTF_oeufs = Math.pow(10, logKow - 7.0);
+
+  const C_racines = BCF_racines * Cwater;
+  const C_feuilles = BCF_feuilles * Csol;
+  const Dose_animal = Csol * 0.5 + C_feuilles * 16.9;
+  const C_viande = Dose_animal * BTF_viande;
+  const C_lait = Dose_animal * BTF_lait;
+  const C_oeufs = Dose_animal * BTF_oeufs;
+
+  // Rations ANSES INCA 3 adulte (g/j)
+  const rations = [
+    { produit: 'Légumes racines', ration: 31, conc: C_racines },
+    { produit: 'Légumes feuilles', ration: 25, conc: C_feuilles },
+    { produit: 'Fruits potager', ration: 60, conc: C_feuilles },
+    { produit: 'Viande bovine', ration: 78, conc: C_viande },
+    { produit: 'Lait/produits laitiers', ration: 240, conc: C_lait },
+    { produit: 'Œufs', ration: 20, conc: C_oeufs }
+  ];
+  let Dose_totale = 0;
+  rations.forEach(r => { r.dose = (r.ration * r.conc) / 1000; Dose_totale += r.dose; });
+
+  const DJE = Dose_totale / Math.max(p.P, 1);
+  const QD = vtr.oral > 0 ? DJE / vtr.oral : null;
+  const ERI = eru.oral > 0 ? DJE * eru.oral * p.ED / (p.AT_sansseuil || 70) : null;
+
+  state.v7.tr_results = {
+    logKow, Kd, Cwater, BCF_racines, BCF_feuilles, BTF_viande, BTF_lait, BTF_oeufs,
+    C_racines, C_feuilles, C_viande, C_lait, C_oeufs,
+    Dose_animal, rations, Dose_totale, DJE, QD, ERI
+  };
+}
+
+// ============================================================
+// EFFET DE MÉLANGE PAR ORGANE CIBLE (US EPA Mixture Risk 2000)
+// ============================================================
+function computeMelangeOrgane() {
+  const qdSubs = state.resultatsQD || {};
+  const organes = {};
+
+  Object.keys(qdSubs).forEach(name => {
+    const orgList = ORGANES_CIBLES[name] || ['—','—'];
+    const r = qdSubs[name];
+    // Somme tous QD: ingestion sol+eau, inhalation directe + J&E, contact
+    const qdTotal = (r.qd_ing_sol_ad || 0) + (r.qd_ing_eau_ad || 0)
+                  + (r.qd_inhal_ad || 0) + (r.qd_inhal_je_ad || 0)
+                  + (r.qd_contact_ad || 0);
+    if (qdTotal <= 0) return;
+    orgList.forEach(org => {
+      if (!org || org === '—') return;
+      if (!organes[org]) organes[org] = { hi: 0, substances: [] };
+      organes[org].hi += qdTotal;
+      organes[org].substances.push(name);
+    });
+  });
+
+  let HI_max = 0, SumQD_global = 0;
+  Object.values(organes).forEach(o => { HI_max = Math.max(HI_max, o.hi); });
+  Object.keys(qdSubs).forEach(name => {
+    const r = qdSubs[name];
+    SumQD_global += (r.qd_ing_sol_ad || 0) + (r.qd_ing_eau_ad || 0)
+                  + (r.qd_inhal_ad || 0) + (r.qd_inhal_je_ad || 0)
+                  + (r.qd_contact_ad || 0);
+  });
+
+  state.v7.org_results = { organes, HI_max, SumQD_global };
+}
+
+// ============================================================
+// HOOK : recalcul des modules V7 dans le pipeline principal
+// ============================================================
+const _origRecalculate = recalculate;
+recalculate = function() {
+  _origRecalculate();
+  try { computeInverse(); } catch(e) { console.error('computeInverse', e); }
+  try { computeTemporel(); } catch(e) { console.error('computeTemporel', e); }
+  try { computeTrophique(); } catch(e) { console.error('computeTrophique', e); }
+  try { computeMelangeOrgane(); } catch(e) { console.error('computeMelangeOrgane', e); }
+  if (activeTab && activeTab.startsWith && activeTab !== 'monte_carlo') {
+    // Monte-Carlo lancé à la demande seulement (lourd)
+  }
+};
+
+// ============================================================
+// RENDERERS V7
+// ============================================================
+
+function _verdict(qd, eri) {
+  if ((qd !== null && qd >= 1) || (eri !== null && eri >= 1e-5))
+    return '<span style="color:var(--red-text);font-weight:600">✗ Inacceptable</span>';
+  if ((qd !== null && qd >= 0.3) || (eri !== null && eri >= 1e-6))
+    return '<span style="color:var(--orange-text);font-weight:600">⚠ Vigilance</span>';
+  return '<span style="color:var(--green-text);font-weight:600">✓ Acceptable</span>';
+}
+
+// --- Calcul Inverse ---
+sheetRenderers.calcul_inverse = function() {
+  computeInverse();
+  const r = state.v7.inv_results;
+  const subs = Object.keys(VTR_SEUIL).concat(Object.keys(VTR_SANSSEUIL))
+    .filter((v, i, a) => a.indexOf(v) === i).sort();
+
+  let h = '<div class="sheet-title">Calcul Inverse — Concentration source admissible</div>';
+  h += '<div class="sheet-subtitle">Étant donné un QD ou ERI cible, calcule la concentration source maximale acceptable</div>';
+
+  h += '<div class="info-box"><h3>Principe méthodologique</h3>';
+  h += 'Inversion analytique des formules J&E + DJE + QD/ERI. Sortie : concentration admissible dans 3 milieux ';
+  h += '(sol-gaz, sol, eau souterraine) pour 3 cibles (adulte, enfant, salarié).';
+  h += '<br><br><code>Cair_max = QD_cible × VTR × 1000 × AT × 365 / (Fi × EF × ED)</code><br>';
+  h += '<code>Csol-gaz_max = Cair_max / α_eff</code> ·  <code>Cnappe_max = Csol-gaz_max / (H\' × 1000)</code>';
+  h += '</div>';
+
+  h += '<div class="table-wrap" style="max-width:760px"><table class="data-table"><thead><tr>';
+  h += '<th colspan="2" style="text-align:center">Paramètres d\'entrée</th></tr></thead><tbody>';
+  h += '<tr><td style="width:55%">Substance ciblée</td><td>';
+  h += '<select data-field="v7.inv_substance" style="width:100%;padding:0.3rem;background:var(--yellow);border:1px solid var(--yellow-border);border-radius:3px">';
+  subs.forEach(s => {
+    h += `<option value="${s}"${s === state.v7.inv_substance ? ' selected' : ''}>${s}</option>`;
+  });
+  h += '</select></td></tr>';
+  h += '<tr><td>Cible toxicologique</td><td>';
+  h += '<select data-field="v7.inv_cible" style="width:100%;padding:0.3rem;background:var(--yellow);border:1px solid var(--yellow-border);border-radius:3px">';
+  ['adulte','enfant','salarie'].forEach(c => {
+    h += `<option value="${c}"${c === state.v7.inv_cible ? ' selected' : ''}>${c.charAt(0).toUpperCase() + c.slice(1)}</option>`;
+  });
+  h += '</select></td></tr>';
+  h += `<tr><td>QD cible (effets à seuil)</td><td><input type="text" data-field="v7.inv_QD" value="${state.v7.inv_QD}" style="width:100%"></td></tr>`;
+  h += `<tr><td>ERI cible (effets sans seuil)</td><td><input type="text" data-field="v7.inv_ERI" value="${state.v7.inv_ERI}" style="width:100%"></td></tr>`;
+  h += '</tbody></table></div>';
+
+  h += '<div class="table-wrap" style="max-width:760px;margin-top:1rem"><table class="data-table"><thead><tr>';
+  h += '<th>VTR / ERU récupérés</th><th>Valeur</th><th>Unité</th></tr></thead><tbody>';
+  h += `<tr><td>VTR Inhalation</td><td class="computed">${fmtSci(r.VTR_inhal)}</td><td>mg/m³</td></tr>`;
+  h += `<tr><td>VTR Orale</td><td class="computed">${fmtSci(r.VTR_oral)}</td><td>mg/kg/j</td></tr>`;
+  h += `<tr><td>ERU Inhalation</td><td class="computed">${fmtSci(r.ERU_inhal)}</td><td>(µg/m³)⁻¹</td></tr>`;
+  h += `<tr><td>ERU Orale</td><td class="computed">${fmtSci(r.ERU_oral)}</td><td>(mg/kg/j)⁻¹</td></tr>`;
+  h += `<tr><td>α_eff (courant)</td><td class="computed">${fmtSci(r.alpha_eff)}</td><td>—</td></tr>`;
+  h += `<tr><td>H\' (Henry)</td><td class="computed">${fmt(r.Hprime, 3)}</td><td>—</td></tr>`;
+  h += '</tbody></table></div>';
+
+  h += '<div class="table-wrap" style="margin-top:1rem"><table class="data-table"><thead><tr>';
+  h += '<th>Voie</th><th>Effets à seuil (QD)</th><th>Effets sans seuil (ERI)</th><th>Unité</th></tr></thead><tbody>';
+  h += `<tr><td><strong>Cair intérieur max</strong></td><td class="computed val-yellow">${fmtSci(r.Cair_max_s)}</td><td class="computed val-yellow">${fmtSci(r.Cair_max_ss)}</td><td>µg/m³</td></tr>`;
+  h += `<tr><td><strong>Csol-gaz max (via α_eff)</strong></td><td class="computed val-yellow">${fmtSci(r.Csg_max_s)}</td><td class="computed val-yellow">${fmtSci(r.Csg_max_ss)}</td><td>µg/m³</td></tr>`;
+  h += `<tr><td><strong>Cnappe max (via Henry)</strong></td><td class="computed val-yellow">${fmtSci(r.Cnp_max_s)}</td><td class="computed val-yellow">${fmtSci(r.Cnp_max_ss)}</td><td>µg/L</td></tr>`;
+  h += `<tr><td><strong>Csol max (ingestion)</strong></td><td class="computed val-yellow">${fmtSci(r.Csol_max_s)}</td><td class="computed val-yellow">${fmtSci(r.Csol_max_ss)}</td><td>mg/kg MS</td></tr>`;
+  h += '</tbody></table></div>';
+
+  h += '<div class="info-box" style="background:#fff8e5;border-left:4px solid #d4a017"><strong>Recommandation :</strong> retenir la valeur la plus restrictive (toutes voies confondues) comme objectif de dépollution. Comparer aux concentrations mesurées sur site pour identifier les zones à traiter.</div>';
+
+  return h;
+};
+
+// --- Monte-Carlo ---
+sheetRenderers.monte_carlo = function() {
+  let h = '<div class="sheet-title">Monte-Carlo — Propagation des incertitudes</div>';
+  h += '<div class="sheet-subtitle">1000 tirages aléatoires sur les 8 paramètres incertains du modèle J&E</div>';
+
+  h += '<div class="info-box"><h3>Principe</h3>';
+  h += 'Propagation probabiliste des incertitudes via 1000 tirages aléatoires sur les paramètres clés ';
+  h += '(C₀, n, θw, kv, Lcrack, η, ER, H\'). Lois utilisées : log-normale (concentrations, perméabilité), ';
+  h += 'triangulaire (porosité, ER), uniforme (épaisseur). Sortie : médiane, percentiles, coefficient de variation.';
+  h += '<br><br><button onclick="computeMonteCarlo();renderActiveSheet()" style="margin-top:8px;padding:8px 20px;background:#1a5276;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;font-weight:600">🎲 Lancer 1000 tirages</button>';
+  h += '</div>';
+
+  if (!state.v7.mc_results) {
+    h += '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-style:italic">Cliquer sur "Lancer 1000 tirages" pour démarrer la simulation</div>';
+    return h;
+  }
+
+  const r = state.v7.mc_results;
+  h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:1rem 0">';
+  const kpis = [
+    ['Médiane P50', fmtSci(r.p50) + ' µg/m³', 'var(--blue)'],
+    ['P95 (conservatif)', fmtSci(r.p95) + ' µg/m³', '#9c0006'],
+    ['Coefficient variation', (r.cv * 100).toFixed(1) + '%', 'var(--blue-dark)'],
+    ['Ratio P95/P50', r.ratio.toFixed(2) + 'x', 'var(--blue-dark)']
+  ];
+  kpis.forEach(([lbl, val, col]) => {
+    h += `<div style="background:#fff;border:1px solid var(--border);border-top:4px solid ${col};border-radius:6px;padding:1rem;text-align:center">`;
+    h += `<div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">${lbl}</div>`;
+    h += `<div style="font-size:1.3rem;font-weight:700;color:${col};margin-top:4px">${val}</div></div>`;
+  });
+  h += '</div>';
+
+  h += '<div class="table-wrap" style="max-width:520px"><table class="data-table"><thead><tr>';
+  h += '<th>Statistique</th><th>Cindoor (µg/m³)</th></tr></thead><tbody>';
+  [
+    ['Min', r.min], ['P5 (5e percentile)', r.p5], ['Médiane (P50)', r.p50],
+    ['Moyenne', r.mean], ['P95 (95e percentile)', r.p95], ['Max', r.max],
+    ['Écart-type', r.std]
+  ].forEach(([lbl, v]) => {
+    h += `<tr><td>${lbl}</td><td class="computed">${fmtSci(v)}</td></tr>`;
+  });
+  h += '</tbody></table></div>';
+
+  h += '<canvas id="mc_canvas" width="900" height="280" style="margin-top:1rem;max-width:100%;border:1px solid var(--border);border-radius:6px;background:#fff"></canvas>';
+
+  h += '<div class="info-box" style="background:#fff8e5;border-left:4px solid #d4a017;margin-top:1rem"><strong>Recommandation INERIS :</strong> retenir le <strong>P95</strong> comme valeur conservative pour décision réglementaire. Si CV > 100%, multiplier les mesures avant conclusion.</div>';
+
+  setTimeout(() => drawMCHistogram(r.samples), 50);
+  return h;
+};
+
+function drawMCHistogram(samples) {
+  const canvas = document.getElementById('mc_canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const W = canvas.width, H = canvas.height, padding = 50;
+  const bins = 40;
+  const minV = samples[0], maxV = samples[samples.length - 1];
+  const range = maxV - minV;
+  const binSize = range / bins;
+  const counts = new Array(bins).fill(0);
+  samples.forEach(v => {
+    let b = Math.floor((v - minV) / binSize);
+    if (b >= bins) b = bins - 1;
+    counts[b]++;
+  });
+  const maxC = Math.max(...counts);
+
+  ctx.fillStyle = '#0e2f44';
+  ctx.font = 'bold 13px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('Distribution Cindoor (µg/m³) — 1000 tirages', W / 2, 22);
+
+  const barWidth = (W - 2 * padding) / bins;
+  ctx.fillStyle = '#1a5276';
+  for (let i = 0; i < bins; i++) {
+    const bh = (counts[i] / maxC) * (H - 2 * padding);
+    ctx.fillRect(padding + i * barWidth, H - padding - bh, barWidth - 1, bh);
+  }
+
+  ctx.strokeStyle = '#333';
+  ctx.beginPath();
+  ctx.moveTo(padding, padding);
+  ctx.lineTo(padding, H - padding);
+  ctx.lineTo(W - padding, H - padding);
+  ctx.stroke();
+
+  ctx.fillStyle = '#333';
+  ctx.font = '10px Segoe UI';
+  for (let i = 0; i <= 5; i++) {
+    const x = padding + (i / 5) * (W - 2 * padding);
+    const v = minV + (i / 5) * range;
+    ctx.fillText(fmtSci(v), x, H - padding + 16);
+  }
+
+  // Markers P5, P50, P95
+  const p5 = samples[Math.floor(samples.length * 0.05)];
+  const p50 = samples[Math.floor(samples.length * 0.50)];
+  const p95 = samples[Math.floor(samples.length * 0.95)];
+  [['P5', p5, '#6b6b66'], ['P50', p50, '#1a5276'], ['P95', p95, '#9c0006']].forEach(([lbl, val, col]) => {
+    const x = padding + ((val - minV) / range) * (W - 2 * padding);
+    ctx.strokeStyle = col;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(x, padding);
+    ctx.lineTo(x, H - padding);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = col;
+    ctx.font = 'bold 11px Segoe UI';
+    ctx.fillText(lbl, x, padding - 5);
+  });
+}
+
+// --- Temporel ---
+sheetRenderers.temporel = function() {
+  computeTemporel();
+  const sub = state.v7.tp_substance;
+  const series = state.v7.tp_series;
+  const subs = Object.keys(VTR_SEUIL).concat(Object.keys(VTR_SANSSEUIL))
+    .filter((v, i, a) => a.indexOf(v) === i).sort();
+
+  let h = '<div class="sheet-title">Simulation Temporelle — 70 ans</div>';
+  h += '<div class="sheet-subtitle">Évolution de la concentration source avec déplétion mass-balance et biodégradation 1er ordre</div>';
+
+  h += '<div class="info-box"><h3>Équation maîtresse</h3>';
+  h += '<code>C(t) = C₀ × exp(–(λ_depl + k_bio) × t)</code><br>';
+  h += 'avec <code>λ_depl = Qsoil × 3.15×10⁷ / Vsource</code> (déplétion mass-balance EPA)<br>';
+  h += 'et <code>k_bio</code> = constante cinétique 1er ordre (DeVaull 2007).';
+  h += '</div>';
+
+  h += '<div class="table-wrap" style="max-width:760px"><table class="data-table"><thead><tr>';
+  h += '<th colspan="3" style="text-align:center">Paramètres temporels</th></tr></thead><tbody>';
+  h += '<tr><td style="width:45%">Substance simulée</td><td colspan="2">';
+  h += '<select data-field="v7.tp_substance" style="width:100%;padding:0.3rem;background:var(--yellow);border:1px solid var(--yellow-border);border-radius:3px">';
+  subs.forEach(s => {
+    h += `<option value="${s}"${s === sub ? ' selected' : ''}>${s}</option>`;
+  });
+  h += '</select></td></tr>';
+  h += `<tr><td>C₀ (concentration initiale)</td><td><input type="text" data-field="v7.tp_C0" value="${state.v7.tp_C0}" style="width:100%"></td><td>µg/m³</td></tr>`;
+  h += `<tr><td>k_bio (biodégradation)</td><td><input type="text" data-field="v7.tp_kbio" value="${state.v7.tp_kbio}" style="width:100%"></td><td>an⁻¹</td></tr>`;
+  h += `<tr><td>Vsource (volume sol contaminé)</td><td><input type="text" data-field="v7.tp_Vsource" value="${state.v7.tp_Vsource}" style="width:100%"></td><td>m³</td></tr>`;
+  const kbioDefault = K_BIO[sub];
+  if (kbioDefault !== undefined) {
+    h += `<tr><td colspan="3" style="font-size:0.74rem;color:var(--text-muted);font-style:italic">Valeur recommandée DeVaull 2007 pour ${sub} : k_bio = ${kbioDefault} an⁻¹</td></tr>`;
+  }
+  h += '</tbody></table></div>';
+
+  // KPI synthèse
+  const at10 = series[10] || {}, at30 = series[30] || {}, at70 = series[70] || {};
+  h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:1rem 0">';
+  [
+    ['T½ (demi-vie)', fmt(state.v7.tp_T_demi, 2) + ' ans', 'var(--blue)'],
+    ['C source 10 ans', fmtSci(at10.Cs), 'var(--blue-dark)'],
+    ['C source 30 ans', fmtSci(at30.Cs), 'var(--blue-dark)'],
+    ['ERI vie entière', fmtSci(at70.ERI), '#9c0006']
+  ].forEach(([lbl, val, col]) => {
+    h += `<div style="background:#fff;border:1px solid var(--border);border-top:4px solid ${col};border-radius:6px;padding:1rem;text-align:center">`;
+    h += `<div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">${lbl}</div>`;
+    h += `<div style="font-size:1.3rem;font-weight:700;color:${col};margin-top:4px">${val}</div></div>`;
+  });
+  h += '</div>';
+
+  h += '<div class="table-wrap"><table class="data-table"><thead><tr>';
+  h += '<th>Année</th><th>C source (µg/m³)</th><th>Cindoor (µg/m³)</th><th>QD instant.</th><th>ERI cumulé</th><th>% restant</th></tr></thead><tbody>';
+  [0, 5, 10, 15, 20, 25, 30, 40, 50, 60, 70].forEach(t => {
+    const s = series[t];
+    if (!s) return;
+    h += `<tr><td>${s.t}</td><td class="computed">${fmtSci(s.Cs)}</td><td class="computed">${fmtSci(s.Ci)}</td>`;
+    h += `<td class="computed">${fmt(s.QD, 4)}</td><td class="computed">${fmtSci(s.ERI)}</td>`;
+    h += `<td class="computed">${(s.pct * 100).toFixed(1)}%</td></tr>`;
+  });
+  h += '</tbody></table></div>';
+
+  h += '<canvas id="tp_canvas" width="900" height="280" style="margin-top:1rem;max-width:100%;border:1px solid var(--border);border-radius:6px;background:#fff"></canvas>';
+
+  setTimeout(() => drawTemporelCurve(series), 50);
+  return h;
+};
+
+function drawTemporelCurve(series) {
+  const canvas = document.getElementById('tp_canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const W = canvas.width, H = canvas.height, padding = 55;
+  const maxC = Math.max(...series.map(s => s.Cs));
+  const maxT = series[series.length - 1].t;
+
+  ctx.fillStyle = '#0e2f44';
+  ctx.font = 'bold 13px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('Décroissance C source sur 70 ans', W / 2, 22);
+
+  ctx.strokeStyle = '#e0e0db';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 5; i++) {
+    const y = padding + (i / 5) * (H - 2 * padding);
+    ctx.beginPath();
+    ctx.moveTo(padding, y);
+    ctx.lineTo(W - padding, y);
+    ctx.stroke();
+  }
+
+  ctx.strokeStyle = '#333';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padding, padding);
+  ctx.lineTo(padding, H - padding);
+  ctx.lineTo(W - padding, H - padding);
+  ctx.stroke();
+
+  ctx.strokeStyle = '#1a5276';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  series.forEach((s, i) => {
+    const x = padding + (s.t / maxT) * (W - 2 * padding);
+    const y = H - padding - (s.Cs / maxC) * (H - 2 * padding);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(26, 82, 118, 0.15)';
+  ctx.lineTo(W - padding, H - padding);
+  ctx.lineTo(padding, H - padding);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.fillStyle = '#333';
+  ctx.font = '10px Segoe UI';
+  ctx.textAlign = 'center';
+  for (let i = 0; i <= 7; i++) {
+    const x = padding + (i / 7) * (W - 2 * padding);
+    ctx.fillText(Math.round((i / 7) * maxT) + ' ans', x, H - padding + 16);
+  }
+  ctx.textAlign = 'right';
+  for (let i = 0; i <= 4; i++) {
+    const y = padding + (i / 4) * (H - 2 * padding);
+    const v = maxC * (1 - i / 4);
+    ctx.fillText(fmtSci(v), padding - 6, y + 3);
+  }
+  ctx.save();
+  ctx.translate(15, H / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#6b6b66';
+  ctx.font = '10px Segoe UI';
+  ctx.fillText('C source (µg/m³)', 0, 0);
+  ctx.restore();
+}
+
+// --- Chaîne Trophique ---
+sheetRenderers.trophique = function() {
+  computeTrophique();
+  const r = state.v7.tr_results;
+  const sub = state.v7.tr_substance;
+  const subs = Object.keys(PROPRIETES).sort();
+
+  let h = '<div class="sheet-title">Chaîne Trophique — Sol → végétaux → animaux → humain</div>';
+  h += '<div class="sheet-subtitle">Modèles Trapp & Matthies (1995) pour végétaux, Travis & Arms (1988) pour produits animaux</div>';
+
+  h += '<div class="info-box"><h3>Modèles employés</h3>';
+  h += '<code>BCF_racines = 0.82 + 0.0303 × Kow^0.77</code> (Trapp & Matthies 1995)<br>';
+  h += '<code>BCF_feuilles = 10^(1.588 − 0.578 × logKow)</code> (Travis & Arms 1988)<br>';
+  h += '<code>BTF_viande = 10^(logKow − 7.6)</code> · <code>BTF_lait = 10^(logKow − 8.1)</code><br>';
+  h += 'Rations adultes par défaut : ANSES INCA 3';
+  h += '</div>';
+
+  h += '<div class="table-wrap" style="max-width:760px"><table class="data-table"><thead><tr>';
+  h += '<th colspan="3" style="text-align:center">Paramètres source</th></tr></thead><tbody>';
+  h += '<tr><td style="width:45%">Substance</td><td colspan="2">';
+  h += '<select data-field="v7.tr_substance" style="width:100%;padding:0.3rem;background:var(--yellow);border:1px solid var(--yellow-border);border-radius:3px">';
+  subs.forEach(s => {
+    h += `<option value="${s}"${s === sub ? ' selected' : ''}>${s}</option>`;
+  });
+  h += '</select></td></tr>';
+  h += `<tr><td>C sol (concentration sol)</td><td><input type="text" data-field="v7.tr_Csol" value="${state.v7.tr_Csol}" style="width:100%"></td><td>mg/kg MS</td></tr>`;
+  h += `<tr><td>log Kow (récupéré)</td><td class="computed">${fmt(r.logKow, 2)}</td><td>—</td></tr>`;
+  h += `<tr><td>Kd = Koc × foc</td><td class="computed">${fmt(r.Kd, 2)}</td><td>L/kg</td></tr>`;
+  h += `<tr><td>C eau interstitielle</td><td class="computed">${fmtSci(r.Cwater)}</td><td>mg/L</td></tr>`;
+  h += '</tbody></table></div>';
+
+  h += '<div class="table-wrap" style="margin-top:1rem"><table class="data-table"><thead><tr>';
+  h += '<th>Compartiment</th><th>Facteur transfert</th><th>Concentration</th><th>Unité</th></tr></thead><tbody>';
+  h += `<tr><td><strong>Racines (carottes, betteraves...)</strong></td><td class="computed">BCF=${fmt(r.BCF_racines, 3)}</td><td class="computed val-yellow">${fmtSci(r.C_racines)}</td><td>mg/kg MF</td></tr>`;
+  h += `<tr><td><strong>Feuilles / fruits</strong></td><td class="computed">BCF=${fmtSci(r.BCF_feuilles)}</td><td class="computed val-yellow">${fmtSci(r.C_feuilles)}</td><td>mg/kg MS</td></tr>`;
+  h += `<tr><td><strong>Viande bovine</strong></td><td class="computed">BTF=${fmtSci(r.BTF_viande)}</td><td class="computed val-yellow">${fmtSci(r.C_viande)}</td><td>mg/kg MS</td></tr>`;
+  h += `<tr><td><strong>Lait</strong></td><td class="computed">BTF=${fmtSci(r.BTF_lait)}</td><td class="computed val-yellow">${fmtSci(r.C_lait)}</td><td>mg/L</td></tr>`;
+  h += `<tr><td><strong>Œufs</strong></td><td class="computed">BTF=${fmtSci(r.BTF_oeufs)}</td><td class="computed val-yellow">${fmtSci(r.C_oeufs)}</td><td>mg/kg</td></tr>`;
+  h += '</tbody></table></div>';
+
+  h += '<div class="table-wrap" style="margin-top:1rem"><table class="data-table"><thead><tr>';
+  h += '<th>Produit alimentaire</th><th>Ration (g/j)</th><th>Concentration (mg/kg)</th><th>Dose (mg/j)</th></tr></thead><tbody>';
+  r.rations.forEach(rt => {
+    h += `<tr><td>${rt.produit}</td><td>${rt.ration}</td><td class="computed">${fmtSci(rt.conc)}</td><td class="computed">${fmtSci(rt.dose)}</td></tr>`;
+  });
+  h += `<tr class="sum-row"><td><strong>DOSE TOTALE</strong></td><td>—</td><td>—</td><td class="computed"><strong>${fmtSci(r.Dose_totale)}</strong></td></tr>`;
+  h += '</tbody></table></div>';
+
+  h += '<div class="table-wrap" style="max-width:760px;margin-top:1rem"><table class="data-table"><thead><tr>';
+  h += '<th>Indicateur</th><th>Valeur</th><th>Critère</th><th>Statut</th></tr></thead><tbody>';
+  h += `<tr><td>DJE trophique</td><td class="computed">${fmtSci(r.DJE)} mg/kg/j</td><td>—</td><td>—</td></tr>`;
+  h += `<tr><td>QD trophique (effets à seuil)</td><td class="computed">${fmt(r.QD, 4)}</td><td>< 1</td><td>${_verdict(r.QD, null)}</td></tr>`;
+  h += `<tr><td>ERI trophique (sans seuil)</td><td class="computed">${fmtSci(r.ERI)}</td><td>< 10⁻⁶</td><td>${_verdict(null, r.ERI)}</td></tr>`;
+  h += '</tbody></table></div>';
+
+  return h;
+};
+
+// --- Mélange par organe ---
+sheetRenderers.melange_organe = function() {
+  computeMelangeOrgane();
+  const r = state.v7.org_results;
+
+  let h = '<div class="sheet-title">Effet de mélange par organe cible</div>';
+  h += '<div class="sheet-subtitle">Index de Danger (HI) par organe selon US EPA Mixture Risk Assessment (2000)</div>';
+
+  h += '<div class="info-box"><h3>Principe</h3>';
+  h += 'Selon l\'US EPA, les QD doivent être sommés <strong>uniquement pour les substances ciblant le même organe</strong>. ';
+  h += 'La somme classique des QD (mode EQRS standard) est conservative mais surestime le risque si différents organes sont ciblés. ';
+  h += 'Cette table calcule un HI par organe à partir des données de votre site.';
+  h += '<br><br><code>HI_organe = Σ QD_i pour les substances i ciblant cet organe</code> · Critère : <strong>HI < 1 par organe</strong>';
+  h += '</div>';
+
+  const organesArr = Object.entries(r.organes || {}).sort((a, b) => b[1].hi - a[1].hi);
+
+  if (organesArr.length === 0) {
+    h += '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-style:italic">Aucun QD calculé. Saisir des concentrations dans l\'onglet "Concentrations" pour activer ce module.</div>';
+    return h;
+  }
+
+  // KPI
+  h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1rem 0">';
+  [
+    ['HI max par organe', fmt(r.HI_max, 3), '#9c0006'],
+    ['Σ QD globale (EQRS std)', fmt(r.SumQD_global, 3), 'var(--blue-dark)'],
+    ['Différence (sur-estim.)', fmt(r.SumQD_global - r.HI_max, 3), 'var(--orange-text)']
+  ].forEach(([lbl, val, col]) => {
+    h += `<div style="background:#fff;border:1px solid var(--border);border-top:4px solid ${col};border-radius:6px;padding:1rem;text-align:center">`;
+    h += `<div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">${lbl}</div>`;
+    h += `<div style="font-size:1.3rem;font-weight:700;color:${col};margin-top:4px">${val}</div></div>`;
+  });
+  h += '</div>';
+
+  h += '<div class="table-wrap"><table class="data-table"><thead><tr>';
+  h += '<th>Organe-cible</th><th>HI (Σ QD)</th><th>Nb substances</th><th>Critère</th><th>Statut</th><th>Substances contributrices</th></tr></thead><tbody>';
+
+  organesArr.forEach(([org, data]) => {
+    h += `<tr><td><strong>${org}</strong></td>`;
+    h += `<td class="computed">${fmt(data.hi, 4)}</td>`;
+    h += `<td>${data.substances.length}</td>`;
+    h += '<td>HI < 1</td>';
+    h += `<td>${_verdict(data.hi, null)}</td>`;
+    h += `<td style="font-size:0.74rem">${data.substances.join(', ')}</td></tr>`;
+  });
+  h += `<tr class="sum-row"><td><strong>HI MAX</strong></td><td class="computed"><strong>${fmt(r.HI_max, 3)}</strong></td><td colspan="4">—</td></tr>`;
+  h += `<tr><td><strong>Σ QD globale (EQRS standard)</strong></td><td class="computed">${fmt(r.SumQD_global, 3)}</td><td colspan="4" style="font-style:italic;color:var(--text-muted)">Comparaison : sur-estimation par rapport à l'approche par organe</td></tr>`;
+  h += '</tbody></table></div>';
+
+  h += '<div class="info-box" style="background:#fff8e5;border-left:4px solid #d4a017"><strong>Interprétation :</strong> si <code>HI max < 1</code> mais <code>Σ QD globale > 1</code>, cela signifie que l\'approche EQRS standard surestime le risque réel. L\'approche par organe (US EPA 2000) est scientifiquement plus défendable et peut éviter des actions de dépollution déraisonnables.</div>';
+
+  return h;
+};
 
 // ============================================================
 // EXPORT PDF
