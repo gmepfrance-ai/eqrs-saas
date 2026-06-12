@@ -22,6 +22,10 @@ import TarifsPage from "@/pages/tarifs";
 import ContactPage from "@/pages/contact";
 import MentionsLegalesPage from "@/pages/mentions-legales";
 import CgvPage from "@/pages/cgv";
+import EqrsV3105EcotoxPage from "@/pages/eqrs-v31-05-ecotox";
+import RabattementV1585Page from "@/pages/rabattement-v15-85";
+import TsnTransfertSolNappePage from "@/pages/tsn-transfert-sol-nappe";
+import SchemaConceptuelPage from "@/pages/schema-conceptuel";
 import NotFound from "@/pages/not-found";
 
 const API_BASE_TRACK = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
@@ -61,6 +65,10 @@ function AppRouter() {
       <Route path="/contact" component={ContactPage} />
       <Route path="/mentions-legales" component={MentionsLegalesPage} />
       <Route path="/cgv" component={CgvPage} />
+      <Route path="/eqrs-v31-05-ecotox" component={EqrsV3105EcotoxPage} />
+      <Route path="/rabattement-v15-85" component={RabattementV1585Page} />
+      <Route path="/tsn-transfert-sol-nappe" component={TsnTransfertSolNappePage} />
+      <Route path="/schema-conceptuel" component={SchemaConceptuelPage} />
       <Route component={NotFound} />
     </Switch>
   );
