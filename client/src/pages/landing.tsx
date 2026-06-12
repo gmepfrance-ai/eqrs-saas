@@ -77,6 +77,102 @@ export default function LandingPage() {
             <p>{t("v2.tools.subtitle")}</p>
           </div>
           <div className="v2-tools-grid">
+            {/* Carte NOUVELLE 1 : EQRS V31.05 + ECOTOX V8 */}
+            <article className="v2-tool-card">
+              <span className="v2-badge">{t("v2.tools.eqrs_v31.badge")}</span>
+              <div className="v2-tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <circle cx="16" cy="16" r="13" stroke="#1a5276" strokeWidth="2" />
+                  <path d="M16 9v7l5 3" stroke="#39e07a" strokeWidth="2" strokeLinecap="round" />
+                  <circle cx="16" cy="16" r="2" fill="#39e07a" />
+                </svg>
+              </div>
+              <h3>{t("v2.tools.eqrs_v31.title")}</h3>
+              <p>{t("v2.tools.eqrs_v31.desc")}</p>
+              <p style={{ marginTop: "0.5rem", fontSize: "0.92rem", color: "#1a2b4a", fontWeight: 500 }}>
+                ✓ {t("v2.tools.eqrs_v31.feat1")}<br />
+                ✓ {t("v2.tools.eqrs_v31.feat2")}<br />
+                ✓ {t("v2.tools.eqrs_v31.feat3")}
+              </p>
+              <div className="v2-tool-price">{t("v2.tools.eqrs_v31.price")}</div>
+              <a href="#/eqrs-v31-05-ecotox" className="v2-btn v2-btn-blue">
+                {t("v2.tools.eqrs_v31.cta")}
+              </a>
+            </article>
+
+            {/* Carte NOUVELLE 2 : Rabattement V15.85 multicouche IA */}
+            <article className="v2-tool-card">
+              <span className="v2-badge">{t("v2.tools.rabattement_v15.badge")}</span>
+              <div className="v2-tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <path d="M3 12h26" stroke="#2563eb" strokeWidth="1.5" strokeDasharray="2 2" />
+                  <path d="M3 20h26" stroke="#2563eb" strokeWidth="1.5" strokeDasharray="2 2" />
+                  <rect x="14" y="3" width="4" height="22" rx="1" fill="#1a2b4a" />
+                  <path d="M16 13c-2 2-3.5 4.5-3.5 7a3.5 3.5 0 007 0c0-2.5-1.5-5-3.5-7z" fill="#39e07a" />
+                </svg>
+              </div>
+              <h3>{t("v2.tools.rabattement_v15.title")}</h3>
+              <p>{t("v2.tools.rabattement_v15.desc")}</p>
+              <p style={{ marginTop: "0.5rem", fontSize: "0.92rem", color: "#1a2b4a", fontWeight: 500 }}>
+                ✓ {t("v2.tools.rabattement_v15.feat1")}<br />
+                ✓ {t("v2.tools.rabattement_v15.feat2")}<br />
+                ✓ {t("v2.tools.rabattement_v15.feat3")}
+              </p>
+              <div className="v2-tool-price">{t("v2.tools.rabattement_v15.price")}</div>
+              <a href="#/rabattement-v15-85" className="v2-btn v2-btn-blue">
+                {t("v2.tools.rabattement_v15.cta")}
+              </a>
+            </article>
+
+            {/* Carte NOUVELLE 3 : TSN Transfert Sol → Nappe */}
+            <article className="v2-tool-card">
+              <span className="v2-badge">{t("v2.tools.tsn_new.badge")}</span>
+              <div className="v2-tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <rect x="2" y="6" width="28" height="6" rx="1" fill="#a16207" />
+                  <rect x="2" y="12" width="28" height="6" rx="1" fill="#2563eb" opacity="0.7" />
+                  <rect x="2" y="18" width="28" height="8" rx="1" fill="#1a2b4a" />
+                  <circle cx="24" cy="22" r="3" fill="none" stroke="#39e07a" strokeWidth="1.5" />
+                  <path d="M8 22h10" stroke="#39e07a" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </div>
+              <h3>{t("v2.tools.tsn_new.title")}</h3>
+              <p>{t("v2.tools.tsn_new.desc")}</p>
+              <p style={{ marginTop: "0.5rem", fontSize: "0.92rem", color: "#1a2b4a", fontWeight: 500 }}>
+                ✓ {t("v2.tools.tsn_new.feat1")}<br />
+                ✓ {t("v2.tools.tsn_new.feat2")}<br />
+                ✓ {t("v2.tools.tsn_new.feat3")}
+              </p>
+              <div className="v2-tool-price">{t("v2.tools.tsn_new.price")}</div>
+              <a href="#/tsn-transfert-sol-nappe" className="v2-btn v2-btn-blue">
+                {t("v2.tools.tsn_new.cta")}
+              </a>
+            </article>
+
+            {/* Carte NOUVELLE 4 : Schéma Conceptuel IEM + PG */}
+            <article className="v2-tool-card">
+              <span className="v2-badge">{t("v2.tools.schema.badge")}</span>
+              <div className="v2-tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <rect x="2" y="11" width="8" height="10" rx="1.5" fill="#c0392b" opacity="0.85" />
+                  <rect x="12" y="11" width="8" height="10" rx="1.5" fill="#d97706" opacity="0.85" />
+                  <rect x="22" y="11" width="8" height="10" rx="1.5" fill="#1a5276" opacity="0.85" />
+                  <path d="M10 16h2M20 16h2" stroke="#39e07a" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </div>
+              <h3>{t("v2.tools.schema.title")}</h3>
+              <p>{t("v2.tools.schema.desc")}</p>
+              <p style={{ marginTop: "0.5rem", fontSize: "0.92rem", color: "#1a2b4a", fontWeight: 500 }}>
+                ✓ {t("v2.tools.schema.feat1")}<br />
+                ✓ {t("v2.tools.schema.feat2")}<br />
+                ✓ {t("v2.tools.schema.feat3")}
+              </p>
+              <div className="v2-tool-price">{t("v2.tools.schema.price")}</div>
+              <a href="#/schema-conceptuel" className="v2-btn v2-btn-blue">
+                {t("v2.tools.schema.cta")}
+              </a>
+            </article>
+
             {/* Carte 1 : EQRS J&E */}
             <article className="v2-tool-card">
               <div className="v2-tool-icon" aria-hidden="true">
