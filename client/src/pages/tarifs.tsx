@@ -35,6 +35,104 @@ export default function TarifsPage() {
       <section className="v2-section">
         <div className="container">
           <div className="v2-pricing-grid">
+            {/* NOUVEAU — EQRS V31.05 + ECOTOX V8 */}
+            <div className="v2-price-card featured">
+              <span className="v2-badge">{t("tarifs.eqrsV31.badge")}</span>
+              <h3>{t("v2.tools.eqrs_v31.title")}</h3>
+              <p className="sub">{t("tarifs.eqrsV31.sub")}</p>
+              <div className="v2-price-amount">
+                <span className="currency">€</span>395
+              </div>
+              <div className="v2-price-period">{t("tarifs.eqrsMonthly.period")}</div>
+              <ul className="v2-price-features">
+                <li>{t("tarifs.eqrsV31.f1")}</li>
+                <li>{t("tarifs.eqrsV31.f2")}</li>
+                <li>{t("tarifs.eqrsV31.f3")}</li>
+                <li>{t("tarifs.eqrsV31.f4")}</li>
+              </ul>
+              <button
+                className="v2-btn v2-btn-primary v2-btn-block"
+                onClick={() => startPlan("eqrs_v31_ecotox_monthly", "#/register")}
+              >
+                {t("tarifs.subscribe")}
+              </button>
+            </div>
+
+            {/* NOUVEAU — Rabattement V15.85 multicouche IA */}
+            <div className="v2-price-card">
+              <span className="v2-badge" style={{ background: "#2563eb", color: "#fff" }}>
+                {t("tarifs.rabattementV15.badge")}
+              </span>
+              <h3>{t("v2.tools.rabattement_v15.title")}</h3>
+              <p className="sub">{t("tarifs.rabattementV15.sub")}</p>
+              <div className="v2-price-amount">
+                <span className="currency">€</span>1 500
+              </div>
+              <div className="v2-price-period">{t("tarifs.tsn.period")}</div>
+              <ul className="v2-price-features">
+                <li>{t("tarifs.rabattementV15.f1")}</li>
+                <li>{t("tarifs.rabattementV15.f2")}</li>
+                <li>{t("tarifs.rabattementV15.f3")}</li>
+                <li>{t("tarifs.rabattementV15.f4")}</li>
+              </ul>
+              <button
+                className="v2-btn v2-btn-blue v2-btn-block"
+                onClick={() => startPlan("rabattement_annual", "#/register")}
+              >
+                {t("tarifs.subscribe")}
+              </button>
+            </div>
+
+            {/* NOUVEAU — TSN Transfert Sol → Nappe */}
+            <div className="v2-price-card">
+              <span className="v2-badge" style={{ background: "#2563eb", color: "#fff" }}>
+                {t("tarifs.tsnNew.badge")}
+              </span>
+              <h3>{t("v2.tools.tsn_new.title")}</h3>
+              <p className="sub">{t("tarifs.tsnNew.sub")}</p>
+              <div className="v2-price-amount">
+                <span className="currency">€</span>1 100
+              </div>
+              <div className="v2-price-period">{t("tarifs.tsn.period")}</div>
+              <ul className="v2-price-features">
+                <li>{t("tarifs.tsnNew.f1")}</li>
+                <li>{t("tarifs.tsnNew.f2")}</li>
+                <li>{t("tarifs.tsnNew.f3")}</li>
+                <li>{t("tarifs.tsnNew.f4")}</li>
+              </ul>
+              <button
+                className="v2-btn v2-btn-blue v2-btn-block"
+                onClick={() => startPlan("tsn_annual", "#/register")}
+              >
+                {t("tarifs.subscribe")}
+              </button>
+            </div>
+
+            {/* NOUVEAU — Schéma Conceptuel IEM + PG */}
+            <div className="v2-price-card">
+              <span className="v2-badge" style={{ background: "#2563eb", color: "#fff" }}>
+                {t("tarifs.schema.badge")}
+              </span>
+              <h3>{t("v2.tools.schema.title")}</h3>
+              <p className="sub">{t("tarifs.schema.sub")}</p>
+              <div className="v2-price-amount">
+                <span className="currency">€</span>850
+              </div>
+              <div className="v2-price-period">{t("tarifs.tsn.period")}</div>
+              <ul className="v2-price-features">
+                <li>{t("tarifs.schema.f1")}</li>
+                <li>{t("tarifs.schema.f2")}</li>
+                <li>{t("tarifs.schema.f3")}</li>
+                <li>{t("tarifs.schema.f4")}</li>
+              </ul>
+              <button
+                className="v2-btn v2-btn-blue v2-btn-block"
+                onClick={() => startPlan("schema_conceptuel_annual", "#/register")}
+              >
+                {t("tarifs.subscribe")}
+              </button>
+            </div>
+
             {/* J&E Mensuel */}
             <div className="v2-price-card">
               <h3>{t("v2.tools.eqrs.title")}</h3>
