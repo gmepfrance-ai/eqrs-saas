@@ -104,6 +104,22 @@ export function V2Header() {
                 {t("nav.tools.rabattement")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.rabattement.desc")}</span>
               </a>
+              <a href="#/eqrs-v31-05-ecotox" onClick={() => setDropdownOpen(false)}>
+                {t("nav.tools.eqrsEcotox")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.eqrsEcotox.desc")}</span>
+              </a>
+              <a href="#/rabattement-v15-85" onClick={() => setDropdownOpen(false)}>
+                {t("nav.tools.rabattement1585")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.rabattement1585.desc")}</span>
+              </a>
+              <a href="#/tsn-transfert-sol-nappe" onClick={() => setDropdownOpen(false)}>
+                {t("nav.tools.tsnSolNappe")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.tsnSolNappe.desc")}</span>
+              </a>
+              <a href="#/schema-conceptuel" onClick={() => setDropdownOpen(false)}>
+                {t("nav.tools.schemaConceptuel")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.schemaConceptuel.desc")}</span>
+              </a>
             </div>
           </div>
           <a href="#/tarifs">{t("nav.pricing")}</a>
