@@ -5,7 +5,12 @@ import { V2Footer } from "@/components/v2-footer";
 export default function TsnTransfertSolNappePage() {
   function subscribe() {
     localStorage.setItem("pending_plan", "tsn_annual");
-    window.location.hash = "#/register";
+    window.location.hash = "#/subscribe-tsn";
+  }
+
+  function startTrial() {
+    localStorage.setItem("pending_plan", "tsn_trial");
+    window.location.hash = "#/subscribe-tsn";
   }
 
   const cellTd: React.CSSProperties = { padding: "8px", border: "1px solid #d1dce8" };
@@ -36,7 +41,7 @@ export default function TsnTransfertSolNappePage() {
                 <button className="v2-btn v2-btn-primary" style={{ cursor: "pointer", border: "none" }} onClick={subscribe}>
                   S'abonner — 1 100 € HT/an
                 </button>
-                <a href="#/register" className="v2-btn v2-btn-outline">Essai gratuit 14 jours</a>
+                <button className="v2-btn v2-btn-outline" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 14 jours</button>
                 <a href="#/contact" className="v2-btn v2-btn-outline">Démo sur demande</a>
               </div>
             </div>
@@ -202,7 +207,7 @@ export default function TsnTransfertSolNappePage() {
             </div>
           </div>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginTop: 24 }}>
-            <a href="#/register" className="v2-btn v2-btn-ghost">Essai gratuit 14 jours</a>
+            <button className="v2-btn v2-btn-ghost" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 14 jours</button>
             <a href="#/contact" className="v2-btn v2-btn-ghost">Démo sur demande</a>
           </div>
         </div>

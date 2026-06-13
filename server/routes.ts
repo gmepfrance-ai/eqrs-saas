@@ -58,6 +58,10 @@ const STRIPE_PRICE_TSN_ANNUAL =
   process.env.STRIPE_PRICE_TSN_ANNUAL || "price_1TOK7o3A2g3lkch9UDnnjOWw";
 const STRIPE_PRICE_RABATTEMENT_ANNUAL =
   process.env.STRIPE_PRICE_RABATTEMENT_ANNUAL || "price_1TZT293A2g3lkch9bGF7hcgA";
+const STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY =
+  process.env.STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY || "";
+const STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL =
+  process.env.STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL || "";
 const STRIPE_WEBHOOK_SECRET =
   process.env.STRIPE_WEBHOOK_SECRET || "whsec_placeholder";
 
@@ -691,6 +695,8 @@ export async function registerRoutes(
           plan === "rabattement_annual" ? STRIPE_PRICE_RABATTEMENT_ANNUAL :
           plan === "tsn_annual" ? STRIPE_PRICE_TSN_ANNUAL :
           plan === "annual" ? STRIPE_PRICE_ANNUAL :
+          plan === "eqrs_v31_ecotox_monthly" ? STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY :
+          plan === "schema_conceptuel_annual" ? STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL :
           STRIPE_PRICE_MONTHLY;
 
 
@@ -698,6 +704,8 @@ export async function registerRoutes(
         const tool =
           plan === "rabattement_annual" ? "rabattement" :
           plan === "tsn_annual" ? "tsn" :
+          plan === "eqrs_v31_ecotox_monthly" ? "eqrs_v31" :
+          plan === "schema_conceptuel_annual" ? "schema" :
           "je";
 
         // Chercher un abonnement existant pour ce tool (ou récupérer le customerId existant)
@@ -790,10 +798,14 @@ export async function registerRoutes(
           const plan =
             priceIdFromStripe === STRIPE_PRICE_RABATTEMENT_ANNUAL ? "rabattement_annual" :
             priceIdFromStripe === STRIPE_PRICE_TSN_ANNUAL ? "tsn_annual" :
+            (STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY && priceIdFromStripe === STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY) ? "eqrs_v31_ecotox_monthly" :
+            (STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL && priceIdFromStripe === STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL) ? "schema_conceptuel_annual" :
             priceIdFromStripe === STRIPE_PRICE_ANNUAL ? "annual" : "monthly";
           const tool =
             plan === "rabattement_annual" ? "rabattement" :
             plan === "tsn_annual" ? "tsn" :
+            plan === "eqrs_v31_ecotox_monthly" ? "eqrs_v31" :
+            plan === "schema_conceptuel_annual" ? "schema" :
             "je";
 
           // Chercher d'abord par stripe_subscription_id (le plus précis)
@@ -1122,6 +1134,132 @@ export async function registerRoutes(
       } catch (err: any) {
         return res.status(500).json({ message: err.message });
       }
+    }
+  );
+
+  // ── EQRS V31.05 + ECOTOX Trial : activer essai 14 jours ────────────────
+  app.post(
+    "/api/eqrs-v31-ecotox-trial/activate",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      try {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const existing = subs.find(s => s.tool === "eqrs_v31");
+        if (existing && (existing.status === "active" || existing.status === "trialing")) {
+          return res.status(409).json({ message: "Vous avez déjà un accès EQRS V31.05 + ECOTOX actif ou en cours d'essai." });
+        }
+        const trialEnd = new Date();
+        trialEnd.setDate(trialEnd.getDate() + 14);
+        let sub;
+        if (existing) {
+          sub = await storage.updateSubscription(existing.id, {
+            status: "trialing",
+            plan: "eqrs_v31_ecotox_trial",
+            tool: "eqrs_v31",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        } else {
+          sub = await storage.createSubscription(req.user!.id, {
+            status: "trialing",
+            plan: "eqrs_v31_ecotox_trial",
+            tool: "eqrs_v31",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        }
+        return res.json({ message: "Essai EQRS V31.05 + ECOTOX activé (14 jours)", subscription: sub });
+      } catch (err: any) {
+        return res.status(500).json({ message: err.message });
+      }
+    }
+  );
+
+  // ── EQRS V31.05 + ECOTOX Tool : accès outil (essai ou abonné) ──────────
+  app.get(
+    "/api/eqrs-v31-ecotox-tool",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      if (!eqrsToolHtml) return res.status(500).json({ message: "Outil EQRS non disponible" });
+      if (!isAdminEmail((req.user as any).email)) {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const toolSub = subs.find(s => s.tool === "eqrs_v31" && (s.status === "active" || s.status === "trialing"));
+        if (!toolSub) {
+          return res.status(403).json({ message: "Abonnement EQRS V31.05 + ECOTOX requis pour accéder à cet outil." });
+        }
+        if (toolSub.status === "trialing" && toolSub.currentPeriodEnd && new Date(toolSub.currentPeriodEnd) < new Date()) {
+          return res.status(403).json({ message: "Votre période d'essai de 14 jours est terminée. Souscrivez pour continuer." });
+        }
+      }
+      res.setHeader("X-Frame-Options", "SAMEORIGIN");
+      res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://unpkg.com"
+      );
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.send(protectToolHtml(eqrsToolHtml));
+    }
+  );
+
+  // ── Schéma Conceptuel Trial : activer essai 14 jours ───────────────────
+  app.post(
+    "/api/schema-conceptuel-trial/activate",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      try {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const existing = subs.find(s => s.tool === "schema");
+        if (existing && (existing.status === "active" || existing.status === "trialing")) {
+          return res.status(409).json({ message: "Vous avez déjà un accès Schéma Conceptuel actif ou en cours d'essai." });
+        }
+        const trialEnd = new Date();
+        trialEnd.setDate(trialEnd.getDate() + 14);
+        let sub;
+        if (existing) {
+          sub = await storage.updateSubscription(existing.id, {
+            status: "trialing",
+            plan: "schema_conceptuel_trial",
+            tool: "schema",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        } else {
+          sub = await storage.createSubscription(req.user!.id, {
+            status: "trialing",
+            plan: "schema_conceptuel_trial",
+            tool: "schema",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        }
+        return res.json({ message: "Essai Schéma Conceptuel activé (14 jours)", subscription: sub });
+      } catch (err: any) {
+        return res.status(500).json({ message: err.message });
+      }
+    }
+  );
+
+  // ── Schéma Conceptuel Tool : accès outil (essai ou abonné) ─────────────
+  app.get(
+    "/api/schema-conceptuel-tool",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      if (!eqrsToolHtml) return res.status(500).json({ message: "Outil Schéma Conceptuel non disponible" });
+      if (!isAdminEmail((req.user as any).email)) {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const toolSub = subs.find(s => s.tool === "schema" && (s.status === "active" || s.status === "trialing"));
+        if (!toolSub) {
+          return res.status(403).json({ message: "Abonnement Schéma Conceptuel requis pour accéder à cet outil." });
+        }
+        if (toolSub.status === "trialing" && toolSub.currentPeriodEnd && new Date(toolSub.currentPeriodEnd) < new Date()) {
+          return res.status(403).json({ message: "Votre période d'essai de 14 jours est terminée. Souscrivez pour continuer." });
+        }
+      }
+      res.setHeader("X-Frame-Options", "SAMEORIGIN");
+      res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://unpkg.com"
+      );
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.send(protectToolHtml(eqrsToolHtml));
     }
   );
 

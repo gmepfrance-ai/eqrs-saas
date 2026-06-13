@@ -58,6 +58,16 @@ export default function DashboardPage() {
           .then(r => r.json())
           .then(() => { window.location.href = `/api/rabattement-tool?token=${token}`; })
           .catch(() => { window.location.hash = "#/subscribe-rabattement"; });
+      } else if (plan === "eqrs_v31_ecotox_trial") {
+        fetch(`/api/eqrs-v31-ecotox-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
+          .then(r => r.json())
+          .then(() => { window.location.href = `/api/eqrs-v31-ecotox-tool?token=${token}`; })
+          .catch(() => { window.location.hash = "#/subscribe-eqrs-v31-ecotox"; });
+      } else if (plan === "schema_conceptuel_trial") {
+        fetch(`/api/schema-conceptuel-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
+          .then(r => r.json())
+          .then(() => { window.location.href = `/api/schema-conceptuel-tool?token=${token}`; })
+          .catch(() => { window.location.hash = "#/subscribe-schema-conceptuel"; });
       } else {
         handleCheckout(plan);
       }

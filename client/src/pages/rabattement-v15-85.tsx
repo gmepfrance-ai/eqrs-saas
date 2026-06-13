@@ -5,7 +5,12 @@ import { V2Footer } from "@/components/v2-footer";
 export default function RabattementV1585Page() {
   function subscribe() {
     localStorage.setItem("pending_plan", "rabattement_annual");
-    window.location.hash = "#/register";
+    window.location.hash = "#/subscribe-rabattement";
+  }
+
+  function startTrial() {
+    localStorage.setItem("pending_plan", "rabattement_trial");
+    window.location.hash = "#/subscribe-rabattement";
   }
 
   const cellTd: React.CSSProperties = { padding: "8px", border: "1px solid #d1dce8" };
@@ -36,7 +41,7 @@ export default function RabattementV1585Page() {
                 <button className="v2-btn v2-btn-primary" style={{ cursor: "pointer", border: "none" }} onClick={subscribe}>
                   S'abonner — 1 500 € HT/an
                 </button>
-                <a href="#/register" className="v2-btn v2-btn-outline">Essai gratuit 14 jours</a>
+                <button className="v2-btn v2-btn-outline" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 14 jours</button>
                 <a href="#/contact" className="v2-btn v2-btn-outline">Démo sur demande</a>
               </div>
             </div>
@@ -206,7 +211,7 @@ export default function RabattementV1585Page() {
             </div>
           </div>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginTop: 24 }}>
-            <a href="#/register" className="v2-btn v2-btn-ghost">Essai gratuit 14 jours</a>
+            <button className="v2-btn v2-btn-ghost" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 14 jours</button>
             <a href="#/contact" className="v2-btn v2-btn-ghost">Démo sur demande</a>
           </div>
         </div>
