@@ -1,16 +1,37 @@
 import { V2Header } from "@/components/v2-header";
 import { V2Footer } from "@/components/v2-footer";
+import { useAuth } from "@/lib/auth";
 
 /** Page produit — Rabattement V15.85 (modélisation multicouche IA + Loi sur l'Eau) */
 export default function RabattementV1585Page() {
+  const { user, token } = useAuth();
+
   function subscribe() {
     localStorage.setItem("pending_plan", "rabattement_annual");
     window.location.hash = "#/subscribe-rabattement";
   }
 
-  function startTrial() {
-    localStorage.setItem("pending_plan", "rabattement_trial");
-    window.location.hash = "#/subscribe-rabattement";
+  async function startTrial() {
+    if (!user || !token) {
+      localStorage.setItem("pending_plan", "rabattement_trial");
+      window.location.hash = "#/register";
+      return;
+    }
+    try {
+      const res = await fetch(`/api/rabattement-trial/activate?token=${token}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      // Si 409 (essai déjà actif) ou succès, on ouvre directement l'outil
+      if (res.ok || res.status === 409) {
+        window.location.href = `/api/rabattement-tool?token=${token}`;
+        return;
+      }
+      // Erreur réelle → page subscribe pour traiter
+      window.location.hash = "#/subscribe-rabattement";
+    } catch {
+      window.location.hash = "#/subscribe-rabattement";
+    }
   }
 
   const cellTd: React.CSSProperties = { padding: "8px", border: "1px solid #d1dce8" };

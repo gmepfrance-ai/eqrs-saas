@@ -1,16 +1,35 @@
 import { V2Header } from "@/components/v2-header";
 import { V2Footer } from "@/components/v2-footer";
+import { useAuth } from "@/lib/auth";
 
 /** Page produit — EQRS V31.05 + Extension ECOTOX V8 (HHRA + ERE) */
 export default function EqrsV3105EcotoxPage() {
+  const { user, token } = useAuth();
+
   function subscribe() {
     localStorage.setItem("pending_plan", "eqrs_v31_ecotox_monthly");
     window.location.hash = "#/subscribe-eqrs-v31-ecotox";
   }
 
-  function startTrial() {
-    localStorage.setItem("pending_plan", "eqrs_v31_ecotox_trial");
-    window.location.hash = "#/subscribe-eqrs-v31-ecotox";
+  async function startTrial() {
+    if (!user || !token) {
+      localStorage.setItem("pending_plan", "eqrs_v31_ecotox_trial");
+      window.location.hash = "#/register";
+      return;
+    }
+    try {
+      const res = await fetch(`/api/eqrs-v31-ecotox-trial/activate?token=${token}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (res.ok || res.status === 409) {
+        window.location.href = `/api/eqrs-v31-ecotox-tool?token=${token}`;
+        return;
+      }
+      window.location.hash = "#/subscribe-eqrs-v31-ecotox";
+    } catch {
+      window.location.hash = "#/subscribe-eqrs-v31-ecotox";
+    }
   }
 
   const cellTd: React.CSSProperties = { padding: "8px", border: "1px solid #d1dce8" };

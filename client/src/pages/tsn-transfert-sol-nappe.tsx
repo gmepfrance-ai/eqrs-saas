@@ -1,16 +1,35 @@
 import { V2Header } from "@/components/v2-header";
 import { V2Footer } from "@/components/v2-footer";
+import { useAuth } from "@/lib/auth";
 
 /** Page produit — TSN Transfert Sol → Nappe → Captage AEP (Domenico 1987) */
 export default function TsnTransfertSolNappePage() {
+  const { user, token } = useAuth();
+
   function subscribe() {
     localStorage.setItem("pending_plan", "tsn_annual");
     window.location.hash = "#/subscribe-tsn";
   }
 
-  function startTrial() {
-    localStorage.setItem("pending_plan", "tsn_trial");
-    window.location.hash = "#/subscribe-tsn";
+  async function startTrial() {
+    if (!user || !token) {
+      localStorage.setItem("pending_plan", "tsn_trial");
+      window.location.hash = "#/register";
+      return;
+    }
+    try {
+      const res = await fetch(`/api/tsn-trial/activate?token=${token}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (res.ok || res.status === 409) {
+        window.location.href = `/api/tsn-trial?token=${token}`;
+        return;
+      }
+      window.location.hash = "#/subscribe-tsn";
+    } catch {
+      window.location.hash = "#/subscribe-tsn";
+    }
   }
 
   const cellTd: React.CSSProperties = { padding: "8px", border: "1px solid #d1dce8" };
