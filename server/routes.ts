@@ -127,6 +127,38 @@ function isAdminEmail(email?: string | null): boolean {
   return !!email && ADMIN_EMAILS.has(email.toLowerCase());
 }
 
+// Helper : page HTML de redirection automatique vers une page subscribe quand l'essai est expiré
+function trialExpiredHtml(subscribePath: string, toolName: string, duration: number): string {
+  return `<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Période d'essai terminée — G.M.E.P</title>
+  <meta http-equiv="refresh" content="3;url=${subscribePath}">
+  <style>
+    body { font-family: Inter, -apple-system, sans-serif; background:#0e2f44; color:#fff; display:flex; align-items:center; justify-content:center; min-height:100vh; margin:0; padding:24px; }
+    .card { max-width:520px; background:#1a5276; padding:40px; border-radius:16px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.4); }
+    h1 { font-size:24px; margin:0 0 16px; }
+    p { font-size:16px; line-height:1.6; margin:12px 0; color:#cce0f0; }
+    .badge { display:inline-block; background:#fff2cc; color:#0e2f44; padding:6px 14px; border-radius:20px; font-weight:600; font-size:13px; margin-bottom:20px; }
+    .btn { display:inline-block; background:#39e07a; color:#0e2f44; text-decoration:none; padding:14px 28px; border-radius:8px; font-weight:700; margin-top:24px; font-size:16px; }
+    .small { font-size:13px; color:#9bb8c8; margin-top:20px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">Essai terminé</div>
+    <h1>⏰ Votre période d'essai de ${duration} jours est terminée</h1>
+    <p>Merci d'avoir testé <strong>${toolName}</strong>.</p>
+    <p>Pour continuer à utiliser cet outil sans interruption, souscrivez à un abonnement.</p>
+    <a href="${subscribePath}" class="btn">Souscrire maintenant →</a>
+    <p class="small">Redirection automatique dans 3 secondes...</p>
+  </div>
+</body>
+</html>`;
+}
+
 async function requireSubscription(
   req: AuthRequest,
   res: Response,
@@ -144,9 +176,11 @@ async function requireSubscription(
   }
   if (sub.status === "trialing" && sub.currentPeriodEnd) {
     if (new Date(sub.currentPeriodEnd) < new Date()) {
-      return res
-        .status(403)
-        .json({ message: "Votre période d'essai gratuit de 14 jours est terminée. Veuillez souscrire un abonnement pour continuer." });
+      // Marquer la subscription comme expirée en BDD
+      try { await storage.updateSubscription(sub.id, { status: "expired" }); } catch {}
+      // Rediriger l'utilisateur vers la page d'abonnement EQRS J&E
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.status(403).send(trialExpiredHtml("/#/tarifs", "EQRS Johnson & Ettinger", 14));
     }
   }
   next();
@@ -171,7 +205,9 @@ async function requireTsnSubscription(
   }
   if (tsnSub.status === "trialing" && tsnSub.currentPeriodEnd) {
     if (new Date(tsnSub.currentPeriodEnd) < new Date()) {
-      return res.status(403).json({ message: "Votre période d'essai est terminée. Veuillez souscrire un abonnement." });
+      try { await storage.updateSubscription(tsnSub.id, { status: "expired" }); } catch {}
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.status(403).send(trialExpiredHtml("/#/subscribe-tsn", "TSN — Transfert Sol-Nappe", 8));
     }
   }
   next();
@@ -196,7 +232,9 @@ async function requireRabattementSubscription(
   }
   if (rabSub.status === "trialing" && rabSub.currentPeriodEnd) {
     if (new Date(rabSub.currentPeriodEnd) < new Date()) {
-      return res.status(403).json({ message: "Votre période d'essai est terminée. Veuillez souscrire un abonnement." });
+      try { await storage.updateSubscription(rabSub.id, { status: "expired" }); } catch {}
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.status(403).send(trialExpiredHtml("/#/subscribe-rabattement", "Rabattement V15.85", 8));
     }
   }
   next();
@@ -1087,7 +1125,9 @@ export async function registerRoutes(
       const tsnSub = subs.find(s => s.tool === "tsn" && s.status === "trialing");
       if (!tsnSub) return res.status(403).json({ message: "Aucun essai TSN actif." });
       if (tsnSub.currentPeriodEnd && new Date(tsnSub.currentPeriodEnd) < new Date()) {
-        return res.status(403).json({ message: "Votre essai de 8 jours est terminé. Souscrivez pour continuer." });
+        try { await storage.updateSubscription(tsnSub.id, { status: "expired" }); } catch {}
+        res.setHeader("Content-Type", "text/html; charset=utf-8");
+        return res.status(403).send(trialExpiredHtml("/#/subscribe-tsn", "TSN — Transfert Sol-Nappe", 8));
       }
       const daysLeft = tsnSub.currentPeriodEnd
         ? Math.max(0, Math.ceil((new Date(tsnSub.currentPeriodEnd).getTime() - Date.now()) / 86400000))
@@ -1209,7 +1249,9 @@ export async function registerRoutes(
           return res.status(403).json({ message: "Abonnement EQRS V31.05 + ECOTOX requis pour accéder à cet outil." });
         }
         if (toolSub.status === "trialing" && toolSub.currentPeriodEnd && new Date(toolSub.currentPeriodEnd) < new Date()) {
-          return res.status(403).json({ message: "Votre période d'essai de 14 jours est terminée. Souscrivez pour continuer." });
+          try { await storage.updateSubscription(toolSub.id, { status: "expired" }); } catch {}
+          res.setHeader("Content-Type", "text/html; charset=utf-8");
+          return res.status(403).send(trialExpiredHtml("/#/subscribe-eqrs-v31-ecotox", "EQRS V31.05 + Extension ECOTOX", 14));
         }
       }
       res.setHeader("X-Frame-Options", "SAMEORIGIN");
@@ -1273,7 +1315,9 @@ export async function registerRoutes(
           return res.status(403).json({ message: "Abonnement Schéma Conceptuel requis pour accéder à cet outil." });
         }
         if (toolSub.status === "trialing" && toolSub.currentPeriodEnd && new Date(toolSub.currentPeriodEnd) < new Date()) {
-          return res.status(403).json({ message: "Votre période d'essai de 14 jours est terminée. Souscrivez pour continuer." });
+          try { await storage.updateSubscription(toolSub.id, { status: "expired" }); } catch {}
+          res.setHeader("Content-Type", "text/html; charset=utf-8");
+          return res.status(403).send(trialExpiredHtml("/#/subscribe-schema-conceptuel", "Schéma Conceptuel", 14));
         }
       }
       res.setHeader("X-Frame-Options", "SAMEORIGIN");
