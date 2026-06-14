@@ -34,6 +34,11 @@ export default function SubscribeEqrsV31EcotoxPage() {
       window.location.href = `/api/eqrs-v31-ecotox-tool?token=${token}`;
     } catch (err: any) {
       const msg = err.message || "";
+      // Si l'utilisateur a déjà un essai/abonnement actif (409), on ouvre directement l'outil
+      if (msg.startsWith("409:") || msg.toLowerCase().includes("déjà un accès")) {
+        window.location.href = `/api/eqrs-v31-ecotox-tool?token=${token}`;
+        return;
+      }
       const match = msg.match(/^\d+:\s*(.+)/);
       if (match) {
         try { setError(JSON.parse(match[1]).message || match[1]); }
