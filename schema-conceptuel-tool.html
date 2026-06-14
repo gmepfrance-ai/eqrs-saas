@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Schéma conceptuel EQRS — Module G.M.E.P</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --primary:#003F6B;--accent:#20808D;--text:#1A1A1A;--muted:#5B6770;
+  --panel:#F2F4F6;--border:#D6DCE0;--bg:#FFFFFF;
+  --sol-bg:#F5E9DC;--sol-bd:#8C5E2C;
+  --air-bg:#E3F0F7;--air-bd:#1F6FA8;
+  --gaz-bg:#EFE6F4;--gaz-bd:#6A3A8E;
+  --eau-bg:#DCEEF1;--eau-bd:#20808D;
+  --adu-bg:#FFF2D8;--adu-bd:#B6862C;
+  --enf-bg:#FCE3E3;--enf-bd:#B23A48;
+  --sal-bg:#E3EAF5;--sal-bd:#003F6B;
+  --inactive:#B8BEC4;
+  --ok:#1E7A4D;--warn:#B8860B;--ko:#B23A48;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+     background:#F7F8FA;color:var(--text);line-height:1.5}
+.app{max-width:1500px;margin:0 auto;padding:24px}
+header.bar{background:var(--primary);color:#fff;padding:18px 24px;border-radius:10px;margin-bottom:18px;
+           display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+header.bar h1{margin:0;font-size:20px;font-weight:700}
+header.bar .sub{font-size:12px;color:#C9D6E1;margin-top:4px}
+header.bar .brand{font-size:18px;font-weight:700;text-align:right}
+
+.toolbar{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 18px;
+         margin-bottom:18px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.toolbar label{font-size:12px;color:var(--muted);font-weight:600}
+.toolbar input,.toolbar select{font:inherit;padding:6px 10px;border:1px solid var(--border);
+        border-radius:6px;font-size:13px;min-width:90px}
+.toolbar button{font:inherit;padding:8px 14px;border:none;border-radius:6px;background:var(--primary);
+        color:#fff;font-weight:600;cursor:pointer;font-size:13px}
+.toolbar button.alt{background:var(--accent)}
+.toolbar button:hover{filter:brightness(1.1)}
+
+.layout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;align-items:start}
+@media (max-width:1100px){.layout{grid-template-columns:1fr}}
+
+.col h2{font-size:13px;color:var(--primary);margin:0 0 10px;letter-spacing:0.5px;font-weight:700}
+.col h2 .num{display:inline-block;width:22px;height:22px;border-radius:50%;background:var(--primary);
+       color:#fff;text-align:center;line-height:22px;font-size:12px;margin-right:6px;vertical-align:middle}
+.col h2 .lbl{vertical-align:middle}
+.col p.note{font-size:11px;color:var(--muted);margin:0 0 12px}
+
+.card{background:#fff;border:1px solid var(--border);border-left:6px solid var(--primary);
+      border-radius:10px;padding:14px 16px;margin-bottom:14px;box-shadow:0 2px 4px rgba(0,0,0,.04)}
+.card .title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+.card .meta{font-size:11px;color:var(--muted);margin-bottom:8px}
+.card .row{display:flex;gap:8px;align-items:center;margin-top:8px}
+.card .row label{font-size:11px;color:var(--muted);min-width:78px}
+.card .row input{flex:1;font:inherit;padding:5px 8px;border:1px solid var(--border);
+       border-radius:5px;font-size:12px}
+.card .row select{font:inherit;padding:5px 8px;border:1px solid var(--border);
+       border-radius:5px;font-size:12px}
+
+.card.sol{border-left-color:var(--sol-bd);background:linear-gradient(to right,var(--sol-bg) 0%,#fff 30%)}
+.card.air{border-left-color:var(--air-bd);background:linear-gradient(to right,var(--air-bg) 0%,#fff 30%)}
+.card.gaz{border-left-color:var(--gaz-bd);background:linear-gradient(to right,var(--gaz-bg) 0%,#fff 30%)}
+.card.eau{border-left-color:var(--eau-bd);background:linear-gradient(to right,var(--eau-bg) 0%,#fff 30%)}
+.card.adu{border-left-color:var(--adu-bd);background:linear-gradient(to right,var(--adu-bg) 0%,#fff 30%)}
+.card.enf{border-left-color:var(--enf-bd);background:linear-gradient(to right,var(--enf-bg) 0%,#fff 30%)}
+.card.sal{border-left-color:var(--sal-bd);background:linear-gradient(to right,var(--sal-bg) 0%,#fff 30%)}
+
+.voies{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;
+       box-shadow:0 2px 4px rgba(0,0,0,.04)}
+.voies .voie{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;
+       border-left:3px solid var(--accent);background:#FAFBFC;border-radius:5px;margin-bottom:6px;
+       font-size:12px}
+.voies .voie.inh{border-left-color:var(--primary)}
+.voies .voie.inactive{opacity:0.45;border-left-color:var(--inactive)}
+.voies .voie .code{font-weight:700;color:var(--primary);margin-right:6px}
+.voies .voie .check{font-size:14px;color:var(--accent);font-weight:700}
+.voies .voie.inactive .check{color:var(--inactive)}
+
+.schema-panel{margin-top:24px;background:#fff;border:1px solid var(--border);border-radius:10px;
+       padding:16px;overflow:auto}
+.schema-panel h2{margin:0 0 12px;font-size:14px;color:var(--primary)}
+.schema-panel svg{width:100%;height:auto;max-height:none;display:block}
+
+footer.foot{margin-top:24px;background:var(--panel);border-radius:8px;padding:14px 18px;
+        font-size:11px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+.tag{display:inline-block;background:var(--accent);color:#fff;font-size:10px;font-weight:700;
+     padding:2px 7px;border-radius:10px;margin-left:6px;vertical-align:middle}
+
+.legend{display:flex;gap:18px;font-size:11px;color:var(--muted);margin-top:8px;flex-wrap:wrap}
+.legend span.dot{display:inline-block;width:18px;height:3px;background:var(--accent);vertical-align:middle;margin-right:6px}
+.legend span.dot.inh{background:var(--primary)}
+.legend span.dot.inactive{background:var(--inactive)}
+
+/* ===== Tableau résultats ===== */
+.results-panel{margin-top:24px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px;overflow:auto}
+.results-panel h2{margin:0 0 12px;font-size:14px;color:var(--primary)}
+.results-panel table{width:100%;border-collapse:collapse;font-size:12px}
+.results-panel th{background:var(--primary);color:#fff;font-weight:600;text-align:left;padding:8px 10px;font-size:11.5px}
+.results-panel td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+.results-panel tr:nth-child(even) td{background:#FAFBFC}
+.results-panel .qd-ok,.results-panel .eri-ok{color:var(--ok);font-weight:700}
+.results-panel .qd-warn,.results-panel .eri-warn{color:var(--warn);font-weight:700}
+.results-panel .qd-ko,.results-panel .eri-ko{color:var(--ko);font-weight:700}
+.results-panel .cat{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.results-panel .empty{padding:20px;text-align:center;color:var(--muted);font-style:italic}
+
+/* Cibles : remplissage dynamique */
+.card .targetfill{margin-top:8px;padding:8px 10px;background:#fff;border:1px solid var(--border);border-radius:6px;font-size:11.5px;min-height:46px}
+.card .targetfill .tf-item{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px dashed #E6EAEE}
+.card .targetfill .tf-item:last-child{border-bottom:none}
+.card .targetfill .tf-pol{font-weight:600;color:var(--primary)}
+.card .targetfill .tf-via{font-size:10.5px;color:var(--muted)}
+.card .targetfill .none{color:var(--muted);font-style:italic;text-align:center;padding:4px 0}
+
+/* Saisie polluants multi-lignes */
+.pollutants-edit{margin-top:6px}
+.pollutants-edit .pol-row{display:grid;grid-template-columns:1.4fr 1fr 0.9fr 24px;gap:6px;margin-bottom:4px}
+.pollutants-edit .pol-row input,.pollutants-edit .pol-row select{padding:4px 6px;border:1px solid var(--border);border-radius:4px;font-size:11.5px;width:100%}
+.pollutants-edit .pol-row .rm{background:#fff;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--ko);font-weight:700}
+.pollutants-edit .add{margin-top:4px;background:var(--accent);color:#fff;border:none;border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;font-weight:600}
+.pollutants-edit .hdr{display:grid;grid-template-columns:1.4fr 1fr 0.9fr 24px;gap:6px;font-size:10px;font-weight:700;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.4px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header class="bar">
+  <div>
+    <h1>Schéma conceptuel EQRS — Source › Vecteur › Cible</h1>
+    <div class="sub">Méthodologie nationale SSP · Réf. Ineris-20-201082-2199664-v2.0 (15/02/2021)</div>
+  </div>
+  <div class="brand">
+    G.M.E.P
+    <div class="sub">Module schéma conceptuel — Logiciel EQRS</div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <label>Site :</label>
+  <input type="text" id="siteName" value="Site à compléter" style="min-width:200px">
+  <label>Référence :</label>
+  <input type="text" id="siteRef" value="EQRS-XXXX/2026" style="min-width:140px">
+  <label>Usage :</label>
+  <select id="siteUsage">
+    <option value="res_eco">Résidentiel + activité économique</option>
+    <option value="res">Résidentiel pur</option>
+    <option value="tert">Tertiaire / Bureau</option>
+    <option value="ind">Industriel / ICPE</option>
+    <option value="mixte">Mixte (à préciser)</option>
+  </select>
+  <label>Puits domestique :</label>
+  <select id="puitsDom"><option value="oui">Oui</option><option value="non" selected>Non</option></select>
+  <label>Potager :</label>
+  <select id="potager"><option value="oui">Oui</option><option value="non" selected>Non</option></select>
+  <button onclick="exportJSON()">Exporter JSON</button>
+  <button class="alt" onclick="redrawAll()">Régénérer schéma + calculs</button>
+  <button onclick="window.print()">Imprimer</button>
+</div>
+
+<div class="layout">
+
+  <!-- ===== Colonne 1 : Sources ===== -->
+  <section class="col">
+    <h2><span class="num">1</span><span class="lbl">SOURCES / MILIEUX</span></h2>
+    <p class="note">Saisissez les concentrations mesurées ou modélisées pour chaque milieu. Ajoutez plusieurs polluants si besoin.</p>
+
+    <div class="card sol">
+      <div class="title">Sols pollués</div>
+      <div class="meta">Remblais, surface, subsurface</div>
+      <div class="row"><label>Profondeur</label>
+        <input id="sol_p" type="text" placeholder="0–1 m / 1–3 m / etc."></div>
+      <div class="pollutants-edit" data-milieu="sol">
+        <div class="hdr"><span>Polluant</span><span>Conc.</span><span>Unité</span><span></span></div>
+        <div class="pol-list"></div>
+        <button class="add" type="button" onclick="addPol('sol')">+ ajouter un polluant</button>
+      </div>
+    </div>
+
+    <div class="card air">
+      <div class="title">Air ambiant</div>
+      <div class="meta">Atmosphère extérieure / intérieure</div>
+      <div class="row"><label>Localisation</label>
+        <input id="air_l" type="text" placeholder="extérieur / intérieur — étage"></div>
+      <div class="pollutants-edit" data-milieu="air">
+        <div class="hdr"><span>Polluant</span><span>Conc.</span><span>Unité</span><span></span></div>
+        <div class="pol-list"></div>
+        <button class="add" type="button" onclick="addPol('air')">+ ajouter un polluant</button>
+      </div>
+    </div>
+
+    <div class="card gaz">
+      <div class="title">Gaz du sol</div>
+      <div class="meta">Zone non saturée (vapeurs)</div>
+      <div class="row"><label>Profondeur sond.</label>
+        <input id="gaz_p" type="text" placeholder="1 m / 3 m / 5 m"></div>
+      <div class="pollutants-edit" data-milieu="gaz">
+        <div class="hdr"><span>Polluant</span><span>Conc.</span><span>Unité</span><span></span></div>
+        <div class="pol-list"></div>
+        <button class="add" type="button" onclick="addPol('gaz')">+ ajouter un polluant</button>
+      </div>
+    </div>
+
+    <div class="card eau">
+      <div class="title">Eaux souterraines</div>
+      <div class="meta">Nappe / puits domestique</div>
+      <div class="row"><label>Profondeur nappe</label>
+        <input id="eau_p" type="text" placeholder="m / NGF"></div>
+      <div class="pollutants-edit" data-milieu="eau">
+        <div class="hdr"><span>Polluant</span><span>Conc.</span><span>Unité</span><span></span></div>
+        <div class="pol-list"></div>
+        <button class="add" type="button" onclick="addPol('eau')">+ ajouter un polluant</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Colonne 2 : Voies ===== -->
+  <section class="col">
+    <h2><span class="num">2</span><span class="lbl">VECTEURS / VOIES DE TRANSFERT</span></h2>
+    <p class="note">Voies retenues : actives (couleur) si polluant disponible et cible exposée selon usage ; grisées sinon.</p>
+    <div class="voies" id="voiesList"></div>
+    <div class="legend">
+      <div><span class="dot inh"></span>Inhalation (air, vapeurs)</div>
+      <div><span class="dot"></span>Ingestion / transfert eau-sol-plantes</div>
+      <div><span class="dot inactive"></span>Voie inactive (pas de source ou cible non exposée)</div>
+    </div>
+  </section>
+
+  <!-- ===== Colonne 3 : Cibles ===== -->
+  <section class="col">
+    <h2><span class="num">3</span><span class="lbl">CIBLES</span></h2>
+    <p class="note">Paramètres d'exposition standards (INERIS MODUL'ERS), ajustables. Les cadres se remplissent automatiquement avec les polluants reçus.</p>
+
+    <div class="card adu">
+      <div class="title">Adulte résident</div>
+      <div class="meta">Classe 18-70 ans</div>
+      <div class="row"><label>P (kg)</label><input id="adu_P" type="number" value="70"></div>
+      <div class="row"><label>ED (ans)</label><input id="adu_ED" type="number" value="30"></div>
+      <div class="row"><label>EF (j/an)</label><input id="adu_EF" type="number" value="350"></div>
+      <div class="row"><label>IRa (m³/j)</label><input id="adu_IRa" type="number" value="20"></div>
+      <div class="row"><label>IRw (L/j)</label><input id="adu_IRw" type="number" step="0.1" value="2.0"></div>
+      <div class="row"><label>IRs (mg/j)</label><input id="adu_IRs" type="number" value="50"></div>
+      <div class="row"><label>IRveg (g/j)</label><input id="adu_IRveg" type="number" value="200"></div>
+      <div class="targetfill" id="adu_fill"></div>
+    </div>
+
+    <div class="card enf">
+      <div class="title">Enfant 2-6 ans</div>
+      <div class="meta">Classe 0-11 ans (pica)</div>
+      <div class="row"><label>P (kg)</label><input id="enf_P" type="number" value="15"></div>
+      <div class="row"><label>ED (ans)</label><input id="enf_ED" type="number" value="6"></div>
+      <div class="row"><label>EF (j/an)</label><input id="enf_EF" type="number" value="350"></div>
+      <div class="row"><label>IRa (m³/j)</label><input id="enf_IRa" type="number" value="10"></div>
+      <div class="row"><label>IRw (L/j)</label><input id="enf_IRw" type="number" step="0.1" value="1.0"></div>
+      <div class="row"><label>IRs (mg/j)</label><input id="enf_IRs" type="number" value="100"></div>
+      <div class="row"><label>IRveg (g/j)</label><input id="enf_IRveg" type="number" value="100"></div>
+      <div class="targetfill" id="enf_fill"></div>
+    </div>
+
+    <div class="card sal">
+      <div class="title">Salarié (site)</div>
+      <div class="meta">Travailleurs exposés</div>
+      <div class="row"><label>P (kg)</label><input id="sal_P" type="number" value="70"></div>
+      <div class="row"><label>ED (ans)</label><input id="sal_ED" type="number" value="25"></div>
+      <div class="row"><label>EF (j/an)</label><input id="sal_EF" type="number" value="220"></div>
+      <div class="row"><label>IRa (m³/j)</label><input id="sal_IRa" type="number" value="20"></div>
+      <div class="row"><label>IRs (mg/j)</label><input id="sal_IRs" type="number" value="50"></div>
+      <div class="row"><label>Fi</label><input id="sal_Fi" type="number" step="0.1" value="1.0"></div>
+      <div class="targetfill" id="sal_fill"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== Schéma SVG dynamique ===== -->
+<div class="schema-panel">
+  <h2>Aperçu du schéma conceptuel généré</h2>
+  <div id="svgHost"></div>
+</div>
+
+<!-- ===== Tableau de calcul EQRS ===== -->
+<div class="results-panel">
+  <h2>Résultats EQRS — Doses, quotients de danger (QD) et excès de risque individuel (ERI)</h2>
+  <div id="resultsHost"></div>
+  <p style="font-size:10.5px;color:var(--muted);margin-top:10px">
+    DJE = (C × IR × EF × ED × F) / (P × Tm) — CI = C<sub>air</sub> × t<sub>exp</sub> / t<sub>tot</sub> — QD = DJE/VTR<sub>R</sub> ou CI/VTR<sub>R</sub><br>
+    ERI = DJE × ERU<sub>orale</sub> ou CI × ERU<sub>inh</sub> — Seuils acceptabilité : QD &lt; 1 · ERI &lt; 10⁻⁵ (cancérogène)<br>
+    VTR par défaut : INERIS / ANSES / US-EPA IRIS / OEHHA / EFSA / TPHCWG — données indicatives à valider en EQRS détaillée.
+  </p>
+</div>
+
+<footer class="foot">
+  <div>
+    <strong>SARL G.M.E.P.</strong> · 9 rue de la Marne, 79400 Saint-Maixent-l'École · SIRET 753 097 625 00010<br>
+    gmep.france@gmail.com · <a href="https://www.gmep-france.eu">www.gmep-france.eu</a>
+  </div>
+  <div style="text-align:right">
+    Référentiels VTR : INERIS / ANSES / US-EPA IRIS / OEHHA / EFSA / TPHCWG<br>
+    Modèles : Johnson &amp; Ettinger (EPA 2004) · Domenico (1987) · NF X31-620 · Note ministérielle 19/04/2017
+  </div>
+</footer>
+
+</div>
+
+<script>
+function $(id){return document.getElementById(id)}
+
+/* ============================================================
+   BASE VTR/ERU minimale (à compléter dans EQRS_Calculateur_V7)
+   - VTR R : effets à seuil (chronique) — orale (mg/kg/j) ou inhalation (mg/m³ ou µg/m³)
+   - ERU : effets sans seuil (cancer) — orale (kg.j/mg) ou inhalation (m³/µg)
+   Sources : INERIS portail substances chimiques, ANSES, US-EPA IRIS, OEHHA
+   ============================================================ */
+const VTR = {
+  /* Hydrocarbures totaux (TPHCWG) - fraction agrégée C5-C35 */
+  "hydrocarbures totaux": { aliases:["hct","tph","htp","hydrocarbures"],
+    rfd_oral:0.1, /* mg/kg/j - TPHCWG aliphatiques C9-C18 INERIS */
+    rfc_inh:1.0,  /* mg/m³ - C9-C18 aromatiques */
+    erc_inh:null, eru_oral:null, source:"TPHCWG / INERIS" },
+
+  "toluène": { aliases:["toluene"],
+    rfd_oral:0.08, rfc_inh:0.3, /* mg/m³ - ANSES 2017 */
+    erc_inh:null, eru_oral:null, source:"ANSES 2017 / IRIS" },
+
+  "benzène": { aliases:["benzene"],
+    rfd_oral:0.004, rfc_inh:0.01, /* mg/m³ - ANSES 2014 */
+    erc_inh:2.6e-2, /* (mg/m³)⁻¹ - ANSES VTR cancer 2014 */
+    eru_oral:0.055, source:"ANSES 2014 / IRIS 2003" },
+
+  "éthylbenzène": { aliases:["ethylbenzene","ethylbenzène"],
+    rfd_oral:0.1, rfc_inh:1.0,
+    erc_inh:2.5e-3, eru_oral:null, source:"OEHHA / IRIS" },
+
+  "xylènes": { aliases:["xylene","xylenes","xylènes"],
+    rfd_oral:0.2, rfc_inh:0.1, erc_inh:null, eru_oral:null, source:"IRIS 2003" },
+
+  "bap": { aliases:["benzo(a)pyrène","benzo a pyrene","benzo[a]pyrène","b(a)p"],
+    rfd_oral:3e-4, rfc_inh:2e-6, /* mg/m³ - OEHHA */
+    erc_inh:0.6, /* (mg/m³)⁻¹ - INERIS 2006 */
+    eru_oral:1.0, /* (mg/kg/j)⁻¹ - OEHHA */
+    source:"OEHHA / INERIS 2006" },
+
+  "naphtalène": { aliases:["naphtalene","naphthalene"],
+    rfd_oral:0.02, rfc_inh:3.7e-3, erc_inh:3.4e-2, eru_oral:null, source:"OEHHA / IRIS" },
+
+  "tétrachloroéthylène": { aliases:["pce","tetrachloroethylene","perchloroéthylène","perc"],
+    rfd_oral:6e-3, rfc_inh:0.04, erc_inh:2.6e-4, eru_oral:2.1e-3, source:"IRIS 2012" },
+
+  "trichloroéthylène": { aliases:["tce","trichloroethylene"],
+    rfd_oral:5e-4, rfc_inh:2e-3, erc_inh:4.1e-3, eru_oral:4.6e-2, source:"IRIS 2011" },
+
+  "plomb": { aliases:["pb","lead"],
+    rfd_oral:5e-4, /* sang enfant - INERIS prudent */
+    rfc_inh:null, erc_inh:1.2e-2, eru_oral:8.5e-3, source:"INERIS / OEHHA / IRIS" },
+
+  "cadmium": { aliases:["cd"],
+    rfd_oral:5e-4, rfc_inh:3e-5, erc_inh:1.8, eru_oral:null, source:"IRIS 1999 / OEHHA" },
+
+  "arsenic": { aliases:["as"],
+    rfd_oral:3e-4, rfc_inh:1.5e-5, erc_inh:1.5, eru_oral:1.5, source:"IRIS / OEHHA" },
+
+  "mercure": { aliases:["hg"],
+    rfd_oral:3e-4, rfc_inh:3e-4, erc_inh:null, eru_oral:null, source:"IRIS 2001" },
+
+  "chrome vi": { aliases:["chrome 6","cr(vi)","cr vi","chromium vi"],
+    rfd_oral:9e-4, rfc_inh:1e-4, erc_inh:38, eru_oral:0.5, source:"IRIS 1998 / OEHHA" },
+
+  "nickel": { aliases:["ni"],
+    rfd_oral:2e-2, rfc_inh:9e-5, erc_inh:0.91, eru_oral:null, source:"OEHHA / RIVM" }
+};
+
+function findVTR(name){
+  if(!name) return null;
+  const n=name.trim().toLowerCase();
+  for(const k in VTR){
+    if(k===n) return {key:k, data:VTR[k]};
+    if((VTR[k].aliases||[]).some(a=>a.toLowerCase()===n)) return {key:k, data:VTR[k]};
+  }
+  // Match plus souple : sous-chaîne
+  for(const k in VTR){
+    if(n.includes(k)||k.includes(n)) return {key:k, data:VTR[k]};
+    if((VTR[k].aliases||[]).some(a=>n.includes(a.toLowerCase())||a.toLowerCase().includes(n))) return {key:k, data:VTR[k]};
+  }
+  return null;
+}
+
+/* ============================================================
+   ÉTAT DES POLLUANTS PAR MILIEU
+   ============================================================ */
+const pollutants = {
+  sol: [{name:"Hydrocarbures totaux", c:"", u:"mg/kg MS"}],
+  air: [{name:"", c:"", u:"µg/m³"}],
+  gaz: [{name:"Toluène", c:"", u:"µg/m³"}],
+  eau: [{name:"BaP", c:"", u:"µg/L"}]
+};
+const UNITS = {
+  sol:["mg/kg MS","µg/kg MS"],
+  air:["µg/m³","mg/m³","ng/m³"],
+  gaz:["µg/m³","mg/m³"],
+  eau:["µg/L","mg/L","ng/L"]
+};
+
+function renderPolList(milieu){
+  const host = document.querySelector(`.pollutants-edit[data-milieu="${milieu}"] .pol-list`);
+  if(!host) return;
+  host.innerHTML = "";
+  pollutants[milieu].forEach((p,i)=>{
+    const row=document.createElement("div");
+    row.className="pol-row";
+    const optsU = UNITS[milieu].map(u=>`<option ${u===p.u?"selected":""}>${u}</option>`).join("");
+    row.innerHTML=`
+      <input type="text" value="${p.name.replace(/"/g,'&quot;')}" placeholder="Polluant" data-k="name">
+      <input type="number" step="any" value="${p.c}" placeholder="0" data-k="c">
+      <select data-k="u">${optsU}</select>
+      <button class="rm" title="Supprimer" type="button">×</button>`;
+    row.querySelectorAll("[data-k]").forEach(el=>{
+      el.addEventListener("input",()=>{
+        const k=el.dataset.k;
+        pollutants[milieu][i][k]= (k==="c") ? el.value : el.value;
+        redrawAll();
+      });
+      el.addEventListener("change",()=>{
+        const k=el.dataset.k;
+        pollutants[milieu][i][k]= el.value;
+        redrawAll();
+      });
+    });
+    row.querySelector(".rm").addEventListener("click",()=>{
+      pollutants[milieu].splice(i,1);
+      renderPolList(milieu); redrawAll();
+    });
+    host.appendChild(row);
+  });
+}
+
+function addPol(milieu){
+  pollutants[milieu].push({name:"",c:"",u:UNITS[milieu][0]});
+  renderPolList(milieu);
+  redrawAll();
+}
+
+/* ============================================================
+   LOGIQUE D'ATTRIBUTION : usage × voies × cibles
+   ============================================================ */
+function activeTargetsForUsage(){
+  const u = $('siteUsage').value;
+  // Quelles cibles existent selon usage ?
+  return {
+    ADU: ["res","res_eco","mixte"].includes(u),
+    ENF: ["res","res_eco","mixte"].includes(u),
+    SAL: ["res_eco","tert","ind","mixte"].includes(u)
+  };
+}
+
+// Matrice voies : source, type (ing/inh), cibles possibles + condition
+function voieMatrix(){
+  const puits = $('puitsDom').value==="oui";
+  const potager = $('potager').value==="oui";
+  return [
+    {code:'a', label:'Ingestion / contact direct (sols)', type:'ing', src:'SOL', targets:['ADU','ENF','SAL'], cond:()=>true},
+    {code:'b', label:'Volatilisation sols → air',         type:'inh', src:'SOL', targets:['AIR'], cond:()=>true, transfert:true},
+    {code:'c', label:'Lessivage / percolation vers nappe',type:'ing', src:'SOL', targets:['EAU'], cond:()=>true, transfert:true},
+    {code:'d', label:'Inhalation air ambiant',            type:'inh', src:'AIR', targets:['ADU','ENF','SAL'], cond:()=>true},
+    {code:'e', label:'Intrusion vapeurs (J&E)',           type:'inh', src:'GAZ', targets:['ADU','ENF','SAL'], cond:()=>true},
+    {code:'f', label:'Inhalation directe gaz du sol',     type:'inh', src:'GAZ', targets:['SAL'], cond:()=>true},
+    {code:'g', label:'Ingestion eau (puits domestique)',  type:'ing', src:'EAU', targets:['ADU','ENF'], cond:()=>puits},
+    {code:'h', label:'Transfert plantes (arrosage potager)',type:'ing',src:'EAU', targets:['ADU','ENF'], cond:()=>potager}
+  ];
+}
+
+function srcKeyToMilieu(k){return {SOL:'sol',AIR:'air',GAZ:'gaz',EAU:'eau'}[k]}
+
+// Source a-t-elle au moins un polluant renseigné avec concentration > 0 ?
+function sourceHasData(srcKey){
+  const m = srcKeyToMilieu(srcKey);
+  return (pollutants[m]||[]).some(p=>p.name && p.name.trim() && Number(p.c)>0);
+}
+
+function activeVoies(){
+  const at = activeTargetsForUsage();
+  return voieMatrix().map(v=>{
+    const ok_src = sourceHasData(v.src);
+    const ok_cond = v.cond();
+    const ok_tgts = v.targets.filter(t => (t in at) ? at[t] : true); // AIR/EAU/SOL/GAZ : toujours "actifs" comme cibles intermédiaires
+    const active = ok_src && ok_cond && ok_tgts.length>0;
+    return {...v, active, activeTargets: ok_tgts};
+  });
+}
+
+/* ============================================================
+   RENDU LISTE DES VOIES
+   ============================================================ */
+function renderVoies(){
+  const host=$('voiesList'); host.innerHTML="";
+  for(const v of activeVoies()){
+    const div=document.createElement("div");
+    div.className="voie "+(v.type==='inh'?'inh':'')+(v.active?'':' inactive');
+    let lbl = v.label;
+    if(v.transfert) lbl += ' <span class="tag">transfert</span>';
+    div.innerHTML=`<span><span class="code">${v.code}</span>${lbl}</span><span class="check">${v.active?'✓':'—'}</span>`;
+    host.appendChild(div);
+  }
+}
+
+/* ============================================================
+   RENDU CADRES CIBLES (remplissage automatique)
+   ============================================================ */
+function renderTargetFills(){
+  const at = activeTargetsForUsage();
+  const voies = activeVoies();
+  for(const tgt of ['ADU','ENF','SAL']){
+    const host = $(tgt.toLowerCase()+"_fill"); if(!host) continue;
+    if(!at[tgt]){
+      host.innerHTML = `<div class="none">Cible non exposée selon l'usage choisi</div>`; continue;
+    }
+    const lines=[];
+    for(const v of voies){
+      if(!v.active) continue;
+      if(!v.activeTargets.includes(tgt)) continue;
+      const m = srcKeyToMilieu(v.src);
+      for(const p of pollutants[m]){
+        if(!p.name||!p.name.trim()||!(Number(p.c)>0)) continue;
+        lines.push({pol:p.name, code:v.code, lbl:v.label});
+      }
+    }
+    if(lines.length===0){
+      host.innerHTML = `<div class="none">Aucun polluant atteignant cette cible</div>`;
+    } else {
+      host.innerHTML = lines.map(l=>`<div class="tf-item"><span class="tf-pol">${l.pol}</span><span class="tf-via">voie ${l.code} — ${l.lbl}</span></div>`).join("");
+    }
+  }
+}
+
+/* ============================================================
+   CALCUL EQRS - DJE / CI / QD / ERI
+   Référence : INERIS — méthodologie nationale gestion SSP
+   ============================================================ */
+function getCibleParams(tgt){
+  // P, ED, EF, IRa, IRw, IRs, IRveg, Fi
+  const m={};
+  ['P','ED','EF','IRa','IRw','IRs','IRveg','Fi'].forEach(k=>{
+    const id = tgt.toLowerCase()+"_"+k;
+    const el = $(id);
+    m[k] = el ? Number(el.value)||0 : 0;
+  });
+  return m;
+}
+
+// Conversion concentration vers unité standard
+// Sol/Veg/Eau → mg/kg ou mg/L pour DJE ; Air/Gaz → mg/m³ pour CI
+function concToStd(p, milieu){
+  let c = Number(p.c);
+  if(!isFinite(c)||c<=0) return 0;
+  const u=p.u;
+  if(milieu==='sol'){
+    if(u==='µg/kg MS') c = c/1000;
+    return c; // mg/kg
+  }
+  if(milieu==='eau'){
+    if(u==='µg/L') c = c/1000;
+    if(u==='ng/L') c = c/1e6;
+    return c; // mg/L
+  }
+  if(milieu==='air'||milieu==='gaz'){
+    if(u==='µg/m³') c = c/1000;
+    if(u==='ng/m³') c = c/1e6;
+    return c; // mg/m³
+  }
+  return c;
+}
+
+const Tm_seuil = 365 * 30; // moyenne sur ED chronique : on simplifie en utilisant Tm = ED*365
+function computeAll(){
+  const at = activeTargetsForUsage();
+  const voies = activeVoies();
+  const rows=[];
+
+  for(const tgt of ['ADU','ENF','SAL']){
+    if(!at[tgt]) continue;
+    const par = getCibleParams(tgt);
+    const Tm_ns = 70*365; // vie entière pour cancérogène
+    const Tm_s  = (par.ED||30)*365; // chronique pour seuil
+
+    for(const v of voies){
+      if(!v.active) continue;
+      if(!v.activeTargets.includes(tgt)) continue;
+      if(v.transfert) continue; // voies b/c : pas de calcul direct cible (intermédiaire)
+      const m = srcKeyToMilieu(v.src);
+      for(const p of pollutants[m]){
+        if(!p.name||!p.name.trim()||!(Number(p.c)>0)) continue;
+        const C = concToStd(p, m);
+        const vtrEntry = findVTR(p.name);
+        let DJE=null, CI=null, QD=null, ERI=null, ref="—";
+        let unit_dose="";
+
+        if(v.type==='ing'){
+          // DJE = C × IR × EF × ED × F / (P × Tm)
+          let IR=0, F=1; unit_dose = "mg/kg/j";
+          if(v.code==='a'){ IR = par.IRs||50; IR=IR/1e6; /* mg→kg */ }
+          // a : IRs en mg/j ; C en mg/kg ; donc DJE en mg/kg/j si C(mg/kg)*IRs(kg/j)/P(kg)
+          if(v.code==='g'){ IR = par.IRw||1; /* L/j */ }
+          if(v.code==='h'){ IR = (par.IRveg||100)/1000; /* g → kg/j */
+            // Transfert sol-plante simplifié : C_veg = C_sol × BCF (BCF par défaut 0.05)
+            // Ici on prend C_eau × BCF ou C_sol × BCF — usage simplifié
+          }
+          const EFf = par.EF/365;
+          const EDf = par.ED;
+          if(v.code==='a'){
+            // DJE = (C_sol [mg/kg] × IRs [kg/j] × EF/365 × ED × F) / (P × ED) → simplifie en C × IRs × (EF/365) / P
+            DJE = C * (par.IRs/1e6) * (par.EF/365) / Math.max(par.P,1);
+          } else if(v.code==='g'){
+            DJE = C * (par.IRw||1) * (par.EF/365) / Math.max(par.P,1);
+          } else if(v.code==='h'){
+            // C_eau × BCF eau-veg (0.01 par défaut)
+            DJE = C * 0.01 * ((par.IRveg||100)/1000) * (par.EF/365) / Math.max(par.P,1);
+          }
+
+          if(vtrEntry){
+            ref = vtrEntry.data.source;
+            if(vtrEntry.data.rfd_oral){ QD = DJE / vtrEntry.data.rfd_oral; }
+            if(vtrEntry.data.eru_oral){ ERI = DJE * vtrEntry.data.eru_oral; }
+          }
+        } else if(v.type==='inh'){
+          // CI = C_air × (EF/365) × (ED_exp/Tm_ED) - simplifié : CI ≈ C × (EF/365)
+          unit_dose = "mg/m³";
+          CI = C * (par.EF/365);
+          // Fi facteur pour salarié (fraction inhalée site) ou intérieur/extérieur
+          if(tgt==='SAL' && par.Fi) CI *= par.Fi;
+          if(vtrEntry){
+            ref = vtrEntry.data.source;
+            if(vtrEntry.data.rfc_inh){ QD = CI / vtrEntry.data.rfc_inh; }
+            if(vtrEntry.data.erc_inh){ ERI = CI * vtrEntry.data.erc_inh; }
+          }
+        }
+
+        rows.push({
+          tgt, voieCode:v.code, voieLbl:v.label, type:v.type, src:v.src,
+          pol:p.name, C, unit:m==='sol'?'mg/kg':(m==='eau'?'mg/L':'mg/m³'),
+          DJE, CI, QD, ERI, ref, vtrFound: !!vtrEntry
+        });
+      }
+    }
+  }
+  return rows;
+}
+
+function fmtNum(x){
+  if(x===null||x===undefined||!isFinite(x)) return "—";
+  if(x===0) return "0";
+  const a=Math.abs(x);
+  if(a<1e-3 || a>=1e4) return x.toExponential(2);
+  return x.toPrecision(3);
+}
+function qdClass(q){
+  if(q===null||q===undefined) return "";
+  if(q<0.2) return "qd-ok";
+  if(q<1) return "qd-warn";
+  return "qd-ko";
+}
+function eriClass(e){
+  if(e===null||e===undefined) return "";
+  if(e<1e-6) return "eri-ok";
+  if(e<1e-5) return "eri-warn";
+  return "eri-ko";
+}
+
+function renderResults(){
+  const host=$('resultsHost');
+  const rows=computeAll();
+  if(rows.length===0){
+    host.innerHTML=`<div class="empty">Aucun calcul possible : renseignez au moins un polluant avec une concentration &gt; 0 dans un milieu source.</div>`;
+    return;
+  }
+  const tgtNames={ADU:'Adulte résident',ENF:'Enfant 2-6 ans',SAL:'Salarié (site)'};
+  let html=`<table><thead><tr>
+    <th>Cible</th><th>Polluant</th><th>Voie</th><th>Source</th>
+    <th>C</th><th>DJE / CI</th><th>QD</th><th>ERI</th><th>VTR / Source</th>
+  </tr></thead><tbody>`;
+  // Tri par cible puis voie
+  rows.sort((a,b)=>(a.tgt+a.voieCode).localeCompare(b.tgt+b.voieCode));
+  let lastTgt=null;
+  for(const r of rows){
+    const dose = r.type==='ing' ? `${fmtNum(r.DJE)} mg/kg/j` : `${fmtNum(r.CI)} mg/m³`;
+    html += `<tr>
+      <td><div class="cat">${tgtNames[r.tgt]}</div></td>
+      <td><strong>${r.pol}</strong>${r.vtrFound?'':' <span style="color:var(--warn);font-size:10px">⚠ VTR absente</span>'}</td>
+      <td>${r.voieCode} — ${r.voieLbl}</td>
+      <td>${r.src}</td>
+      <td>${fmtNum(r.C)} ${r.unit}</td>
+      <td>${dose}</td>
+      <td class="${qdClass(r.QD)}">${fmtNum(r.QD)}</td>
+      <td class="${eriClass(r.ERI)}">${fmtNum(r.ERI)}</td>
+      <td style="font-size:10.5px;color:var(--muted)">${r.ref}</td>
+    </tr>`;
+  }
+  html += `</tbody></table>`;
+
+  // Synthèse par cible
+  const syn={};
+  for(const r of rows){
+    if(!syn[r.tgt]) syn[r.tgt]={QD:0,ERI:0};
+    if(isFinite(r.QD)) syn[r.tgt].QD += r.QD;
+    if(isFinite(r.ERI)) syn[r.tgt].ERI += r.ERI;
+  }
+  html += `<h3 style="font-size:13px;color:var(--primary);margin:18px 0 8px">Synthèse cumulée par cible (somme voies × polluants)</h3>`;
+  html += `<table><thead><tr><th>Cible</th><th>ΣQD</th><th>ΣERI</th><th>Acceptabilité</th></tr></thead><tbody>`;
+  for(const tgt of Object.keys(syn)){
+    const s=syn[tgt];
+    const okQD = s.QD<1, okERI = s.ERI<1e-5;
+    const verdict = (okQD && okERI) ? '<span style="color:var(--ok);font-weight:700">Acceptable</span>' :
+      ((!okQD && !okERI) ? '<span style="color:var(--ko);font-weight:700">Non acceptable</span>' :
+       '<span style="color:var(--warn);font-weight:700">À examiner</span>');
+    html += `<tr>
+      <td><div class="cat">${tgtNames[tgt]}</div></td>
+      <td class="${qdClass(s.QD)}">${fmtNum(s.QD)}</td>
+      <td class="${eriClass(s.ERI)}">${fmtNum(s.ERI)}</td>
+      <td>${verdict}</td>
+    </tr>`;
+  }
+  html += `</tbody></table>`;
+  host.innerHTML = html;
+}
+
+/* ============================================================
+   SCHEMA SVG DYNAMIQUE
+   ============================================================ */
+function buildSchemaSVG(){
+  const W=1500, H=900;
+  const P='#003F6B', A='#20808D', T='#1A1A1A', M='#5B6770';
+  const INACT='#B8BEC4';
+  const colors = {
+    SOL:{bg:'#F5E9DC',bd:'#8C5E2C'},AIR:{bg:'#E3F0F7',bd:'#1F6FA8'},
+    GAZ:{bg:'#EFE6F4',bd:'#6A3A8E'},EAU:{bg:'#DCEEF1',bd:'#20808D'},
+    ADU:{bg:'#FFF2D8',bd:'#B6862C'},ENF:{bg:'#FCE3E3',bd:'#B23A48'},
+    SAL:{bg:'#E3EAF5',bd:'#003F6B'}
+  };
+
+  // Concentrations résumées pour affichage (premier polluant > 0 ou liste)
+  const concs={}, pols={};
+  for(const m of ['sol','air','gaz','eau']){
+    const valid = (pollutants[m]||[]).filter(p=>p.name&&p.name.trim()&&Number(p.c)>0);
+    pols[m.toUpperCase()] = valid.length? valid.map(p=>p.name).slice(0,3).join(", ") + (valid.length>3?`…(+${valid.length-3})`:'') : '—';
+    concs[m.toUpperCase()] = valid.length? valid.map(p=>`${p.c} ${p.u}`).slice(0,1).join("") + (valid.length>1?` (+${valid.length-1})`:'') : '—';
+  }
+
+  const at = activeTargetsForUsage();
+  const voies = activeVoies();
+
+  const SRC_X=40, SRC_W=380, SRC_H=160;
+  const sources=[
+    {k:'SOL',t:'SOLS POLLUÉS',s:'Remblais, surface, subsurface',y:120,n:1},
+    {k:'AIR',t:'AIR AMBIANT',s:'Atmosphère ext./int.',y:300,n:2},
+    {k:'GAZ',t:'GAZ DU SOL',s:'Zone non saturée (vapeurs)',y:480,n:3},
+    {k:'EAU',t:'EAUX SOUTERRAINES',s:'Nappe / puits domestique',y:660,n:4},
+  ];
+  const TGT_X=1100, TGT_W=360, TGT_H=200;
+  const cibles=[
+    {k:'ADU',t:'ADULTE Résident',p:`P=${$('adu_P').value} kg · ED=${$('adu_ED').value} ans · EF=${$('adu_EF').value} j/an`,l:'A',y:80,active:at.ADU},
+    {k:'ENF',t:'ENFANT 2-6 ans',p:`P=${$('enf_P').value} kg · ED=${$('enf_ED').value} ans · EF=${$('enf_EF').value} j/an`,l:'E',y:340,active:at.ENF},
+    {k:'SAL',t:'SALARIÉ (site)',p:`P=${$('sal_P').value} kg · ED=${$('sal_ED').value} ans · EF=${$('sal_EF').value} j/an`,l:'S',y:600,active:at.SAL},
+  ];
+
+  // Pour chaque cible, lister polluants reçus
+  const tgtFill = {ADU:[],ENF:[],SAL:[]};
+  for(const v of voies){
+    if(!v.active||v.transfert) continue;
+    const m = srcKeyToMilieu(v.src);
+    for(const p of pollutants[m]){
+      if(!p.name||!p.name.trim()||!(Number(p.c)>0)) continue;
+      for(const tg of v.activeTargets){
+        if(tg in tgtFill) tgtFill[tg].push({pol:p.name, code:v.code});
+      }
+    }
+  }
+
+  let s=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" font-family="Inter,system-ui,Arial,sans-serif">`;
+  s+=`<defs>
+    <marker id="arrP" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L12,6 L0,12 L3,6 z" fill="${P}"/></marker>
+    <marker id="arrA" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L12,6 L0,12 L3,6 z" fill="${A}"/></marker>
+    <marker id="arrI" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L12,6 L0,12 L3,6 z" fill="${INACT}"/></marker>
+  </defs>`;
+  s+=`<rect width="${W}" height="${H}" fill="#FFFFFF"/>`;
+
+  s+=`<text x="220" y="70" font-size="14" font-weight="700" fill="${P}" text-anchor="middle">1. SOURCES / MILIEUX</text>`;
+  s+=`<text x="${W/2}" y="70" font-size="14" font-weight="700" fill="${P}" text-anchor="middle">2. VECTEURS / VOIES DE TRANSFERT</text>`;
+  s+=`<text x="${TGT_X+TGT_W/2}" y="70" font-size="14" font-weight="700" fill="${P}" text-anchor="middle">3. CIBLES</text>`;
+
+  // Sources
+  const srcCenters={}, srcLeftCenters={};
+  for(const src of sources){
+    const c=colors[src.k];
+    const hasData = sourceHasData(src.k);
+    const op = hasData ? 1 : 0.45;
+    s+=`<g opacity="${op}">`;
+    s+=`<rect x="${SRC_X}" y="${src.y}" width="${SRC_W}" height="${SRC_H}" rx="10" fill="${c.bg}" stroke="${hasData?c.bd:INACT}" stroke-width="2"/>`;
+    s+=`<rect x="${SRC_X}" y="${src.y}" width="10" height="${SRC_H}" rx="10" fill="${hasData?c.bd:INACT}"/>`;
+    s+=`<circle cx="${SRC_X+44}" cy="${src.y+34}" r="18" fill="${hasData?c.bd:INACT}"/>`;
+    s+=`<text x="${SRC_X+44}" y="${src.y+40}" font-size="14" font-weight="700" fill="#FFF" text-anchor="middle">${src.n}</text>`;
+    s+=`<text x="${SRC_X+76}" y="${src.y+34}" font-size="15" font-weight="700" fill="${T}">${src.t}</text>`;
+    s+=`<text x="${SRC_X+76}" y="${src.y+54}" font-size="11" fill="${M}">${src.s}</text>`;
+    s+=`<rect x="${SRC_X+20}" y="${src.y+70}" width="${SRC_W-40}" height="32" rx="5" fill="#FFF" stroke="#D6DCE0"/>`;
+    s+=`<text x="${SRC_X+30}" y="${src.y+90}" font-size="11" fill="${M}">Polluants : <tspan font-weight="600" fill="${T}">${pols[src.k]}</tspan></text>`;
+    s+=`<rect x="${SRC_X+20}" y="${src.y+110}" width="${SRC_W-40}" height="32" rx="5" fill="#FFF" stroke="${hasData?A:INACT}"/>`;
+    s+=`<text x="${SRC_X+30}" y="${src.y+130}" font-size="11" fill="${T}">Conc. : <tspan font-weight="700" fill="${hasData?A:INACT}">${concs[src.k]}</tspan></text>`;
+    s+=`</g>`;
+    srcCenters[src.k]=[SRC_X+SRC_W, src.y+SRC_H/2];
+    srcLeftCenters[src.k]=[SRC_X, src.y+SRC_H/2];
+  }
+
+  // Cibles
+  const tgtCenters={};
+  for(const cb of cibles){
+    const c=colors[cb.k];
+    const op = cb.active ? 1 : 0.4;
+    s+=`<g opacity="${op}">`;
+    s+=`<rect x="${TGT_X}" y="${cb.y}" width="${TGT_W}" height="${TGT_H}" rx="10" fill="${c.bg}" stroke="${cb.active?c.bd:INACT}" stroke-width="2"/>`;
+    s+=`<rect x="${TGT_X+TGT_W-10}" y="${cb.y}" width="10" height="${TGT_H}" rx="10" fill="${cb.active?c.bd:INACT}"/>`;
+    s+=`<circle cx="${TGT_X+44}" cy="${cb.y+44}" r="24" fill="${cb.active?c.bd:INACT}"/>`;
+    s+=`<text x="${TGT_X+44}" y="${cb.y+52}" font-size="22" font-weight="700" fill="#FFF" text-anchor="middle">${cb.l}</text>`;
+    s+=`<text x="${TGT_X+82}" y="${cb.y+38}" font-size="16" font-weight="700" fill="${T}">${cb.t}</text>`;
+    s+=`<text x="${TGT_X+82}" y="${cb.y+58}" font-size="11" fill="${M}">${cb.p}</text>`;
+    // Boîte polluants reçus
+    s+=`<rect x="${TGT_X+20}" y="${cb.y+82}" width="${TGT_W-40}" height="${TGT_H-100}" rx="5" fill="#FFF" stroke="#D6DCE0"/>`;
+    if(!cb.active){
+      s+=`<text x="${TGT_X+TGT_W/2}" y="${cb.y+TGT_H/2+10}" font-size="12" font-style="italic" fill="${INACT}" text-anchor="middle">Non exposé (usage)</text>`;
+    } else if(tgtFill[cb.k].length===0){
+      s+=`<text x="${TGT_X+TGT_W/2}" y="${cb.y+TGT_H/2+10}" font-size="12" font-style="italic" fill="${M}" text-anchor="middle">Aucun polluant reçu</text>`;
+    } else {
+      // Aggréger par polluant
+      const agg={};
+      for(const x of tgtFill[cb.k]){
+        if(!agg[x.pol]) agg[x.pol]=new Set();
+        agg[x.pol].add(x.code);
+      }
+      const lines=Object.entries(agg).slice(0,5);
+      let yy = cb.y+98;
+      for(const [pol, codes] of lines){
+        s+=`<text x="${TGT_X+30}" y="${yy}" font-size="11" font-weight="700" fill="${P}">${pol}</text>`;
+        s+=`<text x="${TGT_X+TGT_W-30}" y="${yy}" font-size="10.5" fill="${M}" text-anchor="end">voies ${[...codes].sort().join(", ")}</text>`;
+        yy += 18;
+      }
+      if(Object.keys(agg).length>5){
+        s+=`<text x="${TGT_X+30}" y="${yy}" font-size="10" font-style="italic" fill="${M}">…(+${Object.keys(agg).length-5})</text>`;
+      }
+    }
+    s+=`</g>`;
+    tgtCenters[cb.k]=[TGT_X, cb.y+TGT_H/2];
+  }
+
+  // Voies + flèches
+  const lblX=W/2, lblW=320, lblH=36;
+  const top=140, bot=H-100;
+  const step=(bot-top-lblH)/(voies.length-1);
+  voies.forEach((v,i)=>{
+    const lblY=Math.round(top+i*step);
+    const active = v.active;
+    const colVoie = active ? (v.type==='inh'?P:A) : INACT;
+    const dash = active ? "" : "5,4";
+    const op = active ? 1 : 0.55;
+    s+=`<g opacity="${op}">`;
+    s+=`<rect x="${lblX-lblW/2}" y="${lblY}" width="${lblW}" height="${lblH}" rx="18" fill="#FFF" stroke="${colVoie}" stroke-width="1.6" ${dash?`stroke-dasharray="${dash}"`:''}/>`;
+    s+=`<text x="${lblX-lblW/2+12}" y="${lblY+lblH/2+4}" font-size="12" font-weight="700" fill="${colVoie}">${v.code}</text>`;
+    s+=`<text x="${lblX+8}" y="${lblY+lblH/2+4}" font-size="11" fill="${T}" text-anchor="middle">${v.label}</text>`;
+
+    const [sx,sy]=srcCenters[v.src];
+    const exL=lblX-lblW/2, ey=lblY+lblH/2;
+    const cx1=sx+(exL-sx)*0.45;
+    const arrMk = active ? (v.type==='inh'?'arrP':'arrA') : 'arrI';
+    s+=`<path d="M${sx},${sy} C${cx1},${sy} ${cx1},${ey} ${exL},${ey}" fill="none" stroke="${colVoie}" stroke-width="1.8" ${dash?`stroke-dasharray="${dash}"`:''} marker-end="url(#${arrMk})"/>`;
+    const exR=lblX+lblW/2;
+    for(const t of v.targets){
+      if(tgtCenters[t]){
+        if(!v.activeTargets.includes(t)){
+          // cible visible mais désactivée → flèche grisée pointillée
+          const [tx,ty]=tgtCenters[t];
+          const cx2=exR+(tx-exR)*0.55;
+          s+=`<path d="M${exR},${ey} C${cx2},${ey} ${cx2},${ty} ${tx},${ty}" fill="none" stroke="${INACT}" stroke-width="1.2" stroke-dasharray="3,3" opacity="0.5" marker-end="url(#arrI)"/>`;
+          continue;
+        }
+        const [tx,ty]=tgtCenters[t];
+        const cx2=exR+(tx-exR)*0.55;
+        s+=`<path d="M${exR},${ey} C${cx2},${ey} ${cx2},${ty} ${tx},${ty}" fill="none" stroke="${colVoie}" stroke-width="1.6" ${dash?`stroke-dasharray="${dash}"`:''} opacity="0.85" marker-end="url(#${arrMk})"/>`;
+      } else if(srcLeftCenters[t]){
+        const lblMap={SOL:'vers SOLS',AIR:'vers AIR',GAZ:'vers GAZ DU SOL',EAU:'vers EAUX SOUT.'};
+        const bx=exR+18, by=ey-14;
+        s+=`<rect x="${bx}" y="${by}" width="130" height="28" rx="14" fill="#FFF" stroke="${colVoie}" stroke-width="1.2" stroke-dasharray="4,3"/>`;
+        s+=`<text x="${bx+65}" y="${by+18}" font-size="10" font-weight="600" fill="${colVoie}" text-anchor="middle">${lblMap[t]}</text>`;
+        s+=`<path d="M${exR},${ey} L${bx},${ey}" stroke="${colVoie}" stroke-width="1.4" stroke-dasharray="4,3" fill="none"/>`;
+      }
+    }
+    s+=`</g>`;
+  });
+
+  s+=`</svg>`;
+  return s;
+}
+
+function redrawSchema(){ $('svgHost').innerHTML = buildSchemaSVG(); }
+
+function redrawAll(){
+  renderVoies();
+  renderTargetFills();
+  renderResults();
+  redrawSchema();
+}
+
+/* ============================================================
+   EXPORT JSON
+   ============================================================ */
+function exportJSON(){
+  const data={
+    site:{name:$('siteName').value,ref:$('siteRef').value,usage:$('siteUsage').value,puits:$('puitsDom').value,potager:$('potager').value},
+    sources:{
+      sols:{polluants:pollutants.sol,profondeur:$('sol_p').value},
+      air:{polluants:pollutants.air,localisation:$('air_l').value},
+      gaz:{polluants:pollutants.gaz,profondeur:$('gaz_p').value},
+      eaux:{polluants:pollutants.eau,profondeur:$('eau_p').value},
+    },
+    cibles:{
+      adulte: getCibleParams('ADU'),
+      enfant: getCibleParams('ENF'),
+      salarie: getCibleParams('SAL'),
+    },
+    voies: activeVoies(),
+    resultats_eqrs: computeAll(),
+    reference_ineris:'Ineris-20-201082-2199664-v2.0 (15/02/2021)',
+    timestamp:new Date().toISOString()
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='schema_conceptuel_EQRS_'+(data.site.ref||'export')+'.json';
+  a.click();
+}
+
+// Init
+['sol','air','gaz','eau'].forEach(renderPolList);
+// Listeners
+document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',redrawAll));
+document.querySelectorAll('select').forEach(el=>el.addEventListener('change',redrawAll));
+redrawAll();
+</script>
+</body>
+</html>
