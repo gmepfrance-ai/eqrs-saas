@@ -40,6 +40,28 @@ try {
   console.error("Warning: Could not load rabattement-tool.html", e);
 }
 
+// Load EQRS V31.05 + ECOTOX V8 tool HTML at startup (NEW V8 calculator with ecotoxicology module)
+let eqrsV31EcotoxToolHtml = "";
+try {
+  eqrsV31EcotoxToolHtml = fs.readFileSync(
+    path.resolve(process.cwd(), "eqrs-v31-ecotox-tool.html"),
+    "utf-8"
+  );
+} catch (e) {
+  console.error("Warning: Could not load eqrs-v31-ecotox-tool.html", e);
+}
+
+// Load Schéma Conceptuel tool HTML at startup
+let schemaConceptuelToolHtml = "";
+try {
+  schemaConceptuelToolHtml = fs.readFileSync(
+    path.resolve(process.cwd(), "schema-conceptuel-tool.html"),
+    "utf-8"
+  );
+} catch (e) {
+  console.error("Warning: Could not load schema-conceptuel-tool.html", e);
+}
+
 // Stripe setup
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "sk_test_placeholder";
 const isStripeConfigured =
@@ -1178,7 +1200,8 @@ export async function registerRoutes(
     "/api/eqrs-v31-ecotox-tool",
     requireAuth as any,
     async (req: AuthRequest, res: Response) => {
-      if (!eqrsToolHtml) return res.status(500).json({ message: "Outil EQRS non disponible" });
+      // CORRECTIF v16.3 : utilise le calculateur V8 avec module écotox (pas l'ancien V7)
+      if (!eqrsV31EcotoxToolHtml) return res.status(500).json({ message: "Outil EQRS V31.05 + ECOTOX non disponible" });
       if (!isAdminEmail((req.user as any).email)) {
         const subs = await storage.getSubscriptionsByUserId(req.user!.id);
         const toolSub = subs.find(s => s.tool === "eqrs_v31" && (s.status === "active" || s.status === "trialing"));
@@ -1196,7 +1219,7 @@ export async function registerRoutes(
       );
       res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
       res.setHeader("Content-Type", "text/html; charset=utf-8");
-      return res.send(protectToolHtml(eqrsToolHtml));
+      return res.send(protectToolHtml(eqrsV31EcotoxToolHtml));
     }
   );
 
@@ -1241,7 +1264,8 @@ export async function registerRoutes(
     "/api/schema-conceptuel-tool",
     requireAuth as any,
     async (req: AuthRequest, res: Response) => {
-      if (!eqrsToolHtml) return res.status(500).json({ message: "Outil Schéma Conceptuel non disponible" });
+      // CORRECTIF v16.3 : utilise le HTML du Schéma Conceptuel dédié (pas l'ancien EQRS V7)
+      if (!schemaConceptuelToolHtml) return res.status(500).json({ message: "Outil Schéma Conceptuel non disponible" });
       if (!isAdminEmail((req.user as any).email)) {
         const subs = await storage.getSubscriptionsByUserId(req.user!.id);
         const toolSub = subs.find(s => s.tool === "schema" && (s.status === "active" || s.status === "trialing"));
@@ -1259,7 +1283,7 @@ export async function registerRoutes(
       );
       res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
       res.setHeader("Content-Type", "text/html; charset=utf-8");
-      return res.send(protectToolHtml(eqrsToolHtml));
+      return res.send(protectToolHtml(schemaConceptuelToolHtml));
     }
   );
 
