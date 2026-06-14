@@ -62,6 +62,17 @@ try {
   console.error("Warning: Could not load schema-conceptuel-tool.html", e);
 }
 
+// Load Piézomètres tool HTML at startup
+let piezometresToolHtml = "";
+try {
+  piezometresToolHtml = fs.readFileSync(
+    path.resolve(process.cwd(), "piezometres-tool.html"),
+    "utf-8"
+  );
+} catch (e) {
+  console.error("Warning: Could not load piezometres-tool.html", e);
+}
+
 // Stripe setup
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "sk_test_placeholder";
 const isStripeConfigured =
@@ -831,13 +842,57 @@ export async function registerRoutes(
       const passwordHash = await bcrypt.hash(password, 12);
       const user = await storage.createUser(email, passwordHash, name);
 
-      // Create 14-day free trial subscription
-      const trialEnd = new Date();
-      trialEnd.setDate(trialEnd.getDate() + 14);
+      // ─── ACTIVATION AUTOMATIQUE DES 5 ESSAIS à l'inscription ──────────────
+      // EQRS V7 Johnson & Ettinger : 14 jours
+      const trial14 = new Date(); trial14.setDate(trial14.getDate() + 14);
+      const trial8 = new Date(); trial8.setDate(trial8.getDate() + 8);
+
+      // 1. EQRS V7 J&E (tool='je' ou null pour compat légacy) — 14 jours
       await storage.createSubscription(user.id, {
         status: "trialing",
         plan: "trial",
-        currentPeriodEnd: trialEnd.toISOString(),
+        tool: "je",
+        currentPeriodEnd: trial14.toISOString(),
+      });
+
+      // 2. EQRS V31.05 + ECOTOX — 14 jours
+      await storage.createSubscription(user.id, {
+        status: "trialing",
+        plan: "eqrs_v31_ecotox_trial",
+        tool: "eqrs_v31",
+        currentPeriodEnd: trial14.toISOString(),
+      });
+
+      // 3. TSN — 8 jours
+      await storage.createSubscription(user.id, {
+        status: "trialing",
+        plan: "tsn_trial",
+        tool: "tsn",
+        currentPeriodEnd: trial8.toISOString(),
+      });
+
+      // 4. Rabattement V15.85 — 8 jours
+      await storage.createSubscription(user.id, {
+        status: "trialing",
+        plan: "rabattement_trial",
+        tool: "rabattement",
+        currentPeriodEnd: trial8.toISOString(),
+      });
+
+      // 5. Schéma Conceptuel — 14 jours
+      await storage.createSubscription(user.id, {
+        status: "trialing",
+        plan: "schema_conceptuel_trial",
+        tool: "schema",
+        currentPeriodEnd: trial14.toISOString(),
+      });
+
+      // 6. GMEP Piézomètres v2.9c — 8 jours
+      await storage.createSubscription(user.id, {
+        status: "trialing",
+        plan: "piezometres_trial",
+        tool: "piezometres",
+        currentPeriodEnd: trial8.toISOString(),
       });
 
       const token = crypto.randomUUID();
@@ -855,21 +910,26 @@ export async function registerRoutes(
           await resend.emails.send({
             from: "GMEP <noreply@gmep-france.eu>",
             to: email,
-            subject: "Bienvenue sur GMEP — Votre essai gratuit est activé",
+            subject: "Bienvenue sur GMEP — Vos 6 essais gratuits sont activés",
             html: `
               <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
                 <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
-                  <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
-                  <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">Outils de modélisation environnementale</p>
+                  <h2 style="margin:0;font-size:20px;">G.M.<span style="color:#39e07a;">E</span>.P</h2>
+                  <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">Suite logicielle environnementale — 6 outils intégrés</p>
                 </div>
                 <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
                   <p style="font-size:16px;">Bonjour ${name},</p>
-                  <p>Votre compte GMEP a bien été créé. Votre <strong>essai gratuit de 14 jours</strong> est activé pour l'outil <strong>EQRS (Johnson &amp; Ettinger)</strong>.</p>
+                  <p>Votre compte GMEP a bien été créé. Tous nos <strong>6 logiciels sont activés en essai gratuit</strong>, sans engagement, sans carte bancaire.</p>
                   <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
                     <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #cce0f0;">${email}</td></tr>
-                    <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Essai EQRS</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours gratuits</td></tr>
-                    <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Essai TSN</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours gratuits (disponible dans votre tableau de bord)</td></tr>
+                    <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">EQRS V7 Johnson &amp; Ettinger</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 208 € HT/mois</td></tr>
+                    <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">EQRS V31.05 + ECOTOX V8</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 395 € HT/mois</td></tr>
+                    <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">TSN Transfert Sol-Nappe</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours — 1 100 € HT/an</td></tr>
+                    <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Rabattement V15.85</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours — 1 500 € HT/an</td></tr>
+                    <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">GMEP Piézomètres v2.9c</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours — 1 100 € HT/an</td></tr>
+                    <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Schéma Conceptuel</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 850 € HT/an</td></tr>
                   </table>
+                  <p style="font-size:13px;color:#64748b;">À l'expiration de chaque essai, l'outil affiche une page d'avertissement et vous propose de souscrire l'abonnement correspondant. Vous restez maître du choix : aucun prélèvement automatique.</p>
                   <div style="text-align:center;margin:28px 0;">
                     <a href="https://www.gmep-france.eu/#/dashboard" style="background:#1a365d;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à mon espace</a>
                   </div>
@@ -1568,6 +1628,60 @@ export async function registerRoutes(
       res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       return res.send(protectToolHtml(schemaConceptuelToolHtml));
+    }
+  );
+
+  // ── GMEP Piézomètres v2.9c : accès outil (essai ou abonné) ──────
+  app.get(
+    "/api/piezometres-tool",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      if (!piezometresToolHtml) return res.status(500).json({ message: "Outil GMEP Piézomètres non disponible" });
+      if (!isAdminEmail((req.user as any).email)) {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const toolSub = subs.find(s => s.tool === "piezometres" && (s.status === "active" || s.status === "trialing"));
+        if (!toolSub) {
+          return res.status(403).json({ message: "Abonnement GMEP Piézomètres requis pour accéder à cet outil." });
+        }
+        if (toolSub.status === "trialing" && toolSub.currentPeriodEnd && new Date(toolSub.currentPeriodEnd) < new Date()) {
+          try { await storage.updateSubscription(toolSub.id, { status: "expired" }); } catch {}
+          res.setHeader("Content-Type", "text/html; charset=utf-8");
+          return res.status(403).send(trialExpiredHtml("/#/subscribe-piezometres", "GMEP Piézomètres v2.9c", 8));
+        }
+      }
+      res.setHeader("X-Frame-Options", "SAMEORIGIN");
+      res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://unpkg.com"
+      );
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.send(protectToolHtml(piezometresToolHtml));
+    }
+  );
+
+  // ── GMEP Piézomètres : activation essai 8 jours ────────────────────────────────────────
+  app.post(
+    "/api/piezometres-trial/activate",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      try {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const existing = subs.find(s => s.tool === "piezometres" && (s.status === "active" || s.status === "trialing"));
+        if (existing) {
+          return res.status(409).json({ message: "Vous avez déjà un accès GMEP Piézomètres actif ou en cours d'essai." });
+        }
+        const trialEnd = new Date(); trialEnd.setDate(trialEnd.getDate() + 8);
+        const sub = await storage.createSubscription(req.user!.id, {
+          status: "trialing",
+          plan: "piezometres_trial",
+          tool: "piezometres",
+          currentPeriodEnd: trialEnd.toISOString(),
+        });
+        return res.json({ message: "Essai GMEP Piézomètres activé (8 jours)", subscription: sub });
+      } catch (err: any) {
+        return res.status(500).json({ message: err.message || "Erreur lors de l'activation de l'essai" });
+      }
     }
   );
 

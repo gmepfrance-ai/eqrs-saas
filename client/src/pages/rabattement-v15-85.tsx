@@ -11,27 +11,14 @@ export default function RabattementV1585Page() {
     window.location.hash = "#/subscribe-rabattement";
   }
 
-  async function startTrial() {
+  function startTrial() {
+    // Si non connecté → inscription (qui activera tous les essais auto)
     if (!user || !token) {
-      localStorage.setItem("pending_plan", "rabattement_trial");
       window.location.hash = "#/register";
       return;
     }
-    try {
-      const res = await fetch(`/api/rabattement-trial/activate?token=${token}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-      // Si 409 (essai déjà actif) ou succès, on ouvre directement l'outil
-      if (res.ok || res.status === 409) {
-        window.location.href = `/api/rabattement-tool?token=${token}`;
-        return;
-      }
-      // Erreur réelle → page subscribe pour traiter
-      window.location.hash = "#/subscribe-rabattement";
-    } catch {
-      window.location.hash = "#/subscribe-rabattement";
-    }
+    // Connecté → accès direct à l'outil (essai déjà actif depuis l'inscription)
+    window.location.href = `/api/rabattement-tool?token=${token}`;
   }
 
   const cellTd: React.CSSProperties = { padding: "8px", border: "1px solid #d1dce8" };
