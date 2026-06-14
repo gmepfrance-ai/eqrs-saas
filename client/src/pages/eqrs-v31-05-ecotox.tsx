@@ -11,25 +11,12 @@ export default function EqrsV3105EcotoxPage() {
     window.location.hash = "#/subscribe-eqrs-v31-ecotox";
   }
 
-  async function startTrial() {
+  function startTrial() {
     if (!user || !token) {
-      localStorage.setItem("pending_plan", "eqrs_v31_ecotox_trial");
       window.location.hash = "#/register";
       return;
     }
-    try {
-      const res = await fetch(`/api/eqrs-v31-ecotox-trial/activate?token=${token}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-      if (res.ok || res.status === 409) {
-        window.location.href = `/api/eqrs-v31-ecotox-tool?token=${token}`;
-        return;
-      }
-      window.location.hash = "#/subscribe-eqrs-v31-ecotox";
-    } catch {
-      window.location.hash = "#/subscribe-eqrs-v31-ecotox";
-    }
+    window.location.href = `/api/eqrs-v31-ecotox-tool?token=${token}`;
   }
 
   const cellTd: React.CSSProperties = { padding: "8px", border: "1px solid #d1dce8" };

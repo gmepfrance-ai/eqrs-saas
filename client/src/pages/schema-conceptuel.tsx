@@ -11,25 +11,12 @@ export default function SchemaConceptuelPage() {
     window.location.hash = "#/subscribe-schema-conceptuel";
   }
 
-  async function startTrial() {
+  function startTrial() {
     if (!user || !token) {
-      localStorage.setItem("pending_plan", "schema_conceptuel_trial");
       window.location.hash = "#/register";
       return;
     }
-    try {
-      const res = await fetch(`/api/schema-conceptuel-trial/activate?token=${token}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-      if (res.ok || res.status === 409) {
-        window.location.href = `/api/schema-conceptuel-tool?token=${token}`;
-        return;
-      }
-      window.location.hash = "#/subscribe-schema-conceptuel";
-    } catch {
-      window.location.hash = "#/subscribe-schema-conceptuel";
-    }
+    window.location.href = `/api/schema-conceptuel-tool?token=${token}`;
   }
 
   return (
