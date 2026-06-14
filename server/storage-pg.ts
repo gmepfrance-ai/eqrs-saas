@@ -428,4 +428,101 @@ export class PgStorage implements IStorage {
 
     return { byCountry, byDate, total, byCity };
   }
+
+  // ─── Admin stats (essais / conversions) ──────────────────────────────
+  async getAdminStats(): Promise<any> {
+    const now = new Date().toISOString();
+
+    // Compteurs par outil et statut
+    const byToolStatus = await this.pool.query(`
+      SELECT
+        COALESCE(tool, 'je') AS tool,
+        status,
+        COUNT(*)::int AS count
+      FROM subscriptions
+      GROUP BY tool, status
+      ORDER BY tool, status
+    `);
+
+    // Essais actifs (trialing non expirés)
+    const activeTrials = await this.pool.query(`
+      SELECT id, user_id, tool, plan, status, current_period_end, created_at
+      FROM subscriptions
+      WHERE status = 'trialing' AND current_period_end > $1
+      ORDER BY created_at DESC
+    `, [now]);
+
+    // Essais expirés (trialing dépassés ou status=expired)
+    const expiredTrials = await this.pool.query(`
+      SELECT id, user_id, tool, plan, status, current_period_end, created_at
+      FROM subscriptions
+      WHERE (status = 'trialing' AND current_period_end <= $1)
+         OR status = 'expired'
+      ORDER BY current_period_end DESC
+    `, [now]);
+
+    // Abonnements actifs (payants)
+    const activePaying = await this.pool.query(`
+      SELECT id, user_id, tool, plan, status, current_period_end, created_at
+      FROM subscriptions
+      WHERE status = 'active'
+      ORDER BY created_at DESC
+    `);
+
+    // Détails complets utilisateur + abonnement
+    const detailed = await this.pool.query(`
+      SELECT
+        u.id AS user_id,
+        u.email,
+        u.name,
+        u.created_at AS user_created_at,
+        s.id AS sub_id,
+        s.tool,
+        s.plan,
+        s.status,
+        s.current_period_end,
+        s.created_at AS sub_created_at,
+        s.stripe_customer_id IS NOT NULL AS has_paid
+      FROM users u
+      LEFT JOIN subscriptions s ON s.user_id = u.id
+      ORDER BY u.created_at DESC
+    `);
+
+    // Essais démarrés dans les 8/14 derniers jours
+    const trialsLast14 = await this.pool.query(`
+      SELECT
+        COALESCE(tool, 'je') AS tool,
+        COUNT(*)::int AS started_14d
+      FROM subscriptions
+      WHERE status IN ('trialing', 'active', 'expired')
+        AND created_at > NOW() - INTERVAL '14 days'
+      GROUP BY tool
+    `);
+
+    // Comptage utilisateurs
+    const userCount = await this.pool.query(`SELECT COUNT(*)::int AS n FROM users`);
+
+    // Taux de conversion : actifs payants / (trialing + expired + active)
+    const totalTrialing = activeTrials.rows.length;
+    const totalExpired = expiredTrials.rows.length;
+    const totalActive = activePaying.rows.length;
+    const totalDemarres = totalTrialing + totalExpired + totalActive;
+    const conversionRate = totalDemarres > 0 ? Math.round((totalActive / totalDemarres) * 1000) / 10 : 0;
+
+    return {
+      generated_at: now,
+      total_users: userCount.rows[0].n,
+      total_trials_started: totalDemarres,
+      total_active_trials: totalTrialing,
+      total_expired_trials: totalExpired,
+      total_paying: totalActive,
+      conversion_rate_pct: conversionRate,
+      by_tool_status: byToolStatus.rows,
+      trials_last_14_days: trialsLast14.rows,
+      active_trials: activeTrials.rows,
+      expired_trials: expiredTrials.rows,
+      active_paying: activePaying.rows,
+      detailed_users: detailed.rows,
+    };
+  }
 }

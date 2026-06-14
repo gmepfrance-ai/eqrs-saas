@@ -562,6 +562,246 @@ export async function registerRoutes(
     }
   });
 
+  // ── Admin Stats (essais / conversions) ─────────────────
+  // Middleware admin : exige token + email admin
+  async function requireAdmin(req: AuthRequest, res: Response, next: NextFunction) {
+    await requireAuth(req, res, () => {
+      if (!isAdminEmail(req.user?.email)) {
+        return res.status(403).json({ message: "Accès refusé : réservé aux administrateurs" });
+      }
+      next();
+    });
+  }
+
+  // Endpoint JSON : statistiques complètes
+  app.get("/api/admin/stats", requireAdmin as any, async (req: AuthRequest, res: Response) => {
+    try {
+      const anyStorage = storage as any;
+      if (typeof anyStorage.getAdminStats !== "function") {
+        return res.status(501).json({ message: "Stats admin disponibles uniquement avec PostgreSQL" });
+      }
+      const stats = await anyStorage.getAdminStats();
+      res.json(stats);
+    } catch (err: any) {
+      console.error("[ADMIN STATS ERROR]", err);
+      res.status(500).json({ message: "Erreur serveur", error: err.message });
+    }
+  });
+
+  // Page HTML dashboard (sert l'app, l'auth se fait côté JS)
+  app.get("/admin-stats", (_req: Request, res: Response) => {
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    res.setHeader("X-Robots-Tag", "noindex, nofollow");
+    res.send(`<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Dashboard Admin — GMEP</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f6f8;color:#0e2f44}
+    header{background:#1a5276;color:#fff;padding:20px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    header h1{margin:0;font-size:20px}
+    header .sub{font-size:13px;color:#cfe2ec}
+    main{padding:24px 32px;max-width:1400px;margin:0 auto}
+    .login{max-width:420px;margin:80px auto;background:#fff;padding:32px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+    .login h2{margin-top:0;color:#1a5276}
+    .login input{width:100%;padding:10px 12px;border:1px solid #d0d7de;border-radius:6px;font-size:14px;margin:6px 0 14px}
+    .login button{background:#1a5276;color:#fff;border:none;padding:11px 24px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;width:100%}
+    .login button:hover{background:#0e2f44}
+    .err{color:#c0392b;font-size:13px;margin-top:8px}
+    .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px}
+    .kpi{background:#fff;padding:18px;border-radius:8px;border-left:4px solid #1a5276;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+    .kpi .label{font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:0.5px}
+    .kpi .value{font-size:28px;font-weight:bold;color:#1a5276;margin-top:6px}
+    .kpi.green{border-left-color:#39e07a}
+    .kpi.green .value{color:#0e6b3c}
+    .kpi.orange{border-left-color:#e67e22}
+    .kpi.orange .value{color:#a04a14}
+    .kpi.red{border-left-color:#c0392b}
+    .kpi.red .value{color:#922b1f}
+    section{background:#fff;padding:20px;border-radius:8px;margin-bottom:18px;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+    section h2{margin-top:0;color:#1a5276;font-size:16px;border-bottom:2px solid #fff2cc;padding-bottom:8px}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{text-align:left;padding:8px 10px;border-bottom:1px solid #e9eef2}
+    th{background:#f8fafc;color:#1a5276;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.3px}
+    tr:hover td{background:#fafbfc}
+    .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+    .badge.trialing{background:#fff2cc;color:#7d6608}
+    .badge.active{background:#d4edda;color:#155724}
+    .badge.expired{background:#f8d7da;color:#721c24}
+    .badge.canceled{background:#e9ecef;color:#495057}
+    .small{font-size:12px;color:#64748b}
+    button.refresh{background:#1a5276;color:#fff;border:none;padding:8px 18px;border-radius:6px;font-size:13px;cursor:pointer}
+    button.refresh:hover{background:#0e2f44}
+    button.logout{background:transparent;color:#fff;border:1px solid #fff;padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer}
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+(function(){
+  var TOKEN_KEY = 'gmep_admin_token';
+  var app = document.getElementById('app');
+
+  function fmt(d){ if(!d) return ''; var x=new Date(d); return x.toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
+  function fmtDate(d){ if(!d) return ''; var x=new Date(d); return x.toLocaleDateString('fr-FR'); }
+  function daysLeft(end){ if(!end) return ''; var ms=new Date(end)-new Date(); var d=Math.ceil(ms/86400000); return d>0?d+' j':'expiré'; }
+  function toolLabel(t){ var m={je:'EQRS V7 J&E',eqrs_v31:'EQRS V31+ECOTOX',tsn:'TSN',rabattement:'Rabattement V15.85',schema:'Schéma Conceptuel',bundle:'Bundle'}; return m[t]||t||'?'; }
+
+  function showLogin(errMsg){
+    app.innerHTML = '<div class="login">' +
+      '<h2>Dashboard Admin GMEP</h2>' +
+      '<p class="small">Accès réservé à gmep.france@gmail.com</p>' +
+      '<input id="em" type="email" placeholder="Email" autocomplete="username"/>' +
+      '<input id="pw" type="password" placeholder="Mot de passe" autocomplete="current-password"/>' +
+      '<button onclick="doLogin()">Se connecter</button>' +
+      (errMsg?'<div class="err">'+errMsg+'</div>':'') +
+    '</div>';
+  }
+
+  window.doLogin = async function(){
+    var em = document.getElementById('em').value.trim();
+    var pw = document.getElementById('pw').value;
+    try{
+      var r = await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,password:pw})});
+      var d = await r.json();
+      if(!r.ok){ showLogin(d.message||'Erreur'); return; }
+      if(em.toLowerCase()!=='gmep.france@gmail.com'){ showLogin('Accès réservé à l’administrateur.'); return; }
+      localStorage.setItem(TOKEN_KEY, d.token);
+      loadDashboard();
+    }catch(e){ showLogin('Erreur réseau : '+e.message); }
+  };
+
+  window.doLogout = function(){ localStorage.removeItem(TOKEN_KEY); showLogin(null); };
+
+  async function loadDashboard(){
+    var token = localStorage.getItem(TOKEN_KEY);
+    if(!token){ showLogin(null); return; }
+    app.innerHTML = '<div style="padding:60px;text-align:center;color:#64748b">Chargement…</div>';
+    try{
+      var r = await fetch('/api/admin/stats',{headers:{'x-auth-token':token}});
+      if(r.status===401||r.status===403){ localStorage.removeItem(TOKEN_KEY); showLogin('Session expirée ou non autorisée.'); return; }
+      var data = await r.json();
+      renderDashboard(data);
+    }catch(e){ app.innerHTML='<div style="padding:60px;color:#c0392b">Erreur : '+e.message+'</div>'; }
+  }
+
+  function renderDashboard(d){
+    var html = '<header>' +
+      '<div><h1>Dashboard Admin GMEP</h1><div class="sub">Généré le '+fmt(d.generated_at)+'</div></div>' +
+      '<div><button class="refresh" onclick="loadDashboard()">Rafraîchir</button> <button class="logout" onclick="doLogout()">Déconnexion</button></div>' +
+    '</header><main>';
+
+    html += '<div class="kpis">' +
+      '<div class="kpi"><div class="label">Utilisateurs inscrits</div><div class="value">'+d.total_users+'</div></div>' +
+      '<div class="kpi"><div class="label">Total essais démarrés</div><div class="value">'+d.total_trials_started+'</div></div>' +
+      '<div class="kpi orange"><div class="label">Essais en cours</div><div class="value">'+d.total_active_trials+'</div></div>' +
+      '<div class="kpi red"><div class="label">Essais expirés</div><div class="value">'+d.total_expired_trials+'</div></div>' +
+      '<div class="kpi green"><div class="label">Abonnements payants</div><div class="value">'+d.total_paying+'</div></div>' +
+      '<div class="kpi green"><div class="label">Taux conversion</div><div class="value">'+d.conversion_rate_pct+' %</div></div>' +
+    '</div>';
+
+    // Essais 14 derniers jours par outil
+    html += '<section><h2>Essais démarrés ces 14 derniers jours par outil</h2>';
+    if(d.trials_last_14_days.length===0){ html += '<p class="small">Aucun essai démarré sur cette période.</p>'; }
+    else { html += '<table><thead><tr><th>Outil</th><th>Nb essais</th></tr></thead><tbody>';
+      d.trials_last_14_days.forEach(function(r){ html += '<tr><td>'+toolLabel(r.tool)+'</td><td><strong>'+r.started_14d+'</strong></td></tr>'; });
+      html += '</tbody></table>'; }
+    html += '</section>';
+
+    // Répartition par outil et statut
+    html += '<section><h2>Répartition par outil et statut</h2><table><thead><tr><th>Outil</th><th>Statut</th><th>Nombre</th></tr></thead><tbody>';
+    d.by_tool_status.forEach(function(r){ html += '<tr><td>'+toolLabel(r.tool)+'</td><td><span class="badge '+r.status+'">'+r.status+'</span></td><td>'+r.count+'</td></tr>'; });
+    html += '</tbody></table></section>';
+
+    // Essais en cours détaillés
+    html += '<section><h2>Essais en cours ('+d.active_trials.length+')</h2>';
+    if(d.active_trials.length===0){ html += '<p class="small">Aucun essai actif en ce moment.</p>'; }
+    else { html += '<table><thead><tr><th>User ID</th><th>Outil</th><th>Plan</th><th>Démarré</th><th>Fin</th><th>Jours restants</th></tr></thead><tbody>';
+      d.active_trials.forEach(function(r){ html += '<tr><td>#'+r.user_id+'</td><td>'+toolLabel(r.tool)+'</td><td class="small">'+(r.plan||'')+'</td><td>'+fmtDate(r.created_at)+'</td><td>'+fmtDate(r.current_period_end)+'</td><td><strong>'+daysLeft(r.current_period_end)+'</strong></td></tr>'; });
+      html += '</tbody></table>'; }
+    html += '</section>';
+
+    // Détails utilisateurs
+    html += '<section><h2>Détails utilisateurs ('+d.detailed_users.length+' lignes)</h2><table><thead><tr><th>Email</th><th>Nom</th><th>Inscrit</th><th>Outil</th><th>Statut</th><th>Fin essai/abo</th><th>Paid</th></tr></thead><tbody>';
+    d.detailed_users.forEach(function(r){
+      html += '<tr><td><strong>'+(r.email||'')+'</strong></td><td>'+(r.name||'')+'</td><td>'+fmtDate(r.user_created_at)+'</td><td>'+toolLabel(r.tool)+'</td><td>'+(r.status?'<span class="badge '+r.status+'">'+r.status+'</span>':'<span class="small">aucun</span>')+'</td><td>'+fmtDate(r.current_period_end)+'</td><td>'+(r.has_paid?'✓':'')+'</td></tr>';
+    });
+    html += '</tbody></table></section>';
+
+    html += '</main>';
+    app.innerHTML = html;
+  }
+
+  // Init
+  if(localStorage.getItem(TOKEN_KEY)){ loadDashboard(); } else { showLogin(null); }
+})();
+</script>
+</body>
+</html>`);
+  });
+
+  // Endpoint trigger pour cron : envoi email digest (protégé par secret URL)
+  app.get("/api/admin/send-daily-digest", async (req: Request, res: Response) => {
+    const secret = req.query.secret as string;
+    const expected = process.env.ADMIN_DIGEST_SECRET || "gmep-digest-2026-secret";
+    if (secret !== expected) {
+      return res.status(403).json({ message: "Secret invalide" });
+    }
+    try {
+      const anyStorage = storage as any;
+      if (typeof anyStorage.getAdminStats !== "function") {
+        return res.status(501).json({ message: "Stats admin disponibles uniquement avec PostgreSQL" });
+      }
+      const stats = await anyStorage.getAdminStats();
+      const resendKey = process.env.RESEND_API_KEY;
+      if (!resendKey) {
+        return res.status(503).json({ message: "Resend non configuré" });
+      }
+      const toolLabels: Record<string,string> = {je:'EQRS V7 J&E',eqrs_v31:'EQRS V31+ECOTOX',tsn:'TSN',rabattement:'Rabattement V15.85',schema:'Schéma Conceptuel',bundle:'Bundle'};
+      const tl = (t:string)=>toolLabels[t]||t||'?';
+      let rowsTools = '';
+      for (const r of stats.trials_last_14_days) {
+        rowsTools += `<tr><td style="padding:6px 10px;border-bottom:1px solid #eee">${tl(r.tool)}</td><td style="padding:6px 10px;border-bottom:1px solid #eee"><strong>${r.started_14d}</strong></td></tr>`;
+      }
+      let rowsActive = '';
+      for (const r of stats.active_trials.slice(0, 50)) {
+        const left = r.current_period_end ? Math.max(0, Math.ceil((+new Date(r.current_period_end) - +new Date())/86400000)) : '';
+        rowsActive += `<tr><td style="padding:6px 10px;border-bottom:1px solid #eee">#${r.user_id}</td><td style="padding:6px 10px;border-bottom:1px solid #eee">${tl(r.tool)}</td><td style="padding:6px 10px;border-bottom:1px solid #eee">${new Date(r.current_period_end).toLocaleDateString('fr-FR')}</td><td style="padding:6px 10px;border-bottom:1px solid #eee"><strong>${left} j</strong></td></tr>`;
+      }
+      const html = `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;color:#0e2f44;background:#f4f6f8;padding:20px">
+<table style="max-width:640px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden">
+<tr><td style="background:#1a5276;color:#fff;padding:20px"><h2 style="margin:0">Dashboard quotidien GMEP</h2><p style="margin:4px 0 0;font-size:12px;color:#cfe2ec">${new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</p></td></tr>
+<tr><td style="padding:20px">
+<table style="width:100%;border-collapse:collapse">
+<tr><td style="padding:10px;background:#f8fafc;border-radius:4px"><strong>${stats.total_users}</strong> utilisateurs inscrits</td><td style="padding:10px;background:#f8fafc;border-radius:4px"><strong>${stats.total_trials_started}</strong> essais démarrés</td></tr>
+<tr><td style="padding:10px;background:#fff2cc;border-radius:4px"><strong>${stats.total_active_trials}</strong> essais en cours</td><td style="padding:10px;background:#f8d7da;border-radius:4px"><strong>${stats.total_expired_trials}</strong> essais expirés</td></tr>
+<tr><td style="padding:10px;background:#d4edda;border-radius:4px"><strong>${stats.total_paying}</strong> abonnés payants</td><td style="padding:10px;background:#d4edda;border-radius:4px">Conversion : <strong>${stats.conversion_rate_pct}%</strong></td></tr>
+</table>
+<h3 style="color:#1a5276;margin-top:24px">Essais démarrés ces 14 derniers jours</h3>
+<table style="width:100%;border-collapse:collapse"><thead><tr style="background:#f8fafc"><th style="text-align:left;padding:8px">Outil</th><th style="text-align:left;padding:8px">Nombre</th></tr></thead><tbody>${rowsTools||'<tr><td colspan="2" style="padding:10px;color:#64748b">Aucun essai cette période</td></tr>'}</tbody></table>
+<h3 style="color:#1a5276;margin-top:24px">Essais en cours (top 50)</h3>
+<table style="width:100%;border-collapse:collapse"><thead><tr style="background:#f8fafc"><th style="text-align:left;padding:8px">User</th><th style="text-align:left;padding:8px">Outil</th><th style="text-align:left;padding:8px">Fin</th><th style="text-align:left;padding:8px">Reste</th></tr></thead><tbody>${rowsActive||'<tr><td colspan="4" style="padding:10px;color:#64748b">Aucun essai actif</td></tr>'}</tbody></table>
+<p style="margin-top:24px;font-size:12px;color:#64748b">Dashboard complet : <a href="https://www.gmep-france.eu/admin-stats">www.gmep-france.eu/admin-stats</a></p>
+</td></tr></table></body></html>`;
+      const { Resend } = require("resend");
+      const resend = new Resend(resendKey);
+      await resend.emails.send({
+        from: "GMEP Dashboard <noreply@gmep-france.eu>",
+        to: ["gmep.france@gmail.com"],
+        subject: `Dashboard GMEP — ${new Date().toLocaleDateString('fr-FR')} — ${stats.total_active_trials} essais en cours, ${stats.total_paying} payants`,
+        html,
+      });
+      res.json({ sent: true, stats: { active: stats.total_active_trials, paying: stats.total_paying } });
+    } catch (err: any) {
+      console.error("[DAILY DIGEST ERROR]", err);
+      res.status(500).json({ message: "Erreur envoi digest", error: err.message });
+    }
+  });
+
   // ── Auth Routes ────────────────────────────────────────
 
   // Register
