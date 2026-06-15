@@ -28,6 +28,7 @@ import TsnTransfertSolNappePage from "@/pages/tsn-transfert-sol-nappe";
 import SchemaConceptuelPage from "@/pages/schema-conceptuel";
 import SubscribeEqrsV31EcotoxPage from "@/pages/subscribe-eqrs-v31-ecotox";
 import SubscribeSchemaConceptuelPage from "@/pages/subscribe-schema-conceptuel";
+import SubscribePiezometresPage from "@/pages/subscribe-piezometres";
 import NotFound from "@/pages/not-found";
 
 const API_BASE_TRACK = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
@@ -73,6 +74,7 @@ function AppRouter() {
       <Route path="/schema-conceptuel" component={SchemaConceptuelPage} />
       <Route path="/subscribe-eqrs-v31-ecotox" component={SubscribeEqrsV31EcotoxPage} />
       <Route path="/subscribe-schema-conceptuel" component={SubscribeSchemaConceptuelPage} />
+      <Route path="/subscribe-piezometres" component={SubscribePiezometresPage} />
       <Route component={NotFound} />
     </Switch>
   );
