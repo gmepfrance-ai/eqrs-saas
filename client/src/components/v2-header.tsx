@@ -116,6 +116,10 @@ export function V2Header() {
                 {t("nav.tools.tsnSolNappe")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.tsnSolNappe.desc")}</span>
               </a>
+              <a href="#/subscribe-piezometres" onClick={() => setDropdownOpen(false)}>
+                {t("nav.tools.piezometres")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.piezometres.desc")}</span>
+              </a>
               <a href="#/schema-conceptuel" onClick={() => setDropdownOpen(false)}>
                 {t("nav.tools.schemaConceptuel")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.schemaConceptuel.desc")}</span>

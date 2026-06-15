@@ -95,6 +95,8 @@ const STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY =
   process.env.STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY || "";
 const STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL =
   process.env.STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL || "";
+const STRIPE_PRICE_PIEZOMETRES_ANNUAL =
+  process.env.STRIPE_PRICE_PIEZOMETRES_ANNUAL || "";
 const STRIPE_WEBHOOK_SECRET =
   process.env.STRIPE_WEBHOOK_SECRET || "whsec_placeholder";
 
@@ -1057,6 +1059,7 @@ export async function registerRoutes(
           plan === "annual" ? STRIPE_PRICE_ANNUAL :
           plan === "eqrs_v31_ecotox_monthly" ? STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY :
           plan === "schema_conceptuel_annual" ? STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL :
+          plan === "piezometres_annual" ? STRIPE_PRICE_PIEZOMETRES_ANNUAL :
           STRIPE_PRICE_MONTHLY;
 
 
@@ -1066,6 +1069,7 @@ export async function registerRoutes(
           plan === "tsn_annual" ? "tsn" :
           plan === "eqrs_v31_ecotox_monthly" ? "eqrs_v31" :
           plan === "schema_conceptuel_annual" ? "schema" :
+          plan === "piezometres_annual" ? "piezometres" :
           "je";
 
         // Chercher un abonnement existant pour ce tool (ou récupérer le customerId existant)
@@ -1160,12 +1164,14 @@ export async function registerRoutes(
             priceIdFromStripe === STRIPE_PRICE_TSN_ANNUAL ? "tsn_annual" :
             (STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY && priceIdFromStripe === STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY) ? "eqrs_v31_ecotox_monthly" :
             (STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL && priceIdFromStripe === STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL) ? "schema_conceptuel_annual" :
+            (STRIPE_PRICE_PIEZOMETRES_ANNUAL && priceIdFromStripe === STRIPE_PRICE_PIEZOMETRES_ANNUAL) ? "piezometres_annual" :
             priceIdFromStripe === STRIPE_PRICE_ANNUAL ? "annual" : "monthly";
           const tool =
             plan === "rabattement_annual" ? "rabattement" :
             plan === "tsn_annual" ? "tsn" :
             plan === "eqrs_v31_ecotox_monthly" ? "eqrs_v31" :
             plan === "schema_conceptuel_annual" ? "schema" :
+            plan === "piezometres_annual" ? "piezometres" :
             "je";
 
           // Chercher d'abord par stripe_subscription_id (le plus précis)
