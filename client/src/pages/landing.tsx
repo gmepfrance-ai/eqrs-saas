@@ -277,6 +277,33 @@ export default function LandingPage() {
                 {t("v2.tools.eqrs.cta")}
               </a>
             </article>
+
+            {/* Carte 8 : GMEP Piézomètres v2.9c */}
+            <article className="v2-tool-card">
+              <span className="v2-badge">{t("v2.tools.piezometres.badge")}</span>
+              <div className="v2-tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <rect x="4" y="4" width="4" height="24" rx="1" fill="#0e6b3c" />
+                  <rect x="14" y="8" width="4" height="20" rx="1" fill="#0e6b3c" />
+                  <rect x="24" y="12" width="4" height="16" rx="1" fill="#0e6b3c" />
+                  <path d="M2 22h28" stroke="#2563eb" strokeWidth="1.5" strokeDasharray="2 2" />
+                  <circle cx="6" cy="6" r="1.5" fill="#39e07a" />
+                  <circle cx="16" cy="10" r="1.5" fill="#39e07a" />
+                  <circle cx="26" cy="14" r="1.5" fill="#39e07a" />
+                </svg>
+              </div>
+              <h3>{t("v2.tools.piezometres.title")}</h3>
+              <p>{t("v2.tools.piezometres.desc")}</p>
+              <p style={{ marginTop: "0.5rem", fontSize: "0.92rem", color: "#1a2b4a", fontWeight: 500 }}>
+                ✓ {t("v2.tools.piezometres.feat1")}<br />
+                ✓ {t("v2.tools.piezometres.feat2")}<br />
+                ✓ {t("v2.tools.piezometres.feat3")}
+              </p>
+              <div className="v2-tool-price">{t("v2.tools.piezometres.price")}</div>
+              <a href="#/subscribe-piezometres" className="v2-btn v2-btn-blue">
+                {t("v2.tools.piezometres.cta")}
+              </a>
+            </article>
           </div>
         </div>
       </section>
