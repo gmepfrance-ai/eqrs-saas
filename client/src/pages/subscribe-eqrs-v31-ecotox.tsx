@@ -79,10 +79,13 @@ export default function SubscribeEqrsV31EcotoxPage() {
       <V2Header />
       <div className="flex-1 px-4 py-12 max-w-lg mx-auto w-full">
         <button
-          onClick={() => (window.location.hash = "#/")}
+          onClick={() => {
+            if (user && token) window.location.hash = `#/dashboard?token=${token}&checkout=cancel`;
+            else window.location.hash = "#/";
+          }}
           className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground mb-8"
         >
-          <ArrowLeft className="w-3.5 h-3.5" /> Retour
+          <ArrowLeft className="w-3.5 h-3.5" /> {user ? "Retour au tableau de bord" : "Retour"}
         </button>
 
         <div className="flex items-center gap-3 mb-8">

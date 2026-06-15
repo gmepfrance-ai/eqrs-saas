@@ -2,7 +2,7 @@ import { V2Header } from "@/components/v2-header";
 import { V2Footer } from "@/components/v2-footer";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
-import { Check, Waves, ArrowLeft, CreditCard, Loader2 } from "lucide-react";
+import { Check, MapPin, ArrowLeft, CreditCard, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -15,7 +15,7 @@ function PricingItem({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function SubscribeRabattementPage() {
+export default function SubscribePiezometresPage() {
   const { user, token } = useAuth();
   const [loading, setLoading] = useState(false);
   const [trialLoading, setTrialLoading] = useState(false);
@@ -23,20 +23,19 @@ export default function SubscribeRabattementPage() {
 
   async function handleTrial() {
     if (!user || !token) {
-      localStorage.setItem("pending_plan", "rabattement_trial");
+      localStorage.setItem("pending_plan", "piezometres_trial");
       window.location.hash = "#/register";
       return;
     }
     setTrialLoading(true);
     setError("");
     try {
-      await apiRequest("POST", `/api/rabattement-trial/activate?token=${token}`, {});
-      window.location.href = `/api/rabattement-tool?token=${token}`;
+      await apiRequest("POST", `/api/piezometres-trial/activate?token=${token}`, {});
+      window.location.href = `/api/piezometres-tool?token=${token}`;
     } catch (err: any) {
       const msg = err.message || "";
-      // Si l'utilisateur a déjà un essai/abonnement actif (409), on ouvre directement l'outil
       if (msg.startsWith("409:") || msg.toLowerCase().includes("déjà un accès")) {
-        window.location.href = `/api/rabattement-tool?token=${token}`;
+        window.location.href = `/api/piezometres-tool?token=${token}`;
         return;
       }
       const match = msg.match(/^\d+:\s*(.+)/);
@@ -53,14 +52,14 @@ export default function SubscribeRabattementPage() {
 
   async function handleSubscribe() {
     if (!user || !token) {
-      localStorage.setItem("pending_plan", "rabattement_annual");
+      localStorage.setItem("pending_plan", "piezometres_annual");
       window.location.hash = "#/register";
       return;
     }
     setLoading(true);
     setError("");
     try {
-      const res = await apiRequest("POST", `/api/stripe/create-checkout?token=${token}`, { plan: "rabattement_annual" });
+      const res = await apiRequest("POST", `/api/stripe/create-checkout?token=${token}`, { plan: "piezometres_annual" });
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;
@@ -74,33 +73,39 @@ export default function SubscribeRabattementPage() {
     }
   }
 
+  // Retour vers dashboard si connecté, sinon vers accueil
+  function handleBack() {
+    if (user && token) {
+      window.location.hash = `#/dashboard?token=${token}&checkout=cancel`;
+    } else {
+      window.location.hash = "#/";
+    }
+  }
+
   return (
     <div className="v2-page min-h-screen flex flex-col bg-background">
       <V2Header />
       <div className="flex-1 px-4 py-12 max-w-lg mx-auto w-full">
         <button
-          onClick={() => {
-            if (user && token) window.location.hash = `#/dashboard?token=${token}&checkout=cancel`;
-            else window.location.hash = "#/";
-          }}
+          onClick={handleBack}
           className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground mb-8"
         >
           <ArrowLeft className="w-3.5 h-3.5" /> {user ? "Retour au tableau de bord" : "Retour"}
         </button>
 
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white" style={{ background: "#1a365d" }}>
-            <Waves className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white" style={{ background: "#0e6b3c" }}>
+            <MapPin className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-extrabold text-foreground">Rabattement de nappe</h1>
-            <p className="text-xs text-muted-foreground">Theis + Dupuit-Thiem — Classification IOTA — Licence annuelle</p>
+            <h1 className="text-xl font-extrabold text-foreground">GMEP Piézomètres v2.9c</h1>
+            <p className="text-xs text-muted-foreground">Dimensionnement et implantation — IOTA R.214-1 — Loi sur l'Eau</p>
           </div>
         </div>
 
         <div className="rounded-xl border-2 p-6 shadow-md relative bg-white" style={{ borderColor: "#2ecc71" }}>
           <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold text-white px-4 py-1 rounded-full" style={{ background: "#2ecc71" }}>
-            Nouveau — Licence annuelle
+            Licence annuelle
           </div>
 
           <div className="flex items-baseline gap-1 mb-1">
@@ -110,14 +115,14 @@ export default function SubscribeRabattementPage() {
           <p className="text-xs text-muted-foreground mb-6">Facturation annuelle. Résiliable à l'échéance.</p>
 
           <ul className="space-y-2 mb-6 text-sm">
-            <PricingItem>Calcul Theis (régime transitoire) + Dupuit-Thiem (permanent)</PricingItem>
-            <PricingItem>Classification IOTA automatique (R.214-1)</PricingItem>
-            <PricingItem>26 substrats hydrogéologiques + 15 départements</PricingItem>
-            <PricingItem>Carte OpenStreetMap intégrée (Lambert 93)</PricingItem>
-            <PricingItem>Dossier PDF 27 pages prêt pour la DDT</PricingItem>
-            <PricingItem>Bilan hydrique départemental + ETP</PricingItem>
-            <PricingItem>Schéma technique automatique</PricingItem>
-            <PricingItem>Licence mono-poste + mises à jour</PricingItem>
+            <PricingItem>Dimensionnement et implantation piézomètres de surveillance</PricingItem>
+            <PricingItem>55 substances pré-paramétrées (BTEX, HAP, métaux, COHV, PFAS, PCB)</PricingItem>
+            <PricingItem>Calcul Darcy v=Ki/ne + rayon Sichardt R=3000s√K</PricingItem>
+            <PricingItem>Règles ANSES IEM 2018 (génération auto piézos amont/aval)</PricingItem>
+            <PricingItem>Conformité IOTA R.214-1 rubriques 1.1.1.0 et 1.1.2.0</PricingItem>
+            <PricingItem>Carte Leaflet IGN Plan v2 + BD ORTHO + Lambert 93 ↔ WGS84</PricingItem>
+            <PricingItem>Génération dossier Loi sur l'Eau automatique</PricingItem>
+            <PricingItem>Export PDF + CSV des résultats</PricingItem>
             <PricingItem>Support par e-mail + mises à jour réglementaires</PricingItem>
           </ul>
 
@@ -158,7 +163,7 @@ export default function SubscribeRabattementPage() {
               Déjà un compte ?{" "}
               <button
                 className="text-primary hover:underline font-medium"
-                onClick={() => { localStorage.setItem("pending_plan", "rabattement_annual"); window.location.hash = "#/login"; }}
+                onClick={() => { localStorage.setItem("pending_plan", "piezometres_annual"); window.location.hash = "#/login"; }}
               >
                 Se connecter
               </button>
@@ -167,7 +172,7 @@ export default function SubscribeRabattementPage() {
         </div>
 
         <div className="mt-4 bg-blue-50 border border-blue-100 rounded-lg p-4 text-xs text-blue-800">
-          <strong>Note :</strong> L'outil Rabattement de nappe est disponible uniquement en licence annuelle. Aucun abonnement mensuel pour ce module.
+          <strong>Note :</strong> L'outil GMEP Piézomètres v2.9c est disponible uniquement en licence annuelle. Aucun abonnement mensuel pour ce module.
         </div>
       </div>
       <V2Footer />
