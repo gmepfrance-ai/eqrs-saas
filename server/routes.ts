@@ -1121,6 +1121,20 @@ export async function registerRoutes(
           success_url: `${origin}/#/dashboard?token=${token}&checkout=success`,
           cancel_url: `${origin}/#/dashboard?token=${token}&checkout=cancel`,
           metadata: { userId: req.user!.id.toString() },
+          // ── Stripe Tax ───────────────────────────────────────────────────────────────────────────
+          // automatic_tax: calcule TVA automatiquement selon adresse client.
+          // Pour particulier FR: 20% TVA. Pour entreprise UE avec n° TVA: 0%
+          // (autoliquidation). Pour hors UE: 0% (export services).
+          automatic_tax: { enabled: true },
+          // billing_address_collection: 'required' force la collecte de l'adresse
+          // de facturation pour que Stripe puisse calculer la TVA correctement.
+          billing_address_collection: "required",
+          // tax_id_collection: permet aux entreprises UE d'entrer leur n° TVA
+          // intracommunautaire pour bénéficier de l'autoliquidation.
+          tax_id_collection: { enabled: true },
+          // customer_update: stocke l'adresse et le n° TVA sur le client Stripe
+          // pour les abonnements futurs.
+          customer_update: { address: "auto", name: "auto" },
         });
 
         return res.json({ url: session.url });
