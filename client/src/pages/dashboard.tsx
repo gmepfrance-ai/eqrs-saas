@@ -15,6 +15,7 @@ import {
   Settings,
   Droplets,
   Waves,
+  MapPin,
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useEffect } from "react";
@@ -68,6 +69,11 @@ export default function DashboardPage() {
           .then(r => r.json())
           .then(() => { window.location.href = `/api/schema-conceptuel-tool?token=${token}`; })
           .catch(() => { window.location.hash = "#/subscribe-schema-conceptuel"; });
+      } else if (plan === "msp_trial") {
+        fetch(`/api/msp-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
+          .then(r => r.json())
+          .then(() => { window.location.href = `/api/msp-tool?token=${token}`; })
+          .catch(() => { window.location.hash = "#/subscribe-msp"; });
       } else {
         handleCheckout(plan);
       }
@@ -274,6 +280,22 @@ export default function DashboardPage() {
               <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 850 € HT/an ensuite</p>
               <button className="w-full bg-[#6f42c1] text-white py-2 rounded font-semibold text-sm hover:opacity-90"
                 onClick={() => { window.location.href = `/api/schema-conceptuel-tool?token=${token}`; }}>
+                Accéder →
+              </button>
+            </div>
+
+            {/* MSP — Modélisation Sources de Pollution des Sols */}
+            <div className="bg-white border-2 border-[#16a34a] rounded-lg p-4 shadow-sm hover:shadow-md transition">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded bg-[#16a34a] text-white flex items-center justify-center">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <h3 className="text-sm font-bold text-foreground">MSP — Pollution des Sols</h3>
+              </div>
+              <p className="text-xs text-muted-foreground mb-3">ISDI · Arrêté 12/12/2014 · Décret 2023-1408 · Purge IDW</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 250 € HT/mois ou 2 760 € HT/an</p>
+              <button className="w-full bg-[#16a34a] text-white py-2 rounded font-semibold text-sm hover:opacity-90"
+                onClick={() => { window.location.href = `/api/msp-tool?token=${token}`; }}>
                 Accéder →
               </button>
             </div>

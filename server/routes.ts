@@ -73,6 +73,17 @@ try {
   console.error("Warning: Could not load piezometres-tool.html", e);
 }
 
+// Load MSP GMEP tool HTML at startup
+let mspToolHtml = "";
+try {
+  mspToolHtml = fs.readFileSync(
+    path.resolve(process.cwd(), "msp-tool.html"),
+    "utf-8"
+  );
+} catch (e) {
+  console.error("Warning: Could not load msp-tool.html", e);
+}
+
 // Stripe setup
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "sk_test_placeholder";
 const isStripeConfigured =
@@ -252,6 +263,31 @@ async function requireRabattementSubscription(
       try { await storage.updateSubscription(rabSub.id, { status: "expired" }); } catch {}
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       return res.status(403).send(trialExpiredHtml("/#/subscribe-rabattement", "Rabattement V15.85", 8));
+    }
+  }
+  next();
+}
+
+// Middleware spécifique au tool MSP — Modélisation Sources de Pollution
+async function requireMspSubscription(
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) {
+  if (!req.user) return res.status(401).json({ message: "Authentification requise" });
+  if (isAdminEmail((req.user as any).email)) return next();
+  const subs = await storage.getSubscriptionsByUserId(req.user.id);
+  const mspSub = subs.find(
+    (s) => s.tool === "msp" && (s.status === "active" || s.status === "trialing")
+  );
+  if (!mspSub) {
+    return res.status(403).json({ message: "Abonnement MSP requis pour accéder à cet outil" });
+  }
+  if (mspSub.status === "trialing" && mspSub.currentPeriodEnd) {
+    if (new Date(mspSub.currentPeriodEnd) < new Date()) {
+      try { await storage.updateSubscription(mspSub.id, { status: "expired" }); } catch {}
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.status(403).send(trialExpiredHtml("/#/subscribe-msp", "MSP — Modélisation Sources de Pollution des Sols", 8));
     }
   }
   next();
@@ -778,7 +814,7 @@ export async function registerRoutes(
       if (!resendKey) {
         return res.status(503).json({ message: "Resend non configuré" });
       }
-      const toolLabels: Record<string,string> = {je:'EQRS V7 J&E',eqrs_v31:'EQRS V31+ECOTOX',tsn:'TSN',rabattement:'Rabattement V15.85',schema:'Schéma Conceptuel',bundle:'Bundle'};
+      const toolLabels: Record<string,string> = {je:'EQRS V7 J&E',eqrs_v31:'EQRS V31+ECOTOX',tsn:'TSN',rabattement:'Rabattement V15.85',schema:'Schéma Conceptuel',piezometres:'Piézomètres v2.9c',msp:'MSP Pollution des Sols',bundle:'Bundle'};
       const tl = (t:string)=>toolLabels[t]||t||'?';
       let rowsTools = '';
       for (const r of stats.trials_last_14_days) {
@@ -916,7 +952,7 @@ export async function registerRoutes(
           await resend.emails.send({
             from: "GMEP <noreply@gmep-france.eu>",
             to: email,
-            subject: "Bienvenue sur GMEP — Vos 6 essais gratuits sont activés",
+            subject: "Bienvenue sur GMEP — Vos 7 essais gratuits sont activés",
             html: `
               <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
                 <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
@@ -925,7 +961,7 @@ export async function registerRoutes(
                 </div>
                 <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
                   <p style="font-size:16px;">Bonjour ${name},</p>
-                  <p>Votre compte GMEP a bien été créé. Tous nos <strong>6 logiciels sont activés en essai gratuit</strong>, sans engagement, sans carte bancaire.</p>
+                  <p>Votre compte GMEP a bien été créé. Tous nos <strong>7 logiciels sont activés en essai gratuit</strong>, sans engagement, sans carte bancaire.</p>
                   <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
                     <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #cce0f0;">${email}</td></tr>
                     <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">EQRS V7 Johnson &amp; Ettinger</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 208 € HT/mois</td></tr>
@@ -934,6 +970,7 @@ export async function registerRoutes(
                     <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Rabattement V15.85</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours — 1 500 € HT/an</td></tr>
                     <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">GMEP Piézomètres v2.9c</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours — 1 100 € HT/an</td></tr>
                     <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Schéma Conceptuel</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 850 € HT/an</td></tr>
+                    <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">MSP — Pollution des Sols</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours — 250 € HT/mois ou 2 760 € HT/an</td></tr>
                   </table>
                   <p style="font-size:13px;color:#64748b;">À l'expiration de chaque essai, l'outil affiche une page d'avertissement et vous propose de souscrire l'abonnement correspondant. Vous restez maître du choix : aucun prélèvement automatique.</p>
                   <div style="text-align:center;margin:28px 0;">
@@ -1715,6 +1752,207 @@ export async function registerRoutes(
       }
     }
   );
+
+
+  // ══════════════════════════════════════════════════════════════════════
+  // MSP GMEP — Modélisation Sources de Pollution des Sols
+  // ══════════════════════════════════════════════════════════════════════
+
+  // ── MSP : activation essai 8 jours ──────────────────────────────────
+  app.post(
+    "/api/msp-trial/activate",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      try {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const existing = subs.find(s => s.tool === "msp");
+        if (existing && (existing.status === "active" || existing.status === "trialing")) {
+          return res.status(409).json({ message: "Vous avez déjà un accès MSP actif ou en cours d'essai." });
+        }
+        const trialEnd = new Date();
+        trialEnd.setDate(trialEnd.getDate() + 8);
+        let sub;
+        if (existing) {
+          sub = await storage.updateSubscription(existing.id, {
+            status: "trialing",
+            plan: "msp_trial",
+            tool: "msp",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        } else {
+          sub = await storage.createSubscription(req.user!.id, {
+            status: "trialing",
+            plan: "msp_trial",
+            tool: "msp",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        }
+
+        // Email de confirmation activation essai MSP
+        try {
+          const resendKey = process.env.RESEND_API_KEY;
+          if (resendKey) {
+            const { Resend } = require("resend");
+            const resend = new Resend(resendKey);
+            const user = await storage.getUser(req.user!.id);
+            const trialEndFr = trialEnd.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+            await resend.emails.send({
+              from: "GMEP <noreply@gmep-france.eu>",
+              to: req.user!.email,
+              subject: "MSP GMEP — Votre essai gratuit de 8 jours est activé",
+              html: `
+                <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+                  <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+                    <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+                    <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">MSP — Modélisation Sources de Pollution des Sols</p>
+                  </div>
+                  <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+                    <p style="font-size:16px;">Bonjour ${user?.name || req.user!.email},</p>
+                    <p>Votre essai gratuit <strong>MSP GMEP</strong> est maintenant actif. Accès complet au logiciel pendant <strong>8 jours</strong>.</p>
+                    <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
+                      <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Outil</td><td style="padding:10px;border:1px solid #cce0f0;">MSP — Modélisation Sources de Pollution</td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Durée essai</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours</td></tr>
+                      <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Accès jusqu'au</td><td style="padding:10px;border:1px solid #e2e8f0;"><strong>${trialEndFr}</strong></td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #e2e8f0;">${req.user!.email}</td></tr>
+                    </table>
+                    <p style="font-size:13px;color:#64748b;">Après les 8 jours, l'accès est bloqué. Vous recevrez un rappel à J-2 et J-0.</p>
+                    <div style="text-align:center;margin:28px 0;">
+                      <a href="https://www.gmep-france.eu/#/dashboard" style="background:#16a34a;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à MSP GMEP →</a>
+                    </div>
+                    <p style="font-size:13px;color:#64748b;">Référentiels : Arrêté 12/12/2014 (ISDI) · Décret 2023-1408 (VSA/VSB)</p>
+                    <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a> — Tél. 06 07 73 72 33</p>
+                    <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+                    <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+                  </div>
+                </div>
+              `,
+            });
+            console.log(`[MSP TRIAL EMAIL] Sent to ${req.user!.email}`);
+          }
+        } catch (emailErr: any) {
+          console.error("[MSP TRIAL EMAIL] Failed:", emailErr.message);
+        }
+
+        return res.json({ message: "Essai MSP activé (8 jours)", subscription: sub });
+      } catch (err: any) {
+        return res.status(500).json({ message: err.message || "Erreur lors de l'activation de l'essai" });
+      }
+    }
+  );
+
+  // ── MSP : accès outil (essai ou abonné) ────────────────────────────
+  app.get(
+    "/api/msp-tool",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      if (!mspToolHtml) return res.status(503).json({ message: "Outil MSP non disponible — fichier msp-tool.html manquant" });
+      if (!isAdminEmail((req.user as any).email)) {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const mspSub = subs.find(s => s.tool === "msp" && (s.status === "active" || s.status === "trialing"));
+        if (!mspSub) {
+          return res.status(403).json({ message: "Abonnement MSP requis pour accéder à cet outil." });
+        }
+        if (mspSub.status === "trialing" && mspSub.currentPeriodEnd && new Date(mspSub.currentPeriodEnd) < new Date()) {
+          try { await storage.updateSubscription(mspSub.id, { status: "expired" }); } catch {}
+          res.setHeader("Content-Type", "text/html; charset=utf-8");
+          return res.status(403).send(trialExpiredHtml("/#/subscribe-msp", "MSP — Modélisation Sources de Pollution des Sols", 8));
+        }
+      }
+      res.setHeader("X-Frame-Options", "SAMEORIGIN");
+      res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://unpkg.com"
+      );
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.send(protectToolHtml(mspToolHtml));
+    }
+  );
+
+  // ── MSP : cron rappels trial expiration (J-2 et J-0) ──────────────
+  // Déclenché par URL externe protégée — Railway Cron ou Perplexity Scheduler
+  // GET /api/admin/send-msp-trial-reminders?secret=xxx
+  app.get("/api/admin/send-msp-trial-reminders", async (req: Request, res: Response) => {
+    const secret = req.query.secret as string;
+    const expected = process.env.ADMIN_DIGEST_SECRET || "gmep-digest-2026-secret";
+    if (secret !== expected) return res.status(403).json({ message: "Secret invalide" });
+    const resendKey = process.env.RESEND_API_KEY;
+    if (!resendKey) return res.status(503).json({ message: "Resend non configuré" });
+    const { Resend } = require("resend");
+    const resend = new Resend(resendKey);
+    const results: any[] = [];
+    try {
+      const anyStorage = storage as any;
+      let trialingSubs: any[] = [];
+      if (typeof anyStorage.getAllTrialingSubscriptionsByTool === "function") {
+        trialingSubs = await anyStorage.getAllTrialingSubscriptionsByTool("msp");
+      } else if (typeof anyStorage.getAllSubscriptions === "function") {
+        const all = await anyStorage.getAllSubscriptions();
+        trialingSubs = all.filter((s: any) => s.tool === "msp" && s.status === "trialing");
+      }
+
+      const now = new Date();
+      for (const sub of trialingSubs) {
+        if (!sub.currentPeriodEnd) continue;
+        const end = new Date(sub.currentPeriodEnd);
+        const daysLeft = (end.getTime() - now.getTime()) / 86400000;
+        const isJ2 = daysLeft >= 1.5 && daysLeft < 2.5;
+        const isJ0 = daysLeft >= 0 && daysLeft < 0.5;
+        if (!isJ2 && !isJ0) continue;
+
+        let user: any = null;
+        try { user = await storage.getUser(sub.userId); } catch {}
+        if (!user || !user.email) continue;
+
+        const endFr = end.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+        const subject = isJ2
+          ? "MSP GMEP — Il vous reste 2 jours d'essai"
+          : "MSP GMEP — Votre essai expire aujourd'hui";
+        const urgenceColor = isJ0 ? "#dc2626" : "#f59e0b";
+        const urgenceLabel = isJ0 ? "Expire aujourd'hui" : "2 jours restants";
+
+        const html = `
+          <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+            <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+              <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+              <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">MSP — Modélisation Sources de Pollution des Sols</p>
+            </div>
+            <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+              <div style="background:${urgenceColor};color:white;padding:8px 16px;border-radius:6px;text-align:center;font-weight:bold;font-size:14px;margin-bottom:20px;">${urgenceLabel}</div>
+              <p style="font-size:16px;">Bonjour ${user.name || user.email},</p>
+              <p>${isJ0
+                ? "Votre essai gratuit <strong>MSP GMEP</strong> expire <strong>aujourd'hui</strong>. Après expiration, l'accès est bloqué."
+                : `Votre essai gratuit <strong>MSP GMEP</strong> se termine dans <strong>2 jours</strong> (le ${endFr}).`
+              }</p>
+              <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
+                <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Essai valable jusqu'au</td><td style="padding:10px;border:1px solid #cce0f0;"><strong>${endFr}</strong></td></tr>
+                <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Mensuel</td><td style="padding:10px;border:1px solid #e2e8f0;">250 € HT/mois — 300 € TTC</td></tr>
+                <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Annuel</td><td style="padding:10px;border:1px solid #e2e8f0;">2 760 € HT/an — 3 312 € TTC (2 mois offerts)</td></tr>
+              </table>
+              <div style="text-align:center;margin:28px 0;">
+                <a href="https://www.gmep-france.eu/#/subscribe-msp" style="background:#16a34a;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">S'abonner — Accès permanent →</a>
+              </div>
+              <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a> — Tél. 06 07 73 72 33</p>
+              <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+              <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+            </div>
+          </div>
+        `;
+
+        try {
+          await resend.emails.send({ from: "GMEP <noreply@gmep-france.eu>", to: user.email, subject, html });
+          results.push({ userId: sub.userId, email: user.email, type: isJ0 ? "J-0" : "J-2", sent: true });
+          console.log(`[MSP REMINDER ${isJ0 ? "J-0" : "J-2"}] Sent to ${user.email}`);
+        } catch (emailErr: any) {
+          results.push({ userId: sub.userId, email: user.email, type: isJ0 ? "J-0" : "J-2", sent: false, error: emailErr.message });
+        }
+      }
+      return res.json({ processed: trialingSubs.length, reminders_sent: results.filter(r => r.sent).length, results });
+    } catch (err: any) {
+      console.error("[MSP REMINDER CRON ERROR]", err);
+      return res.status(500).json({ message: "Erreur cron rappels MSP", error: err.message });
+    }
+  });
 
   // ── Dev route: reset password ──────────
   if (!isStripeConfigured) {
