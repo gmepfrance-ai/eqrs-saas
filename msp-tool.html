@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>MSP GMEP v1.0 — Maîtrise des Sources de Pollution (ISDI/Purge)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --primary: #1a5276;
+  --header: #0e2f44;
+  --accent: #39e07a;
+  --text: #1a1a1a;
+  --muted: #5b6770;
+  --panel: #f2f4f6;
+  --border: #d6dce0;
+  --bg: #ffffff;
+  --ok: #1a7a4a;
+  --warn: #b8860b;
+  --ko: #b23a48;
+  --yellow: #fff2cc;
+  --conforme: #16a34a;
+  --faible: #a3c96b;
+  --moderee: #f59e0b;
+  --elevee: #ef4444;
+  --source: #7c3aed;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;font-size:14px;background:#f0f3f6;color:var(--text);line-height:1.5}
+
+/* ── HEADER ── */
+header.gmep-header{
+  background:var(--header);color:#fff;
+  padding:14px 24px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px
+}
+.gmep-logo-area{display:flex;align-items:center;gap:14px}
+.gmep-logo-sub{font-size:10px;color:#a8c8d8;letter-spacing:1px;margin-top:2px}
+.gmep-title-block h1{margin:0;font-size:16px;font-weight:700;color:#fff}
+.gmep-title-block .version{font-size:11px;color:#a8c8d8;margin-top:3px}
+.gmep-header-right{font-size:11px;color:#a8c8d8;text-align:right}
+
+/* ── TABS ── */
+.tab-bar{
+  background:var(--primary);display:flex;flex-wrap:wrap;gap:2px;padding:0 16px
+}
+.tab-btn{
+  background:transparent;border:none;color:#a8c8d8;
+  padding:10px 18px;cursor:pointer;font-size:13px;font-weight:600;
+  border-bottom:3px solid transparent;transition:all .2s;font-family:inherit
+}
+.tab-btn.active{color:#fff;border-bottom-color:var(--accent)}
+.tab-btn:hover:not(.active){color:#fff;border-bottom-color:rgba(255,255,255,.3)}
+
+/* ── BODY ── */
+.app-body{max-width:1600px;margin:0 auto;padding:18px}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* ── CARDS ── */
+.card{
+  background:#fff;border:1px solid var(--border);border-radius:10px;
+  padding:18px;margin-bottom:16px;box-shadow:0 2px 5px rgba(0,0,0,.04)
+}
+.card h2{margin:0 0 14px;font-size:15px;color:var(--primary);border-bottom:2px solid var(--primary);padding-bottom:8px;display:flex;align-items:center;gap:8px}
+.card h3{margin:12px 0 8px;font-size:13px;color:var(--primary);font-weight:700}
+.section-label{
+  display:inline-block;background:var(--primary);color:#fff;
+  border-radius:4px;padding:1px 7px;font-size:11px;font-weight:700;margin-right:8px
+}
+
+/* ── FORMS ── */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
+.form-group input,.form-group select,.form-group textarea{
+  font:inherit;padding:7px 10px;border:1px solid var(--border);
+  border-radius:6px;font-size:13px;background:#fff;color:var(--text)
+}
+.form-group input:focus,.form-group select:focus{outline:2px solid var(--primary);outline-offset:1px}
+.form-group .unit{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ── BUTTONS ── */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 18px;border:none;border-radius:6px;cursor:pointer;
+  font-size:13px;font-weight:600;font-family:inherit;transition:filter .15s;white-space:nowrap
+}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-accent{background:var(--accent);color:#0e2f44}
+.btn-secondary{background:var(--panel);color:var(--primary);border:1px solid var(--border)}
+.btn-danger{background:#fadbd8;color:var(--ko);border:1px solid #f1948a}
+.btn-lg{padding:11px 28px;font-size:15px}
+.btn:hover{filter:brightness(1.08)}
+
+/* ── TABLES ── */
+.data-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.data-table th{background:var(--primary);color:#fff;padding:8px 10px;text-align:left;font-size:12px;font-weight:600;white-space:nowrap}
+.data-table td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.data-table tr:nth-child(even) td{background:#fafbfc}
+.data-table tr:hover td{background:#eaf2fb}
+.data-table input{
+  width:100%;font:inherit;font-size:12px;padding:4px 6px;
+  border:1px solid transparent;border-radius:4px;background:transparent
+}
+.data-table input:focus{border-color:var(--primary);background:#fff;outline:none}
+
+/* ── BADGES ── */
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap}
+.badge-conforme{background:#dcfce7;color:var(--conforme)}
+.badge-faible{background:#ecf8d2;color:#5a7a1a}
+.badge-moderee{background:#fef3c7;color:#92600a}
+.badge-elevee{background:#fee2e2;color:#991b1b}
+.badge-source{background:#ede9fe;color:#5b21b6}
+.badge-ok{background:#d5f5e3;color:var(--ok)}
+.badge-warn{background:#fef9e7;color:var(--warn)}
+.badge-ko{background:#fadbd8;color:var(--ko)}
+.badge-blue{background:#d6eaf8;color:var(--primary)}
+
+/* ── INFOBOXES ── */
+.infobox{
+  background:var(--yellow);border-left:4px solid #d4ac0d;
+  border-radius:6px;padding:10px 14px;font-size:12px;margin-bottom:14px
+}
+.infobox strong{color:#7d6608}
+.infobox.green{background:#d5f5e3;border-left-color:var(--ok)}
+.infobox.red{background:#fadbd8;border-left-color:var(--ko)}
+.infobox.blue{background:#d6eaf8;border-left-color:var(--primary)}
+.infobox.purple{background:#ede9fe;border-left-color:#7c3aed}
+
+/* ── KPI ROW ── */
+.kpi-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.kpi-card{
+  flex:1;min-width:160px;background:#fff;border:1px solid var(--border);
+  border-radius:10px;padding:14px 18px;text-align:center;
+  box-shadow:0 2px 5px rgba(0,0,0,.04)
+}
+.kpi-card .kpi-val{font-size:28px;font-weight:700;line-height:1.1}
+.kpi-card .kpi-lbl{font-size:11px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
+.kpi-ok{color:var(--conforme)}
+.kpi-warn{color:var(--warn)}
+.kpi-ko{color:var(--ko)}
+.kpi-purple{color:var(--source)}
+.kpi-blue{color:var(--primary)}
+
+/* ── RESULT BLOCKS ── */
+.result-block{background:var(--panel);border-radius:8px;padding:14px;margin-bottom:12px}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed #d6dce0}
+.result-row:last-child{border-bottom:none}
+.result-label{font-size:12px;color:var(--muted)}
+.result-value{font-size:14px;font-weight:700;color:var(--primary)}
+.result-value.ok{color:var(--ok)}
+.result-value.warn{color:var(--warn)}
+.result-value.ko{color:var(--ko)}
+
+/* ── PURGE ZONE ── */
+.purge-zone-block{
+  border:2px solid var(--ko);border-radius:8px;padding:16px;
+  background:#fff8f8;margin-bottom:14px
+}
+.purge-zone-block h3{color:var(--ko);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.purge-icon{
+  display:inline-block;background:var(--ko);color:#fff;
+  border-radius:50%;width:20px;height:20px;line-height:20px;
+  text-align:center;font-size:12px;font-weight:700
+}
+
+/* ── MAP ── */
+#msp-map{height:500px;border-radius:8px;border:1px solid var(--border)}
+.map-legend{
+  display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;
+  background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 14px
+}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px}
+.legend-dot{width:14px;height:14px;border-radius:50%;border:2px solid rgba(0,0,0,.2);flex-shrink:0}
+
+/* ── CHARTS ── */
+.chart-wrap{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px}
+.chart-wrap h3{font-size:14px;color:var(--primary);margin-bottom:12px}
+#ratioChart{max-height:420px}
+
+/* ── RAPPORT ── */
+.rapport-wrap{background:#fff;border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:16px}
+.rapp-header{border-bottom:3px solid var(--primary);padding-bottom:14px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-end}
+.rapp-section{margin-bottom:24px}
+.rapp-section h2{font-size:14px;color:var(--primary);border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
+.rapp-footer{border-top:1px solid var(--border);padding-top:12px;font-size:11px;color:var(--muted);text-align:center;margin-top:24px}
+.rapp-warning{background:#fff8cc;border-left:4px solid #d4ac0d;border-radius:4px;padding:10px 14px;font-size:11px;color:#7d6608;font-style:italic}
+
+/* ── FOOTER ── */
+footer.gmep-footer{
+  background:var(--header);color:#a8c8d8;
+  text-align:center;font-size:11px;padding:12px 24px;margin-top:24px
+}
+footer a{color:var(--accent);text-decoration:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .form-grid{grid-template-columns:1fr 1fr}
+  .kpi-row .kpi-card{min-width:130px}
+  #msp-map{height:320px}
+}
+@media(max-width:480px){
+  .form-grid{grid-template-columns:1fr}
+  .tab-btn{padding:8px 10px;font-size:12px}
+}
+
+/* ── PRINT ── */
+@media print{
+  header.gmep-header,.tab-bar,.app-body > *:not(#tab-rapport),.gmep-footer,
+  .btn,.tab-panel:not(.active){display:none!important}
+  #tab-rapport{display:block!important}
+  .rapport-wrap{border:none;padding:0}
+  body{background:#fff}
+}
+
+/* ── SCROLL TABLE WRAPPER ── */
+.table-scroll{overflow-x:auto}
+
+/* ── COST EDIT ── */
+.cost-row{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--border);font-size:13px}
+.cost-row:last-child{border-bottom:none}
+.cost-row input{width:90px;padding:5px 8px;border:1px solid var(--border);border-radius:5px;font:inherit;font-size:13px;text-align:right}
+.total-cost{font-size:22px;font-weight:700;color:var(--primary)}
+
+/* utility */
+.flex-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.mt8{margin-top:8px}
+.mt16{margin-top:16px}
+.mb0{margin-bottom:0}
+.text-right{text-align:right}
+.bold{font-weight:700}
+.mono{font-family:monospace}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     HEADER
+═══════════════════════════════════════════ -->
+<header class="gmep-header">
+  <div class="gmep-logo-area">
+    <svg viewBox="0 0 120 32" width="110" height="30" aria-label="GMEP">
+      <g transform="translate(0,2)">
+        <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+        <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+      </g>
+      <text x="22" y="22" font-family="Arial" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+    </svg>
+    <div>
+      <div class="gmep-logo-sub">GESTION DES MILIEUX ET ENVIRONNEMENT POLLUÉS</div>
+    </div>
+  </div>
+  <div class="gmep-title-block">
+    <h1>MSP — Maîtrise des Sources de Pollution</h1>
+    <div class="version">Conformité ISDI · Zones de purge · Estimation volumes &amp; coûts</div>
+  </div>
+  <div class="gmep-header-right">
+    MSP GMEP v1.0<br>
+    Arrêté 12/12/2014 · Décret 2023-1408
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════
+     TAB BAR
+═══════════════════════════════════════════ -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('saisie',this)">① Saisie des données</button>
+  <button class="tab-btn" onclick="showTab('resultats',this)">② Résultats</button>
+  <button class="tab-btn" onclick="showTab('carte',this)">③ Carte &amp; Visualisation</button>
+  <button class="tab-btn" onclick="showTab('rapport',this)">④ Rapport</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MAIN BODY
+═══════════════════════════════════════════ -->
+<div class="app-body">
+
+<!-- ╔═══════════════════════════════════════
+     ONGLET 1 — SAISIE
+═══════════════════════════════════════════╗ -->
+<div id="tab-saisie" class="tab-panel active">
+
+  <!-- Section A — Infos site -->
+  <div class="card">
+    <h2><span class="section-label">A</span> Informations du site</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nom du site</label>
+        <input type="text" id="site-nom" value="Site industriel Exemple — Friche ex-atelier mécanique">
+      </div>
+      <div class="form-group">
+        <label>Référence dossier</label>
+        <input type="text" id="site-ref" value="MSP-2026-001">
+      </div>
+      <div class="form-group">
+        <label>Date de diagnostic</label>
+        <input type="date" id="site-date" value="2026-06-23">
+      </div>
+      <div class="form-group">
+        <label>Maître d'ouvrage</label>
+        <input type="text" id="site-moa" placeholder="Ex : Société XYZ">
+      </div>
+      <div class="form-group">
+        <label>Opérateur / Bureau d'études</label>
+        <input type="text" id="site-be" value="GMEP Bureau d'études">
+      </div>
+      <div class="form-group">
+        <label>Usage futur</label>
+        <select id="site-usage">
+          <option value="residentiel_jardin">Résidentiel avec jardin</option>
+          <option value="residentiel_sans" selected>Résidentiel sans jardin</option>
+          <option value="professionnel">Professionnel</option>
+          <option value="recreatif">Récréatif</option>
+          <option value="autre">Autre</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section B — Points de mesure -->
+  <div class="card">
+    <h2><span class="section-label">B</span> Composés analysés — Points de mesure</h2>
+
+    <div class="infobox blue" style="margin-bottom:14px">
+      <strong>Composés organiques uniquement</strong> — Seuils ISDI selon Arrêté du 12 décembre 2014 (rubriques 2515, 2516, 2517). Les métaux relèvent de l'EQRS/ARR. Unités : mg/kg MS.
+    </div>
+
+    <!-- Composé selector -->
+    <div class="flex-row mt8 mb0" style="margin-bottom:12px">
+      <label style="font-size:12px;font-weight:600;color:var(--muted)">COMPOSÉS AFFICHÉS :</label>
+      <div id="compose-checkboxes" style="display:flex;flex-wrap:wrap;gap:8px;font-size:12px"></div>
+      <button class="btn btn-secondary" onclick="toggleAllComposés(true)">Tout</button>
+      <button class="btn btn-secondary" onclick="toggleAllComposés(false)">Aucun</button>
+    </div>
+
+    <div class="table-scroll">
+      <table class="data-table" id="points-table">
+        <thead id="points-thead"></thead>
+        <tbody id="points-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="flex-row mt8">
+      <button class="btn btn-primary" onclick="addPoint()">+ Ajouter un point de mesure</button>
+      <button class="btn btn-danger" onclick="clearAllPoints()" style="margin-left:auto">Vider le tableau</button>
+    </div>
+  </div>
+
+  <!-- Section C — Piézomètres -->
+  <div class="card">
+    <h2><span class="section-label">C</span> Données piézométriques <span style="font-size:12px;font-weight:400;color:var(--muted)">(optionnel)</span></h2>
+    <div class="table-scroll">
+      <table class="data-table" id="piezo-table">
+        <thead>
+          <tr>
+            <th>ID Piézo</th>
+            <th>X (Lambert 93)</th>
+            <th>Y (Lambert 93)</th>
+            <th>Cote NGF sol (m)</th>
+            <th>Niveau eau (m/sol)</th>
+            <th>Cote NGF eau (m NGF)</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="piezo-tbody"></tbody>
+      </table>
+    </div>
+    <div class="flex-row mt8">
+      <button class="btn btn-primary" onclick="addPiezo()">+ Ajouter un piézomètre</button>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div style="text-align:center;padding:12px 0 24px">
+    <button class="btn btn-accent btn-lg" onclick="calculerAnalyser()">
+      ▶ CALCULER ET ANALYSER
+    </button>
+  </div>
+
+</div><!-- /tab-saisie -->
+
+
+<!-- ╔═══════════════════════════════════════
+     ONGLET 2 — RÉSULTATS
+═══════════════════════════════════════════╗ -->
+<div id="tab-resultats" class="tab-panel">
+
+  <!-- KPIs -->
+  <div class="kpi-row" id="kpi-row">
+    <div class="kpi-card"><div class="kpi-val kpi-blue" id="kpi-points">—</div><div class="kpi-lbl">Points analysés</div></div>
+    <div class="kpi-card"><div class="kpi-val kpi-ok" id="kpi-conformes">—</div><div class="kpi-lbl">Points conformes ISDI</div></div>
+    <div class="kpi-card"><div class="kpi-val kpi-warn" id="kpi-depasse">—</div><div class="kpi-lbl">Points en dépassement</div></div>
+    <div class="kpi-card"><div class="kpi-val kpi-purple" id="kpi-purge">—</div><div class="kpi-lbl">Zones PURGE OBLIGATOIRE</div></div>
+    <div class="kpi-card"><div class="kpi-val kpi-ko" id="kpi-vol">—</div><div class="kpi-lbl">Volume total à excaver (m³)</div></div>
+  </div>
+
+  <!-- Tableau conformité -->
+  <div class="card">
+    <h2>Tableau de conformité ISDI — Composés organiques</h2>
+    <div id="no-calc-msg" class="infobox">Cliquez sur <strong>"CALCULER ET ANALYSER"</strong> dans l'onglet Saisie pour obtenir les résultats.</div>
+    <div id="conformite-wrap" style="display:none">
+      <div class="table-scroll">
+        <table class="data-table" id="conformite-table">
+          <thead id="conformite-thead"></thead>
+          <tbody id="conformite-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zones de purge -->
+  <div class="card" id="purge-card" style="display:none">
+    <h2 style="color:var(--ko);border-bottom-color:var(--ko)">⚠ Zones de PURGE OBLIGATOIRE</h2>
+    <div class="infobox red">
+      <strong>PURGE OBLIGATOIRE</strong> — Tout dépassement du seuil ISDI pour les composés organiques implique une purge obligatoire. Ces zones ne peuvent faire l'objet d'aucune réutilisation. La purge et l'élimination en filière appropriée sont impératives.
+    </div>
+    <div id="purge-list"></div>
+  </div>
+
+  <!-- Estimation volumes -->
+  <div class="card" id="volumes-card" style="display:none">
+    <h2>Estimation des volumes à excaver</h2>
+    <div class="infobox blue">
+      <strong>Méthode :</strong> Surface d'influence estimée par rayon de 5 m autour de chaque point (zone simplifiée). Volume = Surface × Profondeur impactée. Pour un calcul précis, une investigation complémentaire est recommandée.
+    </div>
+    <div class="table-scroll">
+      <table class="data-table" id="volumes-table">
+        <thead>
+          <tr>
+            <th>Point / Zone</th>
+            <th>Composé le plus problématique</th>
+            <th>Ratio max (C/seuil)</th>
+            <th>Surface est. (m²)</th>
+            <th>Profondeur (m)</th>
+            <th>Volume (m³)</th>
+            <th>Filière recommandée</th>
+          </tr>
+        </thead>
+        <tbody id="volumes-tbody"></tbody>
+        <tfoot id="volumes-tfoot"></tfoot>
+      </table>
+    </div>
+    <div id="vol-total-display" style="text-align:center;margin-top:16px;padding:12px;background:var(--panel);border-radius:8px;font-size:18px;font-weight:700;color:var(--ko)"></div>
+  </div>
+
+  <!-- Synthèse économique -->
+  <div class="card" id="eco-card" style="display:none">
+    <h2>Synthèse économique indicative</h2>
+    <div class="infobox" style="margin-bottom:16px">
+      Ces estimations sont indicatives. Elles dépendent des conditions de chantier et des prestataires locaux.
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;flex-wrap:wrap">
+      <div>
+        <h3>Paramètres de coût (modifiables)</h3>
+        <div id="cost-params">
+          <div class="cost-row">
+            <span>Coût excavation</span>
+            <input type="number" id="cout-excav" value="15" min="0"> €/m³
+          </div>
+          <div class="cost-row">
+            <span>Coût transport</span>
+            <input type="number" id="cout-transport" value="45" min="0"> €/t
+          </div>
+          <div class="cost-row">
+            <span>Densité terres</span>
+            <input type="number" id="densite" value="1.8" step="0.1" min="0"> t/m³
+          </div>
+          <div class="cost-row">
+            <span>Traitement ISDI (ratio &lt; 20)</span>
+            <input type="number" id="cout-isdi" value="35" min="0"> €/t
+          </div>
+          <div class="cost-row">
+            <span>Traitement spécialisé (ratio ≥ 20)</span>
+            <input type="number" id="cout-special" value="150" min="0"> €/t
+          </div>
+          <div class="mt8">
+            <button class="btn btn-primary" onclick="recalcCouts()">Recalculer les coûts</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3>Estimation totale</h3>
+        <div id="eco-detail" class="result-block"></div>
+        <div style="background:var(--panel);border-radius:8px;padding:14px;margin-top:12px;text-align:center">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px">COÛT TOTAL ESTIMÉ</div>
+          <div class="total-cost" id="eco-total">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /tab-resultats -->
+
+
+<!-- ╔═══════════════════════════════════════
+     ONGLET 3 — CARTE & VIZ
+═══════════════════════════════════════════╗ -->
+<div id="tab-carte" class="tab-panel">
+
+  <div class="card">
+    <h2>Carte des points de mesure</h2>
+    <div id="msp-map"></div>
+    <div class="map-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--conforme)"></div>Conforme ISDI (ratio ≤ 1)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--faible)"></div>Dépassement faible (×1–2)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--moderee)"></div>Dépassement modéré (×2–10)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--elevee)"></div>Dépassement élevé (×10–20)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--source)"></div>SOURCE — PURGE OBLIGATOIRE (&gt;×20)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#2196f3"></div>Piézomètre</div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <h3>Top 15 — Ratios C/seuil ISDI par point·composé</h3>
+    <div style="position:relative">
+      <canvas id="ratioChart"></canvas>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:8px">
+      Ligne rouge = seuil ISDI (ratio 1) · Ligne violette = seuil source/purge (ratio 20)
+    </div>
+  </div>
+
+</div><!-- /tab-carte -->
+
+
+<!-- ╔═══════════════════════════════════════
+     ONGLET 4 — RAPPORT
+═══════════════════════════════════════════╗ -->
+<div id="tab-rapport" class="tab-panel">
+
+  <div class="flex-row" style="margin-bottom:16px">
+    <button class="btn btn-accent btn-lg" onclick="window.print()">🖨 Imprimer / Télécharger PDF</button>
+    <span style="font-size:12px;color:var(--muted)">Utilisez "Enregistrer en PDF" dans la boîte de dialogue d'impression.</span>
+  </div>
+
+  <div class="rapport-wrap" id="rapport-content">
+
+    <!-- En-tête rapport -->
+    <div class="rapp-header">
+      <div>
+        <svg viewBox="0 0 120 32" width="110" height="30">
+          <g transform="translate(0,2)">
+            <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+            <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+          </g>
+          <text x="22" y="22" font-family="Arial" font-size="17" font-weight="700" letter-spacing="0.5" fill="#1a5276">G.M.E.P</text>
+        </svg>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px">GESTION DES MILIEUX ET ENVIRONNEMENT POLLUÉS</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:18px;font-weight:700;color:var(--primary)">RAPPORT MSP — MAÎTRISE DES SOURCES DE POLLUTION</div>
+        <div style="font-size:12px;color:var(--muted)" id="rapp-ref-date"></div>
+      </div>
+    </div>
+
+    <!-- Infos site -->
+    <div class="rapp-section">
+      <h2>1. Informations du site</h2>
+      <div id="rapp-site-info" class="result-block"></div>
+    </div>
+
+    <!-- Résumé exécutif -->
+    <div class="rapp-section">
+      <h2>2. Résumé exécutif</h2>
+      <div id="rapp-resume"></div>
+    </div>
+
+    <!-- Tableau conformité -->
+    <div class="rapp-section">
+      <h2>3. Tableau de conformité ISDI</h2>
+      <div id="rapp-conformite"></div>
+    </div>
+
+    <!-- Zones de purge -->
+    <div class="rapp-section">
+      <h2>4. Zones de PURGE OBLIGATOIRE</h2>
+      <div id="rapp-purge"></div>
+    </div>
+
+    <!-- Volumes et coûts -->
+    <div class="rapp-section">
+      <h2>5. Estimation des volumes et des coûts</h2>
+      <div id="rapp-volumes"></div>
+    </div>
+
+    <!-- Références réglementaires -->
+    <div class="rapp-section">
+      <h2>6. Références réglementaires</h2>
+      <ul style="font-size:13px;line-height:2;padding-left:20px">
+        <li>Arrêté du 12 décembre 2014 relatif aux conditions d'admission des déchets inertes dans les installations relevant des rubriques 2515, 2516 et 2517</li>
+        <li>Décret n° 2023-1408 du 29 décembre 2023 relatif aux terres excavées et aux sédiments extraits destinés à être utilisés en dehors du site de leur production</li>
+        <li>Guide TEX SSP V2 (INERIS) — Technique d'excavation des terres et des sédiments dans les sites et sols pollués</li>
+        <li>Circulaire du 8 février 2007 relative aux sites et sols pollués — méthodologie nationale</li>
+      </ul>
+    </div>
+
+    <!-- Avertissement -->
+    <div class="rapp-section">
+      <div class="rapp-warning">
+        Ce rapport est généré automatiquement par MSP GMEP. Il est de la responsabilité de l'ingénieur en charge du dossier de valider les hypothèses et les résultats. Les estimations de volumes et de coûts sont indicatives et dépendent des conditions de chantier et des prestataires locaux.
+      </div>
+    </div>
+
+    <div class="rapp-footer">
+      GMEP — Gestion des Milieux et Environnement Pollués · <a href="https://www.gmep-france.eu">www.gmep-france.eu</a><br>
+      MSP GMEP v1.0 · Arrêté du 12/12/2014 · Décret 2023-1408
+    </div>
+
+  </div><!-- /rapport-content -->
+
+</div><!-- /tab-rapport -->
+
+</div><!-- /app-body -->
+
+<!-- ══════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════ -->
+<footer class="gmep-footer">
+  MSP GMEP v1.0 — GMEP | <a href="https://www.gmep-france.eu">www.gmep-france.eu</a>
+  &nbsp;·&nbsp; Arrêté du 12 décembre 2014 &nbsp;·&nbsp; Décret 2023-1408
+</footer>
+
+
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ─── DONNÉES RÉFÉRENTIELLES ─────────────────────────────────────────────────
+
+const COMPOSES = [
+  { id: 'benzene',        nom: 'Benzène',               seuil: 0.1  },
+  { id: 'toluene',        nom: 'Toluène',               seuil: 0.5  },
+  { id: 'ethylbenzene',   nom: 'Éthylbenzène',          seuil: 0.5  },
+  { id: 'xylenes',        nom: 'Xylènes (total)',        seuil: 0.5  },
+  { id: 'naphtalene',     nom: 'Naphtalène',             seuil: 0.5  },
+  { id: 'hap',            nom: 'HAP total',              seuil: 50   },
+  { id: 'bap',            nom: 'Benzo(a)pyrène',         seuil: 0.5  },
+  { id: 'hc1040',         nom: 'Hydrocarbures C10-C40',  seuil: 500  },
+  { id: 'tce',            nom: 'Trichloroéthylène',      seuil: 0.1  },
+  { id: 'pce',            nom: 'Tétrachloroéthylène',    seuil: 0.1  },
+  { id: 'chloroforme',    nom: 'Chloroforme',            seuil: 0.1  },
+  { id: 'styrene',        nom: 'Styrène',                seuil: 0.5  },
+];
+
+// Composés visibles par défaut (ceux qui ont des données dans l'exemple)
+let visibleComposés = new Set(['benzene','hap','bap','hc1040','tce','pce']);
+
+// ─── DONNÉES APPLICATION ────────────────────────────────────────────────────
+
+let points = [];   // { id, x, y, prof, ...composé.id: valeur }
+let piezos = [];   // { id, x, y, cote_sol, niveau_eau }
+let resultsCalc = null;
+
+// ─── ONGLETS ────────────────────────────────────────────────────────────────
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+
+  if (id === 'carte') {
+    setTimeout(() => {
+      if (mapInstance) mapInstance.invalidateSize();
+      renderMap();
+    }, 100);
+  }
+  if (id === 'rapport') renderRapport();
+}
+
+// ─── CHECKBOXES COMPOSÉS ────────────────────────────────────────────────────
+
+function buildComposeCheckboxes() {
+  const wrap = document.getElementById('compose-checkboxes');
+  wrap.innerHTML = '';
+  COMPOSES.forEach(c => {
+    const lbl = document.createElement('label');
+    lbl.style.cssText = 'display:flex;align-items:center;gap:4px;cursor:pointer;background:var(--panel);padding:3px 8px;border-radius:12px;border:1px solid var(--border)';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = visibleComposés.has(c.id);
+    cb.dataset.id = c.id;
+    cb.addEventListener('change', () => {
+      if (cb.checked) visibleComposés.add(c.id);
+      else visibleComposés.delete(c.id);
+      renderPointsTable();
+    });
+    lbl.appendChild(cb);
+    lbl.appendChild(document.createTextNode(c.nom));
+    wrap.appendChild(lbl);
+  });
+}
+
+function toggleAllComposés(val) {
+  COMPOSES.forEach(c => { if (val) visibleComposés.add(c.id); else visibleComposés.delete(c.id); });
+  buildComposeCheckboxes();
+  renderPointsTable();
+}
+
+// ─── TABLE POINTS ───────────────────────────────────────────────────────────
+
+function renderPointsTable() {
+  const visC = COMPOSES.filter(c => visibleComposés.has(c.id));
+
+  // Head
+  const thead = document.getElementById('points-thead');
+  thead.innerHTML = '';
+  const tr = document.createElement('tr');
+  ['ID Point','X (L93)','Y (L93)','Prof. (m)', ...visC.map(c => c.nom + '<br><small style="font-weight:400;color:#a8c8d8">seuil ' + c.seuil + '</small>'), ''].forEach(h => {
+    const th = document.createElement('th');
+    th.innerHTML = h;
+    tr.appendChild(th);
+  });
+  thead.appendChild(tr);
+
+  // Body
+  const tbody = document.getElementById('points-tbody');
+  tbody.innerHTML = '';
+  points.forEach((pt, idx) => {
+    const row = document.createElement('tr');
+    // ID
+    row.appendChild(editCell(idx, 'id', pt.id, 'width:60px'));
+    row.appendChild(editCell(idx, 'x', pt.x, 'width:90px', 'number'));
+    row.appendChild(editCell(idx, 'y', pt.y, 'width:90px', 'number'));
+    row.appendChild(editCell(idx, 'prof', pt.prof, 'width:60px', 'number'));
+
+    visC.forEach(c => {
+      row.appendChild(editCellConc(idx, c.id, pt[c.id] || '', 'width:80px'));
+    });
+
+    const tdDel = document.createElement('td');
+    const btnDel = document.createElement('button');
+    btnDel.className = 'btn btn-danger';
+    btnDel.style.padding = '3px 10px';
+    btnDel.textContent = '✕';
+    btnDel.onclick = () => { points.splice(idx, 1); renderPointsTable(); };
+    tdDel.appendChild(btnDel);
+    row.appendChild(tdDel);
+
+    tbody.appendChild(row);
+  });
+}
+
+function editCell(ptIdx, field, val, style, type) {
+  const td = document.createElement('td');
+  const inp = document.createElement('input');
+  inp.type = type || 'text';
+  inp.value = val !== undefined && val !== null ? val : '';
+  if (style) inp.style.cssText = style;
+  inp.addEventListener('change', () => {
+    points[ptIdx][field] = type === 'number' ? (inp.value === '' ? '' : parseFloat(inp.value)) : inp.value;
+  });
+  td.appendChild(inp);
+  return td;
+}
+
+function editCellConc(ptIdx, compId, val, style) {
+  const td = document.createElement('td');
+  const inp = document.createElement('input');
+  inp.type = 'number';
+  inp.min = '0';
+  inp.step = 'any';
+  inp.value = val !== '' && val !== undefined && val !== null ? val : '';
+  inp.placeholder = '<LD';
+  if (style) inp.style.cssText = style;
+  inp.addEventListener('change', () => {
+    points[ptIdx][compId] = inp.value === '' ? null : parseFloat(inp.value);
+  });
+  td.appendChild(inp);
+  return td;
+}
+
+function addPoint() {
+  const n = points.length + 1;
+  const obj = { id: 'S' + n, x: '', y: '', prof: 0.5 };
+  COMPOSES.forEach(c => { obj[c.id] = null; });
+  points.push(obj);
+  renderPointsTable();
+}
+
+function clearAllPoints() {
+  if (confirm('Vider tous les points de mesure ?')) {
+    points = [];
+    renderPointsTable();
+  }
+}
+
+// ─── TABLE PIÉZOS ───────────────────────────────────────────────────────────
+
+function renderPiezoTable() {
+  const tbody = document.getElementById('piezo-tbody');
+  tbody.innerHTML = '';
+  piezos.forEach((pz, idx) => {
+    const tr = document.createElement('tr');
+    ['id','x','y','cote_sol','niveau_eau'].forEach(f => {
+      const td = document.createElement('td');
+      const inp = document.createElement('input');
+      inp.type = f === 'id' ? 'text' : 'number';
+      inp.value = pz[f] !== null && pz[f] !== undefined ? pz[f] : '';
+      inp.style.width = f === 'id' ? '60px' : '90px';
+      inp.addEventListener('change', () => {
+        piezos[idx][f] = f === 'id' ? inp.value : (inp.value === '' ? null : parseFloat(inp.value));
+        // Auto NGF eau
+        if (f === 'cote_sol' || f === 'niveau_eau') {
+          const cs = parseFloat(piezos[idx].cote_sol);
+          const ne = parseFloat(piezos[idx].niveau_eau);
+          if (!isNaN(cs) && !isNaN(ne)) {
+            piezos[idx].cote_ngf_eau = cs - ne;
+          }
+          renderPiezoTable();
+        }
+      });
+      td.appendChild(inp);
+      tr.appendChild(td);
+    });
+    // NGF eau (calc)
+    const tdNgf = document.createElement('td');
+    const cs = parseFloat(pz.cote_sol);
+    const ne = parseFloat(pz.niveau_eau);
+    if (!isNaN(cs) && !isNaN(ne)) {
+      tdNgf.textContent = (cs - ne).toFixed(2) + ' m NGF';
+      tdNgf.style.fontWeight = '700';
+    } else {
+      tdNgf.textContent = '—';
+      tdNgf.style.color = 'var(--muted)';
+    }
+    tr.appendChild(tdNgf);
+    // Delete
+    const tdDel = document.createElement('td');
+    const btnDel = document.createElement('button');
+    btnDel.className = 'btn btn-danger';
+    btnDel.style.padding = '3px 10px';
+    btnDel.textContent = '✕';
+    btnDel.onclick = () => { piezos.splice(idx, 1); renderPiezoTable(); };
+    tdDel.appendChild(btnDel);
+    tr.appendChild(tdDel);
+    tbody.appendChild(tr);
+  });
+}
+
+function addPiezo() {
+  piezos.push({ id: 'Pz' + (piezos.length + 1), x: '', y: '', cote_sol: null, niveau_eau: null });
+  renderPiezoTable();
+}
+
+// ─── CALCUL PRINCIPAL ────────────────────────────────────────────────────────
+
+function getBadgeClass(ratio) {
+  if (ratio <= 1)  return 'badge-conforme';
+  if (ratio <= 2)  return 'badge-faible';
+  if (ratio <= 10) return 'badge-moderee';
+  if (ratio <= 20) return 'badge-elevee';
+  return 'badge-source';
+}
+function getBadgeText(ratio) {
+  if (ratio <= 1)  return 'Conforme ISDI';
+  if (ratio <= 2)  return 'Dépassement faible (×' + ratio.toFixed(1) + ')';
+  if (ratio <= 10) return 'Dépassement modéré (×' + ratio.toFixed(1) + ')';
+  if (ratio <= 20) return 'Dépassement élevé (×' + ratio.toFixed(1) + ')';
+  return 'SOURCE — PURGE OBLIGATOIRE (×' + ratio.toFixed(0) + ')';
+}
+function getMarkerColor(ratio) {
+  if (ratio <= 1)  return '#16a34a';
+  if (ratio <= 2)  return '#a3c96b';
+  if (ratio <= 10) return '#f59e0b';
+  if (ratio <= 20) return '#ef4444';
+  return '#7c3aed';
+}
+
+function calculerAnalyser() {
+  if (points.length === 0) {
+    alert('Aucun point de mesure. Veuillez saisir au moins un point.');
+    return;
+  }
+
+  // Calcul ratio par point/composé
+  const resultsPts = points.map(pt => {
+    let maxRatio = 0;
+    let maxCompose = null;
+    const composesData = COMPOSES.map(c => {
+      const conc = (pt[c.id] !== null && pt[c.id] !== undefined && pt[c.id] !== '') ? parseFloat(pt[c.id]) : null;
+      if (conc === null) return { ...c, conc: null, ratio: null, badgeClass: 'badge-blue', badgeText: '<LD / NA' };
+      const ratio = conc / c.seuil;
+      if (ratio > maxRatio) { maxRatio = ratio; maxCompose = c; }
+      return { ...c, conc, ratio, badgeClass: getBadgeClass(ratio), badgeText: getBadgeText(ratio) };
+    });
+    return {
+      ...pt,
+      composesData,
+      maxRatio,
+      maxCompose,
+      needsPurge: maxRatio > 1,
+      isSource: maxRatio > 20,
+      color: getMarkerColor(maxRatio),
+    };
+  });
+
+  // Volumes
+  const RAYON = 5; // m
+  const SURFACE = Math.PI * RAYON * RAYON;
+  const purgeZones = resultsPts.filter(p => p.needsPurge).map(p => {
+    const vol = SURFACE * (p.prof || 0.5);
+    const filiere = p.maxRatio > 20 ? 'Élimination spécialisée' : 'ISDI';
+    return { ...p, surface: SURFACE, vol, filiere };
+  });
+
+  const volTotalISDI = purgeZones.filter(p => p.maxRatio <= 20).reduce((s, p) => s + p.vol, 0);
+  const volTotalSpecial = purgeZones.filter(p => p.maxRatio > 20).reduce((s, p) => s + p.vol, 0);
+  const volTotal = volTotalISDI + volTotalSpecial;
+
+  resultsCalc = {
+    resultsPts,
+    purgeZones,
+    volTotalISDI,
+    volTotalSpecial,
+    volTotal,
+  };
+
+  renderResultats();
+  renderCarteViz();
+  recalcCouts();
+
+  // Switcher vers l'onglet résultats
+  document.querySelectorAll('.tab-btn').forEach((b, i) => { if (i === 1) b.click(); });
+}
+
+// ─── RENDU RÉSULTATS ─────────────────────────────────────────────────────────
+
+function renderResultats() {
+  if (!resultsCalc) return;
+  const { resultsPts, purgeZones, volTotal } = resultsCalc;
+
+  // KPIs
+  document.getElementById('kpi-points').textContent = resultsPts.length;
+  const nbConf = resultsPts.filter(p => !p.needsPurge).length;
+  const nbDep  = resultsPts.filter(p => p.needsPurge).length;
+  const nbPurge= purgeZones.length;
+  document.getElementById('kpi-conformes').textContent = nbConf;
+  document.getElementById('kpi-depasse').textContent = nbDep;
+  document.getElementById('kpi-purge').textContent = nbPurge;
+  document.getElementById('kpi-vol').textContent = volTotal.toFixed(0) + ' m³';
+
+  document.getElementById('no-calc-msg').style.display = 'none';
+  document.getElementById('conformite-wrap').style.display = '';
+
+  // Tableau conformité — colonnes = composés ayant au moins une valeur non-nulle
+  const composesAvecData = COMPOSES.filter(c => resultsPts.some(p => {
+    const cd = p.composesData.find(d => d.id === c.id);
+    return cd && cd.conc !== null;
+  }));
+
+  const thead = document.getElementById('conformite-thead');
+  thead.innerHTML = '';
+  const htr = document.createElement('tr');
+  ['Point','Prof. (m)', ...composesAvecData.map(c => c.nom + '<br><small>seuil ' + c.seuil + '</small>'), 'Ratio max','Statut global'].forEach(h => {
+    const th = document.createElement('th');
+    th.innerHTML = h;
+    htr.appendChild(th);
+  });
+  thead.appendChild(htr);
+
+  const tbody = document.getElementById('conformite-tbody');
+  tbody.innerHTML = '';
+  resultsPts.forEach(pt => {
+    const tr = document.createElement('tr');
+    const tdId = document.createElement('td');
+    tdId.innerHTML = '<strong>' + escHtml(pt.id) + '</strong>';
+    tr.appendChild(tdId);
+    const tdProf = document.createElement('td');
+    tdProf.textContent = pt.prof + ' m';
+    tr.appendChild(tdProf);
+
+    composesAvecData.forEach(c => {
+      const cd = pt.composesData.find(d => d.id === c.id);
+      const td = document.createElement('td');
+      if (!cd || cd.conc === null) {
+        td.innerHTML = '<span style="color:var(--muted);font-size:11px">&lt;LD</span>';
+      } else {
+        td.innerHTML = cd.conc + '<br><span style="font-size:10px;color:var(--muted)">÷' + c.seuil + ' = <strong>' + cd.ratio.toFixed(2) + '</strong></span><br><span class="badge ' + cd.badgeClass + '" style="font-size:10px">' + (cd.ratio > 1 ? getBadgeText(cd.ratio).replace(/×.*/, '') + '×' + cd.ratio.toFixed(1) : 'Conf.') + '</span>';
+      }
+      tr.appendChild(td);
+    });
+
+    const tdMax = document.createElement('td');
+    tdMax.innerHTML = pt.maxRatio > 0 ? '<strong>×' + pt.maxRatio.toFixed(2) + '</strong>' : '<span style="color:var(--muted)">—</span>';
+    tr.appendChild(tdMax);
+
+    const tdStat = document.createElement('td');
+    tdStat.innerHTML = '<span class="badge ' + getBadgeClass(pt.maxRatio) + '">' + getBadgeText(pt.maxRatio) + '</span>';
+    tr.appendChild(tdStat);
+
+    tbody.appendChild(tr);
+  });
+
+  // Purge zones
+  const purgeCard = document.getElementById('purge-card');
+  const purgeList = document.getElementById('purge-list');
+  if (purgeZones.length === 0) {
+    purgeCard.style.display = 'none';
+  } else {
+    purgeCard.style.display = '';
+    purgeList.innerHTML = '';
+    purgeZones.forEach(z => {
+      const div = document.createElement('div');
+      div.className = 'purge-zone-block';
+      div.innerHTML = `
+        <h3><span class="purge-icon">!</span> PURGE OBLIGATOIRE — Point ${escHtml(z.id)}</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;font-size:13px">
+          <div><strong>Composé le plus problématique :</strong><br>${escHtml(z.maxCompose ? z.maxCompose.nom : '—')}</div>
+          <div><strong>Concentration mesurée :</strong><br>${z.maxCompose ? (z.composesData.find(d=>d.id===z.maxCompose.id)?.conc ?? '—') : '—'} mg/kg MS</div>
+          <div><strong>Seuil ISDI :</strong><br>${z.maxCompose ? z.maxCompose.seuil : '—'} mg/kg MS</div>
+          <div><strong>Ratio C/seuil :</strong><br><strong style="color:var(--ko)">×${z.maxRatio.toFixed(2)}</strong></div>
+          <div><strong>Volume estimé :</strong><br>${z.vol.toFixed(1)} m³</div>
+          <div><strong>Filière :</strong><br><span class="badge ${z.maxRatio > 20 ? 'badge-source' : 'badge-elevee'}">${z.filiere}</span></div>
+        </div>
+      `;
+      purgeList.appendChild(div);
+    });
+  }
+
+  // Volumes
+  const volCard = document.getElementById('volumes-card');
+  if (purgeZones.length === 0) {
+    volCard.style.display = 'none';
+  } else {
+    volCard.style.display = '';
+    const vtbody = document.getElementById('volumes-tbody');
+    vtbody.innerHTML = '';
+    purgeZones.forEach(z => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong>${escHtml(z.id)}</strong></td>
+        <td>${z.maxCompose ? escHtml(z.maxCompose.nom) : '—'}</td>
+        <td><strong>×${z.maxRatio.toFixed(2)}</strong></td>
+        <td>${z.surface.toFixed(0)} m²</td>
+        <td>${z.prof} m</td>
+        <td><strong>${z.vol.toFixed(1)} m³</strong></td>
+        <td><span class="badge ${z.maxRatio > 20 ? 'badge-source' : 'badge-elevee'}">${z.filiere}</span></td>
+      `;
+      vtbody.appendChild(tr);
+    });
+    const tfoot = document.getElementById('volumes-tfoot');
+    tfoot.innerHTML = `
+      <tr style="background:var(--panel)">
+        <td colspan="5" style="font-weight:700;text-align:right;color:var(--primary)">TOTAL VOLUME À EXCAVER :</td>
+        <td><strong style="font-size:15px;color:var(--ko)">${resultsCalc.volTotal.toFixed(1)} m³</strong></td>
+        <td></td>
+      </tr>`;
+
+    document.getElementById('vol-total-display').innerHTML =
+      '⚠ Volume total à excaver estimé : <strong>' + resultsCalc.volTotal.toFixed(1) + ' m³</strong>';
+    document.getElementById('eco-card').style.display = '';
+  }
+}
+
+// ─── COÛTS ───────────────────────────────────────────────────────────────────
+
+function recalcCouts() {
+  if (!resultsCalc || resultsCalc.purgeZones.length === 0) return;
+  const { volTotalISDI, volTotalSpecial, volTotal } = resultsCalc;
+  const cExcav     = parseFloat(document.getElementById('cout-excav').value) || 15;
+  const cTransport = parseFloat(document.getElementById('cout-transport').value) || 45;
+  const densite    = parseFloat(document.getElementById('densite').value) || 1.8;
+  const cIsdi      = parseFloat(document.getElementById('cout-isdi').value) || 35;
+  const cSpecial   = parseFloat(document.getElementById('cout-special').value) || 150;
+
+  const tonnage      = volTotal * densite;
+  const tonnageIsdi  = volTotalISDI * densite;
+  const tonnageSpec  = volTotalSpecial * densite;
+
+  const coutExcav    = volTotal * cExcav;
+  const coutTransp   = tonnage * cTransport;
+  const coutTrtIsdi  = tonnageIsdi * cIsdi;
+  const coutTrtSpec  = tonnageSpec * cSpecial;
+  const coutTotal    = coutExcav + coutTransp + coutTrtIsdi + coutTrtSpec;
+
+  const fmt = v => new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(v) + ' €';
+
+  document.getElementById('eco-detail').innerHTML = `
+    <div class="result-row"><span class="result-label">Volume total</span><span class="result-value">${volTotal.toFixed(1)} m³</span></div>
+    <div class="result-row"><span class="result-label">Tonnage estimé (×${densite} t/m³)</span><span class="result-value">${tonnage.toFixed(0)} t</span></div>
+    <div class="result-row"><span class="result-label">Coût excavation (${volTotal.toFixed(1)} m³ × ${cExcav} €/m³)</span><span class="result-value">${fmt(coutExcav)}</span></div>
+    <div class="result-row"><span class="result-label">Coût transport (${tonnage.toFixed(0)} t × ${cTransport} €/t)</span><span class="result-value">${fmt(coutTransp)}</span></div>
+    ${tonnageIsdi > 0 ? `<div class="result-row"><span class="result-label">Traitement ISDI (${tonnageIsdi.toFixed(0)} t × ${cIsdi} €/t)</span><span class="result-value">${fmt(coutTrtIsdi)}</span></div>` : ''}
+    ${tonnageSpec > 0 ? `<div class="result-row"><span class="result-label">Traitement spécialisé (${tonnageSpec.toFixed(0)} t × ${cSpecial} €/t)</span><span class="result-value" style="color:var(--ko)">${fmt(coutTrtSpec)}</span></div>` : ''}
+  `;
+  document.getElementById('eco-total').textContent = fmt(coutTotal);
+  resultsCalc._coutTotal = coutTotal;
+  resultsCalc._coutDetail = { coutExcav, coutTransp, coutTrtIsdi, coutTrtSpec, coutTotal, tonnage, tonnageIsdi, tonnageSpec };
+}
+
+// ─── CARTE LEAFLET ────────────────────────────────────────────────────────────
+
+let mapInstance = null;
+let mapMarkers = [];
+
+function initMap() {
+  if (mapInstance) return;
+  mapInstance = L.map('msp-map').setView([46.5, 2.5], 5);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19,
+  }).addTo(mapInstance);
+}
+
+function lambert93ToWGS84(x, y) {
+  // Projection Lambert 93 (EPSG:2154) → WGS84 (approx)
+  // Using proj4js if available, otherwise skip
+  if (window.proj4) {
+    try {
+      const l93 = '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs';
+      const wgs84 = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs';
+      return proj4(l93, wgs84, [x, y]);
+    } catch(e) { return null; }
+  }
+  // Fallback: simple affine approx for metropolitan France
+  // (rough, good enough for demo)
+  if (x > 100000 && x < 1300000 && y > 6000000 && y < 7200000) {
+    const lon = -4.59 + (x - 100000) / 75000;
+    const lat = 42.0 + (y - 6050000) / 111000;
+    return [lon, lat];
+  }
+  return null;
+}
+
+function renderMap() {
+  initMap();
+  // Clear markers
+  mapMarkers.forEach(m => mapInstance.removeLayer(m));
+  mapMarkers = [];
+
+  if (!resultsCalc) return;
+  const { resultsPts } = resultsCalc;
+
+  const bounds = [];
+
+  resultsPts.forEach(pt => {
+    if (!pt.x || !pt.y) return;
+    const coords = lambert93ToWGS84(parseFloat(pt.x), parseFloat(pt.y));
+    if (!coords) return;
+    const [lon, lat] = coords;
+
+    const circleMarker = L.circleMarker([lat, lon], {
+      radius: 10,
+      fillColor: pt.color,
+      color: '#ffffff',
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.9,
+    });
+
+    const composePb = pt.maxCompose ? pt.maxCompose.nom : '—';
+    const concPb = pt.maxCompose ? (pt.composesData.find(d => d.id === pt.maxCompose.id)?.conc ?? '—') : '—';
+    const seuilPb = pt.maxCompose ? pt.maxCompose.seuil : '—';
+
+    circleMarker.bindPopup(`
+      <div style="min-width:180px;font-family:Arial,sans-serif;font-size:13px">
+        <strong style="color:#1a5276;font-size:14px">${escHtml(pt.id)}</strong><br>
+        <hr style="margin:4px 0">
+        <b>Composé le + problématique :</b><br>${escHtml(composePb)}<br>
+        <b>Concentration :</b> ${concPb} mg/kg MS<br>
+        <b>Seuil ISDI :</b> ${seuilPb} mg/kg MS<br>
+        <b>Ratio :</b> <strong>×${pt.maxRatio.toFixed(2)}</strong><br>
+        <b>Profondeur :</b> ${pt.prof} m<br>
+        <span style="display:inline-block;margin-top:6px;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:${pt.color};color:#fff">${getBadgeText(pt.maxRatio)}</span>
+      </div>
+    `);
+
+    circleMarker.addTo(mapInstance);
+    mapMarkers.push(circleMarker);
+    bounds.push([lat, lon]);
+
+    // Label
+    const label = L.marker([lat, lon], {
+      icon: L.divIcon({
+        className: '',
+        html: `<div style="font-size:11px;font-weight:700;color:#0e2f44;white-space:nowrap;margin-top:12px;margin-left:8px;text-shadow:0 1px 2px rgba(255,255,255,.9)">${escHtml(pt.id)}</div>`,
+        iconSize: [60, 20],
+        iconAnchor: [0, 0],
+      }),
+    });
+    label.addTo(mapInstance);
+    mapMarkers.push(label);
+  });
+
+  // Piézos
+  piezos.forEach(pz => {
+    if (!pz.x || !pz.y) return;
+    const coords = lambert93ToWGS84(parseFloat(pz.x), parseFloat(pz.y));
+    if (!coords) return;
+    const [lon, lat] = coords;
+
+    const pm = L.circleMarker([lat, lon], {
+      radius: 7,
+      fillColor: '#2196f3',
+      color: '#ffffff',
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.85,
+    });
+    pm.bindPopup(`<strong>${escHtml(pz.id)}</strong><br>Piézomètre`);
+    pm.addTo(mapInstance);
+    mapMarkers.push(pm);
+    bounds.push([lat, lon]);
+  });
+
+  if (bounds.length > 0) {
+    mapInstance.fitBounds(bounds, { padding: [40, 40], maxZoom: 16 });
+  }
+}
+
+// ─── CHART.JS ─────────────────────────────────────────────────────────────────
+
+let ratioChart = null;
+
+function renderCarteViz() {
+  if (!resultsCalc) return;
+
+  // Collect all ratios
+  const ratioItems = [];
+  resultsCalc.resultsPts.forEach(pt => {
+    pt.composesData.forEach(cd => {
+      if (cd.ratio !== null && cd.ratio > 0) {
+        ratioItems.push({
+          label: pt.id + ' · ' + cd.nom,
+          ratio: cd.ratio,
+          color: getMarkerColor(cd.ratio),
+        });
+      }
+    });
+  });
+  ratioItems.sort((a, b) => b.ratio - a.ratio);
+  const top = ratioItems.slice(0, 15);
+
+  const labels = top.map(i => i.label);
+  const data   = top.map(i => i.ratio);
+  const colors = top.map(i => i.color + 'cc');
+  const borders= top.map(i => i.color);
+
+  if (ratioChart) { ratioChart.destroy(); ratioChart = null; }
+
+  const ctx = document.getElementById('ratioChart').getContext('2d');
+  ratioChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Ratio C/seuil ISDI',
+        data,
+        backgroundColor: colors,
+        borderColor: borders,
+        borderWidth: 1,
+        borderRadius: 4,
+      }],
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => '×' + ctx.parsed.x.toFixed(3),
+          },
+        },
+        annotation: undefined,
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Ratio C / Seuil ISDI', font: { size: 12 } },
+          grid: { color: '#e5e7eb' },
+        },
+        y: {
+          ticks: { font: { size: 11 } },
+        },
+      },
+    },
+    plugins: [{
+      id: 'customLines',
+      afterDraw(chart) {
+        const { ctx, chartArea, scales } = chart;
+        if (!chartArea) return;
+
+        const drawVLine = (val, color, label) => {
+          const x = scales.x.getPixelForValue(val);
+          if (x < chartArea.left || x > chartArea.right) return;
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(x, chartArea.top);
+          ctx.lineTo(x, chartArea.bottom);
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 2;
+          ctx.setLineDash([5, 3]);
+          ctx.stroke();
+          ctx.fillStyle = color;
+          ctx.font = 'bold 10px Arial';
+          ctx.fillText(label, x + 3, chartArea.top + 12);
+          ctx.restore();
+        };
+
+        drawVLine(1,  '#16a34a', 'Seuil ISDI (×1)');
+        drawVLine(20, '#7c3aed', 'Source/Purge (×20)');
+      },
+    }],
+  });
+
+  renderMap();
+}
+
+// ─── RAPPORT ──────────────────────────────────────────────────────────────────
+
+function renderRapport() {
+  const sitNom  = document.getElementById('site-nom').value;
+  const sitRef  = document.getElementById('site-ref').value;
+  const sitDate = document.getElementById('site-date').value;
+  const sitMoa  = document.getElementById('site-moa').value;
+  const sitBe   = document.getElementById('site-be').value;
+  const sitUsage= document.getElementById('site-usage');
+  const usageTxt= sitUsage.options[sitUsage.selectedIndex]?.text || '';
+
+  document.getElementById('rapp-ref-date').textContent =
+    'Réf. : ' + sitRef + '  ·  ' + (sitDate ? new Date(sitDate).toLocaleDateString('fr-FR') : '');
+
+  document.getElementById('rapp-site-info').innerHTML = `
+    <div class="result-row"><span class="result-label">Nom du site</span><span class="result-value">${escHtml(sitNom)}</span></div>
+    <div class="result-row"><span class="result-label">Référence dossier</span><span class="result-value">${escHtml(sitRef)}</span></div>
+    <div class="result-row"><span class="result-label">Maître d'ouvrage</span><span class="result-value">${escHtml(sitMoa || '—')}</span></div>
+    <div class="result-row"><span class="result-label">Opérateur / Bureau d'études</span><span class="result-value">${escHtml(sitBe || '—')}</span></div>
+    <div class="result-row"><span class="result-label">Usage futur</span><span class="result-value">${escHtml(usageTxt)}</span></div>
+  `;
+
+  if (!resultsCalc) {
+    document.getElementById('rapp-resume').innerHTML = '<div class="infobox">Aucune analyse calculée. Effectuez le calcul dans l\'onglet Saisie.</div>';
+    document.getElementById('rapp-conformite').innerHTML = '';
+    document.getElementById('rapp-purge').innerHTML = '';
+    document.getElementById('rapp-volumes').innerHTML = '';
+    return;
+  }
+
+  const { resultsPts, purgeZones, volTotal, _coutDetail } = resultsCalc;
+  const nbConf  = resultsPts.filter(p => !p.needsPurge).length;
+  const nbPurge = purgeZones.length;
+
+  document.getElementById('rapp-resume').innerHTML = `
+    <div class="result-block">
+      <div class="result-row"><span class="result-label">Points de mesure analysés</span><span class="result-value">${resultsPts.length}</span></div>
+      <div class="result-row"><span class="result-label">Points conformes ISDI</span><span class="result-value ok">${nbConf}</span></div>
+      <div class="result-row"><span class="result-label">Points nécessitant une PURGE OBLIGATOIRE</span><span class="result-value ko">${nbPurge}</span></div>
+      <div class="result-row"><span class="result-label">Volume total estimé à excaver</span><span class="result-value ko">${volTotal.toFixed(1)} m³</span></div>
+    </div>
+    ${nbPurge > 0 ? '<div class="infobox red"><strong>ATTENTION :</strong> ' + nbPurge + ' point(s) dépassent le seuil ISDI. Une PURGE OBLIGATOIRE est requise conformément à l\'Arrêté du 12 décembre 2014.</div>' : '<div class="infobox green"><strong>CONFORME</strong> — Aucun point ne dépasse le seuil ISDI. Aucune purge n\'est requise.</div>'}
+  `;
+
+  // Conformité table
+  const composesAvecData = COMPOSES.filter(c => resultsPts.some(p => {
+    const cd = p.composesData.find(d => d.id === c.id);
+    return cd && cd.conc !== null;
+  }));
+
+  let tableHtml = '<table class="data-table"><thead><tr>';
+  ['Point','Prof. (m)', ...composesAvecData.map(c => c.nom), 'Ratio max','Statut'].forEach(h => {
+    tableHtml += '<th>' + h + '</th>';
+  });
+  tableHtml += '</tr></thead><tbody>';
+  resultsPts.forEach(pt => {
+    tableHtml += '<tr>';
+    tableHtml += '<td><strong>' + escHtml(pt.id) + '</strong></td>';
+    tableHtml += '<td>' + pt.prof + ' m</td>';
+    composesAvecData.forEach(c => {
+      const cd = pt.composesData.find(d => d.id === c.id);
+      if (!cd || cd.conc === null) {
+        tableHtml += '<td style="color:var(--muted);font-size:11px">&lt;LD</td>';
+      } else {
+        tableHtml += '<td>' + cd.conc + '<br><small>×' + cd.ratio.toFixed(2) + '</small></td>';
+      }
+    });
+    tableHtml += '<td><strong>×' + pt.maxRatio.toFixed(2) + '</strong></td>';
+    tableHtml += '<td><span class="badge ' + getBadgeClass(pt.maxRatio) + '">' +
+      (pt.maxRatio <= 1 ? 'Conforme' : 'Dépass. ×' + pt.maxRatio.toFixed(1)) + '</span></td>';
+    tableHtml += '</tr>';
+  });
+  tableHtml += '</tbody></table>';
+  document.getElementById('rapp-conformite').innerHTML = tableHtml;
+
+  // Purge
+  if (purgeZones.length === 0) {
+    document.getElementById('rapp-purge').innerHTML = '<div class="infobox green">Aucune zone de purge identifiée.</div>';
+  } else {
+    let purgeHtml = '<div class="infobox red"><strong>PURGE OBLIGATOIRE</strong> — Conformément à l\'Arrêté du 12 décembre 2014 (ISDI), les terres excavées dépassant les seuils d\'admission ne peuvent être réutilisées sans traitement approprié.</div>';
+    purgeZones.forEach(z => {
+      purgeHtml += `<div style="border:1px solid var(--ko);border-radius:6px;padding:10px;margin-bottom:8px">
+        <strong>${escHtml(z.id)}</strong> — ${z.maxCompose ? escHtml(z.maxCompose.nom) : '—'} :
+        ${z.maxCompose ? (z.composesData.find(d=>d.id===z.maxCompose.id)?.conc ?? '—') : '—'} mg/kg MS
+        (seuil ISDI : ${z.maxCompose ? z.maxCompose.seuil : '—'} mg/kg MS, ratio ×${z.maxRatio.toFixed(2)}) —
+        Volume estimé : ${z.vol.toFixed(1)} m³ — Filière : <strong>${z.filiere}</strong>
+      </div>`;
+    });
+    document.getElementById('rapp-purge').innerHTML = purgeHtml;
+  }
+
+  // Volumes
+  if (purgeZones.length === 0) {
+    document.getElementById('rapp-volumes').innerHTML = '<div class="infobox green">Aucun volume de purge.</div>';
+  } else {
+    const cd = _coutDetail;
+    const fmt = v => new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(v) + ' €';
+    let volHtml = `<table class="data-table" style="margin-bottom:14px">
+      <thead><tr><th>Zone</th><th>Composé</th><th>Ratio</th><th>Surface (m²)</th><th>Prof. (m)</th><th>Volume (m³)</th><th>Filière</th></tr></thead>
+      <tbody>`;
+    purgeZones.forEach(z => {
+      volHtml += `<tr>
+        <td><strong>${escHtml(z.id)}</strong></td>
+        <td>${z.maxCompose ? escHtml(z.maxCompose.nom) : '—'}</td>
+        <td>×${z.maxRatio.toFixed(2)}</td>
+        <td>${z.surface.toFixed(0)}</td>
+        <td>${z.prof}</td>
+        <td><strong>${z.vol.toFixed(1)}</strong></td>
+        <td>${z.filiere}</td>
+      </tr>`;
+    });
+    volHtml += `</tbody><tfoot>
+      <tr><td colspan="5" style="text-align:right;font-weight:700">TOTAL :</td>
+      <td><strong>${volTotal.toFixed(1)} m³</strong></td><td></td></tr>
+    </tfoot></table>`;
+
+    if (cd) {
+      volHtml += `<div class="result-block">
+        <div class="result-row"><span class="result-label">Coût excavation</span><span class="result-value">${fmt(cd.coutExcav)}</span></div>
+        <div class="result-row"><span class="result-label">Coût transport</span><span class="result-value">${fmt(cd.coutTransp)}</span></div>
+        ${cd.coutTrtIsdi > 0 ? '<div class="result-row"><span class="result-label">Traitement ISDI</span><span class="result-value">' + fmt(cd.coutTrtIsdi) + '</span></div>' : ''}
+        ${cd.coutTrtSpec > 0 ? '<div class="result-row"><span class="result-label">Traitement spécialisé</span><span class="result-value ko">' + fmt(cd.coutTrtSpec) + '</span></div>' : ''}
+        <div class="result-row" style="border-top:2px solid var(--primary);margin-top:8px;padding-top:8px">
+          <span class="result-label" style="font-size:13px;font-weight:700;color:var(--primary)">TOTAL ESTIMÉ</span>
+          <span style="font-size:18px;font-weight:700;color:var(--primary)">${fmt(cd.coutTotal)}</span>
+        </div>
+      </div>`;
+    }
+    document.getElementById('rapp-volumes').innerHTML = volHtml;
+  }
+}
+
+// ─── UTILITAIRES ──────────────────────────────────────────────────────────────
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── DONNÉES EXEMPLE ──────────────────────────────────────────────────────────
+
+function loadExampleData() {
+  // Points
+  const ex = [
+    { id:'S1', x:448520, y:6824130, prof:0.5,  hc1040:1200, benzene:2.5 },
+    { id:'S2', x:448560, y:6824130, prof:0.5,  hc1040:350,  benzene:0.3 },
+    { id:'S3', x:448540, y:6824160, prof:1.0,  hap:85,      bap:1.2     },
+    { id:'S4', x:448580, y:6824150, prof:0.5,  hc1040:80                 },
+    { id:'S5', x:448500, y:6824150, prof:1.5,  tce:0.8,     pce:0.05    },
+  ];
+  points = ex.map(e => {
+    const obj = { id: e.id, x: e.x, y: e.y, prof: e.prof };
+    COMPOSES.forEach(c => { obj[c.id] = e[c.id] !== undefined ? e[c.id] : null; });
+    return obj;
+  });
+
+  buildComposeCheckboxes();
+  renderPointsTable();
+}
+
+// ─── INIT ──────────────────────────────────────────────────────────────────────
+
+window.addEventListener('DOMContentLoaded', () => {
+  loadExampleData();
+  initMap();
+  // Auto-run calculation on load to pre-populate results
+  setTimeout(() => {
+    calculerAnalyser();
+    // Stay on saisie tab after auto-calc
+    document.querySelectorAll('.tab-btn').forEach((b, i) => { if (i === 0) { b.click(); } });
+  }, 300);
+});
+</script>
+</body>
+</html>
