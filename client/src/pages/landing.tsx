@@ -304,6 +304,33 @@ export default function LandingPage() {
                 {t("v2.tools.piezometres.cta")}
               </a>
             </article>
+
+            {/* Carte MSP GMEP : Diagnostic & Modélisation Sources de Pollution */}
+            <article className="v2-tool-card">
+              <span className="v2-badge" style={{background:"#16a34a",color:"#fff"}}>NOUVEAU</span>
+              <div className="v2-tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <rect x="2" y="18" width="28" height="12" rx="1.5" fill="#a3c96b" opacity="0.5"/>
+                  <rect x="2" y="12" width="28" height="6" rx="1" fill="#f59e0b" opacity="0.6"/>
+                  <rect x="2" y="6" width="28" height="6" rx="1" fill="#ef4444" opacity="0.7"/>
+                  <circle cx="10" cy="9" r="2.5" fill="#1a2b4a"/>
+                  <circle cx="20" cy="15" r="2.5" fill="#1a2b4a"/>
+                  <circle cx="14" cy="21" r="2.5" fill="#1a2b4a"/>
+                  <path d="M10 9l10 6M20 15l-6 6" stroke="#3ddc84" strokeWidth="1.4" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <h3>{t("v2.tools.msp.title")}</h3>
+              <p>{t("v2.tools.msp.desc")}</p>
+              <p style={{ marginTop: "0.5rem", fontSize: "0.92rem", color: "#1a2b4a", fontWeight: 500 }}>
+                ✓ {t("v2.tools.msp.feat1")}<br />
+                ✓ {t("v2.tools.msp.feat2")}<br />
+                ✓ {t("v2.tools.msp.feat3")}
+              </p>
+              <div className="v2-tool-price">{t("v2.tools.msp.price")}</div>
+              <a href="/msp-gmep.html" className="v2-btn v2-btn-blue" style={{background:"#16a34a"}}>
+                {t("v2.tools.msp.cta")}
+              </a>
+            </article>
           </div>
         </div>
       </section>
