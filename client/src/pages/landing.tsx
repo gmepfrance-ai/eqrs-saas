@@ -98,6 +98,9 @@ export default function LandingPage() {
               <a href="#/eqrs-v31-05-ecotox" className="v2-btn v2-btn-blue">
                 {t("v2.tools.eqrs_v31.cta")}
               </a>
+              <div style={{ marginTop: "0.75rem", textAlign: "center" }}>
+                <a href="/notes-techniques/Note_Technique_EQRS_V31_05_ECOTOX.pdf" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}>Télécharger la note technique</a>
+              </div>
             </article>
 
             {/* Carte NOUVELLE 2 : Rabattement V15.85 multicouche IA */}
@@ -122,6 +125,9 @@ export default function LandingPage() {
               <a href="#/rabattement-v15-85" className="v2-btn v2-btn-blue">
                 {t("v2.tools.rabattement_v15.cta")}
               </a>
+              <div style={{ marginTop: "0.75rem", textAlign: "center" }}>
+                <a href="/notes-techniques/Note_Technique_Rabattement_V15_85.pdf" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}>Télécharger la note technique</a>
+              </div>
             </article>
 
             {/* Carte NOUVELLE 3 : TSN Transfert Sol → Nappe */}
@@ -147,6 +153,9 @@ export default function LandingPage() {
               <a href="#/tsn-transfert-sol-nappe" className="v2-btn v2-btn-blue">
                 {t("v2.tools.tsn_new.cta")}
               </a>
+              <div style={{ marginTop: "0.75rem", textAlign: "center" }}>
+                <a href="/notes-techniques/Note_Technique_TSN.pdf" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}>Télécharger la note technique</a>
+              </div>
             </article>
 
             {/* Carte NOUVELLE 4 : Schéma Conceptuel IEM + PG */}
@@ -171,6 +180,9 @@ export default function LandingPage() {
               <a href="#/schema-conceptuel" className="v2-btn v2-btn-blue">
                 {t("v2.tools.schema.cta")}
               </a>
+              <div style={{ marginTop: "0.75rem", textAlign: "center" }}>
+                <a href="/notes-techniques/Note_Technique_Schema_Conceptuel.pdf" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}>Télécharger la note technique</a>
+              </div>
             </article>
 
             {/* Carte 1 : EQRS J&E */}
@@ -227,6 +239,14 @@ export default function LandingPage() {
                   style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}
                 >
                   {t("v2.tools.eqrs.linkZip")}
+                </a>
+                <a
+                  href="/notes-techniques/Note_Technique_EQRS_V7_JE.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}
+                >
+                  Note technique J&amp;E
                 </a>
               </div>
             </article>
@@ -303,6 +323,9 @@ export default function LandingPage() {
               <a href="#/subscribe-piezometres" className="v2-btn v2-btn-blue">
                 {t("v2.tools.piezometres.cta")}
               </a>
+              <div style={{ marginTop: "0.75rem", textAlign: "center" }}>
+                <a href="/notes-techniques/Note_Technique_Piezometres_V29c.pdf" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}>Télécharger la note technique</a>
+              </div>
             </article>
 
             {/* Carte MSP GMEP : Diagnostic & Modélisation Sources de Pollution */}
@@ -330,6 +353,9 @@ export default function LandingPage() {
               <a href="/msp-gmep.html" className="v2-btn v2-btn-blue" style={{background:"#16a34a"}}>
                 {t("v2.tools.msp.cta")}
               </a>
+              <div style={{ marginTop: "0.75rem", textAlign: "center" }}>
+                <a href="/notes-techniques/Note_Technique_MSP_GMEP.pdf" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}>Télécharger la note technique</a>
+              </div>
             </article>
           </div>
         </div>
