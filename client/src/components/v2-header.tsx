@@ -124,6 +124,10 @@ export function V2Header() {
                 {t("nav.tools.schemaConceptuel")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.schemaConceptuel.desc")}</span>
               </a>
+              <a href="/msp-gmep.html" onClick={() => setDropdownOpen(false)}>
+                {t("nav.tools.msp")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.msp.desc")}</span>
+              </a>
             </div>
           </div>
           <a href="#/tarifs">{t("nav.pricing")}</a>
