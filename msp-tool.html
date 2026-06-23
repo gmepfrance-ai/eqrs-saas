@@ -255,7 +255,7 @@ footer a{color:var(--accent);text-decoration:none}
   </div>
   <div class="gmep-title-block">
     <h1>MSP — Maîtrise des Sources de Pollution</h1>
-    <div class="version">Conformité ISDI · Zones de purge · Estimation volumes &amp; coûts</div>
+    <div class="version">Conformité ISDI · Zones de purge · Estimation volumes · Recommandations filières</div>
   </div>
   <div class="gmep-header-right">
     MSP GMEP v1.0<br>
@@ -446,49 +446,15 @@ footer a{color:var(--accent);text-decoration:none}
     <div id="vol-total-display" style="text-align:center;margin-top:16px;padding:12px;background:var(--panel);border-radius:8px;font-size:18px;font-weight:700;color:var(--ko)"></div>
   </div>
 
-  <!-- Synthèse économique -->
+  <!-- Recommandations filières -->
   <div class="card" id="eco-card" style="display:none">
-    <h2>Synthèse économique indicative</h2>
-    <div class="infobox" style="margin-bottom:16px">
-      Ces estimations sont indicatives. Elles dépendent des conditions de chantier et des prestataires locaux.
+    <h2>Recommandations de filières d'élimination</h2>
+    <div class="infobox blue" style="margin-bottom:16px">
+      <strong>Note :</strong> Les coûts d'excavation, de transport et de traitement sont très variables selon les conditions de chantier, la localisation du site et les prestataires. MSP GMEP ne fournit aucune estimation financière — consultez directement les prestataires agréés pour établir un budget.
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;flex-wrap:wrap">
-      <div>
-        <h3>Paramètres de coût (modifiables)</h3>
-        <div id="cost-params">
-          <div class="cost-row">
-            <span>Coût excavation</span>
-            <input type="number" id="cout-excav" value="15" min="0"> €/m³
-          </div>
-          <div class="cost-row">
-            <span>Coût transport</span>
-            <input type="number" id="cout-transport" value="45" min="0"> €/t
-          </div>
-          <div class="cost-row">
-            <span>Densité terres</span>
-            <input type="number" id="densite" value="1.8" step="0.1" min="0"> t/m³
-          </div>
-          <div class="cost-row">
-            <span>Traitement ISDI (ratio &lt; 20)</span>
-            <input type="number" id="cout-isdi" value="35" min="0"> €/t
-          </div>
-          <div class="cost-row">
-            <span>Traitement spécialisé (ratio ≥ 20)</span>
-            <input type="number" id="cout-special" value="150" min="0"> €/t
-          </div>
-          <div class="mt8">
-            <button class="btn btn-primary" onclick="recalcCouts()">Recalculer les coûts</button>
-          </div>
-        </div>
-      </div>
-      <div>
-        <h3>Estimation totale</h3>
-        <div id="eco-detail" class="result-block"></div>
-        <div style="background:var(--panel);border-radius:8px;padding:14px;margin-top:12px;text-align:center">
-          <div style="font-size:12px;color:var(--muted);margin-bottom:4px">COÛT TOTAL ESTIMÉ</div>
-          <div class="total-cost" id="eco-total">—</div>
-        </div>
-      </div>
+    <div id="filieres-detail"></div>
+    <div class="infobox" style="margin-top:16px">
+      <strong>Rappel réglementaire :</strong> Les zones dont les concentrations dépassent les seuils de l'Arrêté du 12 décembre 2014 ne peuvent être acceptées en ISDI qu'après vérification analytique conforme. Les zones de purge obligatoire (dépassement simultané seuil ISDI et VSA/VSB) doivent être orientées vers des filières d'élimination adaptées selon la nature des polluants.
     </div>
   </div>
 
@@ -580,10 +546,15 @@ footer a{color:var(--accent);text-decoration:none}
       <div id="rapp-purge"></div>
     </div>
 
-    <!-- Volumes et coûts -->
+    <!-- Volumes -->
     <div class="rapp-section">
-      <h2>5. Estimation des volumes et des coûts</h2>
+      <h2>5. Estimation des volumes à excaver</h2>
       <div id="rapp-volumes"></div>
+      <p style="font-size:12px;color:#666;margin-top:12px;font-style:italic">
+        Les volumes indiqués sont estimés par interpolation IDW à partir des points de mesure disponibles. 
+        Les coûts d'excavation, de transport et de traitement dépendent des conditions de chantier, 
+        de la localisation du site et des prestataires — ils ne sont pas estimés dans cet outil.
+      </p>
     </div>
 
     <!-- Références réglementaires -->
@@ -600,7 +571,7 @@ footer a{color:var(--accent);text-decoration:none}
     <!-- Avertissement -->
     <div class="rapp-section">
       <div class="rapp-warning">
-        Ce rapport est généré automatiquement par MSP GMEP. Il est de la responsabilité de l'ingénieur en charge du dossier de valider les hypothèses et les résultats. Les estimations de volumes et de coûts sont indicatives et dépendent des conditions de chantier et des prestataires locaux.
+        Ce rapport est généré automatiquement par MSP GMEP. Il est de la responsabilité de l'ingénieur en charge du dossier de valider les hypothèses et les résultats. Les volumes estimés sont calculés par interpolation à partir des points de mesure disponibles et doivent être validés par l'ingénieur en charge du dossier.
       </div>
     </div>
 
@@ -923,7 +894,25 @@ function calculerAnalyser() {
 
   renderResultats();
   renderCarteViz();
-  recalcCouts();
+
+  // Affichage recommandations filières (sans coûts)
+  const filieresEl = document.getElementById('filieres-detail');
+  if (filieresEl) {
+    if (purgeZones.length === 0) {
+      filieresEl.innerHTML = '<div class="infobox green"><strong>Aucune zone de purge détectée.</strong> Tous les points analysés sont conformes aux seuils de l\'Arrêté du 12 décembre 2014.</div>';
+    } else {
+      let html = '<table class="data-table"><thead><tr><th>Point</th><th>Composé le + problématique</th><th>Ratio max</th><th>Volume estimé (m³)</th><th>Filière recommandée</th></tr></thead><tbody>';
+      purgeZones.forEach(z => {
+        const filiere = z.ratioMax >= 20
+          ? '<span class="badge" style="background:#ede9fe;color:#7c3aed">Élimination spécialisée</span>'
+          : '<span class="badge badge-warn">ISDI — vérification analytique requise</span>';
+        html += `<tr><td>${z.id}</td><td>${z.worstComp}</td><td style="color:var(--source);font-weight:700">×${z.ratioMax.toFixed(1)}</td><td>${z.volume ? z.volume.toFixed(0) : '—'}</td><td>${filiere}</td></tr>`;
+      });
+      html += '</tbody></table>';
+      filieresEl.innerHTML = html;
+    }
+  }
+
 
   // Switcher vers l'onglet résultats
   document.querySelectorAll('.tab-btn').forEach((b, i) => { if (i === 1) b.click(); });
@@ -1058,40 +1047,26 @@ function renderResultats() {
   }
 }
 
-// ─── COÛTS ───────────────────────────────────────────────────────────────────
+// ─── FILIÈRES (sans estimation de coûts) ────────────────────────────────────
 
-function recalcCouts() {
-  if (!resultsCalc || resultsCalc.purgeZones.length === 0) return;
-  const { volTotalISDI, volTotalSpecial, volTotal } = resultsCalc;
-  const cExcav     = parseFloat(document.getElementById('cout-excav').value) || 15;
-  const cTransport = parseFloat(document.getElementById('cout-transport').value) || 45;
-  const densite    = parseFloat(document.getElementById('densite').value) || 1.8;
-  const cIsdi      = parseFloat(document.getElementById('cout-isdi').value) || 35;
-  const cSpecial   = parseFloat(document.getElementById('cout-special').value) || 150;
+function recalcCouts() { /* estimation de coûts supprimée */ }
 
-  const tonnage      = volTotal * densite;
-  const tonnageIsdi  = volTotalISDI * densite;
-  const tonnageSpec  = volTotalSpecial * densite;
-
-  const coutExcav    = volTotal * cExcav;
-  const coutTransp   = tonnage * cTransport;
-  const coutTrtIsdi  = tonnageIsdi * cIsdi;
-  const coutTrtSpec  = tonnageSpec * cSpecial;
-  const coutTotal    = coutExcav + coutTransp + coutTrtIsdi + coutTrtSpec;
-
-  const fmt = v => new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(v) + ' €';
-
-  document.getElementById('eco-detail').innerHTML = `
-    <div class="result-row"><span class="result-label">Volume total</span><span class="result-value">${volTotal.toFixed(1)} m³</span></div>
-    <div class="result-row"><span class="result-label">Tonnage estimé (×${densite} t/m³)</span><span class="result-value">${tonnage.toFixed(0)} t</span></div>
-    <div class="result-row"><span class="result-label">Coût excavation (${volTotal.toFixed(1)} m³ × ${cExcav} €/m³)</span><span class="result-value">${fmt(coutExcav)}</span></div>
-    <div class="result-row"><span class="result-label">Coût transport (${tonnage.toFixed(0)} t × ${cTransport} €/t)</span><span class="result-value">${fmt(coutTransp)}</span></div>
-    ${tonnageIsdi > 0 ? `<div class="result-row"><span class="result-label">Traitement ISDI (${tonnageIsdi.toFixed(0)} t × ${cIsdi} €/t)</span><span class="result-value">${fmt(coutTrtIsdi)}</span></div>` : ''}
-    ${tonnageSpec > 0 ? `<div class="result-row"><span class="result-label">Traitement spécialisé (${tonnageSpec.toFixed(0)} t × ${cSpecial} €/t)</span><span class="result-value" style="color:var(--ko)">${fmt(coutTrtSpec)}</span></div>` : ''}
-  `;
-  document.getElementById('eco-total').textContent = fmt(coutTotal);
-  resultsCalc._coutTotal = coutTotal;
-  resultsCalc._coutDetail = { coutExcav, coutTransp, coutTrtIsdi, coutTrtSpec, coutTotal, tonnage, tonnageIsdi, tonnageSpec };
+function afficherFilieres(purgeZones) {
+  const el = document.getElementById('filieres-detail');
+  if (!el) return;
+  if (!purgeZones || purgeZones.length === 0) {
+    el.innerHTML = '<div class="infobox green"><strong>Aucune zone de purge détectée.</strong> Tous les points sont conformes aux seuils de l\'Arrêté du 12 décembre 2014.</div>';
+    return;
+  }
+  let html = '<table class="data-table"><thead><tr><th>Point</th><th>Composé le + problématique</th><th>Ratio max</th><th>Volume estimé (m³)</th><th>Filière recommandée</th></tr></thead><tbody>';
+  purgeZones.forEach(z => {
+    const filiere = z.ratioMax >= 20
+      ? '<span class="badge" style="background:#ede9fe;color:#7c3aed">Élimination spécialisée</span>'
+      : '<span class="badge badge-warn">ISDI — vérification analytique requise</span>';
+    html += `<tr><td>${z.id}</td><td>${z.worstComp}</td><td style="color:var(--source);font-weight:700">×${z.ratioMax.toFixed(1)}</td><td>${z.volume ? z.volume.toFixed(0) : '—'}</td><td>${filiere}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  el.innerHTML = html;
 }
 
 // ─── CARTE LEAFLET ────────────────────────────────────────────────────────────
@@ -1428,18 +1403,7 @@ function renderRapport() {
       <td><strong>${volTotal.toFixed(1)} m³</strong></td><td></td></tr>
     </tfoot></table>`;
 
-    if (cd) {
-      volHtml += `<div class="result-block">
-        <div class="result-row"><span class="result-label">Coût excavation</span><span class="result-value">${fmt(cd.coutExcav)}</span></div>
-        <div class="result-row"><span class="result-label">Coût transport</span><span class="result-value">${fmt(cd.coutTransp)}</span></div>
-        ${cd.coutTrtIsdi > 0 ? '<div class="result-row"><span class="result-label">Traitement ISDI</span><span class="result-value">' + fmt(cd.coutTrtIsdi) + '</span></div>' : ''}
-        ${cd.coutTrtSpec > 0 ? '<div class="result-row"><span class="result-label">Traitement spécialisé</span><span class="result-value ko">' + fmt(cd.coutTrtSpec) + '</span></div>' : ''}
-        <div class="result-row" style="border-top:2px solid var(--primary);margin-top:8px;padding-top:8px">
-          <span class="result-label" style="font-size:13px;font-weight:700;color:var(--primary)">TOTAL ESTIMÉ</span>
-          <span style="font-size:18px;font-weight:700;color:var(--primary)">${fmt(cd.coutTotal)}</span>
-        </div>
-      </div>`;
-    }
+    // Note : aucune estimation de coûts — trop variable selon chantier et prestataires
     document.getElementById('rapp-volumes').innerHTML = volHtml;
   }
 }
