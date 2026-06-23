@@ -97,6 +97,10 @@ const STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL =
   process.env.STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL || "";
 const STRIPE_PRICE_PIEZOMETRES_ANNUAL =
   process.env.STRIPE_PRICE_PIEZOMETRES_ANNUAL || "";
+const STRIPE_PRICE_MSP_MONTHLY =
+  process.env.STRIPE_PRICE_MSP_MONTHLY || "price_1TlY2z3A2g3lkch9xdWCjChC";
+const STRIPE_PRICE_MSP_ANNUAL =
+  process.env.STRIPE_PRICE_MSP_ANNUAL || "price_1TlY523A2g3lkch9r3B65h5U";
 const STRIPE_WEBHOOK_SECRET =
   process.env.STRIPE_WEBHOOK_SECRET || "whsec_placeholder";
 
@@ -1060,6 +1064,8 @@ export async function registerRoutes(
           plan === "eqrs_v31_ecotox_monthly" ? STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY :
           plan === "schema_conceptuel_annual" ? STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL :
           plan === "piezometres_annual" ? STRIPE_PRICE_PIEZOMETRES_ANNUAL :
+          plan === "msp_monthly" ? STRIPE_PRICE_MSP_MONTHLY :
+          plan === "msp_annual" ? STRIPE_PRICE_MSP_ANNUAL :
           STRIPE_PRICE_MONTHLY;
 
 
@@ -1070,6 +1076,8 @@ export async function registerRoutes(
           plan === "eqrs_v31_ecotox_monthly" ? "eqrs_v31" :
           plan === "schema_conceptuel_annual" ? "schema" :
           plan === "piezometres_annual" ? "piezometres" :
+          plan === "msp_monthly" ? "msp" :
+          plan === "msp_annual" ? "msp" :
           "je";
 
         // Chercher un abonnement existant pour ce tool (ou récupérer le customerId existant)
@@ -1179,6 +1187,8 @@ export async function registerRoutes(
             (STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY && priceIdFromStripe === STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY) ? "eqrs_v31_ecotox_monthly" :
             (STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL && priceIdFromStripe === STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL) ? "schema_conceptuel_annual" :
             (STRIPE_PRICE_PIEZOMETRES_ANNUAL && priceIdFromStripe === STRIPE_PRICE_PIEZOMETRES_ANNUAL) ? "piezometres_annual" :
+            priceIdFromStripe === STRIPE_PRICE_MSP_MONTHLY ? "msp_monthly" :
+            priceIdFromStripe === STRIPE_PRICE_MSP_ANNUAL ? "msp_annual" :
             priceIdFromStripe === STRIPE_PRICE_ANNUAL ? "annual" : "monthly";
           const tool =
             plan === "rabattement_annual" ? "rabattement" :
@@ -1186,6 +1196,7 @@ export async function registerRoutes(
             plan === "eqrs_v31_ecotox_monthly" ? "eqrs_v31" :
             plan === "schema_conceptuel_annual" ? "schema" :
             plan === "piezometres_annual" ? "piezometres" :
+            (plan === "msp_monthly" || plan === "msp_annual") ? "msp" :
             "je";
 
           // Chercher d'abord par stripe_subscription_id (le plus précis)
