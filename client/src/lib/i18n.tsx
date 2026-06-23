@@ -227,7 +227,7 @@ const translations = {
     "v2.hero.mock.statusValue": "AUTORISATION",
 
     "v2.tools.eyebrow": "Suite complète — 6 logiciels",
-    "v2.tools.title": "Nos six logiciels",
+    "v2.tools.title": "Nos sept logiciels",
     "v2.tools.subtitle": "Une suite complète de six moteurs de calcul indépendants, conçus pour les contraintes réelles du terrain. Démos interactives disponibles dans le navigateur, sans installation.",
     "v2.tools.eqrs.title": "EQRS Johnson & Ettinger",
     "v2.tools.eqrs.desc": "Intrusion de vapeurs dans les bâtiments. 74 substances (COV, HAP, métaux). Conforme EPA 2004 / ANSES 2018.",
@@ -775,7 +775,7 @@ const translations = {
     "v2.hero.mock.statusValue": "AUTHORISATION",
 
     "v2.tools.eyebrow": "Complete suite — 6 software tools",
-    "v2.tools.title": "Our six software tools",
+    "v2.tools.title": "Our seven software tools",
     "v2.tools.subtitle": "A complete suite of six independent calculation engines designed for real field constraints. Interactive browser demos available, no installation required.",
     "v2.tools.eqrs.title": "EQRS Johnson & Ettinger",
     "v2.tools.eqrs.desc": "Vapour intrusion into buildings. 74 substances (VOCs, PAHs, metals). EPA 2004 / ANSES 2018 compliant.",
@@ -1324,7 +1324,7 @@ const translations = {
     "v2.hero.mock.statusValue": "AUTORIZACIÓN",
 
     "v2.tools.eyebrow": "Suite completa — 6 programas",
-    "v2.tools.title": "Nuestros seis programas",
+    "v2.tools.title": "Nuestros siete programas",
     "v2.tools.subtitle": "Una suite completa de seis motores de cálculo independientes, diseñados para las restricciones reales de campo. Demostraciones interactivas disponibles en el navegador, sin instalación.",
     "v2.tools.eqrs.title": "EQRS Johnson & Ettinger",
     "v2.tools.eqrs.desc": "Intrusión de vapores en edificios. 74 sustancias (COV, HAP, metales). Conforme EPA 2004 / ANSES 2018.",
