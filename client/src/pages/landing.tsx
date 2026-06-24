@@ -355,6 +355,8 @@ export default function LandingPage() {
               </a>
               <div style={{ marginTop: "0.75rem", textAlign: "center" }}>
                 <a href="/notes-techniques/Note_Technique_MSP_GMEP.pdf" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}>Télécharger la note technique</a>
+                <br />
+                <a href="/notes-techniques/Exemple-rapport-modelisation-MSP.pdf" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.85rem", color: "#16a34a", textDecoration: "underline", fontWeight: 500 }}>📄 Exemple de rapport — modélisation 3D</a>
               </div>
             </article>
           </div>
