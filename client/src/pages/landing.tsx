@@ -126,7 +126,7 @@ export default function LandingPage() {
                 {t("v2.tools.rabattement_v15.cta")}
               </a>
               <div style={{ marginTop: "0.75rem", textAlign: "center" }}>
-                <a href="/notes-techniques/Note_Technique_Rabattement_V15_85.pdf" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}>Télécharger la note technique</a>
+                <a href="/notes-techniques/Note_Technique_Rabattement_Comparatif.pdf" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}>Comparer les versions Rabattement</a>
               </div>
             </article>
 
@@ -154,7 +154,7 @@ export default function LandingPage() {
                 {t("v2.tools.tsn_new.cta")}
               </a>
               <div style={{ marginTop: "0.75rem", textAlign: "center" }}>
-                <a href="/notes-techniques/Note_Technique_TSN.pdf" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}>Télécharger la note technique</a>
+                <a href="/notes-techniques/Note_Technique_TSN_Comparatif.pdf" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.85rem", color: "#2563eb", textDecoration: "underline" }}>Comparer les versions TSN</a>
               </div>
             </article>
 
