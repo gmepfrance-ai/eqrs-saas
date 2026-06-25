@@ -604,7 +604,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   <div class="header-right">
     9 rue de la Marne — 79400 Saint-Maixent-l'École<br>
     Tél. 06 07 73 72 33 &bull; gmep.france@gmail.com<br>
-    <button onclick="exportPDF()" style="margin-top:8px;padding:6px 16px;background:#2ecc71;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.82rem;font-weight:600;letter-spacing:0.02em" onmouseover="this.style.background='#27ae60'" onmouseout="this.style.background='#2ecc71'">&#128196; Exporter PDF</button>
+    <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+      <!-- FIX V8.2 — Barre Enregistrement études -->
+      <button onclick="saveStudyQuick()" title="Enregistrer l'étude (mémoire navigateur)" style="padding:6px 12px;background:#1a5276;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.78rem;font-weight:600" onmouseover="this.style.background='#0e2f44'" onmouseout="this.style.background='#1a5276'">💾 Enregistrer</button>
+      <button onclick="openLoadDialog()" title="Charger une étude" style="padding:6px 12px;background:#1a5276;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.78rem;font-weight:600" onmouseover="this.style.background='#0e2f44'" onmouseout="this.style.background='#1a5276'">📂 Charger</button>
+      <button onclick="newStudy()" title="Nouvelle étude (efface les saisies)" style="padding:6px 12px;background:#8e8e8e;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.78rem;font-weight:600" onmouseover="this.style.background='#666'" onmouseout="this.style.background='#8e8e8e'">📄 Nouvelle</button>
+      <button onclick="exportPDF()" style="padding:6px 12px;background:#2ecc71;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.78rem;font-weight:600" onmouseover="this.style.background='#27ae60'" onmouseout="this.style.background='#2ecc71'">📄 PDF</button>
+    </div>
   </div>
 </div>
 
@@ -1042,7 +1048,15 @@ const POROSITY_RELATIONS = [
 // ============================================================
 const state = {
   concentrations: {}, // {substanceName: {air:0, airExt:0, sol:0, eau:0, solGaz:0}}
-  siteInfo: { siteName: '', commune: '', reference: '' },
+  // FIX V8.2 — Métadonnées de l'étude (sauvegarde / archivage)
+  siteInfo: {
+    siteName: '',
+    commune: '',
+    reference: '',
+    dateEtude: new Date().toISOString().slice(0,10), // YYYY-MM-DD
+    operateur: '',
+    commentaires: ''
+  },
   bat: {...BAT_DEFAULTS},
   params: {
     adulte: {...PARAMS_DEFAULTS.adulte},
@@ -1501,6 +1515,7 @@ const TABS = [
   {id:'trophique', label:'Chaîne Trophique', input:false},
   {id:'melange_organe', label:'Mélange Organe', input:false},
   {id:'ecotox', label:'Écotoxicologie', input:false},
+  {id:'mon_etude', label:'📁 Mon étude', input:true}, // FIX V8.2 — Métadonnées + sauvegarde
 ];
 
 let activeTab = 'sommaire';
@@ -1570,6 +1585,26 @@ function handleInput(e) {
     const receptor = parts[1];
     const key = parts[2];
     state.params[receptor][key] = parseNum(el.value);
+  } else if (parts[0] === 'v7') {
+    // FIX V8.1 — Modules avancés (Calcul Inverse, Monte-Carlo, Temporel, Trophique, Mélange Organe)
+    // Avant ce correctif, les sélecteurs data-field="v7.*" étaient silencieusement ignorés
+    // → les substances restaient figées sur Benzène (valeur par défaut de state.v7)
+    const key = parts[1];
+    // Champs textuels (sélecteurs de substance ou de cible toxicologique)
+    if (key.endsWith('_substance') || key === 'inv_cible') {
+      state.v7[key] = el.value;
+    } else {
+      state.v7[key] = parseNum(el.value);
+    }
+  } else if (parts[0] === 'v8') {
+    // FIX V8.1 — Module Écotoxicologie
+    // parts[1] = 'ecotox', parts[2] = champ
+    const sub = parts[1];
+    const key = parts[2];
+    if (state.v8[sub]) {
+      if (key === 'substance') state.v8[sub][key] = el.value;
+      else state.v8[sub][key] = parseNum(el.value);
+    }
   }
 
   recalculate();
@@ -3399,6 +3434,259 @@ const PNEC_DATABASE = {
     eau_algue: { value: 0.10, source: 'ECHA REACH', unit: 'µg/L' },
     eso_hyporheique: { value: 0.007, source: 'OFB 2016 (NQE adaptée)', unit: 'µg/L' },
   },
+  // ---- FIX V8.1 — Extension à 30 substances (couverture SSP étendue) ----
+  'Trichloroéthylène': {
+    sol_invertebres: { value: 3.0, source: 'INERIS DRC-08-94882', unit: 'mg/kg' },
+    sol_plantes: { value: 2.5, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 4.0, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 10, source: 'INERIS', unit: 'µg/L' },
+    eau_daphnie: { value: 21, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 115, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 10, source: 'DCE NQE 2013/39/UE', unit: 'µg/L' },
+  },
+  'Tétrachloroéthylène': {
+    sol_invertebres: { value: 2.5, source: 'INERIS DRC-08-94882', unit: 'mg/kg' },
+    sol_plantes: { value: 3.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 4.5, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 10, source: 'INERIS', unit: 'µg/L' },
+    eau_daphnie: { value: 8.4, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 50, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 10, source: 'DCE NQE 2013/39/UE', unit: 'µg/L' },
+  },
+  'Chlorure de vinyle': {
+    sol_invertebres: { value: 0.5, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 0.8, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 1.0, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 0.5, source: 'US EPA AWQC', unit: 'µg/L' },
+    eau_daphnie: { value: 2.5, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 30, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 0.5, source: 'DCE NQE 2013/39/UE', unit: 'µg/L' },
+  },
+  'Dichlorométhane': {
+    sol_invertebres: { value: 5.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 6.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 8.0, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 20, source: 'INERIS', unit: 'µg/L' },
+    eau_daphnie: { value: 27, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 660, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 20, source: 'DCE NQE 2013/39/UE', unit: 'µg/L' },
+  },
+  'Chloroforme': {
+    sol_invertebres: { value: 2.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 3.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 5.0, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 2.5, source: 'INERIS', unit: 'µg/L' },
+    eau_daphnie: { value: 11, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 185, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 2.5, source: 'DCE NQE 2013/39/UE', unit: 'µg/L' },
+  },
+  '1,2-Dichloroéthane': {
+    sol_invertebres: { value: 1.5, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 2.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 3.5, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 10, source: 'INERIS', unit: 'µg/L' },
+    eau_daphnie: { value: 220, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 710, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 10, source: 'DCE NQE 2013/39/UE', unit: 'µg/L' },
+  },
+  'Éthylbenzène': {
+    sol_invertebres: { value: 4.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 6.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 7.5, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 10, source: 'INERIS', unit: 'µg/L' },
+    eau_daphnie: { value: 100, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 38, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 10, source: 'INERIS', unit: 'µg/L' },
+  },
+  'Xylènes (mélange)': {
+    sol_invertebres: { value: 5.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 4.5, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 7.0, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 16, source: 'INERIS', unit: 'µg/L' },
+    eau_daphnie: { value: 130, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 32, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 16, source: 'INERIS', unit: 'µg/L' },
+  },
+  'Styrène': {
+    sol_invertebres: { value: 6.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 5.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 8.0, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 28, source: 'INERIS', unit: 'µg/L' },
+    eau_daphnie: { value: 75, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 63, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 28, source: 'INERIS', unit: 'µg/L' },
+  },
+  'Naphtalène': {
+    sol_invertebres: { value: 1.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 1.5, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 2.0, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 2.0, source: 'INERIS', unit: 'µg/L' },
+    eau_daphnie: { value: 1.9, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 2.4, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 2.0, source: 'DCE NQE 2013/39/UE', unit: 'µg/L' },
+  },
+  'Anthracène': {
+    sol_invertebres: { value: 1.5, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 1.8, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 2.5, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 0.1, source: 'DCE NQE', unit: 'µg/L' },
+    eau_daphnie: { value: 0.7, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 0.5, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 0.1, source: 'DCE NQE 2013/39/UE', unit: 'µg/L' },
+  },
+  'Fluoranthène': {
+    sol_invertebres: { value: 1.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 1.3, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 2.0, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 0.0063, source: 'DCE NQE', unit: 'µg/L' },
+    eau_daphnie: { value: 0.12, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 0.20, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 0.0063, source: 'DCE NQE 2013/39/UE', unit: 'µg/L' },
+  },
+  'Pyrène': {
+    sol_invertebres: { value: 1.2, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 1.5, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 2.2, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 0.024, source: 'INERIS', unit: 'µg/L' },
+    eau_daphnie: { value: 0.30, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 0.45, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 0.024, source: 'INERIS', unit: 'µg/L' },
+  },
+  'Chrysène': {
+    sol_invertebres: { value: 1.5, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 2.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 3.0, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 0.07, source: 'INERIS', unit: 'µg/L' },
+    eau_daphnie: { value: 0.50, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 0.30, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 0.07, source: 'INERIS', unit: 'µg/L' },
+  },
+  'Benzo(b)fluoranthène': {
+    sol_invertebres: { value: 0.9, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 1.2, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 1.8, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 0.017, source: 'DCE NQE', unit: 'µg/L' },
+    eau_daphnie: { value: 0.30, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 0.20, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 0.017, source: 'DCE NQE 2013/39/UE', unit: 'µg/L' },
+  },
+  'Benzo(k)fluoranthène': {
+    sol_invertebres: { value: 0.9, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 1.2, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 1.8, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 0.017, source: 'DCE NQE', unit: 'µg/L' },
+    eau_daphnie: { value: 0.30, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 0.20, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 0.017, source: 'DCE NQE 2013/39/UE', unit: 'µg/L' },
+  },
+  'Indéno(1,2,3-cd)pyrène': {
+    sol_invertebres: { value: 0.8, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 1.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 1.5, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 0.002, source: 'DCE NQE', unit: 'µg/L' },
+    eau_daphnie: { value: 0.10, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 0.10, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 0.002, source: 'DCE NQE 2013/39/UE', unit: 'µg/L' },
+  },
+  'Phénol': {
+    sol_invertebres: { value: 3.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 4.0, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 5.0, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 7.7, source: 'INERIS', unit: 'µg/L' },
+    eau_daphnie: { value: 100, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 250, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 7.7, source: 'INERIS', unit: 'µg/L' },
+  },
+  'Pentachlorophénol': {
+    sol_invertebres: { value: 0.3, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 0.4, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 0.5, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 0.4, source: 'DCE NQE', unit: 'µg/L' },
+    eau_daphnie: { value: 2.0, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 1.5, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 0.4, source: 'DCE NQE 2013/39/UE', unit: 'µg/L' },
+  },
+  'HCB (Hexachlorobenzène)': {
+    sol_invertebres: { value: 0.05, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 0.08, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 0.10, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 0.01, source: 'DCE NQE', unit: 'µg/L' },
+    eau_daphnie: { value: 0.05, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 0.04, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 0.01, source: 'DCE NQE 2013/39/UE', unit: 'µg/L' },
+  },
+  'Lindane (γ-HCH)': {
+    sol_invertebres: { value: 0.12, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 0.15, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 0.20, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 0.02, source: 'DCE NQE', unit: 'µg/L' },
+    eau_daphnie: { value: 0.20, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 0.10, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 0.02, source: 'DCE NQE 2013/39/UE', unit: 'µg/L' },
+  },
+  'PFOA (polluant éternel)': {
+    sol_invertebres: { value: 0.05, source: 'INERIS DRC-19', unit: 'mg/kg' },
+    sol_plantes: { value: 0.08, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 0.10, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 0.10, source: 'INERIS', unit: 'µg/L' },
+    eau_daphnie: { value: 0.57, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 0.30, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 0.10, source: 'Recommandation INERIS', unit: 'µg/L' },
+  },
+  'PFOS (polluant éternel)': {
+    sol_invertebres: { value: 0.04, source: 'INERIS DRC-19', unit: 'mg/kg' },
+    sol_plantes: { value: 0.06, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 0.08, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 0.0065, source: 'DCE NQE', unit: 'µg/L' },
+    eau_daphnie: { value: 0.23, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 0.10, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 0.0065, source: 'DCE NQE 2013/39/UE', unit: 'µg/L' },
+  },
+  'Cyanures (libres)': {
+    sol_invertebres: { value: 0.9, source: 'INERIS', unit: 'mg/kg' },
+    sol_plantes: { value: 1.2, source: 'INERIS', unit: 'mg/kg' },
+    sol_microorg: { value: 1.5, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 1.0, source: 'INERIS', unit: 'µg/L' },
+    eau_daphnie: { value: 5.0, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 30, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 1.0, source: 'INERIS', unit: 'µg/L' },
+  },
+  'Antimoine': {
+    sol_invertebres: { value: 35, source: 'US EPA Eco-SSL', unit: 'mg/kg' },
+    sol_plantes: { value: 5, source: 'US EPA Eco-SSL', unit: 'mg/kg' },
+    sol_microorg: { value: 10, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 113, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_daphnie: { value: 47, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 33, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 33, source: 'ECHA REACH', unit: 'µg/L' },
+  },
+  'Cobalt': {
+    sol_invertebres: { value: 13, source: 'US EPA Eco-SSL', unit: 'mg/kg' },
+    sol_plantes: { value: 13, source: 'US EPA Eco-SSL', unit: 'mg/kg' },
+    sol_microorg: { value: 20, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 0.6, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_daphnie: { value: 5.1, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 2.5, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 0.6, source: 'ECHA REACH', unit: 'µg/L' },
+  },
+  'Sélénium': {
+    sol_invertebres: { value: 4.1, source: 'US EPA Eco-SSL', unit: 'mg/kg' },
+    sol_plantes: { value: 0.52, source: 'US EPA Eco-SSL', unit: 'mg/kg' },
+    sol_microorg: { value: 10, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 1.0, source: 'US EPA AWQC', unit: 'µg/L' },
+    eau_daphnie: { value: 2.5, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 5.0, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 1.0, source: 'US EPA AWQC', unit: 'µg/L' },
+  },
+  'Vanadium': {
+    sol_invertebres: { value: 1.6, source: 'US EPA Eco-SSL', unit: 'mg/kg' },
+    sol_plantes: { value: 7.8, source: 'US EPA Eco-SSL', unit: 'mg/kg' },
+    sol_microorg: { value: 20, source: 'INERIS', unit: 'mg/kg' },
+    eau_poisson: { value: 4.1, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_daphnie: { value: 20, source: 'ECHA REACH', unit: 'µg/L' },
+    eau_algue: { value: 9, source: 'ECHA REACH', unit: 'µg/L' },
+    eso_hyporheique: { value: 4.1, source: 'ECHA REACH', unit: 'µg/L' },
+  },
 };
 
 // ---- Facteurs de bioaccumulation (BCF / BAF) ----------------
@@ -4835,6 +5123,355 @@ function exportPDF() {
   doc.save('Rapport_EQRS_GMEP' + sitePart + filePart + '_' + dateEtude.replace(/\//g, '-') + '.pdf');
 }
 
+
+// ============================================================
+// FIX V8.2 — SAUVEGARDE / CHARGEMENT D'ÉTUDES
+// ============================================================
+// Mode mixte : localStorage (rapide, navigateur) + fichier .eqrs (portable)
+// Stockage : clé 'gmep_eqrs_studies' → array d'objets {id, name, date, data}
+// ============================================================
+
+const STORAGE_KEY = 'gmep_eqrs_studies';
+const APP_VERSION = '8.2';
+
+// --- Builder du snapshot à sauvegarder ---
+function buildStudySnapshot() {
+  return {
+    appVersion: APP_VERSION,
+    savedAt: new Date().toISOString(),
+    siteInfo: JSON.parse(JSON.stringify(state.siteInfo)),
+    concentrations: JSON.parse(JSON.stringify(state.concentrations)),
+    bat: JSON.parse(JSON.stringify(state.bat)),
+    params: JSON.parse(JSON.stringify(state.params)),
+    v7: state.v7 ? JSON.parse(JSON.stringify({
+      inv_substance: state.v7.inv_substance,
+      inv_cible: state.v7.inv_cible,
+      inv_QD: state.v7.inv_QD,
+      inv_ERI: state.v7.inv_ERI,
+      mc_runs: state.v7.mc_runs,
+      mc_c0_median: state.v7.mc_c0_median,
+      mc_c0_gsd: state.v7.mc_c0_gsd,
+      tp_substance: state.v7.tp_substance,
+      tp_C0: state.v7.tp_C0,
+      tp_kbio: state.v7.tp_kbio,
+      tp_Vsource: state.v7.tp_Vsource,
+      tr_substance: state.v7.tr_substance,
+      tr_Csol: state.v7.tr_Csol,
+    })) : null,
+    v8: state.v8 ? JSON.parse(JSON.stringify({
+      ecotox: state.v8.ecotox ? {
+        C_sol: state.v8.ecotox.C_sol,
+        C_eau_sup: state.v8.ecotox.C_eau_sup,
+        C_eau_sou: state.v8.ecotox.C_eau_sou,
+        substance: state.v8.ecotox.substance,
+      } : null
+    })) : null,
+  };
+}
+
+// --- Appliquer un snapshot au state ---
+function applyStudySnapshot(snap) {
+  if (!snap || typeof snap !== 'object') {
+    alert('Fichier d\'étude invalide.');
+    return false;
+  }
+  try {
+    if (snap.siteInfo) Object.assign(state.siteInfo, snap.siteInfo);
+    if (snap.concentrations) {
+      Object.keys(snap.concentrations).forEach(k => {
+        if (state.concentrations[k]) Object.assign(state.concentrations[k], snap.concentrations[k]);
+      });
+    }
+    if (snap.bat) Object.assign(state.bat, snap.bat);
+    if (snap.params) {
+      ['adulte','enfant','salarie'].forEach(r => {
+        if (snap.params[r] && state.params[r]) Object.assign(state.params[r], snap.params[r]);
+      });
+    }
+    if (snap.v7 && state.v7) Object.assign(state.v7, snap.v7);
+    if (snap.v8 && state.v8 && state.v8.ecotox && snap.v8.ecotox) {
+      Object.assign(state.v8.ecotox, snap.v8.ecotox);
+    }
+    recalculate();
+    renderActiveSheet();
+    return true;
+  } catch (e) {
+    console.error(e);
+    alert('Erreur lors du chargement : ' + e.message);
+    return false;
+  }
+}
+
+// --- Persistance localStorage ---
+function getStoredStudies() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) { return []; }
+}
+
+function setStoredStudies(arr) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+    return true;
+  } catch (e) {
+    alert('Stockage navigateur plein. Exportez en fichier .eqrs et supprimez d\'anciennes études.');
+    return false;
+  }
+}
+
+function generateStudyId() {
+  return 's_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+}
+
+function defaultStudyName() {
+  const s = state.siteInfo.siteName || 'Sans-titre';
+  const ref = state.siteInfo.reference ? ' (' + state.siteInfo.reference + ')' : '';
+  return s + ref;
+}
+
+// --- Bouton Enregistrer (rapide localStorage) ---
+function saveStudyQuick() {
+  const proposed = defaultStudyName();
+  const name = prompt('Nom de l\'étude à enregistrer :', proposed);
+  if (!name) return;
+  const studies = getStoredStudies();
+  const snap = buildStudySnapshot();
+  // Écraser si même nom
+  const existing = studies.findIndex(s => s.name === name);
+  const entry = {
+    id: existing >= 0 ? studies[existing].id : generateStudyId(),
+    name: name,
+    date: new Date().toISOString(),
+    data: snap,
+  };
+  if (existing >= 0) studies[existing] = entry;
+  else studies.unshift(entry);
+  if (setStoredStudies(studies)) {
+    showToast('✓ Étude « ' + name + ' » enregistrée (' + studies.length + ' études en mémoire)');
+  }
+}
+
+// --- Charger : ouvrir la modale liste ---
+function openLoadDialog() {
+  const studies = getStoredStudies();
+  const modal = document.createElement('div');
+  modal.id = 'loadModal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+  const box = document.createElement('div');
+  box.style.cssText = 'background:#fff;border-radius:8px;max-width:700px;width:100%;max-height:85vh;overflow:auto;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.3)';
+  let html = '<h2 style="margin:0 0 4px;color:#1a5276;font-size:1.2rem">Charger une étude</h2>';
+  html += '<p style="margin:0 0 16px;color:#666;font-size:0.85rem">Mémoire navigateur (' + studies.length + ' étude' + (studies.length>1?'s':'') + ') ou fichier .eqrs depuis votre PC.</p>';
+  html += '<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">';
+  html += '<button onclick="document.getElementById(\'eqrsFileInput\').click()" style="padding:8px 14px;background:#1a5276;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;font-weight:600">📁 Importer un fichier .eqrs</button>';
+  html += '<button onclick="exportStudyFile()" style="padding:8px 14px;background:#2ecc71;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;font-weight:600">📤 Exporter l\'étude courante (.eqrs)</button>';
+  html += '<button onclick="closeLoadModal()" style="padding:8px 14px;background:#8e8e8e;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;font-weight:600;margin-left:auto">Fermer</button>';
+  html += '</div>';
+  html += '<input type="file" id="eqrsFileInput" accept=".eqrs,.json" style="display:none" onchange="importStudyFile(event)">';
+  if (studies.length === 0) {
+    html += '<div style="text-align:center;padding:30px;color:#888;font-style:italic;background:#f7f7f7;border-radius:6px">Aucune étude enregistrée en mémoire navigateur.<br>Utilisez le bouton « 💾 Enregistrer » après avoir saisi vos données.</div>';
+  } else {
+    html += '<table style="width:100%;border-collapse:collapse;font-size:0.85rem">';
+    html += '<thead><tr style="background:#f0f4f7;border-bottom:2px solid #1a5276"><th style="text-align:left;padding:8px">Nom</th><th style="text-align:left;padding:8px;width:130px">Sauvegardée le</th><th style="text-align:right;padding:8px;width:180px">Actions</th></tr></thead><tbody>';
+    studies.forEach(s => {
+      const d = new Date(s.date);
+      const dateStr = d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+      html += '<tr style="border-bottom:1px solid #e5e5e5">';
+      html += '<td style="padding:8px"><strong>' + escapeHtml(s.name) + '</strong></td>';
+      html += '<td style="padding:8px;color:#666">' + dateStr + '</td>';
+      html += '<td style="padding:8px;text-align:right">';
+      html += '<button onclick="loadStudyById(\''+s.id+'\')" style="padding:4px 10px;background:#1a5276;color:#fff;border:none;border-radius:3px;cursor:pointer;font-size:0.78rem;margin-right:4px">Charger</button>';
+      html += '<button onclick="exportStudyById(\''+s.id+'\')" style="padding:4px 10px;background:#2ecc71;color:#fff;border:none;border-radius:3px;cursor:pointer;font-size:0.78rem;margin-right:4px" title="Exporter en .eqrs">⤓</button>';
+      html += '<button onclick="deleteStudyById(\''+s.id+'\')" style="padding:4px 10px;background:#c0392b;color:#fff;border:none;border-radius:3px;cursor:pointer;font-size:0.78rem" title="Supprimer">✕</button>';
+      html += '</td></tr>';
+    });
+    html += '</tbody></table>';
+  }
+  box.innerHTML = html;
+  modal.appendChild(box);
+  modal.addEventListener('click', e => { if (e.target === modal) closeLoadModal(); });
+  document.body.appendChild(modal);
+}
+
+function closeLoadModal() {
+  const m = document.getElementById('loadModal');
+  if (m) m.remove();
+}
+
+function loadStudyById(id) {
+  const studies = getStoredStudies();
+  const s = studies.find(x => x.id === id);
+  if (!s) { alert('Étude introuvable.'); return; }
+  if (!confirm('Charger « ' + s.name + ' » ?\nLes saisies actuelles non sauvegardées seront perdues.')) return;
+  if (applyStudySnapshot(s.data)) {
+    closeLoadModal();
+    showToast('✓ Étude « ' + s.name + ' » chargée');
+  }
+}
+
+function deleteStudyById(id) {
+  const studies = getStoredStudies();
+  const s = studies.find(x => x.id === id);
+  if (!s) return;
+  if (!confirm('Supprimer définitivement « ' + s.name + ' » ?')) return;
+  const filtered = studies.filter(x => x.id !== id);
+  setStoredStudies(filtered);
+  closeLoadModal();
+  openLoadDialog();
+}
+
+function exportStudyById(id) {
+  const studies = getStoredStudies();
+  const s = studies.find(x => x.id === id);
+  if (!s) return;
+  downloadJSON(s.data, sanitizeFilename(s.name) + '.eqrs');
+}
+
+function exportStudyFile() {
+  const snap = buildStudySnapshot();
+  const name = state.siteInfo.siteName || 'Etude-EQRS';
+  const date = state.siteInfo.dateEtude || new Date().toISOString().slice(0,10);
+  downloadJSON(snap, sanitizeFilename(name) + '_' + date + '.eqrs');
+  showToast('✓ Fichier .eqrs téléchargé');
+}
+
+function importStudyFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const snap = JSON.parse(e.target.result);
+      if (!confirm('Charger l\'étude depuis le fichier ?\nLes saisies actuelles non sauvegardées seront perdues.')) return;
+      if (applyStudySnapshot(snap)) {
+        closeLoadModal();
+        showToast('✓ Fichier .eqrs importé');
+      }
+    } catch (err) {
+      alert('Fichier illisible : ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function newStudy() {
+  if (!confirm('Créer une nouvelle étude ?\nToutes les saisies actuelles non sauvegardées seront perdues.')) return;
+  // Réinitialiser les valeurs principales
+  state.siteInfo = { siteName:'', commune:'', reference:'', dateEtude: new Date().toISOString().slice(0,10), operateur:'', commentaires:'' };
+  // Réinitialiser concentrations à zéro
+  Object.keys(state.concentrations).forEach(k => {
+    state.concentrations[k] = {air:0, airExt:0, sol:0, eau:0, solGaz:0};
+  });
+  // Réinitialiser bat et params aux défauts
+  Object.assign(state.bat, BAT_DEFAULTS);
+  Object.assign(state.params.adulte, PARAMS_DEFAULTS.adulte);
+  Object.assign(state.params.enfant, PARAMS_DEFAULTS.enfant);
+  Object.assign(state.params.salarie, PARAMS_DEFAULTS.salarie);
+  recalculate();
+  renderActiveSheet();
+  showToast('✓ Nouvelle étude initialisée');
+}
+
+// --- Utilitaires ---
+function downloadJSON(obj, filename) {
+  const blob = new Blob([JSON.stringify(obj, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function sanitizeFilename(s) {
+  return (s || 'etude').replace(/[^a-zA-Z0-9_\-\u00C0-\u017F]/g, '_').slice(0, 80);
+}
+
+function escapeHtml(s) {
+  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function showToast(msg) {
+  const old = document.getElementById('eqrsToast');
+  if (old) old.remove();
+  const t = document.createElement('div');
+  t.id = 'eqrsToast';
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#1a5276;color:#fff;padding:12px 20px;border-radius:6px;box-shadow:0 6px 20px rgba(0,0,0,0.25);z-index:10000;font-size:0.9rem;font-weight:600;animation:eqrsToastIn 0.25s ease-out';
+  document.body.appendChild(t);
+  setTimeout(() => { if (t.parentNode) t.remove(); }, 3500);
+}
+
+// --- Renderer onglet « Mon étude » ---
+sheetRenderers.mon_etude = function() {
+  const m = state.siteInfo;
+  let h = '<div class="sheet-title">📁 Mon étude — Identification du dossier</div>';
+  h += '<div class="sheet-subtitle">Métadonnées archivées avec l\'étude. Ces champs sont sauvegardés automatiquement à chaque « Enregistrer ».</div>';
+
+  h += '<div class="info-box"><h3>Sauvegarde de l\'étude</h3>';
+  h += 'Deux modes sont disponibles, en complément l\'un de l\'autre :<br><br>';
+  h += '<strong>1. Mémoire navigateur</strong> — cliquer sur « 💾 Enregistrer » (en haut à droite). L\'étude reste accessible depuis ce navigateur (jusqu\'à ~50 études).<br>';
+  h += '<strong>2. Fichier .eqrs</strong> — cliquer sur « 📂 Charger » puis « 📤 Exporter » : un fichier .eqrs est téléchargé sur votre poste. Vous pouvez le partager, l\'archiver dans le dossier qualité du site, ou le rouvrir plus tard via « 📁 Importer ».';
+  h += '</div>';
+
+  h += '<div class="table-wrap" style="max-width:760px"><table class="data-table"><thead><tr>';
+  h += '<th colspan="2" style="text-align:center">Identification du dossier</th></tr></thead><tbody>';
+  h += '<tr><td style="width:40%">Nom du site / Opération</td><td><input type="text" data-meta="siteName" value="' + escapeHtml(m.siteName) + '" placeholder="ex. Friche Renault Boulogne" style="width:100%"></td></tr>';
+  h += '<tr><td>Commune</td><td><input type="text" data-meta="commune" value="' + escapeHtml(m.commune) + '" placeholder="ex. Boulogne-Billancourt (92100)" style="width:100%"></td></tr>';
+  h += '<tr><td>Référence dossier</td><td><input type="text" data-meta="reference" value="' + escapeHtml(m.reference) + '" placeholder="ex. GMEP-2026-042" style="width:100%"></td></tr>';
+  h += '<tr><td>Date de l\'étude</td><td><input type="date" data-meta="dateEtude" value="' + escapeHtml(m.dateEtude || '') + '" style="width:100%"></td></tr>';
+  h += '<tr><td>Opérateur / Chargé d\'étude</td><td><input type="text" data-meta="operateur" value="' + escapeHtml(m.operateur) + '" placeholder="ex. Eric Azulay — GMEP" style="width:100%"></td></tr>';
+  h += '<tr><td style="vertical-align:top">Commentaires libres</td><td><textarea data-meta="commentaires" rows="4" placeholder="Notes, contexte, hypothèses retenues, sources de données..." style="width:100%;font-family:inherit;font-size:0.85rem;padding:6px;border:1px solid #d1d5db;border-radius:3px">' + escapeHtml(m.commentaires) + '</textarea></td></tr>';
+  h += '</tbody></table></div>';
+
+  // KPI : nb études en mémoire navigateur
+  const studies = getStoredStudies();
+  h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-top:1.4rem">';
+  h += '<div style="background:#fff;border:1px solid var(--border);border-top:4px solid #1a5276;border-radius:6px;padding:1rem;text-align:center">';
+  h += '<div style="font-size:0.7rem;color:#666;text-transform:uppercase;letter-spacing:0.5px">Études en mémoire</div>';
+  h += '<div style="font-size:1.6rem;font-weight:700;color:#1a5276;margin-top:4px">' + studies.length + '</div></div>';
+  h += '<div style="background:#fff;border:1px solid var(--border);border-top:4px solid #2ecc71;border-radius:6px;padding:1rem;text-align:center">';
+  h += '<div style="font-size:0.7rem;color:#666;text-transform:uppercase;letter-spacing:0.5px">Application</div>';
+  h += '<div style="font-size:1.6rem;font-weight:700;color:#2ecc71;margin-top:4px">EQRS v' + APP_VERSION + '</div></div>';
+  h += '</div>';
+
+  h += '<div style="margin-top:1.5rem;display:flex;gap:10px;flex-wrap:wrap">';
+  h += '<button onclick="saveStudyQuick()" style="padding:10px 20px;background:#1a5276;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:0.9rem;font-weight:600">💾 Enregistrer l\'étude</button>';
+  h += '<button onclick="openLoadDialog()" style="padding:10px 20px;background:#1a5276;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:0.9rem;font-weight:600">📂 Charger une étude</button>';
+  h += '<button onclick="exportStudyFile()" style="padding:10px 20px;background:#2ecc71;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:0.9rem;font-weight:600">📤 Exporter en .eqrs</button>';
+  h += '<button onclick="newStudy()" style="padding:10px 20px;background:#8e8e8e;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:0.9rem;font-weight:600">📄 Nouvelle étude</button>';
+  h += '</div>';
+
+  h += '<div class="info-box" style="background:#fff8e5;border-left:4px solid #d4a017;margin-top:1.5rem"><strong>Recommandation qualité :</strong> pour chaque dossier client, exportez le fichier .eqrs et archivez-le dans le dossier du site aux côtés du rapport PDF. Le fichier .eqrs permet de rouvrir l\'étude à l\'identique pour modifications, contre-expertise ou revue.</div>';
+
+  // Bind après rendu
+  setTimeout(attachMetaHandlers, 50);
+  return h;
+};
+
+function attachMetaHandlers() {
+  document.querySelectorAll('[data-meta]').forEach(el => {
+    const key = el.dataset.meta;
+    el.addEventListener('input', () => {
+      state.siteInfo[key] = el.value;
+    });
+  });
+}
+
+// Style toast
+const _toastStyle = document.createElement('style');
+_toastStyle.textContent = '@keyframes eqrsToastIn { from {opacity:0;transform:translateY(20px)} to {opacity:1;transform:translateY(0)} }';
+document.head.appendChild(_toastStyle);
+
+// FIX V8.2 — Raccourci clavier Ctrl+S → enregistrer
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault();
+    saveStudyQuick();
+  }
+});
 
 document.addEventListener('DOMContentLoaded', init);
 </script>
