@@ -1510,6 +1510,25 @@ export async function registerRoutes(
   );
 
   // ── Rabattement Tool Route (abonnés actifs) ───────────────────────
+  // Page publique DEBRIDEE (acces libre, version complete) : tout visiteur
+  // accede a la version complete, sans authentification ni abonnement.
+  const serveRabattementPublic = (_req: Request, res: Response) => {
+    if (!rabattementToolHtml) {
+      return res.status(500).json({ message: "Outil Rabattement non disponible" });
+    }
+    res.setHeader("X-Frame-Options", "SAMEORIGIN");
+    res.setHeader(
+      "Content-Security-Policy",
+      "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://*.tile.openstreetmap.org https://unpkg.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net"
+    );
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    return res.send(protectToolHtml(rabattementToolHtml));
+  };
+  app.get("/rabattement", serveRabattementPublic);
+  app.get("/rabattement-tool.html", serveRabattementPublic);
+  app.get("/logiciel-rabattement", serveRabattementPublic);
+
   app.get(
     "/api/rabattement-tool",
     requireAuth as any,
