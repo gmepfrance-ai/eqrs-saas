@@ -1214,6 +1214,41 @@ section.alt { background: var(--bg-soft); }
 .demo-banner.warn { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-bottom-color: #fcd34d; color: #92400e; }
 .demo-banner.expired { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-bottom-color: #fca5a5; color: var(--danger); }
 
+/* ─── Note de version / évolutions ─── */
+.version-note {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 12px;
+  padding: 22px 26px;
+  margin: 24px auto 8px;
+  max-width: 920px;
+  box-shadow: 0 2px 14px rgba(15,42,72,.05);
+}
+.version-note__head {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 12px;
+  margin-bottom: 14px;
+}
+.version-note__badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--primary); color: #fff;
+  font-weight: 700; font-size: 13px; letter-spacing: .02em;
+  padding: 5px 12px; border-radius: 999px;
+}
+.version-note__title { font-size: 17px; font-weight: 700; color: var(--navy-800); margin: 0; }
+.version-note__date { font-size: 13px; color: var(--text-muted); margin-left: auto; }
+.version-note ul { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 9px; }
+.version-note li { position: relative; padding-left: 26px; font-size: 14.5px; line-height: 1.55; color: var(--navy-800); }
+.version-note li::before {
+  content: "✓"; position: absolute; left: 0; top: 0;
+  color: var(--accent-dark); font-weight: 800;
+}
+.version-note li strong { color: var(--primary-dark); }
+@media (max-width: 640px) {
+  .version-note { padding: 18px 18px; border-radius: 10px; }
+  .version-note__date { margin-left: 0; width: 100%; }
+}
+
 .demo-section { padding: 60px 0; background: var(--bg-soft); }
 
 .demo-layout {
@@ -1819,15 +1854,31 @@ table.kv td:last-child { text-align: right; font-family: var(--font-mono); font-
 <section id="demo" class="demo-section">
   <div class="container">
     <div class="section-head">
-      <span class="section-eyebrow">Essai gratuit — 8 jours</span>
-      <h2>Démo interactive</h2>
-      <p>Saisissez vos paramètres, lancez le calcul, téléchargez votre PDF de démonstration. Aucune installation, tout se passe dans votre navigateur.</p>
+      <span class="section-eyebrow">Application en ligne — version complète</span>
+      <h2>Logiciel de rabattement de nappe</h2>
+      <p>Saisissez vos paramètres, lancez le calcul, téléchargez votre dossier PDF complet. Aucune installation, tout se passe dans votre navigateur.</p>
     </div>
 
     <div id="quota-banner" class="quota-banner">Initialisation…</div>
 
     <div class="demo-banner">
-      <strong>Mode démonstration.</strong> Les PDF générés portent la mention « DÉMO — non valable pour dépôt DDT ». Souscrivez à la version complète pour des dossiers réglementaires officiels.
+      <strong>Version complète.</strong> Accès illimité — générez vos dossiers Loi sur l'Eau officiels (sans filigrane, sans restriction de durée), prêts pour dépôt auprès du Service Eau et Biodiversité de la DDT.
+    </div>
+
+    <!-- Note de version / évolutions -->
+    <div class="version-note">
+      <div class="version-note__head">
+        <span class="version-note__badge">Nouveauté v15.89</span>
+        <h3 class="version-note__title">Évolutions du logiciel de rabattement</h3>
+        <span class="version-note__date">Juin 2026</span>
+      </div>
+      <ul>
+        <li><strong>Version complète débridée</strong> — l'application en ligne est désormais accessible sans limite de durée ni filigrane : générez directement vos dossiers Loi sur l'Eau officiels prêts pour dépôt en DDT.</li>
+        <li><strong>Génération PDF fiabilisée</strong> — le bouton de téléchargement du dossier PDF est maintenant disponible directement depuis l'onglet Résultats, avec un export complet sans interruption.</li>
+        <li><strong>Lanceur Windows renforcé</strong> — la version bureautique (Excel + script) gère désormais correctement les chemins OneDrive et la détection automatique de Python, sans fermeture intempestive de la fenêtre.</li>
+        <li><strong>Résolution géographique corrigée</strong> — conversion Lambert 93 → WGS84 et tracé de la zone d'influence plus précis sur la carte.</li>
+        <li><strong>Robustesse Excel</strong> — correction du déclenchement de la génération depuis la feuille Sommaire et fiabilisation des liens internes du classeur.</li>
+      </ul>
     </div>
 
     <!-- Onglets -->
@@ -2170,7 +2221,7 @@ table.kv td:last-child { text-align: right; font-family: var(--font-mono); font-
           <div class="demo-actions">
             <button id="btn-example" class="btn btn-secondary">Effacer / saisir mon propre chantier</button>
             <button id="btn-calc" class="btn btn-primary">▶ Lancer le calcul</button>
-            <button id="btn-pdf" class="btn btn-primary">Télécharger le PDF de démonstration</button>
+            <button id="btn-pdf" class="btn btn-primary">Télécharger le dossier PDF</button>
           </div>
 
           <!-- v15.87 : Contexte hydrogéologique automatique (régime de nappe + débit d'écoulement) -->
@@ -3065,42 +3116,19 @@ function showEmailModal() {
   });
 }
 
-// ─── Bannière de statut (toujours affichée en mode démo) ───
+// ─── Bannière de statut : VERSION COMPLÈTE (débridée) ───
 function refreshQuotaBanner() {
   const banner = document.getElementById("quota-banner");
   const lock = document.getElementById("lock-overlay");
+  if (lock) lock.classList.remove("open");
   if (!banner) return;
-  const q = checkQuota();
-  if (q.state === "new") {
-    banner.innerHTML = `<strong>Mode démonstration</strong> — La 1re génération PDF déclenchera le démarrage de votre essai gratuit de 8 jours.`;
-    banner.className = "quota-banner ok";
-    if (lock) lock.classList.remove("open");
-  } else if (q.state === "active") {
-    const date_fin = new Date(q.start + QUOTA_DURATION_MS).toLocaleDateString("fr-FR");
-    banner.innerHTML = `<strong>Essai actif</strong> — ${q.daysLeft} jour${q.daysLeft > 1 ? "s" : ""} restant${q.daysLeft > 1 ? "s" : ""} (jusqu'au ${date_fin}). Compte&nbsp;: ${q.email || ""}.`;
-    banner.className = "quota-banner ok";
-    if (lock) lock.classList.remove("open");
-  } else {
-    const checkoutURL = `https://www.gmep-france.eu/#/register?plan=rabattement_annual&country=${encodeURIComponent(document.getElementById('buyer-country')?.value || 'FR')}`;
-    banner.innerHTML = `<strong>Essai expiré</strong> — Votre période de démonstration de 8 jours est terminée. <a href="${checkoutURL}" target="_blank" rel="noopener">💳 Souscrire en ligne (Stripe) →</a>`;
-    banner.className = "quota-banner expired";
-    if (lock) lock.classList.add("open");
-  }
+  banner.innerHTML = `<strong>Version complète</strong> — Accès illimité : calculs et génération de dossiers Loi sur l'Eau sans restriction.`;
+  banner.className = "quota-banner ok";
 }
 
-// ─── Garde principale : à appeler avant chaque génération PDF ───
+// ─── Garde principale : VERSION COMPLÈTE (débridée) ───
+// Aucun blocage, aucun modal email, aucune limite de durée.
 async function ensureCanGeneratePdf() {
-  const q = checkQuota();
-  if (q.state === "expired") {
-    const lock = document.getElementById("lock-overlay");
-    if (lock) lock.classList.add("open");
-    throw new Error("Essai expiré");
-  }
-  if (q.state === "new") {
-    // Affiche modal email avant 1re génération
-    await showEmailModal();
-    refreshQuotaBanner();
-  }
   return true;
 }
 
@@ -5166,7 +5194,7 @@ function renderResults(r) {
 
       <!-- v15.88 : actions PDF visibles dans l'onglet Résultats (correctif bouton masqué) -->
       <div class="demo-actions" style="margin-top:24px">
-        <button id="btn-pdf-res" class="btn btn-primary">📄 Télécharger le PDF de démonstration</button>
+        <button id="btn-pdf-res" class="btn btn-primary">📄 Télécharger le dossier PDF</button>
         <button id="btn-retour-saisie" class="btn btn-secondary">← Modifier la saisie</button>
       </div>
     </div>
@@ -5242,13 +5270,13 @@ async function runPdf() {
     const btn = document.getElementById("btn-pdf");
     btn.disabled = true; btn.textContent = "Génération en cours…";
     await window.GMEP_PDF.generate(LAST_RESULT);
-    btn.disabled = false; btn.textContent = "Télécharger le PDF de démonstration";
+    btn.disabled = false; btn.textContent = "Télécharger le dossier PDF";
     window.GMEP_Quota.refreshQuotaBanner();
   } catch(e) {
     console.error(e);
     alert("Erreur génération PDF : " + e.message);
     const btn = document.getElementById("btn-pdf");
-    btn.disabled = false; btn.textContent = "Télécharger le PDF de démonstration";
+    btn.disabled = false; btn.textContent = "Télécharger le dossier PDF";
   }
 }
 
