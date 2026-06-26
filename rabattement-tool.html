@@ -5163,9 +5163,20 @@ function renderResults(r) {
           </tbody>
         </table>
       </div>
+
+      <!-- v15.88 : actions PDF visibles dans l'onglet Résultats (correctif bouton masqué) -->
+      <div class="demo-actions" style="margin-top:24px">
+        <button id="btn-pdf-res" class="btn btn-primary">📄 Télécharger le PDF de démonstration</button>
+        <button id="btn-retour-saisie" class="btn btn-secondary">← Modifier la saisie</button>
+      </div>
     </div>
   `;
   document.getElementById("panel-resultats").innerHTML = html;
+  // Re-câblage des boutons injectés dynamiquement
+  const _btnPdfRes = document.getElementById("btn-pdf-res");
+  if (_btnPdfRes) _btnPdfRes.addEventListener("click", runPdf);
+  const _btnRetour = document.getElementById("btn-retour-saisie");
+  if (_btnRetour) _btnRetour.addEventListener("click", () => activateTab("saisie"));
 }
 
 // ─── Carte Leaflet ───
