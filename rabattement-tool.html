@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rabattement de nappe — GMEP v15.83 Multicouche</title>
-<meta name="description" content="Logiciel professionnel de modélisation du rabattement de nappe — Theis, Dupuit-Thiem, Forchheimer/Dupuit multicouche, classification IOTA — v15.83. Démo gratuite 8 jours. 1 100 € HT / an.">
+<title>Rabattement de nappe — GMEP v15.87 Multicouche</title>
+<meta name="description" content="Logiciel professionnel de modélisation du rabattement de nappe — Theis, Dupuit-Thiem, Forchheimer/Dupuit multicouche, classification IOTA — v15.87. Démo gratuite 8 jours. 1 100 € HT / an.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
@@ -1694,6 +1694,27 @@ table.kv td:last-child { text-align: right; font-family: var(--font-mono); font-
 .mc-mode-btn { flex: 1; padding: 8px; border: 2px solid #e5e7eb; border-radius: 6px; cursor: pointer; text-align: center; font-size: 13px; font-weight: 600; transition: all 0.2s; background: #fff; }
 .mc-mode-btn.active { border-color: #1a2b4a; background: #1a2b4a; color: #fff; }
 .mc-piezо-note { background: #e3f2fd; border-left: 4px solid #1565c0; padding: 8px 12px; font-size: 12px; color: #0d47a1; margin-bottom: 12px; border-radius: 0 6px 6px 0; }
+/* v15.87 : contexte hydrogéologique automatique */
+.ch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 880px) { .ch-grid { grid-template-columns: 1fr; } }
+.ch-card { border: 1px solid #d1d5db; border-radius: 8px; padding: 14px 16px; background: #fff; }
+.ch-card.regime-surface { border-left: 5px solid #1565c0; background: #f3f8fe; }
+.ch-card.regime-profond { border-left: 5px solid #2e7d32; background: #f3faf4; }
+.ch-title { font-weight: 700; font-size: 14px; color: #1a2b4a; margin-bottom: 8px; }
+.ch-regime { font-weight: 700; font-size: 12.5px; color: #0d47a1; margin-bottom: 10px; line-height: 1.4; }
+.ch-card.regime-profond .ch-regime { color: #1b5e20; }
+.ch-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.ch-table td { padding: 4px 6px; border-bottom: 1px solid #eef0f3; vertical-align: top; }
+.ch-table td:first-child { color: #6b7280; width: 46%; }
+.ch-table td:last-child { color: #1a2b4a; font-weight: 500; }
+.ch-params { display: flex; flex-wrap: wrap; gap: 8px 12px; font-size: 11.5px; color: #374151; margin-bottom: 8px; }
+.ch-params input { font-size: 11.5px; padding: 2px 4px; border: 1px solid #cbd5e1; border-radius: 4px; }
+.ch-params-calc { font-size: 12px; color: #374151; margin-bottom: 8px; }
+.ch-debits td:last-child { font-weight: 700; text-align: right; }
+.ch-debits tr.ch-hautes td { color: #c62828; font-weight: 800; }
+.ch-prevoir { margin-top: 10px; padding: 8px 12px; background: #fff5f5; border: 1px solid #f5c6cb; border-radius: 6px; font-size: 13px; color: #c62828; }
+.ch-prevoir-off { background: #f3faf4; border-color: #c8e6c9; color: #1b5e20; }
+.ch-legende { margin-top: 10px; font-size: 11px; color: #6b7280; line-height: 1.45; }
 </style>
 </head>
 <body>
@@ -1850,6 +1871,7 @@ table.kv td:last-child { text-align: right; font-family: var(--font-mono); font-
             <div class="field-grp">
               <label>Substrat (base intégrée)</label>
               <select id="inp-substrat"></select>
+              <span class="hint" id="substrat-auto-indicateur" style="color:#01696F;font-weight:600"></span>
             </div>
             <div class="field-grp">
               <label>Département (climat)</label>
@@ -2151,6 +2173,12 @@ table.kv td:last-child { text-align: right; font-family: var(--font-mono); font-
             <button id="btn-pdf" class="btn btn-primary">Télécharger le PDF de démonstration</button>
           </div>
 
+          <!-- v15.87 : Contexte hydrogéologique automatique (régime de nappe + débit d'écoulement) -->
+          <div id="bloc-contexte-hydro" style="display:none; margin-top:22px">
+            <div class="section-label">Contexte hydrogéologique automatique <span style="font-weight:normal;color:#01696F;font-size:0.85em">— déduit de X/Y, NGF et profondeur d'ouvrage (v15.87)</span></div>
+            <div id="contexte-hydro-corps"></div>
+          </div>
+
         </div>
 
         <!-- PANEL RÉSULTATS -->
@@ -2378,6 +2406,304 @@ const CLIMAT = {
   "57": { dept: "Moselle",         station: "Metz",          P: 730, ETP: 720, R: 170 },
   "63": { dept: "Puy-de-Dôme",     station: "Clermont-Ferrand",P: 580,ETP: 770, R: 100 }
 };
+
+
+// ════════════════════════════════════════════════════════════════════════════
+// v15.87 — MOTEUR DE CONTEXTE HYDROGÉOLOGIQUE AUTOMATIQUE (port depuis Excel)
+// Déduction automatique du contexte depuis X/Y Lambert 93, altimétrie NGF et
+// profondeur de l'ouvrage — sans sélection manuelle obligatoire du substrat.
+// ════════════════════════════════════════════════════════════════════════════
+
+// ─── Paramètres globaux du moteur (depuis aquifer_spec.json) ───
+const HYDRO_PARAMS = {
+  coef_hautes_eaux: 1.8,
+  coef_basses_eaux: 0.4,
+  seuil_nappe_superficielle_m: 10,
+  gradient_defaut: 0.01
+};
+
+// ─── Référentiel des emprises aquifères (23 systèmes — Lambert 93) ───
+const REFERENTIEL_AQUIFERES = [
+  {nom:"Calcaires de Beauce libre (Oligo-Miocène)", bassin:"Bassin parisien sédimentaire", prof_toit_min:5, prof_toit_max:30, debit_min:100, debit_max:300, vulnerabilite:"Forte", usages:"AEP / Irrigation", xmin:570000, xmax:720000, ymin:6720000, ymax:6850000, substrat_type:"Calcaire de Beauce", substrat_web:"Calcaire de Beauce"},
+  {nom:"Calcaires de Beauce captif (sous Sologne)", bassin:"Bassin parisien sédimentaire", prof_toit_min:20, prof_toit_max:80, debit_min:20, debit_max:80, vulnerabilite:"Faible", usages:"AEP", xmin:590000, xmax:700000, ymin:6720000, ymax:6810000, substrat_type:"Calcaire de Beauce", substrat_web:"Calcaire de Beauce"},
+  {nom:"Craie séno-turonienne libre (Picardie/Champagne)", bassin:"Bassin parisien sédimentaire", prof_toit_min:0, prof_toit_max:30, debit_min:20, debit_max:150, vulnerabilite:"Forte", usages:"AEP / Irrigation", xmin:560000, xmax:880000, ymin:6850000, ymax:7050000, substrat_type:"Craie", substrat_web:"Craie"},
+  {nom:"Craie captive sous Beauce", bassin:"Bassin parisien sédimentaire", prof_toit_min:30, prof_toit_max:150, debit_min:5, debit_max:30, vulnerabilite:"Faible", usages:"AEP (réserve stratégique)", xmin:590000, xmax:720000, ymin:6770000, ymax:6870000, substrat_type:"Craie", substrat_web:"Craie"},
+  {nom:"Sables albo-cénomaniens (Albien-Néocomien profond)", bassin:"Bassin parisien sédimentaire", prof_toit_min:450, prof_toit_max:950, debit_min:50, debit_max:250, vulnerabilite:"Faible", usages:"AEP (urgence) / Géothermie basse température", xmin:530000, xmax:800000, ymin:6770000, ymax:6970000, substrat_type:"Sables du Sparnacien", substrat_web:"Sables du Sparnacien"},
+  {nom:"Lutétien – Calcaire grossier d'Île-de-France", bassin:"Bassin parisien sédimentaire", prof_toit_min:20, prof_toit_max:80, debit_min:30, debit_max:100, vulnerabilite:"Moyenne", usages:"AEP / Industriel", xmin:620000, xmax:720000, ymin:6830000, ymax:6900000, substrat_type:"Calcaire grossier du Lutétien", substrat_web:"Calcaire grossier du Lutétien"},
+  {nom:"Yprésien – Sables et Calcaires inférieurs (Éocène inf.)", bassin:"Bassin parisien sédimentaire", prof_toit_min:40, prof_toit_max:120, debit_min:10, debit_max:80, vulnerabilite:"Faible", usages:"AEP / Industriel", xmin:620000, xmax:760000, ymin:6870000, ymax:6960000, substrat_type:"Sables de Fontainebleau", substrat_web:"Sables de Fontainebleau"},
+  {nom:"Dogger du Bassin parisien (Jurassique moyen)", bassin:"Bassin parisien sédimentaire", prof_toit_min:1000, prof_toit_max:2000, debit_min:150, debit_max:300, vulnerabilite:"Faible", usages:"Géothermie haute énergie", xmin:590000, xmax:820000, ymin:6800000, ymax:7000000, substrat_type:"Calcaire compact fissuré", substrat_web:"Calcaire fissuré"},
+  {nom:"Grès triasique de Lorraine (Trias inférieur)", bassin:"Bassin parisien sédimentaire", prof_toit_min:0, prof_toit_max:500, debit_min:30, debit_max:150, vulnerabilite:"Moyenne", usages:"AEP / Industriel", xmin:870000, xmax:1010000, ymin:6800000, ymax:6970000, substrat_type:"Grès fin consolidé", substrat_web:"Grès"},
+  {nom:"Calcaires jurassiques Charentes-Périgord (Dogger-Malm)", bassin:"Bassin aquitain", prof_toit_min:0, prof_toit_max:400, debit_min:20, debit_max:200, vulnerabilite:"Forte", usages:"AEP / Irrigation / Industriel", xmin:440000, xmax:580000, ymin:6470000, ymax:6610000, substrat_type:"Calcaire compact fissuré", substrat_web:"Calcaire fissuré"},
+  {nom:"Sables infra-molassiques Éocène (Aquitaine profond)", bassin:"Bassin aquitain", prof_toit_min:50, prof_toit_max:500, debit_min:50, debit_max:200, vulnerabilite:"Faible", usages:"AEP / Industriel", xmin:380000, xmax:580000, ymin:6240000, ymax:6480000, substrat_type:"Molasse miocène", substrat_web:"Molasse miocène"},
+  {nom:"Crétacé supérieur Charentes (Turonien-Coniacien-Santonien)", bassin:"Bassin aquitain", prof_toit_min:0, prof_toit_max:300, debit_min:30, debit_max:200, vulnerabilite:"Forte", usages:"AEP / Irrigation", xmin:380000, xmax:540000, ymin:6450000, ymax:6580000, substrat_type:"Craie", substrat_web:"Craie"},
+  {nom:"Oligo-Miocène molassique (Gironde-Landes)", bassin:"Bassin aquitain", prof_toit_min:5, prof_toit_max:200, debit_min:20, debit_max:100, vulnerabilite:"Faible", usages:"AEP / Industriel", xmin:300000, xmax:500000, ymin:6280000, ymax:6470000, substrat_type:"Molasse miocène", substrat_web:"Molasse miocène"},
+  {nom:"Alluvions du Rhône", bassin:"Vallée alluviale", prof_toit_min:1, prof_toit_max:20, debit_min:50, debit_max:1000, vulnerabilite:"Forte", usages:"AEP / Industriel / Irrigation", xmin:790000, xmax:920000, ymin:6240000, ymax:6560000, substrat_type:"Alluvions grossières", substrat_web:"Sables et graviers (alluvions)"},
+  {nom:"Alluvions de la Loire", bassin:"Vallée alluviale", prof_toit_min:1, prof_toit_max:10, debit_min:30, debit_max:240, vulnerabilite:"Forte", usages:"AEP / Irrigation", xmin:380000, xmax:700000, ymin:6620000, ymax:6770000, substrat_type:"Gravier sableux", substrat_web:"Sables et graviers (alluvions)"},
+  {nom:"Alluvions de la Seine", bassin:"Vallée alluviale", prof_toit_min:1, prof_toit_max:15, debit_min:20, debit_max:200, vulnerabilite:"Forte", usages:"AEP / Industriel", xmin:560000, xmax:720000, ymin:6850000, ymax:6970000, substrat_type:"Alluvions grossières", substrat_web:"Sables et graviers (alluvions)"},
+  {nom:"Alluvions de la Garonne", bassin:"Vallée alluviale", prof_toit_min:1, prof_toit_max:15, debit_min:30, debit_max:200, vulnerabilite:"Forte", usages:"AEP / Irrigation / Industriel", xmin:470000, xmax:640000, ymin:6260000, ymax:6470000, substrat_type:"Gravier sableux", substrat_web:"Sables et graviers (alluvions)"},
+  {nom:"Alluvions du Rhin – Nappe d'Alsace", bassin:"Vallée alluviale", prof_toit_min:1, prof_toit_max:10, debit_min:200, debit_max:1220, vulnerabilite:"Forte", usages:"AEP / Industriel / Irrigation", xmin:990000, xmax:1060000, ymin:6750000, ymax:6900000, substrat_type:"Gravier propre", substrat_web:"Sables et graviers (alluvions)"},
+  {nom:"Granitoïdes fissurés du Massif central (socle)", bassin:"Socle", prof_toit_min:0, prof_toit_max:50, debit_min:1, debit_max:20, vulnerabilite:"Moyenne", usages:"AEP (rural)", xmin:560000, xmax:770000, ymin:6390000, ymax:6580000, substrat_type:"Granite fissuré", substrat_web:"Granite fissuré"},
+  {nom:"Schistes et granites du Massif armoricain", bassin:"Socle", prof_toit_min:0, prof_toit_max:50, debit_min:1, debit_max:50, vulnerabilite:"Moyenne", usages:"AEP (rural)", xmin:130000, xmax:460000, ymin:6700000, ymax:6850000, substrat_type:"Altérite de schiste", substrat_web:"Schistes altérés"},
+  {nom:"Basaltes du Massif central – Auvergne-Cantal (volcanique)", bassin:"Volcanique", prof_toit_min:0, prof_toit_max:50, debit_min:5, debit_max:50, vulnerabilite:"Moyenne", usages:"AEP (rural)", xmin:640000, xmax:760000, ymin:6420000, ymax:6560000, substrat_type:"Basalte fissuré", substrat_web:"Basalte"},
+  {nom:"Causses – calcaires jurassiques karstiques (Lozère-Aveyron)", bassin:"Karst méditerranéen", prof_toit_min:0, prof_toit_max:200, debit_min:1, debit_max:500, vulnerabilite:"Forte", usages:"AEP / Industriel", xmin:650000, xmax:790000, ymin:6310000, ymax:6440000, substrat_type:"Calcaire karstifié", substrat_web:"Calcaire karstifié"},
+  {nom:"Calcaires urgoniens de Provence-Vaucluse (Crétacé inférieur)", bassin:"Karst méditerranéen", prof_toit_min:0, prof_toit_max:800, debit_min:1, debit_max:600, vulnerabilite:"Forte", usages:"AEP / Irrigation", xmin:820000, xmax:1090000, ymin:6240000, ymax:6420000, substrat_type:"Calcaire urgonien", substrat_web:"Calcaire urgonien"}
+];
+
+// ─── Identification de l'aquifère de référence (toujours garantie) ───
+// Teste la présence stricte (point dans l'emprise L93). S'il y a au moins un
+// aquifère présent → "présents". Sinon FALLBACK : aquifère dont le centroïde
+// d'emprise est le plus proche du point (distance euclidienne L93 minimale).
+// Retourne TOUJOURS un aquifère (jamais null) → interdit de proposer un
+// aquifère géographiquement aberrant.
+function identifierAquifere(x, y) {
+  x = parseFloat(x); y = parseFloat(y);
+  if (!isFinite(x) || !isFinite(y)) {
+    return { present: false, nbPresents: 0, aquifere: null, listePresents: [] };
+  }
+  const listePresents = REFERENTIEL_AQUIFERES.filter(a =>
+    x >= a.xmin && x <= a.xmax && y >= a.ymin && y <= a.ymax
+  );
+  if (listePresents.length > 0) {
+    // Aquifère de référence retenu = celui dont le centroïde est le plus proche
+    // (parmi les présents) → évite une référence arbitraire si plusieurs se
+    // superposent (libre/captif, alluvions sur substratum, etc.).
+    let best = listePresents[0], bestD = Infinity;
+    listePresents.forEach(a => {
+      const cx = (a.xmin + a.xmax) / 2, cy = (a.ymin + a.ymax) / 2;
+      const d = Math.hypot(x - cx, y - cy);
+      if (d < bestD) { bestD = d; best = a; }
+    });
+    return { present: true, nbPresents: listePresents.length, aquifere: best, listePresents: listePresents };
+  }
+  // FALLBACK par proximité de centroïde — empêche tout aquifère aberrant
+  let best = REFERENTIEL_AQUIFERES[0], bestD = Infinity;
+  REFERENTIEL_AQUIFERES.forEach(a => {
+    const cx = (a.xmin + a.xmax) / 2, cy = (a.ymin + a.ymax) / 2;
+    const d = Math.hypot(x - cx, y - cy);
+    if (d < bestD) { bestD = d; best = a; }
+  });
+  return { present: false, nbPresents: 0, aquifere: best, listePresents: [] };
+}
+
+// ─── État du mode substrat : auto (déduit X/Y) vs manuel (forçage utilisateur) ───
+var _gmepSubstratManuel = false;
+
+// Lecture des coordonnées depuis les deux jeux de champs présents dans le HTML
+function _gmepLireXY() {
+  function v(id) {
+    const el = document.getElementById(id);
+    if (!el) return NaN;
+    return parseFloat(String(el.value || '').replace(',', '.').trim());
+  }
+  let x = v('mc-x-l93'); if (!isFinite(x)) x = v('inp-x');
+  let y = v('mc-y-l93'); if (!isFinite(y)) y = v('inp-y');
+  return { x: x, y: y };
+}
+
+function _gmepLireNum(id, def) {
+  const el = document.getElementById(id);
+  if (!el) return def;
+  const n = parseFloat(String(el.value || '').replace(',', '.').trim());
+  return isFinite(n) ? n : def;
+}
+
+// ─── Auto-sélection du substrat depuis X/Y ───
+function autoSelectionSubstrat() {
+  const { x, y } = _gmepLireXY();
+  const ind = document.getElementById('substrat-auto-indicateur');
+  if (!isFinite(x) || !isFinite(y)) {
+    if (ind) ind.textContent = '';
+    return null;
+  }
+  const res = identifierAquifere(x, y);
+  if (!res.aquifere) { if (ind) ind.textContent = ''; return null; }
+  const substratWeb = res.aquifere.substrat_web;
+  const sel = document.getElementById('inp-substrat');
+  // Si l'utilisateur a forcé manuellement, on respecte son choix
+  if (!_gmepSubstratManuel && sel && BASE_GEO[substratWeb]) {
+    if (sel.value !== substratWeb) {
+      sel.value = substratWeb;
+      // notifier les autres listeners (calcul, coupe…) sans casser le mode auto
+      sel.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }
+  if (ind) {
+    const prefixe = res.present
+      ? 'Substrat auto-déduit depuis X/Y : '
+      : 'Substrat auto-déduit (aquifère de référence le plus proche) : ';
+    ind.textContent = prefixe + substratWeb + ' — ' + res.aquifere.nom;
+  }
+  return res;
+}
+
+// ─── Distinction de régime de nappe + débit d'écoulement de la nappe de surface ───
+function majContexteHydro() {
+  const bloc = document.getElementById('bloc-contexte-hydro');
+  if (!bloc) return;
+  const res = autoSelectionSubstrat();
+
+  const ns  = _gmepLireNum('inp-ns', NaN);
+  const ff  = _gmepLireNum('inp-ff', NaN);
+  const zAlt = _gmepLireNum('mc-z-alt', NaN);
+  const seuil = HYDRO_PARAMS.seuil_nappe_superficielle_m;
+
+  // Cote NGF de la nappe = altimétrie NGF tête − NS
+  const coteNappeNGF = (isFinite(zAlt) && isFinite(ns)) ? (zAlt - ns) : NaN;
+
+  // Substrat effectif (auto ou forçage manuel)
+  const sel = document.getElementById('inp-substrat');
+  const substrat = sel ? sel.value : '';
+  const geo = BASE_GEO[substrat] || null;
+
+  // Régime : nappe d'écoulement de surface si aucun aquifère présent OU NS faible
+  const aucunPresent = !res || !res.present;
+  const napeSuperficielle = aucunPresent || (isFinite(ns) && ns <= seuil);
+
+  let regimeTxt, regimeRef, regimeClass, calageRef;
+  if (napeSuperficielle) {
+    regimeTxt = "NAPPE D'ÉCOULEMENT DE BASSIN VERSANT (faible profondeur) — référence : niveaux altimétriques des piézomètres / puits BSS BRGM";
+    regimeRef = "Base aquifère nationale (contexte) + piézométrie BSS BRGM";
+    calageRef = "Piézomètres / puits BSS BRGM (niveaux altimétriques mesurés)";
+    regimeClass = "regime-surface";
+  } else {
+    regimeTxt = "AQUIFÈRE PROFOND RÉFÉRENCÉ — référence : base aquifère nationale + emprise L93";
+    regimeRef = "Base aquifère nationale + emprise Lambert 93";
+    calageRef = "Aquifère profond référencé (toit/mur de la formation, emprise L93)";
+    regimeClass = "regime-profond";
+  }
+
+  // ── Débit d'écoulement de la nappe de surface (saisonnier) ──
+  // Paramètres pilotables (valeurs par défaut)
+  const K = geo ? geo.K : 1e-5;                          // m/s, auto depuis BASE_GEO
+  const i = _gmepLireNum('inp-hydro-gradient', HYDRO_PARAMS.gradient_defaut);
+  // Surface d'emprise A (m²) : saisissable, défaut π·rayon² ou 100
+  let A = _gmepLireNum('inp-hydro-surface', NaN);
+  if (!isFinite(A) || A <= 0) {
+    const R = _gmepLireNum('inp-rayon-inf', NaN);
+    A = (isFinite(R) && R > 0) ? Math.PI * R * R : 100;
+  }
+  // Largeur de front d'ouvrage L (m) : défaut = racine de la surface d'emprise ou 10
+  let L = _gmepLireNum('inp-hydro-largeur', NaN);
+  if (!isFinite(L) || L <= 0) { L = A > 0 ? Math.sqrt(A) : 10; }
+  // Hauteur d'eau interceptée h = max(profondeur ouvrage sous nappe, 0)
+  // profondeur ouvrage sous nappe = fond de fouille − NS
+  const profSousNappe = (isFinite(ff) && isFinite(ns)) ? (ff - ns) : NaN;
+  const h = Math.max(isFinite(profSousNappe) ? profSousNappe : 0, 0);
+  // Recharge annuelle R (mm/an) : saisissable, défaut 200
+  const Rmm = _gmepLireNum('inp-hydro-recharge', 200);
+
+  // FORMULES
+  const Q_darcy = K * i * (L * h) * 3600;                          // m³/h
+  const Q_recharge_moy = (Rmm / 1000) * A / (365 * 24);            // m³/h
+  const Q_total_moyen  = Q_darcy + Q_recharge_moy;
+  const Q_hautes_eaux  = Q_darcy + Q_recharge_moy * HYDRO_PARAMS.coef_hautes_eaux;
+  const Q_basses_eaux  = Q_darcy + Q_recharge_moy * HYDRO_PARAMS.coef_basses_eaux;
+
+  const fmt = (v, d) => (isFinite(v) ? v.toLocaleString('fr-FR', { minimumFractionDigits: d, maximumFractionDigits: d }) : '—');
+  const fmtE = (v) => (isFinite(v) ? v.toExponential(1).replace('.', ',') : '—');
+
+  // ── Rendu HTML ──
+  const aq = res && res.aquifere ? res.aquifere : null;
+  let html = '';
+  html += '<div class="ch-grid">';
+
+  // Colonne 1 : régime de nappe
+  html += '<div class="ch-card ' + regimeClass + '">';
+  html += '<div class="ch-title">Régime de nappe</div>';
+  html += '<div class="ch-regime">' + regimeTxt + '</div>';
+  html += '<table class="ch-table">';
+  html += '<tr><td>Aquifère de référence</td><td>' + (aq ? aq.nom : '—') + (aq && !res.present ? ' <em>(proximité)</em>' : '') + '</td></tr>';
+  html += '<tr><td>Bassin / présence emprise</td><td>' + (aq ? aq.bassin : '—') + (res ? (res.present ? ' — <b>présent</b> (' + res.nbPresents + ')' : ' — <b>hors emprise</b>') : '') + '</td></tr>';
+  html += '<tr><td>Niveau statique NS</td><td>' + fmt(ns, 2) + ' m / TN</td></tr>';
+  html += '<tr><td>Altimétrie NGF tête</td><td>' + fmt(zAlt, 2) + ' m NGF</td></tr>';
+  html += '<tr><td>Cote NGF de la nappe</td><td><b>' + fmt(coteNappeNGF, 2) + ' m NGF</b></td></tr>';
+  html += '<tr><td>Référence de calage altimétrique</td><td>' + calageRef + '</td></tr>';
+  html += '<tr><td>Source de référence</td><td>' + regimeRef + '</td></tr>';
+  html += '</table>';
+  html += '</div>';
+
+  // Colonne 2 : débit d'écoulement de la nappe de surface
+  html += '<div class="ch-card">';
+  html += '<div class="ch-title">Débit d\'écoulement de la nappe de surface (saisonnier)</div>';
+  html += '<div class="ch-params">';
+  html += '<label>K (m/s) : <input type="text" id="inp-hydro-K-aff" value="' + fmtE(K) + '" disabled style="width:80px"></label> ';
+  html += '<label>Gradient i : <input type="text" id="inp-hydro-gradient" value="' + (i) + '" style="width:60px"></label> ';
+  html += '<label>L front (m) : <input type="text" id="inp-hydro-largeur" placeholder="' + fmt(L,1) + '" style="width:60px"></label> ';
+  html += '<label>Surface A (m²) : <input type="text" id="inp-hydro-surface" placeholder="' + fmt(A,0) + '" style="width:70px"></label> ';
+  html += '<label>Recharge R (mm/an) : <input type="text" id="inp-hydro-recharge" placeholder="200" style="width:60px"></label>';
+  html += '</div>';
+  html += '<div class="ch-params-calc">h (eau interceptée) = max(FF − NS, 0) = <b>' + fmt(h, 2) + ' m</b></div>';
+  html += '<table class="ch-table ch-debits">';
+  html += '<tr><td>Q moyen</td><td>' + fmt(Q_total_moyen, 3) + ' m³/h</td></tr>';
+  html += '<tr class="ch-hautes"><td>Q HAUTES EAUX (dimensionnant)</td><td>' + fmt(Q_hautes_eaux, 3) + ' m³/h</td></tr>';
+  html += '<tr><td>Q basses eaux</td><td>' + fmt(Q_basses_eaux, 3) + ' m³/h</td></tr>';
+  html += '</table>';
+  if (napeSuperficielle) {
+    html += '<div class="ch-prevoir">Débit de rabattement à prévoir : <b>' + fmt(Q_hautes_eaux, 3) + ' m³/h</b> (cas dimensionnant hautes eaux)</div>';
+  } else {
+    html += '<div class="ch-prevoir ch-prevoir-off">Aquifère profond référencé — le débit d\'écoulement de surface n\'est pas dimensionnant ici (voir calcul Theis/multicouche).</div>';
+  }
+  html += '<div class="ch-legende">Détail : Q_darcy = K·i·(L·h)·3600 = ' + fmt(Q_darcy, 3) + ' m³/h ; Q_recharge moyen = R/1000·A/(365·24) = ' + fmt(Q_recharge_moy, 3) + ' m³/h. ';
+  html += 'Ce débit conditionne le rabattement selon la profondeur de l\'ouvrage : puits, parking souterrain, radier, fondations situés sous le niveau stabilisé de la nappe. Coefficients saisonniers : hautes eaux ×' + HYDRO_PARAMS.coef_hautes_eaux + ', basses eaux ×' + HYDRO_PARAMS.coef_basses_eaux + '.</div>';
+  html += '</div>';
+
+  html += '</div>'; // ch-grid
+
+  const corps = document.getElementById('contexte-hydro-corps');
+  if (corps) corps.innerHTML = html;
+  bloc.style.display = 'block';
+
+  // Re-brancher les listeners sur les champs pilotables (recréés à chaque rendu)
+  ['inp-hydro-gradient', 'inp-hydro-largeur', 'inp-hydro-surface', 'inp-hydro-recharge'].forEach(function (id) {
+    const el = document.getElementById(id);
+    if (el && !el._gmepBound) {
+      el._gmepBound = true;
+      el.addEventListener('input', function () { _gmepDebounceHydro(); });
+    }
+  });
+}
+
+// petit debounce pour éviter de recréer le DOM à chaque frappe trop vite
+var _gmepHydroTimer = null;
+function _gmepDebounceHydro() {
+  // Conserver les valeurs saisies dans les champs pilotables avant re-rendu
+  if (_gmepHydroTimer) clearTimeout(_gmepHydroTimer);
+  _gmepHydroTimer = setTimeout(function () {
+    // sauvegarder les valeurs courantes pour ne pas les perdre au re-rendu
+    const garder = {};
+    ['inp-hydro-gradient', 'inp-hydro-largeur', 'inp-hydro-surface', 'inp-hydro-recharge'].forEach(function (id) {
+      const el = document.getElementById(id);
+      if (el && el.value !== '') garder[id] = el.value;
+    });
+    majContexteHydro();
+    Object.keys(garder).forEach(function (id) {
+      const el = document.getElementById(id);
+      if (el) el.value = garder[id];
+    });
+  }, 250);
+}
+
+// ─── Branchement des écouteurs de réactivité (X, Y, NGF, NS, FF, substrat) ───
+document.addEventListener('DOMContentLoaded', function () {
+  // Marquer le forçage manuel si l'utilisateur change le substrat lui-même
+  const sel = document.getElementById('inp-substrat');
+  if (sel) {
+    sel.addEventListener('change', function (e) {
+      if (e.isTrusted) { _gmepSubstratManuel = true; } // changement humain → mode manuel
+      majContexteHydro();
+    });
+  }
+  const champs = ['mc-x-l93', 'mc-y-l93', 'inp-x', 'inp-y', 'mc-z-alt', 'inp-ns', 'inp-ff'];
+  champs.forEach(function (id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', majContexteHydro);
+    el.addEventListener('change', majContexteHydro);
+  });
+  // Premier rendu (si des valeurs sont déjà présentes)
+  setTimeout(majContexteHydro, 300);
+});
+
 
 // ─── Fonction de puits W(u) de Theis — série de Taylor (Excel-compatible) ───
 function wellFunction(u) {
@@ -5244,6 +5570,8 @@ function updateMCLayer(idx, field, value) {
     mcLayers[idx][field] = value;
   }
   renderMCTable();
+  // v15.86 : redessiner aussi la coupe si elle est déjà affichée
+  if (typeof refreshCoupeAuto === "function") refreshCoupeAuto();
 }
 
 // ─── Calcul multicouche principal ────────────────────────────────────────────
@@ -5478,9 +5806,78 @@ function escSVG(str) {
   return (str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 
+// ─── v15.86 : Rafraîchissement AUTOMATIQUE de la coupe géologique ──────────────
+// Corrige le bug où la coupe (en-tête : nom forage, adresse, X/Y Lambert 93,
+// Z TN, arrivée d'eau, date) gardait en mémoire les anciennes valeurs tant que
+// l'utilisateur ne recliquait pas manuellement sur « Calculer multicouche ».
+// Cette fonction recalcule les couches et redessine la coupe à chaque saisie,
+// sans afficher d'alerte (silencieuse), uniquement si la coupe est déjà visible.
+function refreshCoupeAuto() {
+  // Ne rien faire si la section multicouche n'est pas ouverte / pas encore calculée
+  const area = document.getElementById("mc-results-area");
+  const svgArea = document.getElementById("mc-svg-area");
+  if (!area || area.style.display === "none") return;
+  if (!svgArea || !svgArea.innerHTML) return;
+  if (!mcLayers || mcLayers.length === 0) return;
 
-// ─── v15.83 : Synchronisation bidirectionnelle X/Y Lambert 93 ──────────────
+  const ns = parseFloat((document.getElementById("inp-ns")||{}).value||"2") || 2;
+  const ff = parseFloat((document.getElementById("inp-ff")||{}).value||"4") || 4;
+  const r_puits = (parseFloat((document.getElementById("inp-diam-int")||{}).value||"112") || 112) / 1000 / 2;
+  let R = parseFloat((document.getElementById("inp-rayon-inf")||{}).value||"30") || 30;
+  const s = Math.max(0, ff - ns);
+  if (s <= 0) return; // rabattement nul : on laisse l'utilisateur corriger via Calculer
+
+  let K_max = 0;
+  mcLayers.forEach(l => {
+    const ld = LITHO_DB[l.litho] || { K: 0 };
+    if (ld.K > K_max) K_max = ld.K;
+  });
+  const R_sich = K_max > 0 ? 3000 * s * Math.sqrt(K_max) : R;
+  R = Math.max(R, R_sich);
+  const lnRr = (R > r_puits && r_puits > 0) ? Math.log(R / r_puits) : Math.log(R / 0.056);
+
+  let Q_total = 0;
+  const layerResults = [];
+  mcLayers.forEach((layer) => {
+    const ld = LITHO_DB[layer.litho] || { K: 0, fam: "?" };
+    const K = ld.K;
+    const fam = ld.fam;
+    const color = LITHO_COLORS[fam] || "#eee";
+    const isSat = layer.a > ns;
+    const e_sat = isSat ? Math.max(0, Math.min(layer.a, ff) - Math.max(layer.de, ns)) : 0;
+    const permeable = K > 1e-10;
+    const Q_i = (permeable && e_sat > 0 && s > 0 && lnRr > 0)
+                ? 2 * Math.PI * K * e_sat * s / lnRr * 3600 : 0;
+    Q_total += Q_i;
+    layerResults.push({ ...layer, K, fam, color, e_sat, isSat, permeable, Q_i });
+  });
+
+  renderCoupeSVG(layerResults, ns, ff, s, R, Q_total);
+}
+
+// ─── v15.86 : Branchement des écouteurs de rafraîchissement automatique ────────
+document.addEventListener("DOMContentLoaded", function () {
+  // Champs d'en-tête de la coupe géologique G.M.E.P (adresse, coords, etc.)
+  const champsCoupe = [
+    "mc-nom-forage", "mc-adresse-rue", "mc-adresse-cpville", "mc-date-forage",
+    "mc-x-l93", "mc-y-l93", "mc-z-alt", "mc-arrivee-eau"
+  ];
+  // Paramètres hydrauliques qui influencent la coupe (NS, FF, diamètre, rayon)
+  const champsHydro = ["inp-ns", "inp-ff", "inp-diam-int", "inp-rayon-inf"];
+
+  champsCoupe.concat(champsHydro).forEach(function (id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener("input", refreshCoupeAuto);
+    el.addEventListener("change", refreshCoupeAuto);
+  });
+});
+
+// ─── v15.83 / corrigé v15.86 : Synchronisation bidirectionnelle X/Y Lambert 93 ──
 // inp-x / inp-y (bloc carte principale) ↔ mc-x-l93 / mc-y-l93 (en-tête Coupe G.M.E.P)
+// v15.86 : ajout d'un drapeau anti-récursion (_gmepSyncing) pour empêcher la boucle
+// infinie « Maximum call stack size exceeded » provoquée par le re-dispatch d'events.
+var _gmepSyncing = false;
 document.addEventListener("DOMContentLoaded", function () {
   function syncXY(fromX, fromY, toX, toY) {
     var elFX = document.getElementById(fromX);
@@ -5490,9 +5887,18 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!elFX || !elFY || !elTX || !elTY) return;
 
     function doSync(src, dst) {
-      dst.value = src.value;
-      // Déclencher un événement input sur la destination pour màj d'autres listeners
-      dst.dispatchEvent(new Event("input", { bubbles: true }));
+      if (_gmepSyncing) return;          // déjà en cours de synchro → on ignore
+      if (dst.value === src.value) return; // aucune modification → rien à faire
+      _gmepSyncing = true;
+      try {
+        dst.value = src.value;
+        // Déclencher input/change sur la destination pour màj des autres listeners
+        // (carte, coupe…). Le drapeau empêche le retour en boucle vers la source.
+        dst.dispatchEvent(new Event("input", { bubbles: true }));
+        dst.dispatchEvent(new Event("change", { bubbles: true }));
+      } finally {
+        _gmepSyncing = false;
+      }
     }
 
     elFX.addEventListener("input", function () { doSync(elFX, elTX); });
