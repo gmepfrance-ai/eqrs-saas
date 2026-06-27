@@ -78,9 +78,7 @@ export default function ToolPage() {
           <p className="text-sm text-muted-foreground mb-6">{error}</p>
           <Button
             data-testid="button-back-dashboard"
-            onClick={() =>
-              (navigateTo(`/dashboard?token=${token}`)
-            }
+            onClick={() => navigateTo(`/dashboard?token=${token}`)}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Retour au tableau de bord

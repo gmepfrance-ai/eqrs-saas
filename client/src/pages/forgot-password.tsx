@@ -85,7 +85,7 @@ export default function ForgotPasswordPage() {
               <p className="sub">{t("fp.doneSub")}</p>
               <button
                 className="v2-btn v2-btn-primary v2-btn-block"
-                onClick={() => (navigateTo("/login")}
+                onClick={() => navigateTo("/login")}
               >
                 {t("fp.signIn")}
               </button>

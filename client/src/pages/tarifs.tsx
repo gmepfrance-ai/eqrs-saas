@@ -199,7 +199,7 @@ export default function TarifsPage() {
               </ul>
               <button
                 className="v2-btn v2-btn-blue v2-btn-block"
-                onClick={() => (navigateTo("/subscribe-tsn")}
+                onClick={() => navigateTo("/subscribe-tsn")}
               >
                 {t("tarifs.subscribe")}
               </button>
@@ -225,7 +225,7 @@ export default function TarifsPage() {
               </ul>
               <button
                 className="v2-btn v2-btn-blue v2-btn-block"
-                onClick={() => (navigateTo("/subscribe-rabattement")}
+                onClick={() => navigateTo("/subscribe-rabattement")}
               >
                 {t("tarifs.subscribe")}
               </button>
