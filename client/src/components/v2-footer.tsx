@@ -21,24 +21,24 @@ export function V2Footer() {
             <h6>{t("v2.footer.colTools")}</h6>
             <ul>
               <li>
-                <a href="#/app">{t("v2.footer.linkEqrs")}</a>
+                <a href="/app">{t("v2.footer.linkEqrs")}</a>
               </li>
               <li>
-                <a href="#/tsn">{t("v2.footer.linkTsn")}</a>
+                <a href="/tsn">{t("v2.footer.linkTsn")}</a>
               </li>
               <li>
-                <a href="#/rabattement">{t("v2.footer.linkRabattement")}</a>
+                <a href="/rabattement">{t("v2.footer.linkRabattement")}</a>
               </li>
             </ul>
           </div>
           <div className="v2-footer-col">
             <h6>{t("v2.footer.colCompany")}</h6>
             <ul>
-              <li><a href="#/tarifs">{t("v2.footer.linkPricing")}</a></li>
-              <li><a href="#/mentions-legales">{t("v2.footer.linkMentions")}</a></li>
-              <li><a href="#/cgv">{t("v2.footer.linkCgv")}</a></li>
+              <li><a href="/tarifs">{t("v2.footer.linkPricing")}</a></li>
+              <li><a href="/mentions-legales">{t("v2.footer.linkMentions")}</a></li>
+              <li><a href="/cgv">{t("v2.footer.linkCgv")}</a></li>
               <li><a href="/CGV_GMEP_2026.pdf" download="CGV_GMEP_2026.pdf">{t("v2.footer.linkCgvPdf")}</a></li>
-              <li><a href="#/contact">{t("v2.footer.linkContact")}</a></li>
+              <li><a href="/contact">{t("v2.footer.linkContact")}</a></li>
             </ul>
           </div>
           <div className="v2-footer-col v2-footer-legal">

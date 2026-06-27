@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { navigateTo } from "@/lib/navigation";
 import { V2Header } from "@/components/v2-header";
 import { V2Footer } from "@/components/v2-footer";
 import { Button } from "@/components/ui/button";
@@ -29,13 +30,14 @@ export default function DashboardPage() {
   const [portalLoading, setPortalLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // Check for checkout result in URL
+  // Check for checkout result in URL (query string)
   useEffect(() => {
-    const hash = window.location.hash;
-    if (hash.includes("checkout=success")) {
+    const params = new URLSearchParams(window.location.search);
+    const checkout = params.get("checkout");
+    if (checkout === "success") {
       setMessage("Paiement réussi ! Votre abonnement est maintenant actif.");
       refreshUser();
-    } else if (hash.includes("checkout=cancel")) {
+    } else if (checkout === "cancel") {
       setMessage("Paiement annulé.");
     }
   }, []);
@@ -43,37 +45,43 @@ export default function DashboardPage() {
   // Auto-checkout ou auto-essai si un plan est passé dans l'URL après inscription/connexion
   useEffect(() => {
     if (!token || authLoading) return;
-    const hash = window.location.hash;
-    const match = hash.match(/checkout=([a-z_]+)/);
-    if (match && match[1] && match[1] !== "success" && match[1] !== "cancel") {
-      const plan = match[1];
-      window.location.hash = hash.replace(/[&?]?checkout=[a-z_]+/, "");
+    const params = new URLSearchParams(window.location.search);
+    const plan = params.get("checkout");
+    if (plan && plan !== "success" && plan !== "cancel") {
+      // Retirer le paramètre checkout de l'URL sans recharger la page
+      params.delete("checkout");
+      const cleanSearch = params.toString();
+      window.history.replaceState(
+        null,
+        "",
+        window.location.pathname + (cleanSearch ? `?${cleanSearch}` : "")
+      );
       if (plan === "tsn_trial") {
         // Activer l'essai TSN puis rediriger vers l'outil
         fetch(`/api/tsn-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
           .then(r => r.json())
           .then(() => { window.location.href = `/api/tsn-trial?token=${token}`; })
-          .catch(() => { window.location.hash = "#/subscribe-tsn"; });
+          .catch(() => { navigateTo("/subscribe-tsn"); });
       } else if (plan === "rabattement_trial") {
         fetch(`/api/rabattement-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
           .then(r => r.json())
           .then(() => { window.location.href = `/api/rabattement-tool?token=${token}`; })
-          .catch(() => { window.location.hash = "#/subscribe-rabattement"; });
+          .catch(() => { navigateTo("/subscribe-rabattement"); });
       } else if (plan === "eqrs_v31_ecotox_trial") {
         fetch(`/api/eqrs-v31-ecotox-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
           .then(r => r.json())
           .then(() => { window.location.href = `/api/eqrs-v31-ecotox-tool?token=${token}`; })
-          .catch(() => { window.location.hash = "#/subscribe-eqrs-v31-ecotox"; });
+          .catch(() => { navigateTo("/subscribe-eqrs-v31-ecotox"); });
       } else if (plan === "schema_conceptuel_trial") {
         fetch(`/api/schema-conceptuel-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
           .then(r => r.json())
           .then(() => { window.location.href = `/api/schema-conceptuel-tool?token=${token}`; })
-          .catch(() => { window.location.hash = "#/subscribe-schema-conceptuel"; });
+          .catch(() => { navigateTo("/subscribe-schema-conceptuel"); });
       } else if (plan === "msp_trial") {
         fetch(`/api/msp-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
           .then(r => r.json())
           .then(() => { window.location.href = `/api/msp-tool?token=${token}`; })
-          .catch(() => { window.location.hash = "#/subscribe-msp"; });
+          .catch(() => { navigateTo("/subscribe-msp"); });
       } else {
         handleCheckout(plan);
       }

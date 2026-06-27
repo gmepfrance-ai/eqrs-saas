@@ -103,7 +103,7 @@ export default function CgvPage() {
               <h2>{t("cgv.s8.title")}</h2>
               <p>
                 {t("cgv.s8.p1.before")}
-                <a href="#/mentions-legales">{t("cgv.s8.p1.link")}</a>
+                <a href="/mentions-legales">{t("cgv.s8.p1.link")}</a>
                 {t("cgv.s8.p1.after")}
               </p>
 

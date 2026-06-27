@@ -130,9 +130,9 @@ export default function RegisterPage() {
                   style={{ width: "auto", marginTop: 3 }}
                 />
                 <span>
-                  {t("register.cgu.before")}<a href="#/cgv">{t("register.cgu.cgvLink")}</a>
+                  {t("register.cgu.before")}<a href="/cgv">{t("register.cgu.cgvLink")}</a>
                   {t("register.cgu.middle")}
-                  <a href="#/mentions-legales">{t("register.cgu.mlLink")}</a>
+                  <a href="/mentions-legales">{t("register.cgu.mlLink")}</a>
                   {t("register.cgu.after")}
                 </span>
               </label>
@@ -149,7 +149,7 @@ export default function RegisterPage() {
 
           <p className="form-foot">
             {t("register.already")}{" "}
-            <a href="#/login" data-testid="link-to-login">
+            <a href="/login" data-testid="link-to-login">
               {t("register.signIn")}
             </a>
           </p>

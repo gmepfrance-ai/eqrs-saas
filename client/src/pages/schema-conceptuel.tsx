@@ -1,4 +1,5 @@
 import { V2Header } from "@/components/v2-header";
+import { navigateTo } from "@/lib/navigation";
 import { V2Footer } from "@/components/v2-footer";
 import { useAuth } from "@/lib/auth";
 
@@ -8,12 +9,12 @@ export default function SchemaConceptuelPage() {
 
   function subscribe() {
     localStorage.setItem("pending_plan", "schema_conceptuel_annual");
-    window.location.hash = "#/subscribe-schema-conceptuel";
+    navigateTo("/subscribe-schema-conceptuel");
   }
 
   function startTrial() {
     if (!user || !token) {
-      window.location.hash = "#/register";
+      navigateTo("/register");
       return;
     }
     window.location.href = `/api/schema-conceptuel-tool?token=${token}`;
@@ -43,7 +44,7 @@ export default function SchemaConceptuelPage() {
                   S'abonner — 850 € HT/an
                 </button>
                 <button className="v2-btn v2-btn-outline" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 14 jours</button>
-                <a href="#/contact" className="v2-btn v2-btn-outline">Démo sur demande</a>
+                <a href="/contact" className="v2-btn v2-btn-outline">Démo sur demande</a>
               </div>
             </div>
             <div className="v2-hero-mock" aria-hidden="true">
@@ -243,7 +244,7 @@ export default function SchemaConceptuelPage() {
           </div>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginTop: 24 }}>
             <button className="v2-btn v2-btn-ghost" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 14 jours</button>
-            <a href="#/contact" className="v2-btn v2-btn-ghost">Démo sur demande</a>
+            <a href="/contact" className="v2-btn v2-btn-ghost">Démo sur demande</a>
           </div>
         </div>
       </section>

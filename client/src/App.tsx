@@ -1,5 +1,4 @@
 import { Switch, Route, Router } from "wouter";
-import { useHashLocation } from "@/lib/hash-location";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -37,7 +36,7 @@ const API_BASE_TRACK = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
 function usePageTracker() {
   useEffect(() => {
     const track = () => {
-      const path = window.location.hash.replace(/#/, "").split("?")[0] || "/";
+      const path = window.location.pathname.split("?")[0] || "/";
       fetch(`${API_BASE_TRACK}/api/track`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -45,8 +44,17 @@ function usePageTracker() {
       }).catch(() => {});
     };
     track();
-    window.addEventListener("hashchange", track);
-    return () => window.removeEventListener("hashchange", track);
+    window.addEventListener("popstate", track);
+    // wouter navigue via history.pushState : on patche pour notifier le tracker
+    const origPush = history.pushState;
+    history.pushState = function (...args) {
+      origPush.apply(this, args as any);
+      track();
+    };
+    return () => {
+      window.removeEventListener("popstate", track);
+      history.pushState = origPush;
+    };
   }, []);
 }
 
@@ -88,7 +96,7 @@ function App() {
       <TooltipProvider>
         <Toaster />
         <LanguageProvider>
-          <Router hook={useHashLocation}>
+          <Router>
             <AuthProvider>
               <AppRouter />
             </AuthProvider>

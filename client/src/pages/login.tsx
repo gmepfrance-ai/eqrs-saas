@@ -89,13 +89,13 @@ export default function LoginPage() {
           </form>
 
           <p className="form-foot">
-            <a href="#/forgot-password" data-testid="link-forgot-password">
+            <a href="/forgot-password" data-testid="link-forgot-password">
               {t("login.forgot")}
             </a>
           </p>
           <p className="form-foot">
             {t("login.noAccount")}{" "}
-            <a href="#/register" data-testid="link-to-register">
+            <a href="/register" data-testid="link-to-register">
               {t("login.createAccount")}
             </a>
           </p>

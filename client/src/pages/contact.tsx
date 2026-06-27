@@ -85,7 +85,7 @@ export default function ContactPage() {
               </button>
               <p style={{ fontSize: 12.5, color: "#6b7280", marginTop: 12 }}>
                 {t("contact.form.gdprBefore")}{" "}
-                <a href="#/mentions-legales">{t("contact.form.gdprLink")}</a>.
+                <a href="/mentions-legales">{t("contact.form.gdprLink")}</a>.
               </p>
             </form>
 

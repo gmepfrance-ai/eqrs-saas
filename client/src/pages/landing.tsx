@@ -22,7 +22,7 @@ export default function LandingPage() {
               <p className="lead">{t("v2.hero.lead")}</p>
               <div className="v2-hero-cta">
                 <a
-                  href="#/tarifs"
+                  href="/tarifs"
                   className="v2-btn v2-btn-primary"
                   onClick={(e) => {
                     e.preventDefault();
@@ -31,7 +31,7 @@ export default function LandingPage() {
                 >
                   {t("v2.hero.cta.discover")}
                 </a>
-                <a href="#/register" className="v2-btn v2-btn-outline">
+                <a href="/register" className="v2-btn v2-btn-outline">
                   {t("v2.hero.cta.trial")}
                 </a>
               </div>
@@ -95,7 +95,7 @@ export default function LandingPage() {
                 ✓ {t("v2.tools.eqrs_v31.feat3")}
               </p>
               <div className="v2-tool-price">{t("v2.tools.eqrs_v31.price")}</div>
-              <a href="#/eqrs-v31-05-ecotox" className="v2-btn v2-btn-blue">
+              <a href="/eqrs-v31-05-ecotox" className="v2-btn v2-btn-blue">
                 {t("v2.tools.eqrs_v31.cta")}
               </a>
               <div style={{ marginTop: "0.75rem", textAlign: "center" }}>
@@ -122,7 +122,7 @@ export default function LandingPage() {
                 ✓ {t("v2.tools.rabattement_v15.feat3")}
               </p>
               <div className="v2-tool-price">{t("v2.tools.rabattement_v15.price")}</div>
-              <a href="#/rabattement-v15-85" className="v2-btn v2-btn-blue">
+              <a href="/rabattement-v15-85" className="v2-btn v2-btn-blue">
                 {t("v2.tools.rabattement_v15.cta")}
               </a>
               <div style={{ marginTop: "0.75rem", textAlign: "center" }}>
@@ -150,7 +150,7 @@ export default function LandingPage() {
                 ✓ {t("v2.tools.tsn_new.feat3")}
               </p>
               <div className="v2-tool-price">{t("v2.tools.tsn_new.price")}</div>
-              <a href="#/tsn-transfert-sol-nappe" className="v2-btn v2-btn-blue">
+              <a href="/tsn-transfert-sol-nappe" className="v2-btn v2-btn-blue">
                 {t("v2.tools.tsn_new.cta")}
               </a>
               <div style={{ marginTop: "0.75rem", textAlign: "center" }}>
@@ -177,7 +177,7 @@ export default function LandingPage() {
                 ✓ {t("v2.tools.schema.feat3")}
               </p>
               <div className="v2-tool-price">{t("v2.tools.schema.price")}</div>
-              <a href="#/schema-conceptuel" className="v2-btn v2-btn-blue">
+              <a href="/schema-conceptuel" className="v2-btn v2-btn-blue">
                 {t("v2.tools.schema.cta")}
               </a>
               <div style={{ marginTop: "0.75rem", textAlign: "center" }}>
@@ -210,7 +210,7 @@ export default function LandingPage() {
               </p>
               <div className="v2-tool-price">{t("v2.tools.eqrs.price")}</div>
               <a
-                href="#/app"
+                href="/app"
                 className="v2-btn v2-btn-blue"
                 onClick={() => localStorage.setItem("pending_plan", "monthly")}
               >
@@ -265,7 +265,7 @@ export default function LandingPage() {
               <h3>{t("v2.tools.tsn.title")}</h3>
               <p>{t("v2.tools.tsn.desc")}</p>
               <div className="v2-tool-price">{t("v2.tools.tsn.price")}</div>
-              <a href="#/subscribe-tsn" className="v2-btn v2-btn-blue">
+              <a href="/subscribe-tsn" className="v2-btn v2-btn-blue">
                 {t("v2.tools.eqrs.cta")}
               </a>
             </article>
@@ -293,7 +293,7 @@ export default function LandingPage() {
               <h3>{t("v2.tools.rabattement.title")}</h3>
               <p>{t("v2.tools.rabattement.desc")}</p>
               <div className="v2-tool-price">{t("v2.tools.rabattement.price")}</div>
-              <a href="#/subscribe-rabattement" className="v2-btn v2-btn-blue">
+              <a href="/subscribe-rabattement" className="v2-btn v2-btn-blue">
                 {t("v2.tools.eqrs.cta")}
               </a>
             </article>
@@ -320,7 +320,7 @@ export default function LandingPage() {
                 ✓ {t("v2.tools.piezometres.feat3")}
               </p>
               <div className="v2-tool-price">{t("v2.tools.piezometres.price")}</div>
-              <a href="#/subscribe-piezometres" className="v2-btn v2-btn-blue">
+              <a href="/subscribe-piezometres" className="v2-btn v2-btn-blue">
                 {t("v2.tools.piezometres.cta")}
               </a>
               <div style={{ marginTop: "0.75rem", textAlign: "center" }}>
@@ -490,7 +490,7 @@ export default function LandingPage() {
           <div className="v2-cta-band">
             <h2>{t("v2.cta.title")}</h2>
             <p>{t("v2.cta.desc")}</p>
-            <a href="#/register" className="v2-btn v2-btn-primary">
+            <a href="/register" className="v2-btn v2-btn-primary">
               {t("v2.cta.btn")}
             </a>
           </div>

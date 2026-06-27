@@ -1,4 +1,5 @@
 import { V2Header } from "@/components/v2-header";
+import { navigateTo } from "@/lib/navigation";
 import { V2Footer } from "@/components/v2-footer";
 import { useAuth } from "@/lib/auth";
 
@@ -8,13 +9,13 @@ export default function RabattementV1585Page() {
 
   function subscribe() {
     localStorage.setItem("pending_plan", "rabattement_annual");
-    window.location.hash = "#/subscribe-rabattement";
+    navigateTo("/subscribe-rabattement");
   }
 
   function startTrial() {
     // Si non connecté → inscription (qui activera tous les essais auto)
     if (!user || !token) {
-      window.location.hash = "#/register";
+      navigateTo("/register");
       return;
     }
     // Connecté → accès direct à l'outil (essai déjà actif depuis l'inscription)
@@ -50,7 +51,7 @@ export default function RabattementV1585Page() {
                   S'abonner — 1 500 € HT/an
                 </button>
                 <button className="v2-btn v2-btn-outline" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 14 jours</button>
-                <a href="#/contact" className="v2-btn v2-btn-outline">Démo sur demande</a>
+                <a href="/contact" className="v2-btn v2-btn-outline">Démo sur demande</a>
               </div>
             </div>
             <div className="v2-hero-mock" aria-hidden="true">
@@ -220,7 +221,7 @@ export default function RabattementV1585Page() {
           </div>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginTop: 24 }}>
             <button className="v2-btn v2-btn-ghost" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 14 jours</button>
-            <a href="#/contact" className="v2-btn v2-btn-ghost">Démo sur demande</a>
+            <a href="/contact" className="v2-btn v2-btn-ghost">Démo sur demande</a>
           </div>
         </div>
       </section>

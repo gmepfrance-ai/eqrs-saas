@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { navigateTo } from "@/lib/navigation";
 import { useAuth } from "@/lib/auth";
 import { useTranslation } from "@/lib/i18n";
 import { LanguageSelector } from "@/components/language-selector";
@@ -71,9 +72,9 @@ export function GmepHeader() {
         className="flex items-center gap-3 cursor-pointer flex-shrink-0"
         onClick={() => {
           if (user && token) {
-            window.location.hash = `#/dashboard?token=${token}`;
+            navigateTo(`/dashboard?token=${token}`);
           } else {
-            window.location.hash = "#/";
+            navigateTo("/");
           }
         }}
       >

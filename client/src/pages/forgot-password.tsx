@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { navigateTo } from "@/lib/navigation";
 import { V2Header } from "@/components/v2-header";
 import { V2Footer } from "@/components/v2-footer";
 import { useTranslation } from "@/lib/i18n";
@@ -84,7 +85,7 @@ export default function ForgotPasswordPage() {
               <p className="sub">{t("fp.doneSub")}</p>
               <button
                 className="v2-btn v2-btn-primary v2-btn-block"
-                onClick={() => (window.location.hash = "#/login")}
+                onClick={() => (navigateTo("/login")}
               >
                 {t("fp.signIn")}
               </button>
@@ -181,7 +182,7 @@ export default function ForgotPasswordPage() {
             </>
           )}
           <p className="form-foot">
-            <a href="#/login">{t("fp.back")}</a>
+            <a href="/login">{t("fp.back")}</a>
           </p>
         </div>
       </div>

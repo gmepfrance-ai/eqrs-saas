@@ -1,4 +1,5 @@
 import { V2Header } from "@/components/v2-header";
+import { navigateTo } from "@/lib/navigation";
 import { V2Footer } from "@/components/v2-footer";
 import { useAuth } from "@/lib/auth";
 
@@ -8,12 +9,12 @@ export default function EqrsV3105EcotoxPage() {
 
   function subscribe() {
     localStorage.setItem("pending_plan", "eqrs_v31_ecotox_monthly");
-    window.location.hash = "#/subscribe-eqrs-v31-ecotox";
+    navigateTo("/subscribe-eqrs-v31-ecotox");
   }
 
   function startTrial() {
     if (!user || !token) {
-      window.location.hash = "#/register";
+      navigateTo("/register");
       return;
     }
     window.location.href = `/api/eqrs-v31-ecotox-tool?token=${token}`;
@@ -237,7 +238,7 @@ export default function EqrsV3105EcotoxPage() {
           </div>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginTop: 24 }}>
             <button className="v2-btn v2-btn-ghost" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 14 jours</button>
-            <a href="#/contact" className="v2-btn v2-btn-ghost">Demander une démo</a>
+            <a href="/contact" className="v2-btn v2-btn-ghost">Demander une démo</a>
           </div>
         </div>
       </section>

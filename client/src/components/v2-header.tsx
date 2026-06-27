@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { navigateTo } from "@/lib/navigation";
 import { useAuth } from "@/lib/auth";
 import { useTranslation, type Lang } from "@/lib/i18n";
 
@@ -27,9 +28,9 @@ export function V2Header() {
 
   const goDashboard = () => {
     if (user && token) {
-      window.location.hash = `#/dashboard?token=${token}`;
+      navigateTo(`/dashboard?token=${token}`);
     } else {
-      window.location.hash = "#/";
+      navigateTo("/");
     }
   };
 
@@ -37,7 +38,7 @@ export function V2Header() {
     <header className={`v2-header ${menuOpen ? "menu-open" : ""}`} role="banner">
       <div className="container">
         <a
-          href="#/"
+          href="/"
           className="v2-brand"
           aria-label="Accueil GMEP"
           onClick={(e) => {
@@ -69,7 +70,7 @@ export function V2Header() {
         </a>
 
         <nav className="v2-nav-center" aria-label={t("nav.home")}>
-          <a href="#/">{t("nav.home")}</a>
+          <a href="/">{t("nav.home")}</a>
           <div className={`v2-nav-dropdown ${dropdownOpen ? "open" : ""}`}>
             <button
               className="v2-nav-trigger"
@@ -92,35 +93,35 @@ export function V2Header() {
               </svg>
             </button>
             <div className="v2-nav-dropdown-menu" role="menu">
-              <a href="#/app" onClick={() => setDropdownOpen(false)}>
+              <a href="/app" onClick={() => setDropdownOpen(false)}>
                 {t("nav.tools.eqrs")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.eqrs.desc")}</span>
               </a>
-              <a href="#/subscribe-tsn" onClick={() => setDropdownOpen(false)}>
+              <a href="/subscribe-tsn" onClick={() => setDropdownOpen(false)}>
                 {t("nav.tools.tsn")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.tsn.desc")}</span>
               </a>
-              <a href="#/subscribe-rabattement" onClick={() => setDropdownOpen(false)}>
+              <a href="/subscribe-rabattement" onClick={() => setDropdownOpen(false)}>
                 {t("nav.tools.rabattement")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.rabattement.desc")}</span>
               </a>
-              <a href="#/eqrs-v31-05-ecotox" onClick={() => setDropdownOpen(false)}>
+              <a href="/eqrs-v31-05-ecotox" onClick={() => setDropdownOpen(false)}>
                 {t("nav.tools.eqrsEcotox")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.eqrsEcotox.desc")}</span>
               </a>
-              <a href="#/rabattement-v15-85" onClick={() => setDropdownOpen(false)}>
+              <a href="/rabattement-v15-85" onClick={() => setDropdownOpen(false)}>
                 {t("nav.tools.rabattement1585")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.rabattement1585.desc")}</span>
               </a>
-              <a href="#/tsn-transfert-sol-nappe" onClick={() => setDropdownOpen(false)}>
+              <a href="/tsn-transfert-sol-nappe" onClick={() => setDropdownOpen(false)}>
                 {t("nav.tools.tsnSolNappe")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.tsnSolNappe.desc")}</span>
               </a>
-              <a href="#/subscribe-piezometres" onClick={() => setDropdownOpen(false)}>
+              <a href="/subscribe-piezometres" onClick={() => setDropdownOpen(false)}>
                 {t("nav.tools.piezometres")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.piezometres.desc")}</span>
               </a>
-              <a href="#/schema-conceptuel" onClick={() => setDropdownOpen(false)}>
+              <a href="/schema-conceptuel" onClick={() => setDropdownOpen(false)}>
                 {t("nav.tools.schemaConceptuel")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.schemaConceptuel.desc")}</span>
               </a>
@@ -130,9 +131,9 @@ export function V2Header() {
               </a>
             </div>
           </div>
-          <a href="#/tarifs">{t("nav.pricing")}</a>
-          <a href="#/cgv">{t("nav.cgv")}</a>
-          <a href="#/contact">{t("nav.contact")}</a>
+          <a href="/tarifs">{t("nav.pricing")}</a>
+          <a href="/cgv">{t("nav.cgv")}</a>
+          <a href="/contact">{t("nav.contact")}</a>
         </nav>
 
         <div className="v2-nav-right">
@@ -157,7 +158,7 @@ export function V2Header() {
                 {user.name}
               </span>
               <a
-                href="#/dashboard"
+                href="/dashboard"
                 className="v2-btn-header-outline"
                 onClick={(e) => {
                   e.preventDefault();
@@ -177,10 +178,10 @@ export function V2Header() {
             </>
           ) : (
             <>
-              <a href="#/login" className="v2-btn-header-outline" data-testid="link-login">
+              <a href="/login" className="v2-btn-header-outline" data-testid="link-login">
                 {t("header.login")}
               </a>
-              <a href="#/register" className="v2-btn-header-cta" data-testid="link-register">
+              <a href="/register" className="v2-btn-header-cta" data-testid="link-register">
                 {t("header.register")}
               </a>
             </>

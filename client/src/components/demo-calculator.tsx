@@ -657,7 +657,7 @@ function ResultRow({
 function UpgradeBanner({ t }: { t: (k: any) => string }) {
   return (
     <a
-      href="#/register"
+      href="/register"
       className="mt-2 flex items-center justify-between rounded-xl px-4 py-3 transition-all duration-150 hover:opacity-90 group"
       style={{
         background: "linear-gradient(135deg, #1A365D 0%, #1a5276 100%)",

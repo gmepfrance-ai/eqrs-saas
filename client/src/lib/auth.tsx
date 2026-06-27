@@ -4,14 +4,16 @@ import { apiRequest } from "./queryClient";
 
 const API_BASE = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
 
-function getTokenFromHash(): string | null {
-  const hash = window.location.hash.slice(1) || "/";
-  const qIndex = hash.indexOf("?");
-  if (qIndex >= 0) {
-    const params = new URLSearchParams(hash.slice(qIndex + 1));
-    return params.get("token");
-  }
-  return null;
+function getTokenFromUrl(): string | null {
+  // Token transmis en query string standard (?token=...)
+  return new URLSearchParams(window.location.search).get("token");
+}
+
+// Navigation programmatique compatible wouter (history routing) :
+// pushState + dispatch d'un événement popstate pour que le routeur se mette à jour.
+function navigateTo(path: string) {
+  window.history.pushState(null, "", path);
+  window.dispatchEvent(new PopStateEvent("popstate"));
 }
 
 interface AuthState {
@@ -42,10 +44,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loading: true,
   });
 
-  // Extract token from URL hash on mount and on hash changes
+  // Extract token from URL query on mount and on navigation changes
   useEffect(() => {
     function checkToken() {
-      const token = getTokenFromHash();
+      const token = getTokenFromUrl();
       if (token && token !== state.token) {
         setState((s) => ({ ...s, token }));
       } else if (!token && !state.token) {
@@ -53,8 +55,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
     checkToken();
-    window.addEventListener("hashchange", checkToken);
-    return () => window.removeEventListener("hashchange", checkToken);
+    window.addEventListener("popstate", checkToken);
+    return () => window.removeEventListener("popstate", checkToken);
   }, []);
 
   // When token changes, fetch user
@@ -103,9 +105,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const pendingPlan = localStorage.getItem("pending_plan");
     if (pendingPlan) {
       localStorage.removeItem("pending_plan");
-      window.location.hash = `#/dashboard?token=${data.token}&checkout=${pendingPlan}`;
+      navigateTo(`/dashboard?token=${data.token}&checkout=${pendingPlan}`);
     } else {
-      window.location.hash = `#/dashboard?token=${data.token}`;
+      navigateTo(`/dashboard?token=${data.token}`);
     }
     await fetchMe(data.token);
   }, []);
@@ -131,9 +133,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const pendingPlan = localStorage.getItem("pending_plan");
     if (pendingPlan) {
       localStorage.removeItem("pending_plan");
-      window.location.hash = `#/dashboard?token=${data.token}&checkout=${pendingPlan}`;
+      navigateTo(`/dashboard?token=${data.token}&checkout=${pendingPlan}`);
     } else {
-      window.location.hash = `#/dashboard?token=${data.token}`;
+      navigateTo(`/dashboard?token=${data.token}`);
     }
     await fetchMe(data.token);
   }, []);
@@ -148,7 +150,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     setState({ token: null, user: null, subscription: null, tsnSubscription: null,
     rabattementSubscription: null, loading: false });
-    window.location.hash = "#/";
+    navigateTo("/");
   }, [state.token]);
 
   const refreshUser = useCallback(async () => {

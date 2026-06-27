@@ -1,4 +1,5 @@
 import { V2Header } from "@/components/v2-header";
+import { navigateTo } from "@/lib/navigation";
 import { V2Footer } from "@/components/v2-footer";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
@@ -24,7 +25,7 @@ export default function SubscribePiezometresPage() {
   async function handleTrial() {
     if (!user || !token) {
       localStorage.setItem("pending_plan", "piezometres_trial");
-      window.location.hash = "#/register";
+      navigateTo("/register");
       return;
     }
     setTrialLoading(true);
@@ -53,7 +54,7 @@ export default function SubscribePiezometresPage() {
   async function handleSubscribe() {
     if (!user || !token) {
       localStorage.setItem("pending_plan", "piezometres_annual");
-      window.location.hash = "#/register";
+      navigateTo("/register");
       return;
     }
     setLoading(true);
@@ -76,9 +77,9 @@ export default function SubscribePiezometresPage() {
   // Retour vers dashboard si connecté, sinon vers accueil
   function handleBack() {
     if (user && token) {
-      window.location.hash = `#/dashboard?token=${token}&checkout=cancel`;
+      navigateTo(`/dashboard?token=${token}&checkout=cancel`);
     } else {
-      window.location.hash = "#/";
+      navigateTo("/");
     }
   }
 
@@ -163,7 +164,7 @@ export default function SubscribePiezometresPage() {
               Déjà un compte ?{" "}
               <button
                 className="text-primary hover:underline font-medium"
-                onClick={() => { localStorage.setItem("pending_plan", "piezometres_annual"); window.location.hash = "#/login"; }}
+                onClick={() => { localStorage.setItem("pending_plan", "piezometres_annual"); navigateTo("/login"); }}
               >
                 Se connecter
               </button>

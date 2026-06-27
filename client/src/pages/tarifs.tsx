@@ -1,4 +1,5 @@
 import { V2Header } from "@/components/v2-header";
+import { navigateTo } from "@/lib/navigation";
 import { V2Footer } from "@/components/v2-footer";
 import { useTranslation } from "@/lib/i18n";
 
@@ -6,9 +7,9 @@ import { useTranslation } from "@/lib/i18n";
 export default function TarifsPage() {
   const { t } = useTranslation();
 
-  function startPlan(plan: string, hash: string) {
+  function startPlan(plan: string, path: string) {
     localStorage.setItem("pending_plan", plan);
-    window.location.hash = hash;
+    navigateTo(path); // navigateTo normalise un éventuel "#/xxx" en "/xxx"
   }
 
   return (
@@ -198,7 +199,7 @@ export default function TarifsPage() {
               </ul>
               <button
                 className="v2-btn v2-btn-blue v2-btn-block"
-                onClick={() => (window.location.hash = "#/subscribe-tsn")}
+                onClick={() => (navigateTo("/subscribe-tsn")}
               >
                 {t("tarifs.subscribe")}
               </button>
@@ -224,7 +225,7 @@ export default function TarifsPage() {
               </ul>
               <button
                 className="v2-btn v2-btn-blue v2-btn-block"
-                onClick={() => (window.location.hash = "#/subscribe-rabattement")}
+                onClick={() => (navigateTo("/subscribe-rabattement")}
               >
                 {t("tarifs.subscribe")}
               </button>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { navigateTo } from "@/lib/navigation";
 import { useAuth } from "@/lib/auth";
 import { apiRequest } from "@/lib/queryClient";
 import { Loader2, ArrowLeft, Shield } from "lucide-react";
@@ -78,7 +79,7 @@ export default function ToolPage() {
           <Button
             data-testid="button-back-dashboard"
             onClick={() =>
-              (window.location.hash = `#/dashboard?token=${token}`)
+              (navigateTo(`/dashboard?token=${token}`)
             }
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
