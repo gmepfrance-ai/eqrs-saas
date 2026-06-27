@@ -262,7 +262,7 @@ async function requireRabattementSubscription(
     if (new Date(rabSub.currentPeriodEnd) < new Date()) {
       try { await storage.updateSubscription(rabSub.id, { status: "expired" }); } catch {}
       res.setHeader("Content-Type", "text/html; charset=utf-8");
-      return res.status(403).send(trialExpiredHtml("/#/subscribe-rabattement", "Rabattement V15.85", 8));
+      return res.status(403).send(trialExpiredHtml("/#/subscribe-rabattement", "Rabattement V15.89", 8));
     }
   }
   next();
@@ -702,7 +702,7 @@ export async function registerRoutes(
   function fmt(d){ if(!d) return ''; var x=new Date(d); return x.toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
   function fmtDate(d){ if(!d) return ''; var x=new Date(d); return x.toLocaleDateString('fr-FR'); }
   function daysLeft(end){ if(!end) return ''; var ms=new Date(end)-new Date(); var d=Math.ceil(ms/86400000); return d>0?d+' j':'expiré'; }
-  function toolLabel(t){ var m={je:'EQRS V7 J&E',eqrs_v31:'EQRS V31+ECOTOX',tsn:'TSN',rabattement:'Rabattement V15.85',schema:'Schéma Conceptuel',bundle:'Bundle'}; return m[t]||t||'?'; }
+  function toolLabel(t){ var m={je:'EQRS V7 J&E',eqrs_v31:'EQRS V31+ECOTOX',tsn:'TSN',rabattement:'Rabattement V15.89',schema:'Schéma Conceptuel',bundle:'Bundle'}; return m[t]||t||'?'; }
 
   function showLogin(errMsg){
     app.innerHTML = '<div class="login">' +
@@ -814,7 +814,7 @@ export async function registerRoutes(
       if (!resendKey) {
         return res.status(503).json({ message: "Resend non configuré" });
       }
-      const toolLabels: Record<string,string> = {je:'EQRS V7 J&E',eqrs_v31:'EQRS V31+ECOTOX',tsn:'TSN',rabattement:'Rabattement V15.85',schema:'Schéma Conceptuel',piezometres:'Piézomètres v2.9c',msp:'MSP Pollution des Sols',bundle:'Bundle'};
+      const toolLabels: Record<string,string> = {je:'EQRS V7 J&E',eqrs_v31:'EQRS V31+ECOTOX',tsn:'TSN',rabattement:'Rabattement V15.89',schema:'Schéma Conceptuel',piezometres:'Piézomètres v2.9c',msp:'MSP Pollution des Sols',bundle:'Bundle'};
       const tl = (t:string)=>toolLabels[t]||t||'?';
       let rowsTools = '';
       for (const r of stats.trials_last_14_days) {
@@ -913,7 +913,7 @@ export async function registerRoutes(
         currentPeriodEnd: trial8.toISOString(),
       });
 
-      // 4. Rabattement V15.85 — 8 jours
+      // 4. Rabattement V15.89 — 8 jours
       await storage.createSubscription(user.id, {
         status: "trialing",
         plan: "rabattement_trial",
@@ -967,7 +967,7 @@ export async function registerRoutes(
                     <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">EQRS V7 Johnson &amp; Ettinger</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 208 € HT/mois</td></tr>
                     <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">EQRS V31.05 + ECOTOX V8</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 395 € HT/mois</td></tr>
                     <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">TSN Transfert Sol-Nappe</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours — 1 100 € HT/an</td></tr>
-                    <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Rabattement V15.85</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours — 1 500 € HT/an</td></tr>
+                    <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Rabattement V15.89</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours — 1 500 € HT/an</td></tr>
                     <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">GMEP Piézomètres v2.9c</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours — 1 100 € HT/an</td></tr>
                     <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Schéma Conceptuel</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 850 € HT/an</td></tr>
                     <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">MSP — Pollution des Sols</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours — 250 € HT/mois ou 2 760 € HT/an</td></tr>

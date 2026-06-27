@@ -103,7 +103,7 @@ export default function LandingPage() {
               </div>
             </article>
 
-            {/* Carte NOUVELLE 2 : Rabattement V15.85 multicouche IA */}
+            {/* Carte NOUVELLE 2 : Rabattement V15.89 multicouche IA */}
             <article className="v2-tool-card">
               <span className="v2-badge">{t("v2.tools.rabattement_v15.badge")}</span>
               <div className="v2-tool-icon" aria-hidden="true">
@@ -122,7 +122,7 @@ export default function LandingPage() {
                 ✓ {t("v2.tools.rabattement_v15.feat3")}
               </p>
               <div className="v2-tool-price">{t("v2.tools.rabattement_v15.price")}</div>
-              <a href="/rabattement-v15-85" className="v2-btn v2-btn-blue">
+              <a href="/rabattement-v15-89" className="v2-btn v2-btn-blue">
                 {t("v2.tools.rabattement_v15.cta")}
               </a>
               <div style={{ marginTop: "0.75rem", textAlign: "center" }}>

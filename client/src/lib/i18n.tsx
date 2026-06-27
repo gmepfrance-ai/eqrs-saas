@@ -22,7 +22,7 @@ const translations = {
     "nav.tools.rabattement.desc": "Theis + IOTA — NOUVEAU",
     "nav.tools.eqrsEcotox": "EQRS V31.05 + ECOTOX V8",
     "nav.tools.eqrsEcotox.desc": "104 substances HHRA + 12 écotox — NOUVEAU",
-    "nav.tools.rabattement1585": "Rabattement V15.85",
+    "nav.tools.rabattement1585": "Rabattement V15.89",
     "nav.tools.rabattement1585.desc": "Multicouche IA — Loi sur l'Eau — NOUVEAU",
     "nav.tools.tsnSolNappe": "TSN — Transfert Sol-Nappe",
     "nav.tools.tsnSolNappe.desc": "Domenico 1987 — API Hub'eau — NOUVEAU",
@@ -261,7 +261,7 @@ const translations = {
     "v2.tools.eqrs_v31.cta": "Découvrir →",
 
     "v2.tools.rabattement_v15.badge": "NOUVEAU",
-    "v2.tools.rabattement_v15.title": "Rabattement V15.85 — multicouche IA",
+    "v2.tools.rabattement_v15.title": "Rabattement V15.89 — multicouche IA",
     "v2.tools.rabattement_v15.desc": "Modélisation multicouche assistée par IA. 42 lithologies, 15 couches, Forchheimer/Dupuit, Mode A/B, rayon de Sichardt automatique et Dossier Loi sur l'Eau généré automatiquement.",
     "v2.tools.rabattement_v15.feat1": "42 lithologies, 15 couches max, Mode A / B",
     "v2.tools.rabattement_v15.feat2": "Assistant IA intégré + rayon de Sichardt automatique",
@@ -813,7 +813,7 @@ const translations = {
     "v2.tools.eqrs_v31.cta": "Discover →",
 
     "v2.tools.rabattement_v15.badge": "NEW",
-    "v2.tools.rabattement_v15.title": "Drawdown V15.85 — AI multilayer",
+    "v2.tools.rabattement_v15.title": "Drawdown V15.89 — AI multilayer",
     "v2.tools.rabattement_v15.desc": "AI-assisted multilayer modelling. 42 lithologies, 15 layers, Forchheimer/Dupuit, Mode A/B, automatic Sichardt radius and Water Act dossier generated automatically.",
     "v2.tools.rabattement_v15.feat1": "42 lithologies, up to 15 layers, Mode A / B",
     "v2.tools.rabattement_v15.feat2": "Built-in AI assistant + automatic Sichardt radius",
@@ -1366,7 +1366,7 @@ const translations = {
     "v2.tools.eqrs_v31.cta": "Descubrir →",
 
     "v2.tools.rabattement_v15.badge": "NUEVO",
-    "v2.tools.rabattement_v15.title": "Abatimiento V15.85 — multicapa IA",
+    "v2.tools.rabattement_v15.title": "Abatimiento V15.89 — multicapa IA",
     "v2.tools.rabattement_v15.desc": "Modelización multicapa asistida por IA. 42 litologías, 15 capas, Forchheimer/Dupuit, Modo A/B, radio de Sichardt automático y expediente Ley del Agua generado automáticamente.",
     "v2.tools.rabattement_v15.feat1": "42 litologías, hasta 15 capas, Modo A / B",
     "v2.tools.rabattement_v15.feat2": "Asistente IA integrado + radio de Sichardt automático",

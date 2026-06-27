@@ -59,7 +59,7 @@ export default function TarifsPage() {
               </button>
             </div>
 
-            {/* NOUVEAU — Rabattement V15.85 multicouche IA */}
+            {/* NOUVEAU — Rabattement V15.89 multicouche IA */}
             <div className="v2-price-card">
               <span className="v2-badge" style={{ background: "#2563eb", color: "#fff" }}>
                 {t("tarifs.rabattementV15.badge")}

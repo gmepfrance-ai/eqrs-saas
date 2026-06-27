@@ -127,8 +127,8 @@ export default function NouveautesPage() {
                 Essai gratuit de 8 jours
               </h3>
               <p style={{ margin: "0 auto 24px", maxWidth: 640, fontSize: 14.5, color: "#374151", lineHeight: 1.7 }}>
-                Essai gratuit de 8 jours, puis abonnement annuel renouvelable (1 100 € HT / utilisateur /
-                an, renouvellement manuel sans reconduction ni prélèvement automatique). Projets et
+                Essai gratuit de 8 jours, puis abonnement annuel 1 500 € HT/an renouvelable
+                (renouvellement manuel sans reconduction ni prélèvement automatique). Projets et
                 calculs illimités pendant toute la durée de l'abonnement.
               </p>
               <div
@@ -149,7 +149,7 @@ export default function NouveautesPage() {
                   className="v2-btn v2-btn-blue"
                   onClick={() => navigateTo("/subscribe-rabattement")}
                 >
-                  Essayer gratuitement
+                  Essai gratuit 8 jours
                 </button>
               </div>
             </div>

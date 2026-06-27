@@ -3,7 +3,7 @@ import { navigateTo } from "@/lib/navigation";
 import { V2Footer } from "@/components/v2-footer";
 import { useAuth } from "@/lib/auth";
 
-/** Page produit — Rabattement V15.85 (modélisation multicouche IA + Loi sur l'Eau) */
+/** Page produit — Rabattement V15.89 (modélisation multicouche IA + Loi sur l'Eau) */
 export default function RabattementV1585Page() {
   const { user, token } = useAuth();
 
@@ -38,7 +38,7 @@ export default function RabattementV1585Page() {
               <span className="v2-hero-badge" style={{ background: "linear-gradient(135deg,#39e07a 0%,#1a5276 100%)", color: "#fff" }}>
                 ASSISTANT IA INTÉGRÉ
               </span>
-              <h1>Rabattement V15.85 — Modélisation multicouche IA</h1>
+              <h1>Rabattement V15.89 — Modélisation multicouche IA</h1>
               <p className="lead">
                 Modélisation de rabattement de nappe <strong>multicouche</strong> assistée par intelligence artificielle.
                 42 lithologies intégrées, jusqu'à 15 couches, formules <strong>Forchheimer/Dupuit</strong>, <strong>Mode A/B</strong>,
@@ -50,16 +50,19 @@ export default function RabattementV1585Page() {
                 <button className="v2-btn v2-btn-primary" style={{ cursor: "pointer", border: "none" }} onClick={subscribe}>
                   S'abonner — 1 500 € HT/an
                 </button>
-                <button className="v2-btn v2-btn-outline" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 14 jours</button>
+                <button className="v2-btn v2-btn-outline" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 8 jours</button>
                 <a href="/contact" className="v2-btn v2-btn-outline">Démo sur demande</a>
               </div>
+              <p style={{ marginTop: 12, fontSize: 13.5, color: "#cfe3f2" }}>
+                Essai gratuit de 8 jours, puis abonnement annuel 1 500 € HT/an renouvelable.
+              </p>
             </div>
             <div className="v2-hero-mock" aria-hidden="true">
               <div className="v2-hero-mock-head">
                 <span className="dot" style={{ background: "#ed5d5d" }}></span>
                 <span className="dot" style={{ background: "#f5b94d" }}></span>
                 <span className="dot" style={{ background: "#62c87f" }}></span>
-                <span className="label">rabattement · v15.85</span>
+                <span className="label">rabattement · v15.89</span>
               </div>
               <div className="v2-hero-mock-row"><span className="l">Mode</span><span className="v">A — Q imposé</span></div>
               <div className="v2-hero-mock-row"><span className="l">Couches</span><span className="v">3 / 15</span></div>
@@ -76,7 +79,7 @@ export default function RabattementV1585Page() {
         <div className="container">
           <div className="v2-section-head">
             <span className="v2-section-eyebrow">Présentation</span>
-            <h2>Rabattement V15.85 — la modélisation multicouche simplifiée</h2>
+            <h2>Rabattement V15.89 — la modélisation multicouche simplifiée</h2>
             <p>
               Une approche analytique Forchheimer/Dupuit, 42 lithologies prêtes à l'emploi et un assistant IA pour interpréter
               les résultats et suggérer les paramètres.
@@ -126,7 +129,7 @@ export default function RabattementV1585Page() {
         <div className="container">
           <div className="v2-section-head">
             <span className="v2-section-eyebrow">Comparatif</span>
-            <h2>Rabattement V15.85 vs MODFLOW vs MARTHE</h2>
+            <h2>Rabattement V15.89 vs MODFLOW vs MARTHE</h2>
             <p>Un outil « Tier 1 » analytique complémentaire des codes numériques lourds — accessible aux bureaux d'études non spécialistes de la modélisation.</p>
           </div>
           <div style={{ overflowX: "auto" }}>
@@ -136,7 +139,7 @@ export default function RabattementV1585Page() {
                   <th style={{ padding: 10, textAlign: "left", border: "1px solid #0e2f44" }}>Critère</th>
                   <th style={cellTh}>MODFLOW (USGS)</th>
                   <th style={cellTh}>MARTHE (BRGM)</th>
-                  <th style={{ ...cellTh, background: "#39e07a", color: "#0e2f44" }}>Rabattement V15.85</th>
+                  <th style={{ ...cellTh, background: "#39e07a", color: "#0e2f44" }}>Rabattement V15.89</th>
                 </tr>
               </thead>
               <tbody>
@@ -195,7 +198,7 @@ export default function RabattementV1585Page() {
         <div className="container">
           <div className="v2-section-head">
             <span className="v2-section-eyebrow">Tarif</span>
-            <h2>Abonnez-vous à Rabattement V15.85</h2>
+            <h2>Abonnez-vous à Rabattement V15.89</h2>
           </div>
           <div className="v2-pricing-grid" style={{ maxWidth: 520, margin: "0 auto" }}>
             <div className="v2-price-card featured">
@@ -220,9 +223,12 @@ export default function RabattementV1585Page() {
             </div>
           </div>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginTop: 24 }}>
-            <button className="v2-btn v2-btn-ghost" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 14 jours</button>
+            <button className="v2-btn v2-btn-ghost" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 8 jours</button>
             <a href="/contact" className="v2-btn v2-btn-ghost">Démo sur demande</a>
           </div>
+          <p style={{ textAlign: "center", marginTop: 14, fontSize: 13.5, color: "#374151" }}>
+            Essai gratuit de 8 jours, puis abonnement annuel 1 500 € HT/an renouvelable.
+          </p>
         </div>
       </section>
 
@@ -230,7 +236,7 @@ export default function RabattementV1585Page() {
       <section className="v2-section">
         <div className="container">
           <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, padding: "32px", textAlign: "center", maxWidth: 820, margin: "0 auto" }}>
-            <h3 style={{ marginTop: 0, color: "#0e2f44" }}>Note technique — Rabattement V15.85</h3>
+            <h3 style={{ marginTop: 0, color: "#0e2f44" }}>Note technique — Rabattement V15.89</h3>
             <p style={{ color: "#374151", lineHeight: 1.6 }}>
               Téléchargez la note technique : formulation Forchheimer/Dupuit multicouche, méthode de recalage piézométrique,
               rayon de Sichardt et constitution du Dossier Loi sur l'Eau.

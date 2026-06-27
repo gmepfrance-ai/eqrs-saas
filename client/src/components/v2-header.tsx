@@ -109,7 +109,7 @@ export function V2Header() {
                 {t("nav.tools.eqrsEcotox")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.eqrsEcotox.desc")}</span>
               </a>
-              <a href="/rabattement-v15-85" onClick={() => setDropdownOpen(false)}>
+              <a href="/rabattement-v15-89" onClick={() => setDropdownOpen(false)}>
                 {t("nav.tools.rabattement1585")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.rabattement1585.desc")}</span>
               </a>

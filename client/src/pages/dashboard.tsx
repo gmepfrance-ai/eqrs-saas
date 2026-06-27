@@ -250,11 +250,11 @@ export default function DashboardPage() {
               </button>
             </div>
 
-            {/* Rabattement V15.85 */}
+            {/* Rabattement V15.89 */}
             <div className="bg-white border-2 border-[#1a365d] rounded-lg p-4 shadow-sm hover:shadow-md transition">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-8 h-8 rounded bg-[#1a365d] text-white flex items-center justify-center text-xs font-bold">RAB</div>
-                <h3 className="text-sm font-bold text-foreground">Rabattement V15.85</h3>
+                <h3 className="text-sm font-bold text-foreground">Rabattement V15.89</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-3">Forchheimer multicouche — IA — Loi sur l'Eau</p>
               <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 1 500 € HT/an ensuite</p>

@@ -81,6 +81,7 @@ function AppRouter() {
       <Route path="/nouveautes" component={NouveautesPage} />
       <Route path="/eqrs-v31-05-ecotox" component={EqrsV3105EcotoxPage} />
       <Route path="/rabattement-v15-85" component={RabattementV1585Page} />
+      <Route path="/rabattement-v15-89" component={RabattementV1585Page} />
       <Route path="/tsn-transfert-sol-nappe" component={TsnTransfertSolNappePage} />
       <Route path="/schema-conceptuel" component={SchemaConceptuelPage} />
       <Route path="/subscribe-eqrs-v31-ecotox" component={SubscribeEqrsV31EcotoxPage} />
