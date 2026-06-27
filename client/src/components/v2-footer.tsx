@@ -35,6 +35,7 @@ export function V2Footer() {
             <h6>{t("v2.footer.colCompany")}</h6>
             <ul>
               <li><a href="/tarifs">{t("v2.footer.linkPricing")}</a></li>
+              <li><a href="/nouveautes">{t("v2.footer.linkNews")}</a></li>
               <li><a href="/mentions-legales">{t("v2.footer.linkMentions")}</a></li>
               <li><a href="/cgv">{t("v2.footer.linkCgv")}</a></li>
               <li><a href="/CGV_GMEP_2026.pdf" download="CGV_GMEP_2026.pdf">{t("v2.footer.linkCgvPdf")}</a></li>

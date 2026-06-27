@@ -21,6 +21,7 @@ import TarifsPage from "@/pages/tarifs";
 import ContactPage from "@/pages/contact";
 import MentionsLegalesPage from "@/pages/mentions-legales";
 import CgvPage from "@/pages/cgv";
+import NouveautesPage from "@/pages/nouveautes";
 import EqrsV3105EcotoxPage from "@/pages/eqrs-v31-05-ecotox";
 import RabattementV1585Page from "@/pages/rabattement-v15-85";
 import TsnTransfertSolNappePage from "@/pages/tsn-transfert-sol-nappe";
@@ -77,6 +78,7 @@ function AppRouter() {
       <Route path="/contact" component={ContactPage} />
       <Route path="/mentions-legales" component={MentionsLegalesPage} />
       <Route path="/cgv" component={CgvPage} />
+      <Route path="/nouveautes" component={NouveautesPage} />
       <Route path="/eqrs-v31-05-ecotox" component={EqrsV3105EcotoxPage} />
       <Route path="/rabattement-v15-85" component={RabattementV1585Page} />
       <Route path="/tsn-transfert-sol-nappe" component={TsnTransfertSolNappePage} />

@@ -132,6 +132,7 @@ export function V2Header() {
             </div>
           </div>
           <a href="/tarifs">{t("nav.pricing")}</a>
+          <a href="/nouveautes">{t("nav.news")}</a>
           <a href="/cgv">{t("nav.cgv")}</a>
           <a href="/contact">{t("nav.contact")}</a>
         </nav>
