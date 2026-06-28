@@ -241,7 +241,7 @@ export default function RabattementV1585Page() {
               Téléchargez la note technique : formulation Forchheimer/Dupuit multicouche, méthode de recalage piézométrique,
               rayon de Sichardt et constitution du Dossier Loi sur l'Eau.
             </p>
-            <a href="/notes-techniques/Note_Technique_Rabattement_V15_85.pdf" target="_blank" rel="noopener noreferrer" className="v2-btn v2-btn-primary">
+            <a href="/notes-techniques/Note_Technique_Rabattement_V15_89.pdf" target="_blank" rel="noopener noreferrer" className="v2-btn v2-btn-primary">
               Télécharger la note technique (PDF)
             </a>
           </div>
