@@ -1515,6 +1515,7 @@ const TABS = [
   {id:'trophique', label:'Chaîne Trophique', input:false},
   {id:'melange_organe', label:'Mélange Organe', input:false},
   {id:'ecotox', label:'Écotoxicologie', input:false},
+  {id:'tier3', label:'Tier 3 Alimentation', input:false},  // GMEP v1.0 — Module Voie alimentaire humaine
   {id:'mon_etude', label:'📁 Mon étude', input:true}, // FIX V8.2 — Métadonnées + sauvegarde
 ];
 
@@ -1643,6 +1644,7 @@ sheetRenderers.sommaire = function() {
     ['trophique','Chaîne Trophique','Transfert sol → végétaux → animaux → ingestion humaine (Trapp & Matthies, Travis & Arms)'],
     ['melange_organe','Mélange Organe','Index de Danger (HI) par organe-cible — US EPA Mixture Risk Assessment'],
     ['ecotox','Écotoxicologie','Évaluation des risques écologiques Tier 1+2 (PEC/PNEC + transferts trophiques) — INERIS / ECHA / US EPA'],
+    ['tier3','Tier 3 Alimentation','NOUVEAU — Voie alimentaire humaine : sol/eau → légumes/œufs/lait/viande/poisson → dose → QD/ERI | EFSA 2020 + ANSES 2023'],
   ];
 
   items.forEach(([id,label,desc]) => {
@@ -4049,6 +4051,560 @@ if (typeof renderActiveSheet === 'function') {
     try { attachEcotoxHandlers(); } catch(e) { console.warn('Ecotox handlers:', e); }
   };
 }
+
+
+// ============================================================
+// EQRS V8 — MODULE TIER 3 : VOIE ALIMENTAIRE HUMAINE
+// Extension ECOTOX V8 — Chaîne sol/eau → aliment → homme
+// Conforme INERIS DRC-09-103096-09387C (sommation QD/ERI)
+// EFSA 2020 (TWI PFAS), ANSES 2023, US EPA IRIS
+// GMEP — v1.0 Juin 2026
+// ============================================================
+
+// ---- State Tier 3 ------------------------------------------
+state.v8 = state.v8 || {};
+state.v8.tier3 = {
+  // Entrées principales
+  substance:  'PFOS (polluant éternel)',
+  profil:     'adulte_standard',
+  // Concentrations milieux
+  C_sol:      50,     // mg/kg MS
+  C_eau:      1.2,    // µg/L (eau superficielle)
+  // Voies actives
+  voie_legumes: true,
+  voie_viande:  true,
+  voie_oeuf:    true,
+  voie_lait:    true,
+  voie_poisson: true,
+  // Résultats calculés
+  doses:  {},  // dose par matrice (ng/kg pc/j)
+  dose_totale: 0,
+  QD:     null,
+  ERI:    null,
+  depasse: false,
+};
+
+// ---- Profils d'exposition (taux d'ingestion, g/j) ----------
+const PROFILS_T3 = {
+  adulte_standard: {
+    label: 'Résident adulte standard',
+    PC:      70,    // poids corporel kg
+    FE:      1,     // fraction d'exposition (1 = exposition quotidienne)
+    EF:      350,   // jours/an
+    ED:      30,    // durée exposition ans
+    legumes: 200,   // g/j légumes potager
+    oeuf:     15,   // g/j
+    lait:    200,   // g/j
+    viande:  100,   // g/j (viande + abats)
+    poisson:  22,   // g/j
+  },
+  adulte_potager: {
+    label: 'Résident potager (haute exposition)',
+    PC:     70,
+    FE:     1,
+    EF:     350,
+    ED:     30,
+    legumes:400,
+    oeuf:    40,
+    lait:   300,
+    viande: 150,
+    poisson: 50,
+  },
+  enfant: {
+    label: 'Enfant 3–12 ans',
+    PC:     20,
+    FE:     1,
+    EF:     350,
+    ED:     9,
+    legumes:150,
+    oeuf:    20,
+    lait:   300,
+    viande:  60,
+    poisson: 10,
+  },
+  pecheur: {
+    label: 'Pêcheur de loisir (haute exposition poisson)',
+    PC:     70,
+    FE:     1,
+    EF:     350,
+    ED:     30,
+    legumes:200,
+    oeuf:    15,
+    lait:   200,
+    viande: 100,
+    poisson:150,
+  },
+};
+
+// ---- Facteurs de transfert par substance et matrice --------
+// TF sol→légume (kg/kg MS), BTF fourrage→matrice (j/kg), BAF eau→poisson (L/kg)
+// F_abs = fraction d'absorption orale (adimensionnel)
+const T3_TRANSFER = {
+  'PFOS (polluant éternel)': {
+    TF_legume_feuille:  0.12,   // mg/kg plante / mg/kg sol (Blaine 2014, Maine DEP 2020)
+    TF_legume_racine:   0.05,
+    BTF_oeuf:           0.05,   // j/kg (Battelle 2019) — C_oeuf = BTF × C_fourrage × TF_fourrage
+    BTF_lait:           0.02,   // j/kg (Maine DEP 2020)
+    BTF_viande:         0.01,   // j/kg muscle bovin (Battelle 2019)
+    TF_fourrage:        0.10,   // mg/kg fourrage / mg/kg sol (Maine DEP 2020)
+    BAF_poisson:        7200,   // L/kg (Burkhard 2021, brochet terrain)
+    F_abs:              0.95,   // fraction d'absorption orale (US EPA 2016)
+    unite_VTR:         'ng/kg/sem', // TWI EFSA 2020 = pour 4 PFAS somme
+    VTR_seuil_jours:    0.629,  // ng/kg pc/j (TWI 4.4 ng/kg/sem / 7) — EFSA 2020 (somme 4 PFAS)
+    ERU_oral:           null,   // pas de classif cancérogène EFSA pour PFOS
+    organe_cible:       'Hépatique, immunologique, thyroïdien',
+    source_VTR:         'EFSA 2020 — TWI 4,4 ng/kg pc/sem (somme PFOS+PFOA+PFNA+PFHxS)',
+  },
+  'PFOA (polluant éternel)': {
+    TF_legume_feuille:  0.20,
+    TF_legume_racine:   0.08,
+    BTF_oeuf:           0.04,
+    BTF_lait:           0.025,
+    BTF_viande:         0.008,
+    TF_fourrage:        0.15,
+    BAF_poisson:        3500,
+    F_abs:              0.95,
+    VTR_seuil_jours:    0.629,  // idem PFOS (TWI somme 4 PFAS)
+    ERU_oral:           null,
+    organe_cible:       'Hépatique, immunologique, thyroïdien',
+    source_VTR:         'EFSA 2020 — TWI 4,4 ng/kg pc/sem (somme PFOS+PFOA+PFNA+PFHxS)',
+  },
+  'PCB total': {
+    TF_legume_feuille:  0.005,
+    TF_legume_racine:   0.002,
+    BTF_oeuf:           null,    // transfert via graisses : géré via TEQ (simplifié)
+    BTF_lait:           4.5,     // BTF fat-basis (mg/kg graisse lait / mg/kg aliment) — INERIS 2007
+    BTF_viande:         2.0,     // mg/kg viande / (mg/kg aliment × j)
+    TF_fourrage:        0.03,
+    BAF_poisson:       31000,   // L/kg (BCF_BAF_DATABASE existant)
+    F_abs:              0.90,
+    unite_VTR:         'pg TEQ/kg/sem',
+    VTR_seuil_jours:    0.286,  // TWI EFSA 2018 : 2 pg TEQ/kg/sem / 7
+    ERU_oral:           0.014,  // (mg/kg/j)^-1 — INERIS (PCB)
+    organe_cible:       'Hépatique, immunologique, cancérogène',
+    source_VTR:         'EFSA 2018 — TWI dioxines+PCB-DL 2 pg TEQ/kg pc/sem',
+  },
+  'Benzo(a)pyrène': {
+    TF_legume_feuille:  0.002,
+    TF_legume_racine:   0.0005,
+    BTF_oeuf:           0.003,
+    BTF_lait:           0.002,
+    BTF_viande:         0.004,
+    TF_fourrage:        0.002,
+    BAF_poisson:        1800,
+    F_abs:              0.85,
+    unite_VTR:         'µg/kg/j',
+    VTR_seuil_jours:    0.004,  // DJA ANSES/INERIS
+    ERU_oral:           0.07,   // (mg/kg/j)^-1 — INERIS/ANSES
+    organe_cible:       'Cancérogène génotoxique (poumon, peau)',
+    source_VTR:         'ANSES/INERIS — DJA 0,004 µg/kg/j, ERU 0,07 (mg/kg/j)^-1',
+  },
+  'Cadmium': {
+    TF_legume_feuille:  1.2,    // mg/kg plante / mg/kg sol (Travis & Arms 1988)
+    TF_legume_racine:   0.55,
+    BTF_oeuf:           0.002,
+    BTF_lait:           0.005,
+    BTF_viande:         0.003,
+    TF_fourrage:        0.2,
+    BAF_poisson:        270,
+    F_abs:              0.05,   // faible absorption Cd (US EPA)
+    unite_VTR:         'µg/kg/j',
+    VTR_seuil_jours:    2.0,    // DJA US EPA IRIS
+    ERU_oral:           null,
+    organe_cible:       'Rénal (tubules proximaux)',
+    source_VTR:         'US EPA IRIS — DJA 2 µg/kg/j (aliments)',
+  },
+  'Mercure (MeHg)': {
+    TF_legume_feuille:  0.01,
+    TF_legume_racine:   0.005,
+    BTF_oeuf:           0.08,
+    BTF_lait:           0.01,
+    BTF_viande:         0.05,
+    TF_fourrage:        0.02,
+    BAF_poisson:       500000,  // BMF sédiment→prédateur >>10^6 possible (UNEP 2018)
+    F_abs:              0.95,
+    unite_VTR:         'µg/kg/j',
+    VTR_seuil_jours:    0.1,   // DJA ANSES/OMS pour MeHg
+    ERU_oral:           null,
+    organe_cible:       'Neurologique (développemental)',
+    source_VTR:         'ANSES/OMS — DJA 0,1 µg/kg/j (MeHg)',
+  },
+  'Arsenic inorganique': {
+    TF_legume_feuille:  0.04,
+    TF_legume_racine:   0.04,
+    BTF_oeuf:           0.01,
+    BTF_lait:           0.005,
+    BTF_viande:         0.003,
+    TF_fourrage:        0.05,
+    BAF_poisson:          17,
+    F_abs:              0.90,
+    unite_VTR:         'µg/kg/j',
+    VTR_seuil_jours:    0.3,    // DJA ANSES 2021
+    ERU_oral:           1.5,    // (mg/kg/j)^-1 — ANSES 2021
+    organe_cible:       'Cancérogène (peau, poumon, vessie)',
+    source_VTR:         'ANSES 2021 — DJA 0,3 µg/kg/j, ERU 1,5 (mg/kg/j)^-1',
+  },
+  'Plomb': {
+    TF_legume_feuille:  0.08,
+    TF_legume_racine:   0.04,
+    BTF_oeuf:           0.005,
+    BTF_lait:           0.004,
+    BTF_viande:         0.003,
+    TF_fourrage:        0.05,
+    BAF_poisson:          50,
+    F_abs:              0.15,
+    unite_VTR:         'µg/kg/j',
+    VTR_seuil_jours:    1.50,   // TDI EFSA 2010 provisoire (1,3 µg/kg/j EFSA 2010)
+    ERU_oral:           null,   // EFSA: pas de seuil défini
+    organe_cible:       'Neurologique (enfant), rénal',
+    source_VTR:         'EFSA 2010 — TDI 1,5 µg/kg/j (enfant)',
+  },
+};
+
+// ---- Substances Tier 3 disponibles -------------------------
+const T3_SUBSTANCES = Object.keys(T3_TRANSFER);
+
+// ---- Fonctions de calcul Tier 3 ----------------------------
+function tier3Compute() {
+  const st = state.v8.tier3;
+  const sub = T3_TRANSFER[st.substance];
+  const prof = PROFILS_T3[st.profil];
+  if (!sub || !prof) return;
+
+  const C_sol = parseFloat(st.C_sol) || 0;   // mg/kg
+  const C_eau = parseFloat(st.C_eau) || 0;   // µg/L
+
+  // ---- Concentrations dans chaque matrice (en µg/kg poids frais ou ng/kg selon substance) ----
+  // Convention : on travaille en µg/kg pour les métaux/HAP, en ng/kg pour PFAS
+  // La VTR_seuil est exprimée en ng/kg/j (PFAS) ou µg/kg/j (métaux/HAP)
+  // C_sol est en mg/kg → ×1000 → µg/kg → ×1000 → ng/kg
+
+  const isPFAS = st.substance.includes('PFOS') || st.substance.includes('PFOA');
+  const factor_sol_to_ug_kg = 1000;  // mg/kg sol × 1000 = µg/kg sol
+  const factor_ug_to_ng = 1000;      // pour PFAS : µg/kg → ng/kg
+
+  // C_sol en µg/kg pour calculs intermédiaires
+  const C_sol_ugkg = C_sol * factor_sol_to_ug_kg;
+  // C_eau en µg/L (déjà en µg/L) → BAF (L/kg) → µg/kg poids frais
+  const C_eau_ugl = C_eau;
+
+  // Voie légumes-feuilles : C_legume (µg/kg pf) = C_sol(mg/kg) × TF × 1000
+  const C_legume = C_sol * sub.TF_legume_feuille * 1000;  // µg/kg pf
+
+  // Voie œufs : C_oeuf = C_sol × TF_fourrage × BTF_oeuf × 1e6 (mg/kg → ng/kg via BTF en j/kg)
+  // BTF en j/kg : C_tissu(ng/kg) = C_ingere(µg/kg) × BTF(j/kg) × 1000
+  const C_fourrage_ugkg = C_sol * sub.TF_fourrage * 1000; // µg/kg
+  const C_oeuf    = (sub.BTF_oeuf  !== null) ? C_fourrage_ugkg * sub.BTF_oeuf * 1000  : 0; // ng/kg
+  const C_lait    = (sub.BTF_lait  !== null) ? C_fourrage_ugkg * sub.BTF_lait * 1000  : 0;
+  const C_viande  = (sub.BTF_viande!== null) ? C_fourrage_ugkg * sub.BTF_viande * 1000: 0;
+
+  // Voie poisson : C_poisson (µg/kg pf) = C_eau (µg/L) × BAF (L/kg)
+  const C_poisson = C_eau_ugl * sub.BAF_poisson;  // µg/kg pf
+
+  // ---- Conversion vers l'unité de la VTR ----
+  // Pour les PFAS (VTR en ng/kg/j) : doses en ng/kg pc/j
+  // Pour les autres (VTR en µg/kg/j) : doses en µg/kg pc/j
+  // Les concentrations calculées ci-dessus sont en µg/kg (légumes/poisson) ou ng/kg (oeuf/lait/viande via BTF)
+
+  function getDose(C_aliment_ugkg, IR_gj, unitsAlreadyNg) {
+    // C_aliment : µg/kg pf → ×(IR en g/j)/(1000 g/kg) → µg/j → /PC → µg/kg pc/j
+    // Si PFAS on multiplie par 1000 pour avoir ng/kg pc/j
+    // unitsAlreadyNg : true si C_aliment est déjà en ng/kg (cas BTF)
+    const IR_kg = IR_gj / 1000;
+    let dose_ugkg_j;
+    if (unitsAlreadyNg) {
+      dose_ugkg_j = (C_aliment_ugkg / 1000) * IR_kg * sub.F_abs / prof.PC;
+    } else {
+      dose_ugkg_j = C_aliment_ugkg * IR_kg * sub.F_abs / prof.PC;
+    }
+    return isPFAS ? dose_ugkg_j * 1000 : dose_ugkg_j;  // ng/kg/j ou µg/kg/j
+  }
+
+  const doses = {};
+  if (st.voie_legumes) doses.legumes = getDose(C_legume,         prof.legumes, false);
+  if (st.voie_oeuf)    doses.oeuf    = getDose(C_oeuf,           prof.oeuf,    true);
+  if (st.voie_lait)    doses.lait    = getDose(C_lait,           prof.lait,    true);
+  if (st.voie_viande)  doses.viande  = getDose(C_viande,         prof.viande,  true);
+  if (st.voie_poisson) doses.poisson = getDose(C_poisson,        prof.poisson, false);
+
+  const dose_totale = Object.values(doses).reduce((a, b) => a + b, 0);
+
+  // QD et ERI
+  const VTR = sub.VTR_seuil_jours || null;
+  const QD  = VTR ? dose_totale / VTR : null;
+  const ERU = sub.ERU_oral || null;
+
+  // ERI : ERU est en (mg/kg/j)^-1
+  // dose en µg/kg/j → /1000 → mg/kg/j ; si PFAS dose en ng/kg/j → /1e6 → mg/kg/j
+  let ERI = null;
+  if (ERU) {
+    const dose_mg = isPFAS ? dose_totale / 1e6 : dose_totale / 1000;
+    ERI = dose_mg * ERU;
+  }
+
+  // Concentrations dans matrices pour affichage
+  const matrices = {
+    legumes: { C: C_legume,  unite: 'µg/kg pf', label: 'Légumes-feuilles (potager)' },
+    oeuf:    { C: C_oeuf,    unite: 'ng/kg pf',  label: 'Oeufs (basse-cour)' },
+    lait:    { C: C_lait,    unite: 'ng/kg pf',  label: 'Lait vache' },
+    viande:  { C: C_viande,  unite: 'ng/kg pf',  label: 'Viande / abats bovins' },
+    poisson: { C: C_poisson, unite: 'µg/kg pf',  label: 'Poisson (chair grasse)' },
+  };
+
+  st.doses = doses;
+  st.dose_totale = dose_totale;
+  st.QD    = QD;
+  st.ERI   = ERI;
+  st.depasse = (QD !== null && QD > 1) || (ERI !== null && ERI > 1e-5);
+  st._matrices = matrices;
+  st._sub = sub;
+  st._prof = prof;
+  st._C_legume = C_legume;
+  st._C_oeuf   = C_oeuf;
+  st._C_lait   = C_lait;
+  st._C_viande = C_viande;
+  st._C_poisson= C_poisson;
+  st._isPFAS   = isPFAS;
+}
+
+// ---- Renderer onglet "tier3" --------------------------------
+sheetRenderers.tier3 = function() {
+  tier3Compute();
+  const st   = state.v8.tier3;
+  const sub  = st._sub  || {};
+  const prof = st._prof || {};
+  const isPFAS = st._isPFAS;
+  const uniteVTR = isPFAS ? 'ng/kg pc/j' : 'µg/kg pc/j';
+  const QD   = st.QD;
+  const ERI  = st.ERI;
+  const dt   = st.dose_totale;
+
+  // Couleur synthèse
+  function rqC(v) { return v < 1 ? '#27ae60' : '#c0392b'; }
+  function eriC(v){ return v < 1e-5 ? '#27ae60' : v < 1e-4 ? '#e67e22' : '#c0392b'; }
+
+  // Liste substances
+  let subOpts = '';
+  T3_SUBSTANCES.forEach(s => {
+    subOpts += `<option value="${s}" ${s===st.substance?'selected':''}>${s}</option>`;
+  });
+
+  // Liste profils
+  let profOpts = '';
+  Object.entries(PROFILS_T3).forEach(([k,p]) => {
+    profOpts += `<option value="${k}" ${k===st.profil?'selected':''}>${p.label}</option>`;
+  });
+
+  // Tableau matrices
+  const matData = [
+    { key:'legumes', voie:'voie_legumes', label:'Légumes-feuilles (potager)', C:st._C_legume,  uC:'µg/kg pf', IR:prof.legumes||0,  irsrc:'200 g/j (standard)',   TFtxt:`TF = ${sub.TF_legume_feuille||'—'} kg/kg (Blaine 2014)` },
+    { key:'oeuf',    voie:'voie_oeuf',    label:'Oeufs basse-cour',           C:st._C_oeuf,    uC:'ng/kg pf', IR:prof.oeuf||0,     irsrc:'15 g/j (standard)',    TFtxt:`BTF = ${sub.BTF_oeuf||'—'} j/kg (Battelle 2019)` },
+    { key:'lait',    voie:'voie_lait',    label:'Lait vache',                  C:st._C_lait,    uC:'ng/kg pf', IR:prof.lait||0,     irsrc:'200 g/j (standard)',   TFtxt:`BTF = ${sub.BTF_lait||'—'} j/kg (Maine DEP 2020)` },
+    { key:'viande',  voie:'voie_viande',  label:'Viande / abats bovins',       C:st._C_viande,  uC:'ng/kg pf', IR:prof.viande||0,   irsrc:'100 g/j (standard)',   TFtxt:`BTF = ${sub.BTF_viande||'—'} j/kg (Battelle 2019)` },
+    { key:'poisson', voie:'voie_poisson', label:'Poisson (chair grasse)',       C:st._C_poisson, uC:'µg/kg pf', IR:prof.poisson||0,  irsrc:'22 g/j (standard)',    TFtxt:`BAF = ${sub.BAF_poisson ? sub.BAF_poisson.toLocaleString('fr-FR') : '—'} L/kg (Burkhard 2021)` },
+  ];
+
+  let matRows = '';
+  matData.forEach(m => {
+    const active = st[m.voie];
+    const doseVal = st.doses[m.key] || 0;
+    const contrib = dt > 0 ? Math.round(doseVal / dt * 100) : 0;
+    matRows += `<tr style="${active?'':'opacity:0.35;'}">
+      <td style="padding:8px;">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" data-t3voie="${m.voie}" ${active?'checked':''} style="width:15px;height:15px;cursor:pointer;">
+          <span style="font-weight:600;">${m.label}</span>
+        </label>
+        <div style="font-size:10px;color:#888;margin-top:2px;margin-left:23px;">${m.TFtxt}</div>
+      </td>
+      <td style="text-align:right;padding:8px;font-family:monospace;font-size:12px;">${fmtSci(m.C)}</td>
+      <td style="text-align:center;padding:8px;font-size:11px;color:#666;">${m.uC}</td>
+      <td style="text-align:right;padding:8px;">${m.IR} g/j</td>
+      <td style="text-align:right;padding:8px;font-family:monospace;font-size:12px;font-weight:600;color:${active && doseVal>0?'#1a5276':'#999'};">${active ? fmtSci(doseVal) : '—'}</td>
+      <td style="text-align:right;padding:8px;">
+        ${active && dt>0 ? `<div style="background:#1a5276;width:${Math.min(contrib,100)}%;height:8px;border-radius:4px;min-width:4px;display:inline-block;"></div> ${contrib}%` : '—'}
+      </td>
+    </tr>`;
+  });
+
+  // Synthèse QD / ERI
+  let syntheseHtml = '';
+  if (QD !== null) {
+    const qdCol = rqC(QD);
+    syntheseHtml += `
+      <div style="background:${qdCol}22;border:2px solid ${qdCol};border-radius:8px;padding:16px 20px;flex:1;min-width:220px;">
+        <div style="font-size:10px;letter-spacing:1px;color:${qdCol};font-weight:700;margin-bottom:4px;">EFFETS A SEUIL — QD ALIMENTAIRE</div>
+        <div style="font-size:28px;font-weight:800;color:${qdCol};">QD = ${fmtSci(QD)}</div>
+        <div style="font-size:12px;margin-top:4px;color:#333;">
+          Dose ${fmtSci(dt)} ${uniteVTR}<br>
+          VTR ${fmtSci(sub.VTR_seuil_jours||0)} ${uniteVTR}<br>
+          <em style="font-size:11px;color:#666;">${sub.source_VTR||''}</em>
+        </div>
+        <div style="margin-top:8px;font-weight:700;color:${qdCol};">${QD>=1?'RISQUE INACCEPTABLE (QD >= 1)':'Risque acceptable (QD < 1)'}</div>
+      </div>`;
+  }
+  if (ERI !== null) {
+    const eriCol = eriC(ERI);
+    syntheseHtml += `
+      <div style="background:${eriCol}22;border:2px solid ${eriCol};border-radius:8px;padding:16px 20px;flex:1;min-width:220px;">
+        <div style="font-size:10px;letter-spacing:1px;color:${eriCol};font-weight:700;margin-bottom:4px;">EFFETS SANS SEUIL — ERI ALIMENTAIRE</div>
+        <div style="font-size:28px;font-weight:800;color:${eriCol};">ERI = ${fmtSci(ERI)}</div>
+        <div style="font-size:12px;margin-top:4px;color:#333;">
+          ERU oral = ${sub.ERU_oral} (mg/kg/j)⁻¹<br>
+          Seuil acceptable : ERI &lt; 10⁻⁵<br>
+          <em style="font-size:11px;color:#666;">${sub.source_VTR||''}</em>
+        </div>
+        <div style="margin-top:8px;font-weight:700;color:${eriCol};">${ERI>=1e-4?'RISQUE ELEVE':ERI>=1e-5?'Risque modere (10⁻⁵ < ERI < 10⁻⁴)':'Risque negligeable (ERI < 10⁻⁵)'}</div>
+      </div>`;
+  }
+  if (!QD && !ERI) {
+    syntheseHtml = `<div style="padding:16px;color:#666;font-style:italic;">VTR non disponible pour cette substance — saisir manuellement.</div>`;
+  }
+
+  // Encadré sommation INERIS
+  const sommationHtml = `
+    <div style="background:#eef4fa;border-left:4px solid #1a5276;border-radius:4px;padding:14px 18px;margin-top:18px;font-size:12px;line-height:1.8;">
+      <strong style="color:#1a5276;">Sommation multi-voies (INERIS DRC-09-103096-09387C) :</strong><br>
+      QD<sub>total</sub> = QD<sub>EQRS classique</sub> + QD<sub>alim</sub> (par organe cible)<br>
+      ERI<sub>total</sub> = ERI<sub>EQRS classique</sub> + ERI<sub>alim</sub><br>
+      <span style="color:#666;">Organe(s) cible(s) : <em>${sub.organe_cible||'—'}</em></span>
+    </div>`;
+
+  return `
+    <h2 class="sheet-title">Tier 3 — Voie Alimentaire Humaine</h2>
+    <p class="sheet-subtitle">Extension ECOTOX V8 — Chaîne sol/eau &rarr; aliment &rarr; homme | EFSA 2020, ANSES 2023, US EPA IRIS | GMEP v1.0</p>
+
+    <div class="info-box" style="background:#f0f7f0;border-left:4px solid #27ae60;">
+      <strong>Principe Tier 3 :</strong> calcul de la dose d'exposition humaine par ingestion d'aliments contamin&eacute;s
+      via bioaccumulation depuis le sol ou l'eau. Trois sous-voies : (1) <strong>V&eacute;g&eacute;tale</strong>
+      [sol &rarr; l&eacute;gumes], (2) <strong>Elevage</strong> [sol &rarr; fourrage &rarr; oeuf/lait/viande],
+      (3) <strong>Aquatique</strong> [eau &rarr; poisson]. Calcul du QD et ERI alimentaires additionnables
+      aux voies classiques EQRS (sommation INERIS DRC-09-103096-09387C).
+    </div>
+
+    <!-- Panneau de saisie -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:18px 0;">
+      <div style="background:#fff2cc;border:1px solid #d6c46c;padding:12px;border-radius:6px;">
+        <label style="font-size:11px;color:#7a6212;font-weight:600;display:block;margin-bottom:4px;">SUBSTANCE</label>
+        <select id="t3_substance" style="width:100%;padding:6px;border:1px solid #ccc;border-radius:4px;font-size:12px;">
+          ${subOpts}
+        </select>
+      </div>
+      <div style="background:#fff2cc;border:1px solid #d6c46c;padding:12px;border-radius:6px;">
+        <label style="font-size:11px;color:#7a6212;font-weight:600;display:block;margin-bottom:4px;">PROFIL D'EXPOSITION</label>
+        <select id="t3_profil" style="width:100%;padding:6px;border:1px solid #ccc;border-radius:4px;font-size:12px;">
+          ${profOpts}
+        </select>
+      </div>
+      <div style="background:#fff2cc;border:1px solid #d6c46c;padding:12px;border-radius:6px;">
+        <label style="font-size:11px;color:#7a6212;font-weight:600;display:block;margin-bottom:4px;">C SOL (mg/kg MS)</label>
+        <input type="number" id="t3_csol" value="${st.C_sol}" step="any" style="width:100%;padding:6px;border:1px solid #ccc;border-radius:4px;font-size:13px;font-family:monospace;">
+      </div>
+      <div style="background:#fff2cc;border:1px solid #d6c46c;padding:12px;border-radius:6px;">
+        <label style="font-size:11px;color:#7a6212;font-weight:600;display:block;margin-bottom:4px;">C EAU SUPERFICIELLE (&micro;g/L)</label>
+        <input type="number" id="t3_ceau" value="${st.C_eau}" step="any" style="width:100%;padding:6px;border:1px solid #ccc;border-radius:4px;font-size:13px;font-family:monospace;">
+      </div>
+    </div>
+
+    <!-- Tableau matrices alimentaires -->
+    <h3 style="color:#1a5276;border-bottom:2px solid #1a5276;padding-bottom:6px;margin-top:24px;">
+      Concentrations dans les matrices alimentaires &amp; doses par voie
+    </h3>
+    <table class="data-table" style="margin-top:12px;">
+      <thead>
+        <tr>
+          <th style="width:30%;">Matrice alimentaire (activer/d&eacute;sactiver)</th>
+          <th style="text-align:right;">C aliment</th>
+          <th style="text-align:center;">Unit&eacute;</th>
+          <th style="text-align:right;">Ing&eacute;ration</th>
+          <th style="text-align:right;">Dose (${uniteVTR})</th>
+          <th style="text-align:right;">Contribution</th>
+        </tr>
+      </thead>
+      <tbody>${matRows}</tbody>
+      <tfoot>
+        <tr style="background:#e8eef3;font-weight:700;">
+          <td colspan="4" style="padding:8px;color:#1a5276;">DOSE ALIMENTAIRE TOTALE</td>
+          <td style="text-align:right;padding:8px;font-size:15px;color:#1a5276;">${fmtSci(dt)}</td>
+          <td style="text-align:right;padding:8px;">100%</td>
+        </tr>
+        <tr style="background:#f0f7f0;">
+          <td colspan="4" style="padding:6px 8px;font-size:11px;color:#555;">Facteur d'absorption F_abs = ${sub.F_abs||'—'} | Poids corporel = ${prof.PC||'—'} kg</td>
+          <td colspan="2" style="padding:6px 8px;font-size:11px;color:#555;text-align:right;">Unit&eacute; VTR : ${sub.unite_VTR||uniteVTR}</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <!-- Synthèse risque -->
+    <h3 style="color:#1a5276;border-bottom:2px solid #1a5276;padding-bottom:6px;margin-top:24px;">
+      Synth&egrave;se — Risque alimentaire
+    </h3>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;">
+      ${syntheseHtml}
+    </div>
+    ${sommationHtml}
+
+    <!-- Encadré PFOS brochet (exemple de référence) -->
+    <div style="background:#fff8e1;border:1px solid #f9a825;border-radius:6px;padding:14px 18px;margin-top:20px;">
+      <strong style="color:#e65100;">Exemple de r&eacute;f&eacute;rence — Brochet &amp; PFOS (d&eacute;monstr. GMEP) :</strong><br>
+      C<sub>eau</sub> = 1,2 ng PFOS/L (sous seuil DCE) &rarr; C<sub>muscle brochet</sub> = 1,2 &times; 7 200 = <strong>8 640 ng/kg</strong><br>
+      Consommation 150 g de filet &rarr; <strong>1 350 ng PFOS</strong> = 1,5&times; le seuil ANSES hebdomadaire (910 ng/sem pour 70 kg)<br>
+      <em style="font-size:11px;color:#666;">S&eacute;lectionnez PFOS + C eau = 0,0012 &micro;g/L + profil Adulte standard pour reproduire ce calcul.</em>
+    </div>
+
+    <!-- Sources -->
+    <div style="margin-top:18px;padding:14px;background:#f8fafc;border-radius:6px;font-size:12px;color:#444;line-height:1.8;">
+      <strong>Sources :</strong>
+      <a href="https://www.efsa.europa.eu/fr/efsajournal/pub/6223" target="_blank" style="color:#1a5276;">EFSA 2020 (PFAS TWI)</a> &middot;
+      <a href="https://www.anses.fr/fr/content/pfas" target="_blank" style="color:#1a5276;">ANSES 2023 (PFAS)</a> &middot;
+      <a href="https://iris.epa.gov/" target="_blank" style="color:#1a5276;">US EPA IRIS (Cd, As)</a> &middot;
+      <a href="https://www.ineris.fr/fr/substance-chimique" target="_blank" style="color:#1a5276;">INERIS substances</a> &middot;
+      <a href="https://setac.onlinelibrary.wiley.com/doi/10.1002/etc.5014" target="_blank" style="color:#1a5276;">Burkhard 2021 (BAF PFAS)</a> &middot;
+      <a href="https://www.maine.gov/dacf/php/pfas/" target="_blank" style="color:#1a5276;">Maine DEP 2020</a> &middot;
+      <a href="https://rais.ornl.gov/documents/tm13391.pdf" target="_blank" style="color:#1a5276;">INERIS DRC-09-103096-09387C</a>
+    </div>
+  `;
+};
+
+// ---- Handlers interactifs Tier 3 ---------------------------
+function attachTier3Handlers() {
+  if (activeTab !== 'tier3') return;
+  const sub  = document.getElementById('t3_substance');
+  const prf  = document.getElementById('t3_profil');
+  const csol = document.getElementById('t3_csol');
+  const ceau = document.getElementById('t3_ceau');
+  if (!sub || !prf || !csol || !ceau) return;
+
+  const refresh = () => {
+    state.v8.tier3.substance = sub.value;
+    state.v8.tier3.profil    = prf.value;
+    state.v8.tier3.C_sol     = parseFloat(csol.value) || 0;
+    state.v8.tier3.C_eau     = parseFloat(ceau.value) || 0;
+    renderActiveSheet();
+  };
+  sub.addEventListener('change',  refresh);
+  prf.addEventListener('change',  refresh);
+  csol.addEventListener('input',  refresh);
+  ceau.addEventListener('input',  refresh);
+
+  // Checkboxes voies actives
+  document.querySelectorAll('input[data-t3voie]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      state.v8.tier3[cb.dataset.t3voie] = cb.checked;
+      renderActiveSheet();
+    });
+  });
+}
+
+// Wrap renderActiveSheet pour ajouter attachTier3Handlers
+if (typeof renderActiveSheet === 'function') {
+  const _origRenderSheetT3 = renderActiveSheet;
+  renderActiveSheet = function() {
+    _origRenderSheetT3();
+    try { attachTier3Handlers(); } catch(e) { console.warn('Tier3 handlers:', e); }
+  };
+}
+
 
 // ============================================================
 // EXPORT PDF PROFESSIONNEL — G.M.E.P — Johnson & Ettinger
