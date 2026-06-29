@@ -77,6 +77,31 @@ export default function LandingPage() {
             <p>{t("v2.tools.subtitle")}</p>
           </div>
           <div className="v2-tools-grid">
+            {/* Carte HUMAIN Tier 3 : EQRS V8 + ECOTOX + Module HUMAIN */}
+            <article className="v2-tool-card" style={{ border: "2px solid #2ecc71" }}>
+              <span className="v2-badge" style={{ background: "#2ecc71", color: "#fff" }}>{t("v2.tools.humain.badge")}</span>
+              <div className="v2-tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <circle cx="16" cy="9" r="4" fill="#1a2b4a"/>
+                  <path d="M8 28v-4a8 8 0 0116 0v4" stroke="#1a2b4a" strokeWidth="2" strokeLinecap="round"/>
+                  <path d="M10 18c-2 2-3 4-2 6" stroke="#2ecc71" strokeWidth="1.5" strokeLinecap="round"/>
+                  <path d="M22 18c2 2 3 4 2 6" stroke="#2ecc71" strokeWidth="1.5" strokeLinecap="round"/>
+                  <path d="M16 26v-8" stroke="#2ecc71" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <h3>{t("v2.tools.humain.title")}</h3>
+              <p>{t("v2.tools.humain.desc")}</p>
+              <p style={{ marginTop: "0.5rem", fontSize: "0.92rem", color: "#1a2b4a", fontWeight: 500 }}>
+                ✓ {t("v2.tools.humain.feat1")}<br />
+                ✓ {t("v2.tools.humain.feat2")}<br />
+                ✓ {t("v2.tools.humain.feat3")}
+              </p>
+              <div className="v2-tool-price">{t("v2.tools.humain.price")}</div>
+              <a href="/subscribe-eqrs-v8-humain" className="v2-btn v2-btn-primary">
+                {t("v2.tools.humain.cta")}
+              </a>
+            </article>
+
             {/* Carte NOUVELLE 1 : EQRS V31.05 + ECOTOX V8 */}
             <article className="v2-tool-card">
               <span className="v2-badge">{t("v2.tools.eqrs_v31.badge")}</span>

@@ -260,6 +260,15 @@ const translations = {
     "v2.tools.eqrs_v31.price": "395 € HT/mois",
     "v2.tools.eqrs_v31.cta": "Découvrir →",
 
+    "v2.tools.humain.badge": "NOUVEAU — Tier 3",
+    "v2.tools.humain.title": "EQRS V8 + ECOTOX + Module HUMAIN",
+    "v2.tools.humain.desc": "Premier logiciel français intégrant la voie alimentaire humaine complète (chaîne trophique). PFAS, PCB, métaux — légumes, œufs, lait, viande, poisson. VTR EFSA 2020.",
+    "v2.tools.humain.feat1": "Voie végétale — TF sol→plante (Blaine 2014)",
+    "v2.tools.humain.feat2": "Voie élevage — BTF fourrage→tissu (Battelle 2019)",
+    "v2.tools.humain.feat3": "Voie aquatique — BAF eau→poisson (Burkhard 2021)",
+    "v2.tools.humain.price": "550 € HT/mois — ou 5 200 € HT/an",
+    "v2.tools.humain.cta": "Découvrir →",
+
     "v2.tools.rabattement_v15.badge": "NOUVEAU",
     "v2.tools.rabattement_v15.title": "Rabattement V15.89 — multicouche IA",
     "v2.tools.rabattement_v15.desc": "Modélisation multicouche assistée par IA. 42 lithologies, 15 couches, Forchheimer/Dupuit, Mode A/B, rayon de Sichardt automatique et Dossier Loi sur l'Eau généré automatiquement.",
@@ -323,6 +332,8 @@ const translations = {
     "v2.footer.phoneLabel": "Tél.",
     "v2.footer.colTools": "Nos outils",
     "v2.footer.colCompany": "Société",
+    "v2.footer.linkHumain": "EQRS V8 + Module HUMAIN — Tier 3",
+    "v2.footer.linkEqrsV31": "EQRS V31.05 + ECOTOX V8",
     "v2.footer.linkEqrs": "EQRS Johnson & Ettinger",
     "v2.footer.linkTsn": "Transfert Sol → Nappe → Captage",
     "v2.footer.linkRabattement": "Rabattement de nappe IOTA",
@@ -338,7 +349,7 @@ const translations = {
 
     // ===== Tarifs =====
     "tarifs.hero.title": "Tarifs et abonnements",
-    "tarifs.hero.lead": "Quatre offres simples, sans engagement de durée et sans renouvellement automatique. Paiement sécurisé par Stripe.",
+    "tarifs.hero.lead": "Nos offres, sans engagement de durée et sans renouvellement automatique. Paiement sécurisé par Stripe.",
     "tarifs.eqrsMonthly.sub": "Abonnement mensuel — flexibilité maximale",
     "tarifs.eqrsMonthly.period": "HT / mois — résiliable à tout moment",
     "tarifs.eqrsMonthly.f1": "74 substances (COV, HAP, métaux)",
@@ -812,6 +823,15 @@ const translations = {
     "v2.tools.eqrs_v31.price": "€395 excl. VAT/month",
     "v2.tools.eqrs_v31.cta": "Discover →",
 
+    "v2.tools.humain.badge": "NEW — Tier 3",
+    "v2.tools.humain.title": "EQRS V8 + ECOTOX + HUMAN Module",
+    "v2.tools.humain.desc": "First French software integrating the complete human food chain pathway. PFAS, PCB, metals — vegetables, eggs, milk, meat, fish. EFSA 2020 TRVs.",
+    "v2.tools.humain.feat1": "Plant pathway — TF soil→plant (Blaine 2014)",
+    "v2.tools.humain.feat2": "Livestock pathway — BTF fodder→tissue (Battelle 2019)",
+    "v2.tools.humain.feat3": "Aquatic pathway — BAF water→fish (Burkhard 2021)",
+    "v2.tools.humain.price": "€550 excl. VAT/month — or €5,200 excl. VAT/year",
+    "v2.tools.humain.cta": "Discover →",
+
     "v2.tools.rabattement_v15.badge": "NEW",
     "v2.tools.rabattement_v15.title": "Drawdown V15.89 — AI multilayer",
     "v2.tools.rabattement_v15.desc": "AI-assisted multilayer modelling. 42 lithologies, 15 layers, Forchheimer/Dupuit, Mode A/B, automatic Sichardt radius and Water Act dossier generated automatically.",
@@ -875,6 +895,8 @@ const translations = {
     "v2.footer.phoneLabel": "Tel.",
     "v2.footer.colTools": "Our tools",
     "v2.footer.colCompany": "Company",
+    "v2.footer.linkHumain": "EQRS V8 + HUMAN Module — Tier 3",
+    "v2.footer.linkEqrsV31": "EQRS V31.05 + ECOTOX V8",
     "v2.footer.linkEqrs": "EQRS Johnson & Ettinger",
     "v2.footer.linkTsn": "Soil → Groundwater → Well transfer",
     "v2.footer.linkRabattement": "IOTA groundwater drawdown",
@@ -890,7 +912,7 @@ const translations = {
 
     // ===== Pricing =====
     "tarifs.hero.title": "Pricing and subscriptions",
-    "tarifs.hero.lead": "Four simple plans, no minimum term, no automatic renewal. Secure payment via Stripe.",
+    "tarifs.hero.lead": "All plans, no minimum term, no automatic renewal. Secure payment via Stripe.",
     "tarifs.eqrsMonthly.sub": "Monthly subscription — maximum flexibility",
     "tarifs.eqrsMonthly.period": "excl. VAT / month — cancel anytime",
     "tarifs.eqrsMonthly.f1": "74 substances (VOCs, PAHs, metals)",
@@ -1365,6 +1387,15 @@ const translations = {
     "v2.tools.eqrs_v31.price": "395 € sin IVA/mes",
     "v2.tools.eqrs_v31.cta": "Descubrir →",
 
+    "v2.tools.humain.badge": "NUEVO — Tier 3",
+    "v2.tools.humain.title": "EQRS V8 + ECOTOX + Módulo HUMANO",
+    "v2.tools.humain.desc": "Primer software francés que integra la vía alimentaria humana completa (cadena trófica). PFAS, PCB, metales — verduras, huevos, leche, carne, pescado. VTR EFSA 2020.",
+    "v2.tools.humain.feat1": "Vía vegetal — TF suelo→planta (Blaine 2014)",
+    "v2.tools.humain.feat2": "Vía ganadería — BTF forraje→tejido (Battelle 2019)",
+    "v2.tools.humain.feat3": "Vía acuática — BAF agua→pez (Burkhard 2021)",
+    "v2.tools.humain.price": "550 € sin IVA/mes — o 5 200 € sin IVA/año",
+    "v2.tools.humain.cta": "Descubrir →",
+
     "v2.tools.rabattement_v15.badge": "NUEVO",
     "v2.tools.rabattement_v15.title": "Abatimiento V15.89 — multicapa IA",
     "v2.tools.rabattement_v15.desc": "Modelización multicapa asistida por IA. 42 litologías, 15 capas, Forchheimer/Dupuit, Modo A/B, radio de Sichardt automático y expediente Ley del Agua generado automáticamente.",
@@ -1428,6 +1459,8 @@ const translations = {
     "v2.footer.phoneLabel": "Tel.",
     "v2.footer.colTools": "Nuestras herramientas",
     "v2.footer.colCompany": "Sociedad",
+    "v2.footer.linkHumain": "EQRS V8 + Módulo HUMANO — Tier 3",
+    "v2.footer.linkEqrsV31": "EQRS V31.05 + ECOTOX V8",
     "v2.footer.linkEqrs": "EQRS Johnson & Ettinger",
     "v2.footer.linkTsn": "Transferencia Suelo → Acuífero → Captación",
     "v2.footer.linkRabattement": "Abatimiento IOTA",
@@ -1443,7 +1476,7 @@ const translations = {
 
     // ===== Tarifas =====
     "tarifs.hero.title": "Tarifas y suscripciones",
-    "tarifs.hero.lead": "Cuatro ofertas sencillas, sin compromiso de duración y sin renovación automática. Pago seguro mediante Stripe.",
+    "tarifs.hero.lead": "Nuestras ofertas, sin compromiso de duración y sin renovación automática. Pago seguro mediante Stripe.",
     "tarifs.eqrsMonthly.sub": "Suscripción mensual — máxima flexibilidad",
     "tarifs.eqrsMonthly.period": "sin IVA / mes — cancelable en cualquier momento",
     "tarifs.eqrsMonthly.f1": "74 sustancias (COV, HAP, metales)",

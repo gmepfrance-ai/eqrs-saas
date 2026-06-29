@@ -21,6 +21,12 @@ export function V2Footer() {
             <h6>{t("v2.footer.colTools")}</h6>
             <ul>
               <li>
+                <a href="/subscribe-eqrs-v8-humain">{t("v2.footer.linkHumain")}</a>
+              </li>
+              <li>
+                <a href="/eqrs-v31-05-ecotox">{t("v2.footer.linkEqrsV31")}</a>
+              </li>
+              <li>
                 <a href="/app">{t("v2.footer.linkEqrs")}</a>
               </li>
               <li>
