@@ -12,7 +12,7 @@
   --yellow:#fff2cc;--yellow-border:#d4a017;
   --green:#c6efce;--orange:#ffeb9c;--red:#ffc7ce;
   --green-text:#006100;--orange-text:#9c5700;--red-text:#9c0006;
-  --header-gradient:linear-gradient(135deg,#0e2f44 0%,#1a5276 50%,#2471a3 100%);
+  --header-gradient:linear-gradient(135deg,#1e2d4a 0%,#2e3a5c 60%,#3a4d73 100%);
   --radius:6px;--shadow:0 1px 3px rgba(0,0,0,0.08);
 }
 html{font-size:14px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text)}
@@ -583,33 +583,29 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
 <!-- Header -->
 <div class="header">
-  <div class="header-logo">
-    <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="2" y="2" width="40" height="40" rx="6" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-      <path d="M10 32V18l4-4h5l-5 9h5l-7 9z" fill="#2ecc71" opacity="0.9"/>
-      <path d="M22 14h12M22 22h10M22 30h8" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
-      <circle cx="35" cy="32" r="4" fill="none" stroke="#2ecc71" stroke-width="1.5"/>
-      <path d="M33.5 32l1 1 2-2" stroke="#2ecc71" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <div>
-      <div class="logo-text">G.M.E.P</div>
-      <div class="logo-sub">Global Management of Environmental Project</div>
-    </div>
+  <!-- Logo officiel GMEP identique au site www.gmep-france.eu -->
+  <div class="header-logo" style="gap:0;padding-right:4px;">
+    <img src="data:image/jpeg;base64,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" alt="Logo GMEP" style="height:52px;width:auto;border-radius:6px;display:block;">
   </div>
   <div class="header-sep"></div>
   <div class="header-text">
-    <h1>EQRS &mdash; Modèle Johnson &amp; Ettinger</h1>
-    <p>Évaluation Quantitative des Risques Sanitaires &bull; Intrusion de vapeurs</p>
+    <h1>EQRS V8 &mdash; Modèle Johnson &amp; Ettinger</h1>
+    <p>Évaluation Quantitative des Risques Sanitaires &bull; Intrusion de vapeurs &bull; ECOTOX V8 Tier 1+2+3</p>
+    <!-- Bandeau note Tier 3 -->
+    <div style="margin-top:5px;display:inline-flex;align-items:center;gap:8px;background:rgba(46,204,113,0.18);border:1px solid rgba(46,204,113,0.5);border-radius:4px;padding:3px 10px;font-size:0.7rem;font-weight:600;color:#c8f7e0;letter-spacing:0.04em;">
+      <span style="width:7px;height:7px;border-radius:50%;background:#2ecc71;flex-shrink:0;display:inline-block;"></span>
+      NOUVEAU &mdash; Extension ECOTOX V8 &bull; Module Tier 3 : Voie alimentaire humaine &bull; GMEP v1.0 Juin 2026
+    </div>
   </div>
   <div class="header-right">
+    www.gmep-france.eu &bull; contact@gmep-france.eu<br>
     9 rue de la Marne — 79400 Saint-Maixent-l'École<br>
-    Tél. 06 07 73 72 33 &bull; gmep.france@gmail.com<br>
+    Tél. 06 07 73 72 33<br>
     <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
-      <!-- FIX V8.2 — Barre Enregistrement études -->
-      <button onclick="saveStudyQuick()" title="Enregistrer l'étude (mémoire navigateur)" style="padding:6px 12px;background:#1a5276;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.78rem;font-weight:600" onmouseover="this.style.background='#0e2f44'" onmouseout="this.style.background='#1a5276'">💾 Enregistrer</button>
-      <button onclick="openLoadDialog()" title="Charger une étude" style="padding:6px 12px;background:#1a5276;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.78rem;font-weight:600" onmouseover="this.style.background='#0e2f44'" onmouseout="this.style.background='#1a5276'">📂 Charger</button>
-      <button onclick="newStudy()" title="Nouvelle étude (efface les saisies)" style="padding:6px 12px;background:#8e8e8e;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.78rem;font-weight:600" onmouseover="this.style.background='#666'" onmouseout="this.style.background='#8e8e8e'">📄 Nouvelle</button>
-      <button onclick="exportPDF()" style="padding:6px 12px;background:#2ecc71;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.78rem;font-weight:600" onmouseover="this.style.background='#27ae60'" onmouseout="this.style.background='#2ecc71'">📄 PDF</button>
+      <button onclick="saveStudyQuick()" title="Enregistrer l'étude (mémoire navigateur)" style="padding:6px 12px;background:#2e3a5c;color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:4px;cursor:pointer;font-size:0.78rem;font-weight:600" onmouseover="this.style.background='#1e2d4a'" onmouseout="this.style.background='#2e3a5c'">&#128190; Enregistrer</button>
+      <button onclick="openLoadDialog()" title="Charger une étude" style="padding:6px 12px;background:#2e3a5c;color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:4px;cursor:pointer;font-size:0.78rem;font-weight:600" onmouseover="this.style.background='#1e2d4a'" onmouseout="this.style.background='#2e3a5c'">&#128194; Charger</button>
+      <button onclick="newStudy()" title="Nouvelle étude (efface les saisies)" style="padding:6px 12px;background:#8e8e8e;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.78rem;font-weight:600" onmouseover="this.style.background='#666'" onmouseout="this.style.background='#8e8e8e'">&#128196; Nouvelle</button>
+      <button onclick="exportPDF()" style="padding:6px 12px;background:#2ecc71;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.78rem;font-weight:600" onmouseover="this.style.background='#27ae60'" onmouseout="this.style.background='#2ecc71'">&#128196; PDF</button>
     </div>
   </div>
 </div>
