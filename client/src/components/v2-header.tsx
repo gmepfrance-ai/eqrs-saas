@@ -93,6 +93,10 @@ export function V2Header() {
               </svg>
             </button>
             <div className="v2-nav-dropdown-menu" role="menu">
+              <a href="/subscribe-eqrs-v8-humain" onClick={() => setDropdownOpen(false)}>
+                {t("nav.tools.humain")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.humain.desc")}</span>
+              </a>
               <a href="/app" onClick={() => setDropdownOpen(false)}>
                 {t("nav.tools.eqrs")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.eqrs.desc")}</span>

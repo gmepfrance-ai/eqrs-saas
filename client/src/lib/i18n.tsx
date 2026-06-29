@@ -20,6 +20,8 @@ const translations = {
     "nav.tools.tsn.desc": "Modèle Domenico 1987",
     "nav.tools.rabattement": "Rabattement de nappe",
     "nav.tools.rabattement.desc": "Theis + IOTA — NOUVEAU",
+    "nav.tools.humain": "EQRS V8 + Module HUMAIN",
+    "nav.tools.humain.desc": "Chaîne trophique — Tier 3 — NOUVEAU",
     "nav.tools.eqrsEcotox": "EQRS V31.05 + ECOTOX V8",
     "nav.tools.eqrsEcotox.desc": "104 substances HHRA + 12 écotox — NOUVEAU",
     "nav.tools.rabattement1585": "Rabattement V15.89",
