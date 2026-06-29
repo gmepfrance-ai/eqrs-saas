@@ -112,6 +112,10 @@ const STRIPE_PRICE_MSP_MONTHLY =
   process.env.STRIPE_PRICE_MSP_MONTHLY || "price_1TlY2z3A2g3lkch9xdWCjChC";
 const STRIPE_PRICE_MSP_ANNUAL =
   process.env.STRIPE_PRICE_MSP_ANNUAL || "price_1TlY523A2g3lkch9r3B65h5U";
+const STRIPE_PRICE_HUMAIN_MONTHLY =
+  process.env.STRIPE_PRICE_HUMAIN_MONTHLY || "";
+const STRIPE_PRICE_HUMAIN_ANNUAL =
+  process.env.STRIPE_PRICE_HUMAIN_ANNUAL || "";
 const STRIPE_WEBHOOK_SECRET =
   process.env.STRIPE_WEBHOOK_SECRET || "whsec_placeholder";
 
@@ -1103,6 +1107,8 @@ export async function registerRoutes(
           plan === "piezometres_annual" ? STRIPE_PRICE_PIEZOMETRES_ANNUAL :
           plan === "msp_monthly" ? STRIPE_PRICE_MSP_MONTHLY :
           plan === "msp_annual" ? STRIPE_PRICE_MSP_ANNUAL :
+          plan === "humain_monthly" ? STRIPE_PRICE_HUMAIN_MONTHLY :
+          plan === "humain_annual" ? STRIPE_PRICE_HUMAIN_ANNUAL :
           STRIPE_PRICE_MONTHLY;
 
 
@@ -1115,6 +1121,8 @@ export async function registerRoutes(
           plan === "piezometres_annual" ? "piezometres" :
           plan === "msp_monthly" ? "msp" :
           plan === "msp_annual" ? "msp" :
+          plan === "humain_monthly" ? "humain" :
+          plan === "humain_annual" ? "humain" :
           "je";
 
         // Chercher un abonnement existant pour ce tool (ou récupérer le customerId existant)
