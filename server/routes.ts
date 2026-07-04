@@ -84,6 +84,17 @@ try {
   console.error("Warning: Could not load msp-tool.html", e);
 }
 
+// Load Eaux Pluviales (DLE/GEP) tool HTML at startup
+let eauxPluvialesToolHtml = "";
+try {
+  eauxPluvialesToolHtml = fs.readFileSync(
+    path.resolve(process.cwd(), "eaux-pluviales-tool.html"),
+    "utf-8"
+  );
+} catch (e) {
+  console.error("Warning: Could not load eaux-pluviales-tool.html", e);
+}
+
 // Stripe setup
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "sk_test_placeholder";
 const isStripeConfigured =
@@ -116,6 +127,8 @@ const STRIPE_PRICE_HUMAIN_MONTHLY =
   process.env.STRIPE_PRICE_HUMAIN_MONTHLY || "";
 const STRIPE_PRICE_HUMAIN_ANNUAL =
   process.env.STRIPE_PRICE_HUMAIN_ANNUAL || "";
+const STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL =
+  process.env.STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL || "";
 const STRIPE_WEBHOOK_SECRET =
   process.env.STRIPE_WEBHOOK_SECRET || "whsec_placeholder";
 
@@ -1109,6 +1122,7 @@ export async function registerRoutes(
           plan === "msp_annual" ? STRIPE_PRICE_MSP_ANNUAL :
           plan === "humain_monthly" ? STRIPE_PRICE_HUMAIN_MONTHLY :
           plan === "humain_annual" ? STRIPE_PRICE_HUMAIN_ANNUAL :
+          plan === "eaux_pluviales_annual" ? STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL :
           STRIPE_PRICE_MONTHLY;
 
 
@@ -1123,6 +1137,7 @@ export async function registerRoutes(
           plan === "msp_annual" ? "msp" :
           plan === "humain_monthly" ? "humain" :
           plan === "humain_annual" ? "humain" :
+          plan === "eaux_pluviales_annual" ? "eaux_pluviales" :
           "je";
 
         // Chercher un abonnement existant pour ce tool (ou récupérer le customerId existant)
@@ -1876,6 +1891,121 @@ export async function registerRoutes(
       res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       return res.send(protectToolHtml(mspToolHtml));
+    }
+  );
+
+  // ══════════════════════════════════════════════════════════════════════
+  // Eaux Pluviales — DLE / GEP v2.1 (Loi sur l'Eau — IOTA 2.1.5.0 / 3.3.1.0)
+  // ══════════════════════════════════════════════════════════════════════
+
+  // ── Eaux Pluviales : activation essai 8 jours ──────────────────────────
+  app.post(
+    "/api/eaux-pluviales-trial/activate",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      try {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const existing = subs.find(s => s.tool === "eaux_pluviales");
+        if (existing && (existing.status === "active" || existing.status === "trialing")) {
+          return res.status(409).json({ message: "Vous avez déjà un accès Eaux Pluviales (DLE/GEP) actif ou en cours d'essai." });
+        }
+        const trialEnd = new Date();
+        trialEnd.setDate(trialEnd.getDate() + 8);
+        let sub;
+        if (existing) {
+          sub = await storage.updateSubscription(existing.id, {
+            status: "trialing",
+            plan: "eaux_pluviales_trial",
+            tool: "eaux_pluviales",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        } else {
+          sub = await storage.createSubscription(req.user!.id, {
+            status: "trialing",
+            plan: "eaux_pluviales_trial",
+            tool: "eaux_pluviales",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        }
+
+        // Email de confirmation activation essai Eaux Pluviales
+        try {
+          const resendKey = process.env.RESEND_API_KEY;
+          if (resendKey) {
+            const { Resend } = require("resend");
+            const resend = new Resend(resendKey);
+            const user = await storage.getUser(req.user!.id);
+            const trialEndFr = trialEnd.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+            await resend.emails.send({
+              from: "GMEP <noreply@gmep-france.eu>",
+              to: req.user!.email,
+              subject: "GMEP Eaux Pluviales — Votre essai gratuit de 8 jours est activé",
+              html: `
+                <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+                  <div style="background:#1A6FB5;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+                    <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+                    <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">Gestion des eaux pluviales — DLE / GEP v2.1</p>
+                  </div>
+                  <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+                    <p style="font-size:16px;">Bonjour ${user?.name || req.user!.email},</p>
+                    <p>Votre essai gratuit <strong>GMEP Eaux Pluviales (DLE/GEP)</strong> est maintenant actif. Accès complet au logiciel pendant <strong>8 jours</strong>.</p>
+                    <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
+                      <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Outil</td><td style="padding:10px;border:1px solid #cce0f0;">Gestion des eaux pluviales — DLE / GEP v2.1</td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Durée essai</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours</td></tr>
+                      <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Accès jusqu'au</td><td style="padding:10px;border:1px solid #e2e8f0;"><strong>${trialEndFr}</strong></td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #e2e8f0;">${req.user!.email}</td></tr>
+                    </table>
+                    <p style="font-size:13px;color:#64748b;">Après les 8 jours, l'accès est bloqué. Souscription : 3 500 € HT/an.</p>
+                    <div style="text-align:center;margin:28px 0;">
+                      <a href="https://www.gmep-france.eu/#/dashboard" style="background:#1A6FB5;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à GMEP Eaux Pluviales →</a>
+                    </div>
+                    <p style="font-size:13px;color:#64748b;">Référentiels : Loi sur l'Eau L.214-1 à L.214-6 CE — Nomenclature IOTA rubriques 2.1.5.0 / 3.3.1.0 / 3.2.2.0 / 1.1.1.0</p>
+                    <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a> — Tél. 06 07 73 72 33</p>
+                    <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+                    <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+                  </div>
+                </div>
+              `,
+            });
+            console.log(`[EAUX PLUVIALES TRIAL EMAIL] Sent to ${req.user!.email}`);
+          }
+        } catch (emailErr: any) {
+          console.error("[EAUX PLUVIALES TRIAL EMAIL] Failed:", emailErr.message);
+        }
+
+        return res.json({ message: "Essai Eaux Pluviales activé (8 jours)", subscription: sub });
+      } catch (err: any) {
+        return res.status(500).json({ message: err.message || "Erreur lors de l'activation de l'essai" });
+      }
+    }
+  );
+
+  // ── Eaux Pluviales : accès outil (essai ou abonné) ────────────────────
+  app.get(
+    "/api/eaux-pluviales-tool",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      if (!eauxPluvialesToolHtml) return res.status(503).json({ message: "Outil Eaux Pluviales non disponible — fichier eaux-pluviales-tool.html manquant" });
+      if (!isAdminEmail((req.user as any).email)) {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const epSub = subs.find(s => s.tool === "eaux_pluviales" && (s.status === "active" || s.status === "trialing"));
+        if (!epSub) {
+          return res.status(403).json({ message: "Abonnement Eaux Pluviales requis pour accéder à cet outil." });
+        }
+        if (epSub.status === "trialing" && epSub.currentPeriodEnd && new Date(epSub.currentPeriodEnd) < new Date()) {
+          try { await storage.updateSubscription(epSub.id, { status: "expired" }); } catch {}
+          res.setHeader("Content-Type", "text/html; charset=utf-8");
+          return res.status(403).send(trialExpiredHtml("/#/subscribe-eaux-pluviales", "Gestion des eaux pluviales — DLE/GEP v2.1", 8));
+        }
+      }
+      res.setHeader("X-Frame-Options", "SAMEORIGIN");
+      res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://unpkg.com"
+      );
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.send(protectToolHtml(eauxPluvialesToolHtml));
     }
   );
 

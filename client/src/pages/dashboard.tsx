@@ -82,6 +82,11 @@ export default function DashboardPage() {
           .then(r => r.json())
           .then(() => { window.location.href = `/api/msp-tool?token=${token}`; })
           .catch(() => { navigateTo("/subscribe-msp"); });
+      } else if (plan === "eaux_pluviales_trial") {
+        fetch(`/api/eaux-pluviales-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
+          .then(r => r.json())
+          .then(() => { window.location.href = `/api/eaux-pluviales-tool?token=${token}`; })
+          .catch(() => { navigateTo("/subscribe-eaux-pluviales"); });
       } else {
         handleCheckout(plan);
       }
@@ -304,6 +309,24 @@ export default function DashboardPage() {
               <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 250 € HT/mois ou 2 760 € HT/an</p>
               <button className="w-full bg-[#16a34a] text-white py-2 rounded font-semibold text-sm hover:opacity-90"
                 onClick={() => { window.location.href = `/api/msp-tool?token=${token}`; }}>
+                Accéder →
+              </button>
+            </div>
+
+            {/* Eaux Pluviales DLE/GEP v2.1 */}
+            <div className="bg-white border-2 border-[#1A6FB5] rounded-lg p-4 shadow-sm hover:shadow-md transition">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded bg-[#1A6FB5] text-white flex items-center justify-center text-xs font-bold">EP</div>
+                <h3 className="text-sm font-bold text-foreground">Eaux Pluviales DLE/GEP v2.1</h3>
+              </div>
+              <p className="text-xs text-muted-foreground mb-3">Loi sur l'Eau IOTA 2.1.5.0 / 3.3.1.0 — IA Porchet — Bassin rétention</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 3 500 € HT/an ensuite</p>
+              <button className="w-full bg-[#1A6FB5] text-white py-2 rounded font-semibold text-sm hover:opacity-90"
+                onClick={() => {
+                  fetch(`/api/eaux-pluviales-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
+                    .then(() => { window.location.href = `/api/eaux-pluviales-tool?token=${token}`; })
+                    .catch(() => { window.location.href = `/api/eaux-pluviales-tool?token=${token}`; });
+                }}>
                 Accéder →
               </button>
             </div>
