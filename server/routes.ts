@@ -618,6 +618,8 @@ export async function registerRoutes(
         hasPriceMonthly: !!process.env.STRIPE_PRICE_MONTHLY,
         hasPriceAnnual: !!process.env.STRIPE_PRICE_ANNUAL,
         hasPriceTsnAnnual: !!process.env.STRIPE_PRICE_TSN_ANNUAL || true,
+        hasPriceEauxPluvialesAnnual: !!process.env.STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL,
+        eauxPluvialesPriceId: process.env.STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL || null,
         hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET,
         hasDatabaseUrl: !!process.env.DATABASE_URL,
         dbBackend: process.env.DATABASE_URL ? 'postgresql' : 'json',
@@ -1178,6 +1180,13 @@ export async function registerRoutes(
           }
         }
 
+        // Garde-fou : si le price ID n'est pas configuré pour ce plan, on bloque proprement
+        if (!priceId) {
+          return res.status(400).json({
+            message: "Tarif Stripe non configuré pour ce plan. Contactez gmep.france@gmail.com.",
+          });
+        }
+
         const origin = `${req.protocol}://${req.get("host")}`;
         const token = req.query.token as string;
 
@@ -1188,7 +1197,10 @@ export async function registerRoutes(
           mode: "subscription",
           success_url: `${origin}/#/dashboard?token=${token}&checkout=success`,
           cancel_url: `${origin}/#/dashboard?token=${token}&checkout=cancel`,
-          metadata: { userId: req.user!.id.toString() },
+          metadata: { userId: req.user!.id.toString(), plan, tool },
+          subscription_data: {
+            metadata: { userId: req.user!.id.toString(), plan, tool },
+          },
           // ── Stripe Tax ───────────────────────────────────────────────────────────────────────────
           // automatic_tax: calcule TVA automatiquement selon adresse client.
           // Pour particulier FR: 20% TVA. Pour entreprise UE avec n° TVA: 0%
@@ -1241,7 +1253,7 @@ export async function registerRoutes(
           const subscription = event.data.object as Stripe.Subscription;
           const customerId = subscription.customer as string;
           const priceIdFromStripe = subscription.items.data[0]?.price?.id;
-          const plan =
+          let plan =
             priceIdFromStripe === STRIPE_PRICE_RABATTEMENT_ANNUAL ? "rabattement_annual" :
             priceIdFromStripe === STRIPE_PRICE_TSN_ANNUAL ? "tsn_annual" :
             (STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY && priceIdFromStripe === STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY) ? "eqrs_v31_ecotox_monthly" :
@@ -1249,15 +1261,23 @@ export async function registerRoutes(
             (STRIPE_PRICE_PIEZOMETRES_ANNUAL && priceIdFromStripe === STRIPE_PRICE_PIEZOMETRES_ANNUAL) ? "piezometres_annual" :
             priceIdFromStripe === STRIPE_PRICE_MSP_MONTHLY ? "msp_monthly" :
             priceIdFromStripe === STRIPE_PRICE_MSP_ANNUAL ? "msp_annual" :
+            (STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL && priceIdFromStripe === STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL) ? "eaux_pluviales_annual" :
             priceIdFromStripe === STRIPE_PRICE_ANNUAL ? "annual" : "monthly";
-          const tool =
+          let tool =
             plan === "rabattement_annual" ? "rabattement" :
             plan === "tsn_annual" ? "tsn" :
             plan === "eqrs_v31_ecotox_monthly" ? "eqrs_v31" :
             plan === "schema_conceptuel_annual" ? "schema" :
             plan === "piezometres_annual" ? "piezometres" :
             (plan === "msp_monthly" || plan === "msp_annual") ? "msp" :
+            (plan === "humain_monthly" || plan === "humain_annual") ? "humain" :
+            plan === "eaux_pluviales_annual" ? "eaux_pluviales" :
             "je";
+
+          // Préférence : metadata de la subscription (plus fiable que le mapping par price ID)
+          const subMeta = (subscription as any).metadata || {};
+          if (subMeta.plan) plan = subMeta.plan;
+          if (subMeta.tool) tool = subMeta.tool;
 
           // Chercher d'abord par stripe_subscription_id (le plus précis)
           let sub = await storage.getSubscriptionByStripeSubscriptionId(subscription.id);
@@ -1301,11 +1321,14 @@ export async function registerRoutes(
                   const toolName =
                     tool === "rabattement" ? "Rabattement de nappe — Theis + Dupuit-Thiem" :
                     tool === "tsn" ? "TSN — Transfert Sol vers Nappe" :
+                    tool === "eaux_pluviales" ? "Gestion des eaux pluviales — DLE / GEP v2.1" :
+                    tool === "humain" ? "Module HUMAIN — EQRS V8 Tier 3" :
                     "EQRS — Johnson & Ettinger";
                   const toolUrl = "https://www.gmep-france.eu/#/dashboard";
                   const planLabel =
                     plan === "rabattement_annual" ? "Annuel — 1 100 € HT/an" :
                     plan === "tsn_annual" ? "Annuel — 850 € HT/an" :
+                    plan === "eaux_pluviales_annual" ? "Annuel — 3 500 € HT/an" :
                     plan === "annual" ? "Annuel — 2 499 € HT/an" :
                     "Mensuel — 245 € HT/mois";
                   const periodEnd = new Date((subscription as any).current_period_end * 1000)
