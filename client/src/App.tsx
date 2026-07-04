@@ -30,6 +30,7 @@ import SubscribeEqrsV31EcotoxPage from "@/pages/subscribe-eqrs-v31-ecotox";
 import SubscribeSchemaConceptuelPage from "@/pages/subscribe-schema-conceptuel";
 import SubscribePiezometresPage from "@/pages/subscribe-piezometres";
 import SubscribeMspPage from "@/pages/subscribe-msp";
+import SubscribeEauxPluvialesPage from "@/pages/subscribe-eaux-pluviales";
 import SubscribeEqrsV8HumainPage from "@/pages/subscribe-eqrs-v8-humain";
 import NotFound from "@/pages/not-found";
 
@@ -89,6 +90,7 @@ function AppRouter() {
       <Route path="/subscribe-schema-conceptuel" component={SubscribeSchemaConceptuelPage} />
       <Route path="/subscribe-piezometres" component={SubscribePiezometresPage} />
       <Route path="/subscribe-msp" component={SubscribeMspPage} />
+      <Route path="/subscribe-eaux-pluviales" component={SubscribeEauxPluvialesPage} />
       <Route path="/subscribe-eqrs-v8-humain" component={SubscribeEqrsV8HumainPage} />
       <Route component={NotFound} />
     </Switch>
