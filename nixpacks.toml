@@ -1,12 +1,8 @@
 [phases.install]
-cmds = ["npm install --production=false --ignore-scripts"]
+cmds = ["npm install"]
 
 [phases.build]
-# HOTFIX 2026-07-05 : reconstruction désactivée temporairement.
-# Railway sert désormais dist/index.cjs et dist/public/ committés dans le repo.
-# Ce contournement rétablit /api/admin/send-daily-digest cassée depuis le 04/07.
-# Reactivation prévue après diagnostic de l'échec de esbuild sur Railway.
-cmds = ["echo 'HOTFIX: rebuild disabled, using committed dist/'"]
+cmds = ["npm run build"]
 
 [start]
 cmd = "node dist/index.cjs"
