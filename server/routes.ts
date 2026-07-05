@@ -1329,6 +1329,8 @@ export async function registerRoutes(
                     plan === "rabattement_annual" ? "Annuel — 1 100 € HT/an" :
                     plan === "tsn_annual" ? "Annuel — 850 € HT/an" :
                     plan === "eaux_pluviales_annual" ? "Annuel — 3 500 € HT/an" :
+                    plan === "humain_monthly" ? "Mensuel — 550 € HT/mois" :
+                    plan === "humain_annual" ? "Annuel — 5 200 € HT/an" :
                     plan === "annual" ? "Annuel — 2 499 € HT/an" :
                     "Mensuel — 245 € HT/mois";
                   const periodEnd = new Date((subscription as any).current_period_end * 1000)
