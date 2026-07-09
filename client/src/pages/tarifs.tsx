@@ -61,7 +61,7 @@ export default function TarifsPage() {
               </button>
             </div>
 
-          {/* EQRS V31.05 + ECOTOX V8 */}
+          {/* EQRS V9 + ECOTOX V9 */}
             <div className="v2-price-card featured">
               <span className="v2-badge">{t("tarifs.eqrsV31.badge")}</span>
               <h3>{t("v2.tools.eqrs_v31.title")}</h3>
