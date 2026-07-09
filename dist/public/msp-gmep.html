@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ── SEO ─────────────────────────────────────────────────────────── -->
+  <title>MSP GMEP — Diagnostic & Modélisation des Sources de Pollution des Sols | G.M.E.P</title>
+  <meta name="description" content="Logiciel professionnel de diagnostic et modélisation des sources de pollution des sols. Seuils ISDI, purge obligatoire, vue 3D IDW, rapport PDF 6 pages. Arrêté du 12 décembre 2014 · Décret 2023-1408 · Guide TEX SSP V2." />
+  <meta name="keywords" content="MSP GMEP, diagnostic pollution sols, seuils ISDI, purge excavation obligatoire, modélisation SSP, hydrogéologie logiciel, sites sols pollués, interpolation IDW, rapport PDF réglementaire, VSA VSB Guide TEX, Arrêté 12 décembre 2014, Décret 2023-1408, bureau études environnement" />
+  <meta name="author" content="SARL G.M.E.P — Éric Azulay, Ingénieur sites et sols pollués" />
+  <meta name="robots" content="index, follow" />
+  <meta name="geo.region" content="FR-79" />
+  <meta name="geo.placename" content="Saint-Maixent-l'École" />
+
+  <!-- ── Open Graph ──────────────────────────────────────────────────── -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.gmep-france.eu/msp-gmep.html" />
+  <meta property="og:title" content="MSP GMEP — Diagnostic & Modélisation des Sources de Pollution des Sols" />
+  <meta property="og:description" content="Logiciel professionnel de diagnostic SSP. Seuils ISDI, purge obligatoire, vue 3D IDW, rapport PDF 6 pages. Conforme Arrêté 12/12/2014 et Décret 2023-1408." />
+  <meta property="og:site_name" content="G.M.E.P" />
+  <meta property="og:locale" content="fr_FR" />
+
+  <!-- ── JSON-LD ─────────────────────────────────────────────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "MSP GMEP",
+        "url": "https://www.gmep-france.eu/msp-gmep.html",
+        "description": "Logiciel professionnel de diagnostic et modélisation des sources de pollution des sols. Vérification automatique des seuils ISDI (Arrêté 12/12/2014), détermination de la purge obligatoire, vue 3D IDW, rapport PDF 6 pages.",
+        "applicationCategory": "EnvironmentalSoftware",
+        "operatingSystem": "Windows, macOS, Linux",
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Essai gratuit",
+            "price": "0",
+            "priceCurrency": "EUR",
+            "description": "8 jours d'essai — 5 sondages maximum"
+          },
+          {
+            "@type": "Offer",
+            "name": "Abonnement mensuel",
+            "price": "250",
+            "priceCurrency": "EUR",
+            "priceSpecification": { "@type": "UnitPriceSpecification", "billingDuration": "P1M" }
+          },
+          {
+            "@type": "Offer",
+            "name": "Abonnement annuel",
+            "price": "2760",
+            "priceCurrency": "EUR",
+            "priceSpecification": { "@type": "UnitPriceSpecification", "billingDuration": "P1Y" }
+          }
+        ],
+        "author": { "@type": "Organization", "name": "SARL G.M.E.P" },
+        "featureList": [
+          "Plus de 60 substances réglementées",
+          "Seuils ISDI Arrêté 12 décembre 2014",
+          "Purge obligatoire VSA VSB Guide TEX SSP V2",
+          "Interpolation IDW 3D interactive",
+          "Rapport PDF 6 pages",
+          "Données piézométriques et analyses nappe"
+        ]
+      },
+      {
+        "@type": "Organization",
+        "name": "SARL G.M.E.P",
+        "url": "https://www.gmep-france.eu",
+        "telephone": "+33607737233",
+        "email": "contact@gmep-france.eu",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "9 rue de la Marne",
+          "addressLocality": "Saint-Maixent-l'École",
+          "postalCode": "79400",
+          "addressCountry": "FR"
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- ── Google Fonts ────────────────────────────────────────────────── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+
+  <style>
+    /* ── RESET & BASE ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --g:      #3ddc84;
+      --navy:   #2d4a7a;
+      --navy2:  #1a2b4a;
+      --bg:     #f8f7f6;
+      --surf:   #ffffff;
+      --text:   #1a1a2e;
+      --muted:  #6b7280;
+      --line:   #e5e7eb;
+      --err:    #dc2626;
+      --ok:     #16a34a;
+      --warn:   #f59e0b;
+      --radius: .75rem;
+      --shadow: 0 2px 12px rgba(0,0,0,.08);
+      --font:   'Inter', system-ui, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 1rem;
+    }
+    a { color: var(--navy); text-decoration: none; }
+    a:hover { color: var(--g); }
+    img { max-width: 100%; display: block; }
+
+    /* ── NAVBAR ────────────────────────────────────────────────────── */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy2);
+      border-bottom: 2px solid var(--g);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .nav-brand {
+      font-size: 1.35rem; font-weight: 800; letter-spacing: .04em;
+      color: #fff; display: flex; align-items: center; gap: .5rem;
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 1.75rem; }
+    .nav-links a {
+      color: #a8c4e8; font-size: .88rem; font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--g); }
+    .nav-cta {
+      background: var(--g); color: var(--navy2) !important;
+      font-weight: 700 !important; padding: .35rem .9rem;
+      border-radius: 2rem; font-size: .82rem !important;
+      transition: opacity .2s;
+    }
+    .nav-cta:hover { opacity: .88; color: var(--navy2) !important; }
+    .nav-burger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+    .nav-burger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; }
+
+    /* ── HERO ──────────────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 60%, #1e3a5f 100%);
+      color: #fff;
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(61,220,132,.10) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(61,220,132,.15);
+      border: 1px solid rgba(61,220,132,.35);
+      color: var(--g); font-size: .78rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: .25rem .85rem; border-radius: 2rem; margin-bottom: 1.25rem;
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.9rem);
+      font-weight: 900; line-height: 1.18; margin-bottom: .75rem;
+      max-width: 780px; margin-left: auto; margin-right: auto;
+    }
+    .hero h1 em { color: var(--g); font-style: normal; }
+    .hero p {
+      font-size: 1.08rem; color: #a8c4e8;
+      max-width: 640px; margin: 0 auto 2rem;
+    }
+    .hero-btns {
+      display: flex; align-items: center; justify-content: center;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .btn-primary {
+      background: var(--g); color: var(--navy2);
+      font-weight: 800; font-size: .95rem;
+      padding: .75rem 1.75rem; border-radius: 2rem;
+      display: inline-flex; align-items: center; gap: .5rem;
+      transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 4px 16px rgba(61,220,132,.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(61,220,132,.45); color: var(--navy2); }
+    .btn-outline {
+      border: 2px solid rgba(255,255,255,.3); color: #fff;
+      font-weight: 600; font-size: .92rem;
+      padding: .72rem 1.65rem; border-radius: 2rem;
+      display: inline-flex; align-items: center; gap: .5rem;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-outline:hover { border-color: var(--g); color: var(--g); }
+    .hero-trial { font-size: .78rem; color: #6b8cb8; margin-top: 1rem; }
+
+    /* ── SECTION WRAPPER ───────────────────────────────────────────── */
+    .section { padding: 4.5rem 2rem; }
+    .section-inner { max-width: 1080px; margin: 0 auto; }
+    .section-label {
+      font-size: .72rem; font-weight: 800; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--g); margin-bottom: .5rem;
+    }
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 800; color: var(--navy2); margin-bottom: 1rem;
+      line-height: 1.25;
+    }
+    .section-sub {
+      font-size: 1rem; color: var(--muted);
+      max-width: 680px; margin-bottom: 2.5rem;
+    }
+    .section-alt { background: var(--surf); }
+
+    /* ── CARDS RÔLE OUTIL ──────────────────────────────────────────── */
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem; margin-top: 2rem;
+    }
+    .role-card {
+      background: var(--surf); border-radius: var(--radius);
+      border: 1px solid var(--line);
+      padding: 1.75rem 1.5rem;
+      box-shadow: var(--shadow);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .role-card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(0,0,0,.11); }
+    .role-icon {
+      width: 48px; height: 48px; border-radius: .6rem;
+      background: linear-gradient(135deg, var(--navy2), var(--navy));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: 1rem;
+    }
+    .role-card h3 { font-size: 1rem; font-weight: 700; color: var(--navy2); margin-bottom: .5rem; }
+    .role-card p { font-size: .88rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── FONCTIONNALITÉS TABLE ─────────────────────────────────────── */
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem; margin-top: 2rem;
+    }
+    .feat-item {
+      display: flex; align-items: flex-start; gap: .75rem;
+      background: var(--bg); border-radius: .6rem;
+      padding: 1rem 1.1rem; border: 1px solid var(--line);
+    }
+    .feat-check {
+      flex-shrink: 0; width: 22px; height: 22px;
+      background: var(--ok); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: .75rem; font-weight: 700; margin-top: .1rem;
+    }
+    .feat-item strong { display: block; font-size: .88rem; color: var(--navy2); font-weight: 700; }
+    .feat-item span { font-size: .78rem; color: var(--muted); }
+
+    /* ── BLOC RÉGLEMENTAIRE ────────────────────────────────────────── */
+    .reg-split {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.5rem; margin-top: 2rem;
+    }
+    .reg-card {
+      border-radius: var(--radius); padding: 1.75rem 1.6rem;
+      border: 2px solid; position: relative;
+    }
+    .reg-card.isdi {
+      background: rgba(220,38,38,.04);
+      border-color: #dc2626;
+    }
+    .reg-card.decret {
+      background: rgba(45,74,122,.04);
+      border-color: var(--navy);
+    }
+    .reg-tag {
+      display: inline-block; font-size: .7rem; font-weight: 800;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: .2rem .65rem; border-radius: 2rem; margin-bottom: .9rem;
+    }
+    .reg-card.isdi .reg-tag { background: #dc2626; color: #fff; }
+    .reg-card.decret .reg-tag { background: var(--navy); color: #fff; }
+    .reg-card h3 { font-size: 1rem; font-weight: 800; margin-bottom: .6rem; }
+    .reg-card.isdi h3 { color: #dc2626; }
+    .reg-card.decret h3 { color: var(--navy); }
+    .reg-card p { font-size: .86rem; color: var(--text); line-height: 1.65; margin-bottom: .75rem; }
+    .reg-card ul { padding-left: 1.1rem; }
+    .reg-card ul li { font-size: .84rem; color: var(--muted); margin-bottom: .3rem; }
+    .reg-sep {
+      background: linear-gradient(135deg, #fef3c7, #fef9ee);
+      border: 1.5px solid var(--warn); border-radius: var(--radius);
+      padding: 1.1rem 1.4rem; margin-top: 1.25rem;
+      display: flex; align-items: flex-start; gap: .75rem;
+    }
+    .reg-sep-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: .1rem; }
+    .reg-sep p { font-size: .86rem; color: #78350f; margin: 0; line-height: 1.6; }
+    .reg-sep strong { color: #92400e; }
+
+    /* ── COULEURS PURGE ────────────────────────────────────────────── */
+    .purge-section { margin-top: 2rem; }
+    .purge-legend {
+      display: flex; flex-wrap: wrap; gap: .75rem;
+      margin-top: 1.25rem;
+    }
+    .purge-chip {
+      display: flex; align-items: center; gap: .5rem;
+      background: var(--surf); border-radius: .5rem;
+      border: 1px solid var(--line); padding: .5rem 1rem;
+      font-size: .83rem;
+    }
+    .purge-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+    .purge-chip strong { font-weight: 700; }
+
+    /* ── TARIFICATION ──────────────────────────────────────────────── */
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem; margin-top: 2rem; max-width: 780px;
+    }
+    .price-card {
+      background: var(--surf); border-radius: var(--radius);
+      border: 1.5px solid var(--line); padding: 1.75rem 1.5rem;
+      text-align: center; box-shadow: var(--shadow);
+      position: relative; transition: transform .2s;
+    }
+    .price-card:hover { transform: translateY(-3px); }
+    .price-card.featured {
+      border-color: var(--g);
+      box-shadow: 0 0 0 3px rgba(61,220,132,.15), var(--shadow);
+    }
+    .price-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--g); color: var(--navy2);
+      font-size: .7rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .08em; padding: .2rem .75rem; border-radius: 2rem;
+    }
+    .price-label { font-size: .78rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .5rem; }
+    .price-amount { font-size: 2rem; font-weight: 900; color: var(--navy2); line-height: 1; }
+    .price-amount span { font-size: 1rem; font-weight: 500; color: var(--muted); }
+    .price-ttc { font-size: .74rem; color: var(--muted); margin: .2rem 0 .9rem; }
+    .price-desc { font-size: .8rem; color: var(--muted); line-height: 1.55; }
+
+    /* ── FORMULAIRE DE CONTACT ─────────────────────────────────────── */
+    .contact-wrap {
+      display: grid; grid-template-columns: 1fr 1.4fr;
+      gap: 3rem; align-items: start; margin-top: 2rem;
+    }
+    .contact-info h3 { font-size: 1.05rem; font-weight: 700; color: var(--navy2); margin-bottom: .75rem; }
+    .contact-info p { font-size: .88rem; color: var(--muted); margin-bottom: 1rem; line-height: 1.7; }
+    .contact-detail {
+      display: flex; align-items: center; gap: .6rem;
+      font-size: .86rem; color: var(--text); margin-bottom: .5rem;
+    }
+    .contact-detail a { color: var(--navy); font-weight: 500; }
+    .contact-detail a:hover { color: var(--g); }
+    .contact-icon { font-size: 1rem; width: 20px; text-align: center; }
+    form.contact-form {
+      background: var(--surf); border-radius: var(--radius);
+      border: 1px solid var(--line); padding: 2rem;
+      box-shadow: var(--shadow);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1rem; }
+    .form-group label { font-size: .82rem; font-weight: 600; color: var(--navy2); }
+    .form-group input, .form-group select, .form-group textarea {
+      border: 1.5px solid var(--line); border-radius: .5rem;
+      padding: .65rem .85rem; font-family: var(--font);
+      font-size: .9rem; color: var(--text); background: var(--bg);
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--navy); box-shadow: 0 0 0 3px rgba(45,74,122,.1);
+    }
+    .form-group textarea { resize: vertical; min-height: 110px; }
+    .btn-submit {
+      width: 100%; background: var(--navy2); color: #fff;
+      font-weight: 700; font-size: .95rem; padding: .8rem;
+      border: none; border-radius: .6rem; cursor: pointer;
+      font-family: var(--font); transition: background .2s, transform .15s;
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+    }
+    .btn-submit:hover { background: var(--navy); transform: translateY(-1px); }
+    .form-notice { font-size: .74rem; color: var(--muted); margin-top: .75rem; text-align: center; }
+
+    /* ── FOOTER ────────────────────────────────────────────────────── */
+    footer {
+      background: var(--navy2);
+      border-top: 2px solid var(--g);
+      color: #a8c4e8; padding: 2.5rem 2rem;
+    }
+    .footer-inner {
+      max-width: 1080px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 2rem;
+    }
+    .footer-brand { font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: .5rem; }
+    .footer-brand span { color: var(--g); }
+    .footer-tagline { font-size: .8rem; color: #6b8cb8; margin-bottom: 1rem; line-height: 1.5; }
+    .footer-reg {
+      font-size: .72rem; color: #4a6491;
+      border-top: 1px solid rgba(255,255,255,.08); padding-top: .75rem; margin-top: .5rem;
+    }
+    .footer-col h4 { font-size: .78rem; font-weight: 700; color: var(--g); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .85rem; }
+    .footer-col a { display: block; font-size: .83rem; color: #a8c4e8; margin-bottom: .4rem; transition: color .2s; }
+    .footer-col a:hover { color: var(--g); }
+    .footer-bottom {
+      max-width: 1080px; margin: 1.5rem auto 0;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 1.25rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: .5rem;
+    }
+    .footer-bottom span { font-size: .76rem; color: #4a6491; }
+
+    /* ── RESPONSIVE ────────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-burger { display: flex; }
+      .nav-links.open {
+        display: flex; flex-direction: column;
+        position: fixed; inset: 60px 0 0 0;
+        background: var(--navy2); padding: 2rem;
+        align-items: flex-start; gap: 1.25rem; z-index: 99;
+      }
+      .reg-split { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 360px; }
+      .contact-wrap { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr; gap: 1.5rem; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 480px) {
+      .section { padding: 3rem 1.25rem; }
+      .hero { padding: 3.5rem 1.25rem 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════════════════════════════════ -->
+<nav class="navbar" role="navigation" aria-label="Navigation principale">
+  <a href="https://www.gmep-france.eu" class="nav-brand">
+    <svg viewBox="0 0 120 32" width="110" height="30" role="img" aria-label="G.M.E.P" style="flex-shrink:0;display:block">
+      <g transform="translate(0,2)">
+        <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+        <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+      </g>
+      <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+    </svg>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="https://www.gmep-france.eu">EQRS &amp; Intrusion de vapeurs</a>
+    <a href="/msp-gmep.html" class="active">MSP — Sols pollués</a>
+    <a href="#contact">Contact</a>
+    <a href="https://www.gmep-france.eu/#/register" class="nav-cta">Essai gratuit 8 jours</a>
+  </div>
+  <div class="nav-burger" id="navBurger" aria-label="Menu" role="button" tabindex="0">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════════════════════════ -->
+<section class="hero" aria-label="Présentation MSP GMEP">
+  <div class="hero-badge">Nouveau — MSP GMEP v1</div>
+  <h1>Diagnostic &amp; Modélisation des<br><em>Sources de Pollution des Sols</em></h1>
+  <p>
+    Vérification automatique des seuils ISDI, détermination de la purge obligatoire,
+    interpolation 3D IDW et rapport PDF réglementaire 6 pages — pour chaque dossier SSP.
+  </p>
+  <div class="hero-btns">
+    <a href="https://www.gmep-france.eu/#/register" class="btn-primary">
+      Essai gratuit 8 jours — S'inscrire
+    </a>
+    <a href="https://www.gmep-france.eu/#/subscribe-msp" class="btn-outline">
+      Voir les tarifs &amp; s'abonner
+    </a>
+  </div>
+  <p class="hero-trial">Essai gratuit 8 jours · Aucune carte bancaire requise · Résiliable à tout moment</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     RÔLE DE L'OUTIL
+════════════════════════════════════════════════════════════════════ -->
+<section class="section" aria-labelledby="role-title">
+  <div class="section-inner">
+    <div class="section-label">Rôle de l'outil</div>
+    <h2 class="section-title" id="role-title">Un logiciel conçu pour le terrain<br>et pour le dossier réglementaire</h2>
+    <p class="section-sub">
+      MSP GMEP centralise l'ensemble du flux de travail d'un diagnostic de pollution des sols :
+      de la saisie des données de terrain jusqu'à la production du rapport opposable,
+      en appliquant automatiquement les référentiels réglementaires en vigueur.
+    </p>
+
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="role-icon">📍</div>
+        <h3>Saisie et gestion des sondages</h3>
+        <p>Coordonnées Lambert-93, altimétrie NGF, profondeurs de prélèvement. Catalogue de plus de 60 substances (HCT, HAP, BTEX, solvants chlorés, PFAS). Données organisées par sondage et par profil stratigraphique.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-icon">⚖️</div>
+        <h3>Vérification réglementaire ISDI</h3>
+        <p>Comparaison automatique des concentrations mesurées aux seuils de l'Arrêté du 12 décembre 2014 (acceptation en ISDI). Détermination de la purge obligatoire lorsque les concentrations dépassent simultanément le seuil ISDI et les valeurs VSA ou VSB du Guide TEX SSP V2.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-icon">🗺️</div>
+        <h3>Modélisation et visualisation 3D</h3>
+        <p>Interpolation spatiale par pondération inverse des distances (IDW, puissance p=2) sur l'ensemble du site. Vue 3D interactive Plotly avec colorimétrie 5 classes calquée sur les seuils ISDI. Cartographie Leaflet avec coordonnées réelles.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-icon">💧</div>
+        <h3>Données nappe et piézométrie</h3>
+        <p>Intégration des relevés piézométriques : altitudes de nappe, gradients hydrauliques, corrélation temporelle avec les analyses de sol. Tableau analytique nappe consolidé dans le rapport.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-icon">📄</div>
+        <h3>Rapport PDF 6 pages automatisé</h3>
+        <p>Couverture · Contexte réglementaire · Vue 3D IDW · Tableau analytique complet · Conformité ISDI par sondage · Synthèse purge obligatoire · Coordonnées. Généré instantanément pour chaque dossier, avec toutes les données du projet.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-icon">💾</div>
+        <h3>Sauvegarde et portabilité</h3>
+        <p>Export et import de dossier au format JSON. Le logiciel fonctionne en autonomie complète (fichier HTML standalone) : aucune installation, aucune dépendance serveur. Compatible Windows, macOS et Linux.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     FONCTIONNALITÉS CLÉS
+════════════════════════════════════════════════════════════════════ -->
+<section class="section section-alt" aria-labelledby="feat-title">
+  <div class="section-inner">
+    <div class="section-label">Fonctionnalités</div>
+    <h2 class="section-title" id="feat-title">Tout ce qu'un dossier SSP exige</h2>
+    <p class="section-sub">Conçu par des ingénieurs en hydrogéologie pour les bureaux d'études environnement.</p>
+
+    <div class="feat-grid">
+      <div class="feat-item">
+        <div class="feat-check">✓</div>
+        <div>
+          <strong>Catalogue &gt; 60 substances</strong>
+          <span>HCT · HAP · BTEX · Solvants chlorés · PFAS · Phénols</span>
+        </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-check">✓</div>
+        <div>
+          <strong>Seuils ISDI Arrêté 12/12/2014</strong>
+          <span>Annexe II §2° — contenu total par substance</span>
+        </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-check">✓</div>
+        <div>
+          <strong>Valeurs VSA et VSB</strong>
+          <span>Guide TEX SSP V2 — usage sensible &amp; moins sensible</span>
+        </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-check">✓</div>
+        <div>
+          <strong>Purge obligatoire automatique</strong>
+          <span>Déclenchée si conc &gt; ISDI ET conc &gt; VSA ou VSB</span>
+        </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-check">✓</div>
+        <div>
+          <strong>Vue 3D IDW interactive</strong>
+          <span>Plotly · palette 5 classes · export image</span>
+        </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-check">✓</div>
+        <div>
+          <strong>Carte Leaflet</strong>
+          <span>Fond IGN/BRGM · coordonnées L93 · emprise purge</span>
+        </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-check">✓</div>
+        <div>
+          <strong>Conformité Décret 2023-1408</strong>
+          <span>Vérification réutilisation terres excavées</span>
+        </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-check">✓</div>
+        <div>
+          <strong>Rapport PDF 6 pages</strong>
+          <span>Mise en page A4 · header/footer réglementaire</span>
+        </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-check">✓</div>
+        <div>
+          <strong>Données piézométriques</strong>
+          <span>Relevés nappe · gradient hydraulique · analyses</span>
+        </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-check">✓</div>
+        <div>
+          <strong>Standalone HTML</strong>
+          <span>Aucune installation · fonctionne hors ligne</span>
+        </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-check">✓</div>
+        <div>
+          <strong>Export / Import JSON</strong>
+          <span>Sauvegarde dossier · reprise de session</span>
+        </div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-check">✓</div>
+        <div>
+          <strong>Mises à jour réglementaires</strong>
+          <span>Catalogue maintenu à jour par GMEP</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Légende palette colorimétrique -->
+    <div class="purge-section">
+      <p style="font-size:.85rem;font-weight:700;color:var(--navy2);margin-bottom:.25rem;">Colorimétrie ISDI — rapport au seuil réglementaire</p>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:.75rem;">Appliquée sur la vue 3D IDW et le tableau analytique.</p>
+      <div class="purge-legend">
+        <div class="purge-chip"><div class="purge-dot" style="background:#16a34a"></div><strong>Conforme ISDI</strong><span>&nbsp;— sous le seuil</span></div>
+        <div class="purge-chip"><div class="purge-dot" style="background:#a3c96b"></div><strong>×1 – ×2</strong><span>&nbsp;— vérification renforcée</span></div>
+        <div class="purge-chip"><div class="purge-dot" style="background:#f59e0b"></div><strong>×2 – ×10</strong><span>&nbsp;— dépassement significatif</span></div>
+        <div class="purge-chip"><div class="purge-dot" style="background:#ef4444"></div><strong>×10 – ×20</strong><span>&nbsp;— dépassement majeur</span></div>
+        <div class="purge-chip"><div class="purge-dot" style="background:#7c3aed"></div><strong>&gt;×20</strong><span>&nbsp;— zone source</span></div>
+        <div class="purge-chip"><div class="purge-dot" style="background:#dc2626;opacity:.5;border:2px solid #dc2626"></div><strong>Plan seuil ISDI</strong><span>&nbsp;— repère visuel 3D</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     CADRE RÉGLEMENTAIRE — DEUX BRANCHES DISTINCTES
+════════════════════════════════════════════════════════════════════ -->
+<section class="section" aria-labelledby="reg-title">
+  <div class="section-inner">
+    <div class="section-label">Cadre réglementaire</div>
+    <h2 class="section-title" id="reg-title">Deux référentiels distincts,<br>deux logiques différentes</h2>
+    <p class="section-sub">
+      MSP GMEP applique rigoureusement les deux cadres réglementaires sans les confondre.
+      La distinction est fondamentale pour la validité juridique de vos conclusions.
+    </p>
+
+    <div class="reg-split">
+
+      <div class="reg-card isdi">
+        <div class="reg-tag">Arrêté du 12 décembre 2014</div>
+        <h3>Acceptation en Installation de Stockage de Déchets Inertes (ISDI)</h3>
+        <p>
+          Fixe les conditions d'admission des terres excavées dans les ISDI.
+          Les seuils de l'Annexe II §2° (contenu total en mg/kg MS) définissent
+          l'acceptabilité de chaque lot de terres en tant que déchet inerte.
+          Tout dépassement de ces seuils interdit l'admission en ISDI sans traitement préalable.
+        </p>
+        <ul>
+          <li>Applicable aux terres excavées qualifiées de <strong>déchets</strong></li>
+          <li>Seuils fixés par substance — contenu total mg/kg MS</li>
+          <li>Dépassement → <strong>Purge obligatoire</strong> ou filière déchet adaptée</li>
+          <li>Procédure d'acceptation préalable obligatoire (Annexe I)</li>
+          <li>Référentiel : seuils ISDI + valeurs VSA/VSB Guide TEX SSP V2</li>
+        </ul>
+      </div>
+
+      <div class="reg-card decret">
+        <div class="reg-tag">Décret 2023-1408 du 29 novembre 2023</div>
+        <h3>Réutilisation des terres excavées dans les projets d'aménagement</h3>
+        <p>
+          Encadre la sortie du statut de déchet pour les terres excavées destinées
+          à être réutilisées <em>in situ</em> ou dans un autre projet d'aménagement.
+          La compatibilité avec l'usage futur du site récepteur est le critère central.
+          Elle ne peut être établie que par un expert habilité au terme d'une EQRS.
+        </p>
+        <ul>
+          <li>Applicable uniquement si les terres sont réutilisées (non mises en décharge)</li>
+          <li>Compatibilité définie par rapport à l'<strong>usage futur</strong> du site récepteur</li>
+          <li>Conditions d'usage, de traçabilité et de suivi définies par décret</li>
+          <li>Conclusions réservées à un expert environnemental habilité</li>
+          <li>Référentiel : Décret 2023-1408 + arrêté d'application</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="reg-sep" role="note" aria-label="Séparation réglementaire obligatoire">
+      <div class="reg-sep-icon">⚠️</div>
+      <p>
+        <strong>Séparation réglementaire obligatoire.</strong>
+        L'Arrêté du 12 décembre 2014 (acceptation en ISDI) et le Décret 2023-1408
+        (réutilisation de terres excavées en aménagement) sont deux référentiels
+        <strong>distincts qui ne doivent pas être confondus.</strong>
+        MSP GMEP ne conclut pas seul à la compatibilité avec un usage futur —
+        cette conclusion reste de la responsabilité exclusive de l'expert
+        environnemental habilité.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     TARIFICATION
+════════════════════════════════════════════════════════════════════ -->
+<section class="section section-alt" id="tarifs" aria-labelledby="tarifs-title">
+  <div class="section-inner">
+    <div class="section-label">Tarification</div>
+    <h2 class="section-title" id="tarifs-title">Accès simple,<br>sans engagement de durée</h2>
+    <p class="section-sub">Toutes les fonctionnalités incluses dès l'essai gratuit.</p>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-label">Essai gratuit</div>
+        <div class="price-amount">0 €</div>
+        <div class="price-ttc">8 jours · 5 sondages maximum</div>
+        <div class="price-desc">Accès complet au logiciel. Rapport PDF inclus. Aucune carte bancaire requise.</div>
+      </div>
+      <div class="price-card featured">
+        <div class="price-badge">Sans engagement</div>
+        <div class="price-label">Mensuel</div>
+        <div class="price-amount">250 €<span> HT</span></div>
+        <div class="price-ttc">300 € TTC / mois</div>
+        <div class="price-desc">Sondages illimités. Catalogue complet. Rapport PDF. Mises à jour réglementaires incluses.</div>
+      </div>
+      <div class="price-card">
+        <div class="price-label">Annuel</div>
+        <div class="price-amount">2 760 €<span> HT</span></div>
+        <div class="price-ttc">3 312 € TTC / an — soit 230 € HT/mois</div>
+        <div class="price-desc">Toutes les fonctionnalités. Priorité support. Économie de 2 mois par rapport au mensuel.</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:1rem;justify-content:center;margin-top:2rem;flex-wrap:wrap">
+      <a href="https://www.gmep-france.eu/#/register" class="btn-primary" style="font-size:.95rem">Essai gratuit 8 jours — S'inscrire</a>
+      <a href="https://www.gmep-france.eu/#/subscribe-msp" class="btn-outline" style="font-size:.95rem">S'abonner</a>
+    </div>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:1.25rem;text-align:center">
+      Tarifs HT — TVA 20 % applicable. Facturation SARL G.M.E.P — Siret 90392773200012.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     FORMULAIRE DE CONTACT
+════════════════════════════════════════════════════════════════════ -->
+<section class="section" id="contact" aria-labelledby="contact-title">
+  <div class="section-inner">
+    <div class="section-label">Contact &amp; Support</div>
+    <h2 class="section-title" id="contact-title">Une question sur le logiciel ?<br>Nous vous répondons.</h2>
+
+    <div class="contact-wrap">
+      <div class="contact-info">
+        <h3>G.M.E.P — Ingénierie Environnementale</h3>
+        <p>
+          SARL G.M.E.P intervient en hydrogéologie, diagnostic et réhabilitation
+          des sites et sols pollués. MSP GMEP est développé en interne par des
+          ingénieurs praticiens, pour répondre aux exigences réelles du terrain
+          et des autorités de contrôle.
+        </p>
+        <div class="contact-detail"><span class="contact-icon">✉</span><a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a></div>
+        <div class="contact-detail"><span class="contact-icon">📞</span><a href="tel:+33607737233">+33 6 07 73 72 33</a></div>
+        <div class="contact-detail"><span class="contact-icon">📍</span><span>9 rue de la Marne · 79400 Saint-Maixent-l'École</span></div>
+        <div class="contact-detail"><span class="contact-icon">🌐</span><a href="https://www.gmep-france.eu">www.gmep-france.eu</a></div>
+
+        <div style="margin-top:1.5rem;padding:1rem 1.1rem;background:var(--bg);border-radius:.6rem;border:1px solid var(--line)">
+          <p style="font-size:.8rem;font-weight:700;color:var(--navy2);margin-bottom:.35rem">Références réglementaires</p>
+          <p style="font-size:.77rem;color:var(--muted);margin:0;line-height:1.7">
+            Arrêté du 12 décembre 2014<br>
+            Décret n° 2023-1408 du 29 novembre 2023<br>
+            Guide TEX SSP V2 — Valeurs VSA/VSB<br>
+            Loi sur l'Eau · ICPE · ALUR
+          </p>
+        </div>
+      </div>
+
+      <form class="contact-form" action="mailto:contact@gmep-france.eu" method="get" enctype="text/plain" aria-label="Formulaire de contact support MSP GMEP">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nom">Nom *</label>
+            <input type="text" id="nom" name="Nom" placeholder="Jean Dupont" required autocomplete="name" />
+          </div>
+          <div class="form-group">
+            <label for="societe">Société</label>
+            <input type="text" id="societe" name="Societe" placeholder="Bureau d'études environnement" autocomplete="organization" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Adresse e-mail *</label>
+          <input type="email" id="email" name="Adresse-email" placeholder="nom@bureau-etudes.fr" required autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="sujet">Objet de la demande</label>
+          <select id="sujet" name="Objet">
+            <option value="Demande essai gratuit">Demande d'essai gratuit</option>
+            <option value="Support technique">Support technique</option>
+            <option value="Demande de devis">Demande de devis</option>
+            <option value="Question reglementaire">Question réglementaire</option>
+            <option value="Autre">Autre</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Message *</label>
+          <textarea id="message" name="Message" placeholder="Décrivez votre besoin, le contexte du projet, ou la question technique..." required></textarea>
+        </div>
+        <button type="submit" class="btn-submit">
+          ✉ Envoyer le message
+        </button>
+        <p class="form-notice">
+          Ce formulaire ouvre votre client mail avec les informations pré-remplies.
+          Vous pouvez aussi écrire directement à
+          <a href="mailto:contact@gmep-france.eu" style="color:var(--navy)">contact@gmep-france.eu</a>.
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════════════ -->
+<footer role="contentinfo">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">G.<span>M</span>.E.P</div>
+      <p class="footer-tagline">
+        Global Management of Environmental Project<br>
+        Hydrogéologie · Sites &amp; Sols Pollués · Réhabilitation<br>
+        SARL — Siret 90392773200012
+      </p>
+      <p class="footer-reg">
+        Arrêté du 12 décembre 2014 · Décret 2023-1408<br>
+        Guide TEX SSP V2 · Loi sur l'Eau · ICPE · ALUR
+      </p>
+    </div>
+    <div class="footer-col">
+      <h4>Logiciels</h4>
+      <a href="https://www.gmep-france.eu">EQRS Johnson &amp; Ettinger</a>
+      <a href="/msp-gmep.html">MSP GMEP — Pollution des sols</a>
+      <a href="https://www.gmep-france.eu/#/register">Essai gratuit 8 jours</a>
+      <a href="https://www.gmep-france.eu/#/subscribe-msp">S'abonner — Tarifs</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a>
+      <a href="tel:+33607737233">+33 6 07 73 72 33</a>
+      <a href="#contact">Formulaire de contact</a>
+      <a href="https://www.linkedin.com/company/gmep" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024–2026 SARL G.M.E.P · Saint-Maixent-l'École (79) · Tous droits réservés</span>
+    <span>MSP GMEP · Arrêté 12/12/2014 · Décret 2023-1408</span>
+  </div>
+</footer>
+
+<!-- ── BURGER MENU JS ─────────────────────────────────────────────── -->
+<script>
+(function(){
+  var burger = document.getElementById('navBurger');
+  var links  = document.getElementById('navLinks');
+  if(!burger || !links) return;
+  function toggle(){
+    var open = links.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  burger.addEventListener('click', toggle);
+  burger.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); }});
+  links.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ links.classList.remove('open'); });
+  });
+})();
+</script>
+
+</body>
+</html>
