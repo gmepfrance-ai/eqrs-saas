@@ -330,6 +330,21 @@ export default function DashboardPage() {
                 Accéder →
               </button>
             </div>
+            {/* EQRS V9 + ECOTOX V9 + Module HUMAIN Tier 3 */}
+            <div className="bg-white border-2 border-[#2ECC71] rounded-lg p-4 shadow-sm hover:shadow-md transition" style={{position:"relative"}}>
+              <span className="absolute top-2 right-2 bg-[#2ECC71] text-white text-xs font-bold px-2 py-0.5 rounded-full">NOUVEAU — Tier 3</span>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded bg-[#2ECC71] text-white flex items-center justify-center text-xs font-bold">HUM</div>
+                <h3 className="text-sm font-bold text-foreground">EQRS V9 + Module HUMAIN</h3>
+              </div>
+              <p className="text-xs text-muted-foreground mb-3">Voie alimentaire humaine — 47 substances Tier 3 — PFAS, PCB, métaux, HAP</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 550 € HT/mois ensuite</p>
+              <button className="w-full text-white py-2 rounded font-semibold text-sm hover:opacity-90" style={{backgroundColor:"#2ECC71"}}
+                onClick={() => { window.location.href = `/api/eqrs-v8-humain-tool?token=${token}`; }}>
+                Accéder →
+              </button>
+            </div>
+
           </div>
           <p className="text-xs text-muted-foreground mt-3 italic">
             À l'expiration de chaque essai, l'outil affiche une page d'avertissement avec le bouton pour souscrire l'abonnement correspondant. Aucun prélèvement automatique.
