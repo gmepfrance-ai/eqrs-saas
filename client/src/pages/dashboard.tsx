@@ -340,7 +340,11 @@ export default function DashboardPage() {
               <p className="text-xs text-muted-foreground mb-3">Voie alimentaire humaine — 47 substances Tier 3 — PFAS, PCB, métaux, HAP</p>
               <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 550 € HT/mois ensuite</p>
               <button className="w-full text-white py-2 rounded font-semibold text-sm hover:opacity-90" style={{backgroundColor:"#2ECC71"}}
-                onClick={() => { window.location.href = `/api/eqrs-v8-humain-tool?token=${token}`; }}>
+                onClick={() => {
+                  fetch(`/api/eqrs-v8-humain-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
+                    .then(() => { window.location.href = `/api/eqrs-v8-humain-tool?token=${token}`; })
+                    .catch(() => { window.location.href = `/api/eqrs-v8-humain-tool?token=${token}`; });
+                }}>
                 Accéder →
               </button>
             </div>
