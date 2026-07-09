@@ -77,7 +77,7 @@ export default function LandingPage() {
             <p>{t("v2.tools.subtitle")}</p>
           </div>
           <div className="v2-tools-grid">
-            {/* Carte HUMAIN Tier 3 : EQRS V8 + ECOTOX + Module HUMAIN */}
+            {/* Carte HUMAIN Tier 3 : EQRS V9 + ECOTOX V9 + Module HUMAIN */}
             <article className="v2-tool-card" style={{ border: "2px solid #2ecc71" }}>
               <span className="v2-badge" style={{ background: "#2ecc71", color: "#fff" }}>{t("v2.tools.humain.badge")}</span>
               <div className="v2-tool-icon" aria-hidden="true">
@@ -102,7 +102,7 @@ export default function LandingPage() {
               </a>
             </article>
 
-            {/* Carte NOUVELLE 1 : EQRS V31.05 + ECOTOX V8 */}
+            {/* Carte NOUVELLE 1 : EQRS V9 + ECOTOX V9 */}
             <article className="v2-tool-card">
               <span className="v2-badge">{t("v2.tools.eqrs_v31.badge")}</span>
               <div className="v2-tool-icon" aria-hidden="true">
