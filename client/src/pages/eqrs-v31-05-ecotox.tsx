@@ -3,7 +3,7 @@ import { navigateTo } from "@/lib/navigation";
 import { V2Footer } from "@/components/v2-footer";
 import { useAuth } from "@/lib/auth";
 
-/** Page produit — EQRS V31.05 + Extension ECOTOX V8 (HHRA + ERE) */
+/** Page produit — EQRS V9 + ECOTOX V9 V8 (HHRA + ERE) */
 export default function EqrsV3105EcotoxPage() {
   const { user, token } = useAuth();
 
@@ -34,11 +34,11 @@ export default function EqrsV3105EcotoxPage() {
           <div className="v2-hero-grid">
             <div>
               <span className="v2-hero-badge" style={{ background: "linear-gradient(135deg,#39e07a 0%,#1a5276 100%)", color: "#fff" }}>
-                NOUVEAU — Extension ECOTOX V8 disponible
+                NOUVEAU — Extension ECOTOX V9 disponible
               </span>
-              <h1>EQRS V31.05 + Extension ECOTOX</h1>
+              <h1>EQRS V9 + ECOTOX V9</h1>
               <p className="lead">
-                La <strong>référence française HHRA + ERE</strong>. 104 substances en risque sanitaire humain + 12 substances
+                La <strong>référence française HHRA + ERE</strong>. 104 substances en risque sanitaire humain + 47 substances écotox Tier 3
                 écotox, approche <strong>Tier 1 et Tier 2</strong>, et 5 modules avancés exclusifs : <strong>Monte-Carlo</strong>,{" "}
                 <strong>calcul inverse</strong>, <strong>simulation temporelle 70 ans</strong>, <strong>chaîne trophique</strong> et{" "}
                 <strong>mélange par organe</strong>. Conçu pour les BE SSP, les industriels HSE/ICPE, les hydrogéologues et les
@@ -49,7 +49,7 @@ export default function EqrsV3105EcotoxPage() {
                   S'abonner — 395 € HT/mois
                 </button>
                 <button className="v2-btn v2-btn-outline" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>
-                  Essai gratuit 14 jours
+                  Essai gratuit 8 jours
                 </button>
               </div>
             </div>
@@ -75,7 +75,7 @@ export default function EqrsV3105EcotoxPage() {
         <div className="container">
           <div className="v2-section-head">
             <span className="v2-section-eyebrow">Présentation</span>
-            <h2>EQRS V31.05 — l'évaluation des risques sanitaires nouvelle génération</h2>
+            <h2>EQRS V9 — l'évaluation des risques sanitaires nouvelle génération</h2>
             <p>
               104 substances paramétrées, 22 onglets interactifs, rapport PDF 14 pages et cartographie Leaflet native.
               Toutes les VTR sont issues du référentiel ANSES et tenues à jour.
@@ -97,7 +97,7 @@ export default function EqrsV3105EcotoxPage() {
         </div>
       </section>
 
-      {/* === 2. NOUVEAUTÉ V8 — MODULE ECOTOX === */}
+      {/* === 2. NOUVEAUTÉ V9 — MODULE ECOTOX === */}
       <section
         className="v2-section"
         style={{ background: "linear-gradient(180deg,#f0fff4 0%,#e8f5ec 100%)", borderTop: "3px solid #39e07a", borderBottom: "3px solid #39e07a" }}
@@ -105,11 +105,11 @@ export default function EqrsV3105EcotoxPage() {
         <div className="container">
           <div className="v2-section-head">
             <span className="v2-section-eyebrow" style={{ background: "#1a5276", color: "#fff", padding: "4px 12px", borderRadius: 4, letterSpacing: "0.5px" }}>
-              NOUVEAUTÉ V8 — MODULE ECOTOX
+              NOUVEAUTÉ V9 — MODULE ECOTOX
             </span>
             <h2>Le risque écologique (ERE) ajouté au risque sanitaire (HHRA)</h2>
             <p>
-              Là où EQRS V31.05 évalue le <strong>risque sanitaire humain</strong> (QD, ERI, VLEP), l'extension ECOTOX V8 ajoute
+              Là où EQRS V9 évalue le <strong>risque sanitaire humain</strong> (QD, ERI, VLEP), l'extension ECOTOX V9 ajoute
               le <strong>risque écologique</strong> par quotient PEC/PNEC et transferts trophiques vers la faune sauvage — dans
               la même interface.
             </p>
@@ -118,7 +118,7 @@ export default function EqrsV3105EcotoxPage() {
             {[
               { t: "Tier 1 — 7 récepteurs sentinelles", d: "Quotient PEC/PNEC sur le sol (plantes terrestres, vers de terre Eisenia fetida, micro-organismes), l'eau superficielle (poisson, daphnie D. magna, algue P. subcapitata) et l'eau souterraine (macro-invertébrés hyporhéiques)." },
               { t: "Tier 2 — 5 prédateurs trophiques", d: "Transferts trophiques (Sample & Suter ORNL/TM-13391) sur 🐦 Rouge-gorge, 🐭 Musaraigne, 🐹 Campagnol, 🦩 Héron et 🦦 Loutre." },
-              { t: "Cascade PNEC", d: "Dérivation hiérarchisée des PNEC : INERIS → ECHA REACH (R.10) → US EPA Eco-SSL. 12 substances en V8 : Pb, Cd, Zn, Cu, Ni, As, Hg, Cr VI, benzène, toluène, B(a)P, PCB total." },
+              { t: "Cascade PNEC", d: "Dérivation hiérarchisée des PNEC : INERIS → ECHA REACH (R.10) → US EPA Eco-SSL. 47 substances en V9 : PFAS, métaux, HAP, PCB/dioxines, BTEX, solvants chlorés, pesticides." },
               { t: "Code couleur RQ", d: "Risk Quotient lisible : 🟢 < 0,1 négligeable, 🟠 < 1 faible, 🔴 ≥ 1 potentiel — pour chaque récepteur et chaque substance." },
             ].map((f) => (
               <div key={f.t} style={{ background: "#fff", borderRadius: 14, padding: 24, borderLeft: "4px solid #39e07a" }}>
@@ -135,7 +135,7 @@ export default function EqrsV3105EcotoxPage() {
         <div className="container">
           <div className="v2-section-head">
             <span className="v2-section-eyebrow">Comparatif</span>
-            <h2>EQRS V31.05 + ECOTOX vs MODUL'ERS vs RISC5</h2>
+            <h2>EQRS V9 + ECOTOX vs MODUL'ERS vs RISC5</h2>
             <p>Le seul outil français combinant HHRA (humain) et ERE (écologique) dans une même interface.</p>
           </div>
           <div style={{ overflowX: "auto" }}>
@@ -145,7 +145,7 @@ export default function EqrsV3105EcotoxPage() {
                   <th style={{ padding: 10, textAlign: "left", border: "1px solid #0e2f44" }}>Critère</th>
                   <th style={cellTh}>RISC5</th>
                   <th style={cellTh}>MODUL'ERS (INERIS)</th>
-                  <th style={{ ...cellTh, width: "22%", background: "#39e07a", color: "#0e2f44" }}>EQRS V31.05 + ECOTOX</th>
+                  <th style={{ ...cellTh, width: "22%", background: "#39e07a", color: "#0e2f44" }}>EQRS V9 + ECOTOX</th>
                 </tr>
               </thead>
               <tbody>
@@ -153,13 +153,13 @@ export default function EqrsV3105EcotoxPage() {
                   ["Dernière mise à jour", "2014 (gelé)", "Actif", "Juin 2026", "#c0392b", "#27ae60"],
                   ["Plateforme", "Windows desktop", "Windows + clé USB", "Web + Excel", "#999", "#999"],
                   ["Accompagnement", "Tutoriels en ligne", "Formation présentielle", "Formation à distance + études de cas utilisateur", "#999", "#999"],
-                  ["Substances couvertes", "Bibliothèque US EPA", "~100 (INERIS)", "104 HHRA + 12 ECOTOX", "#999", "#999"],
+                  ["Substances couvertes", "Bibliothèque US EPA", "~100 (INERIS)", "104 HHRA + 47 ECOTOX", "#999", "#999"],
                   ["PFAS UE 2020 (20 subst.)", "✗", "Partiel", "✓", "#c0392b", "#999"],
                   ["Calcul inverse (Cmax pour QD/ERI cible)", "Partiel", "✗", "✓", "#999", "#c0392b"],
                   ["Monte-Carlo 1000 tirages", "Limité", "✓", "✓ (+visuel)", "#999", "#27ae60"],
                   ["Simulation temporelle 70 ans", "Partiel", "✓", "✓ DeVaull 2007", "#999", "#27ae60"],
                   ["Chaîne trophique humaine", "✗", "✓", "✓ Trapp + Travis + INCA 3", "#c0392b", "#27ae60"],
-                  ["Écotoxicologie Tier 1 + 2", "✗", "Partiel", "✓ ECOTOX V8", "#c0392b", "#999"],
+                  ["Écotoxicologie Tier 1 + 2", "✗", "Partiel", "✓ ECOTOX V9", "#c0392b", "#999"],
                   ["Cascade PNEC INERIS/ECHA/EPA", "✗", "INERIS uniquement", "✓ Triple cascade", "#c0392b", "#999"],
                   ["Cartographie Leaflet + IGN + BRGM", "✗", "Partiel", "✓ native", "#c0392b", "#999"],
                 ].map((r, i) => (
@@ -212,19 +212,19 @@ export default function EqrsV3105EcotoxPage() {
         <div className="container">
           <div className="v2-section-head">
             <span className="v2-section-eyebrow">Tarif</span>
-            <h2>Abonnez-vous à EQRS V31.05 + ECOTOX</h2>
+            <h2>Abonnez-vous à EQRS V9 + ECOTOX</h2>
           </div>
           <div className="v2-pricing-grid" style={{ maxWidth: 520, margin: "0 auto" }}>
             <div className="v2-price-card featured">
               <span className="v2-badge">HHRA + ERE</span>
               <h3>Abonnement mensuel</h3>
-              <p className="sub">EQRS V31.05 + extension ECOTOX V8</p>
+              <p className="sub">EQRS V9 + extension ECOTOX V9</p>
               <div className="v2-price-amount">
                 <span className="currency">€</span>395
               </div>
               <div className="v2-price-period">HT / mois</div>
               <ul className="v2-price-features">
-                <li>104 substances HHRA + 12 substances écotox</li>
+                <li>104 substances HHRA + 47 substances écotox Tier 3</li>
                 <li>5 modules avancés (Monte-Carlo, calcul inverse, temporel, trophique, mélange)</li>
                 <li>Écotoxicologie Tier 1 + Tier 2</li>
                 <li>Rapport PDF 14 pages + cartographie Leaflet</li>
@@ -237,7 +237,7 @@ export default function EqrsV3105EcotoxPage() {
             </div>
           </div>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginTop: 24 }}>
-            <button className="v2-btn v2-btn-ghost" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 14 jours</button>
+            <button className="v2-btn v2-btn-ghost" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 8 jours</button>
             <a href="/contact" className="v2-btn v2-btn-ghost">Demander une démo</a>
           </div>
         </div>
@@ -247,12 +247,12 @@ export default function EqrsV3105EcotoxPage() {
       <section className="v2-section">
         <div className="container">
           <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, padding: "32px", textAlign: "center", maxWidth: 820, margin: "0 auto" }}>
-            <h3 style={{ marginTop: 0, color: "#0e2f44" }}>Note technique — EQRS V31.05 + ECOTOX</h3>
+            <h3 style={{ marginTop: 0, color: "#0e2f44" }}>Note technique — EQRS V9 + ECOTOX</h3>
             <p style={{ color: "#374151", lineHeight: 1.6 }}>
               Téléchargez la note technique complète : architecture des 22 onglets, méthodologie HHRA et ERE, références
               scientifiques et exemples de calcul.
             </p>
-            <a href="/notes-techniques/Note_Technique_EQRS_V31_05_ECOTOX.pdf" target="_blank" rel="noopener noreferrer" className="v2-btn v2-btn-primary">
+            <a href="/notes-techniques/Note_Technique_EQRS_V9_ECOTOX.pdf" target="_blank" rel="noopener noreferrer" className="v2-btn v2-btn-primary">
               Télécharger la note technique (PDF)
             </a>
           </div>
