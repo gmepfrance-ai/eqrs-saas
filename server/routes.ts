@@ -95,6 +95,17 @@ try {
   console.error("Warning: Could not load eaux-pluviales-tool.html", e);
 }
 
+// Load EQRS V8 Humain (Module Tier 3 — Voie alimentaire) tool HTML at startup
+let eqrsV8HumainToolHtml = "";
+try {
+  eqrsV8HumainToolHtml = fs.readFileSync(
+    path.resolve(process.cwd(), "eqrs-v8-humain-tool.html"),
+    "utf-8"
+  );
+} catch (e) {
+  console.error("Warning: Could not load eqrs-v8-humain-tool.html", e);
+}
+
 // Stripe setup
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "sk_test_placeholder";
 const isStripeConfigured =
@@ -2035,6 +2046,35 @@ export async function registerRoutes(
       res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       return res.send(protectToolHtml(eauxPluvialesToolHtml));
+    }
+  );
+
+  // ── EQRS V8 Humain — Module Tier 3 (Voie alimentaire) : accès outil ──────
+  app.get(
+    "/api/eqrs-v8-humain-tool",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      if (!eqrsV8HumainToolHtml) return res.status(503).json({ message: "Outil EQRS V8 Humain non disponible — fichier eqrs-v8-humain-tool.html manquant" });
+      if (!isAdminEmail((req.user as any).email)) {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const humainSub = subs.find(s => s.tool === "humain" && (s.status === "active" || s.status === "trialing"));
+        if (!humainSub) {
+          return res.status(403).json({ message: "Abonnement Module HUMAIN requis pour accéder à cet outil." });
+        }
+        if (humainSub.status === "trialing" && humainSub.currentPeriodEnd && new Date(humainSub.currentPeriodEnd) < new Date()) {
+          try { await storage.updateSubscription(humainSub.id, { status: "expired" }); } catch {}
+          res.setHeader("Content-Type", "text/html; charset=utf-8");
+          return res.status(403).send(trialExpiredHtml("/#/subscribe-eqrs-v8-humain", "Module HUMAIN — EQRS V9 Tier 3 Voie alimentaire", 8));
+        }
+      }
+      res.setHeader("X-Frame-Options", "SAMEORIGIN");
+      res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://unpkg.com"
+      );
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.send(protectToolHtml(eqrsV8HumainToolHtml));
     }
   );
 
