@@ -95,7 +95,7 @@ try {
   console.error("Warning: Could not load eaux-pluviales-tool.html", e);
 }
 
-// Load EQRS V8 Humain (Module Tier 3 — Voie alimentaire) tool HTML at startup
+// Load EQRS V9 Humain (Module Tier 3 — Voie alimentaire) tool HTML at startup
 let eqrsV8HumainToolHtml = "";
 try {
   eqrsV8HumainToolHtml = fs.readFileSync(
@@ -1337,7 +1337,7 @@ export async function registerRoutes(
                     tool === "rabattement" ? "Rabattement de nappe — Theis + Dupuit-Thiem" :
                     tool === "tsn" ? "TSN — Transfert Sol vers Nappe" :
                     tool === "eaux_pluviales" ? "Gestion des eaux pluviales — DLE / GEP v2.1" :
-                    tool === "humain" ? "Module HUMAIN — EQRS V8 Tier 3" :
+                    tool === "humain" ? "Module HUMAIN — EQRS V9 Tier 3" :
                     "EQRS — Johnson & Ettinger";
                   const toolUrl = "https://www.gmep-france.eu/#/dashboard";
                   const planLabel =
@@ -2049,12 +2049,12 @@ export async function registerRoutes(
     }
   );
 
-  // ── EQRS V8 Humain — Module Tier 3 (Voie alimentaire) : accès outil ──────
+  // ── EQRS V9 Humain — Module Tier 3 (Voie alimentaire) : accès outil ──────
   app.get(
     "/api/eqrs-v8-humain-tool",
     requireAuth as any,
     async (req: AuthRequest, res: Response) => {
-      if (!eqrsV8HumainToolHtml) return res.status(503).json({ message: "Outil EQRS V8 Humain non disponible — fichier eqrs-v8-humain-tool.html manquant" });
+      if (!eqrsV8HumainToolHtml) return res.status(503).json({ message: "Outil EQRS V9 Humain non disponible — fichier eqrs-v8-humain-tool.html manquant" });
       if (!isAdminEmail((req.user as any).email)) {
         const subs = await storage.getSubscriptionsByUserId(req.user!.id);
         const humainSub = subs.find(s => s.tool === "humain" && (s.status === "active" || s.status === "trialing"));
