@@ -220,21 +220,21 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-bold text-foreground">EQRS V7 Johnson &amp; Ettinger</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-3">74 substances — Calcul QD &amp; ERI — EPA 2004</p>
-              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 208 € HT/mois ensuite</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 208 € HT/mois ensuite</p>
               <button className="w-full bg-[#1a5276] text-white py-2 rounded font-semibold text-sm hover:bg-[#0e2f44]"
                 onClick={() => { window.location.href = `/api/tool?token=${token}`; }}>
                 Accéder →
               </button>
             </div>
 
-            {/* EQRS V31 + ECOTOX */}
+            {/* EQRS V9 + ECOTOX V9 */}
             <div className="bg-white border-2 border-[#1a5276] rounded-lg p-4 shadow-sm hover:shadow-md transition">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-8 h-8 rounded bg-[#1a5276] text-white flex items-center justify-center text-xs font-bold">V31</div>
-                <h3 className="text-sm font-bold text-foreground">EQRS V31.05 + ECOTOX V8</h3>
+                <div className="w-8 h-8 rounded bg-[#1a5276] text-white flex items-center justify-center text-xs font-bold">V9</div>
+                <h3 className="text-sm font-bold text-foreground">EQRS V9 + ECOTOX V9</h3>
               </div>
-              <p className="text-xs text-muted-foreground mb-3">104 substances — HHRA + ERE — Polluants éternels</p>
-              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 395 € HT/mois ensuite</p>
+              <p className="text-xs text-muted-foreground mb-3">104 substances HHRA + 47 écotox Tier 3 — PFAS, PCB, métaux</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 395 € HT/mois ensuite</p>
               <button className="w-full bg-[#1a5276] text-white py-2 rounded font-semibold text-sm hover:bg-[#0e2f44]"
                 onClick={() => { window.location.href = `/api/eqrs-v31-ecotox-tool?token=${token}`; }}>
                 Accéder →
@@ -290,7 +290,7 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-bold text-foreground">Schéma Conceptuel</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-3">SVG Source › Vecteur › Cible — IEM + PG</p>
-              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 850 € HT/an ensuite</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 850 € HT/an ensuite</p>
               <button className="w-full bg-[#6f42c1] text-white py-2 rounded font-semibold text-sm hover:opacity-90"
                 onClick={() => { window.location.href = `/api/schema-conceptuel-tool?token=${token}`; }}>
                 Accéder →
