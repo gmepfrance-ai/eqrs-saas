@@ -36,10 +36,10 @@ export default function TarifsPage() {
       <section className="v2-section">
         <div className="container">
           <div className="v2-pricing-grid">
-            {/* NOUVEAU Tier 3 — EQRS V8 + ECOTOX + Module HUMAIN */}
+            {/* NOUVEAU Tier 3 — EQRS V9 + ECOTOX V9 + Module HUMAIN */}
             <div className="v2-price-card featured" style={{ border: "2px solid #2ecc71" }}>
               <span className="v2-badge" style={{ background: "#2ecc71", color: "#fff" }}>NOUVEAU — Tier 3</span>
-              <h3>EQRS V8 + ECOTOX + Module HUMAIN</h3>
+              <h3>EQRS V9 + ECOTOX V9 + Module HUMAIN</h3>
               <p className="sub">Chaîne trophique — voie alimentaire humaine complète</p>
               <div className="v2-price-amount">
                 <span className="currency">€</span>550
@@ -50,7 +50,7 @@ export default function TarifsPage() {
                 <li>Module élevage — BTF fourrage→tissu (Battelle 2019)</li>
                 <li>Module aquatique — BAF eau→poisson (Burkhard 2021)</li>
                 <li>VTR EFSA 2020 — TWI PFAS somme 4 (4,4 ng/kg/sem)</li>
-                <li>7 substances : PFOS, PFOA, PCB, B[a]P, Cd, MeHg, As</li>
+                <li>47 substances : PFAS, métaux, HAP, PCB, BTEX, solvants, pesticides</li>
                 <li>Conforme INERIS DRC-09-103096-09387C</li>
               </ul>
               <button
