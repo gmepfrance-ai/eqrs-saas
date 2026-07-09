@@ -96,7 +96,7 @@ export default function SubscribeEqrsV8HumainPage() {
             <Leaf className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-extrabold text-foreground">EQRS V8 + ECOTOX + Module HUMAIN</h1>
+            <h1 className="text-xl font-extrabold text-foreground">EQRS V9 + ECOTOX V9 + Module HUMAIN</h1>
             <p className="text-xs text-muted-foreground">Voie alimentaire humaine — chaîne trophique PFAS/PCB/métaux — Tier 3</p>
           </div>
         </div>
@@ -156,14 +156,14 @@ export default function SubscribeEqrsV8HumainPage() {
 
         {/* Fonctionnalités incluses */}
         <div className="rounded-xl border p-6 bg-white mb-6">
-          <h3 className="font-bold text-sm mb-4" style={{ color: "#1a2b4a" }}>Fonctionnalités incluses — EQRS V8 + ECOTOX + Module HUMAIN</h3>
+          <h3 className="font-bold text-sm mb-4" style={{ color: "#1a2b4a" }}>Fonctionnalités incluses — EQRS V9 + ECOTOX V9 + Module HUMAIN</h3>
           <ul className="space-y-2 text-sm" style={{ columns: 2, columnGap: "2rem" }}>
-            <PricingItem>Tout EQRS V8 + ECOTOX V8 inclus</PricingItem>
+            <PricingItem>Tout EQRS V9 + ECOTOX V9 inclus</PricingItem>
             <PricingItem>Voie végétale — TF sol→plante (Blaine 2014)</PricingItem>
             <PricingItem>Voie élevage — BTF fourrage→tissu (Battelle 2019)</PricingItem>
             <PricingItem>Voie aquatique — BAF eau→poisson (Burkhard 2021)</PricingItem>
-            <PricingItem>7 substances : PFOS, PFOA, PCB, B[a]P, Cd, MeHg, As</PricingItem>
-            <PricingItem>VTR EFSA 2020 — TWI PFAS somme 4 = 4,4 ng/kg/sem</PricingItem>
+            <PricingItem>47 substances : PFAS (4), métaux (14), HAP (6), PCB/dioxines (2), BTEX (4), solvants chlorés (6), pesticides (11)</PricingItem>
+            <PricingItem>VTR EFSA 2020 — TWI PFAS somme 4 = 4,4 ng/kg/sem — 47 VTR documentées V9</PricingItem>
             <PricingItem>4 profils récepteurs (adulte, enfant, femme enceinte, pêcheur)</PricingItem>
             <PricingItem>QD + ERI alimentaires + sommation INERIS DRC-09-103096</PricingItem>
             <PricingItem>Note technique chaîne trophique + cas brochet PFOS incluse</PricingItem>
