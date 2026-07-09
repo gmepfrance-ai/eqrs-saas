@@ -2049,6 +2049,90 @@ export async function registerRoutes(
     }
   );
 
+
+  // ── EQRS V9 Humain — Module Tier 3 : activation essai gratuit 8 jours ──
+  app.post(
+    "/api/eqrs-v8-humain-trial/activate",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      try {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const existing = subs.find(s => s.tool === "humain");
+        if (existing && (existing.status === "active" || existing.status === "trialing")) {
+          return res.status(409).json({ message: "Vous avez déjà un accès Module HUMAIN actif ou en cours d'essai." });
+        }
+        const trialEnd = new Date();
+        trialEnd.setDate(trialEnd.getDate() + 8);
+        let sub;
+        if (existing) {
+          sub = await storage.updateSubscription(existing.id, {
+            status: "trialing",
+            plan: "humain_trial",
+            tool: "humain",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        } else {
+          sub = await storage.createSubscription(req.user!.id, {
+            status: "trialing",
+            plan: "humain_trial",
+            tool: "humain",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        }
+
+        // Email de confirmation activation essai Module HUMAIN
+        try {
+          const resendKey = process.env.RESEND_API_KEY;
+          if (resendKey) {
+            const { Resend } = require("resend");
+            const resend = new Resend(resendKey);
+            const user = await storage.getUser(req.user!.id);
+            const trialEndFr = trialEnd.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+            await resend.emails.send({
+              from: "GMEP <noreply@gmep-france.eu>",
+              to: req.user!.email,
+              subject: "GMEP EQRS V9 + Module HUMAIN — Votre essai gratuit de 8 jours est activé",
+              html: `
+                <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+                  <div style="background:#2ECC71;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+                    <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+                    <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">EQRS V9 + ECOTOX V9 + Module HUMAIN — Voie alimentaire Tier 3</p>
+                  </div>
+                  <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+                    <p style="font-size:16px;">Bonjour \${user?.name || req.user!.email},</p>
+                    <p>Votre essai gratuit <strong>EQRS V9 + Module HUMAIN Tier 3</strong> est maintenant actif. Accès complet pendant <strong>8 jours</strong>.</p>
+                    <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
+                      <tr style="background:#eafaf1;"><td style="padding:10px;border:1px solid #a9dfbf;font-weight:bold;">Outil</td><td style="padding:10px;border:1px solid #a9dfbf;">EQRS V9 + ECOTOX V9 + Module HUMAIN Tier 3</td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Substances</td><td style="padding:10px;border:1px solid #e2e8f0;">47 substances — PFAS, métaux, HAP, PCB, BTEX, solvants, pesticides</td></tr>
+                      <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Durée essai</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours</td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Accès jusqu'au</td><td style="padding:10px;border:1px solid #e2e8f0;"><strong>\${trialEndFr}</strong></td></tr>
+                      <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #e2e8f0;">\${req.user!.email}</td></tr>
+                    </table>
+                    <p style="font-size:13px;color:#64748b;">Après les 8 jours, l'accès est bloqué. Abonnement : 550 € HT/mois ou 5 200 € HT/an.</p>
+                    <div style="text-align:center;margin:28px 0;">
+                      <a href="https://app.gmep-france.eu/api/eqrs-v8-humain-tool" style="background:#2ECC71;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder au Module HUMAIN →</a>
+                    </div>
+                    <p style="font-size:13px;color:#64748b;">Référentiels : INERIS DRC-09-103096 — VTR EFSA 2020 — ANSES INCA 3</p>
+                    <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a> — Tél. 06 07 73 72 33</p>
+                    <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+                    <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+                  </div>
+                </div>
+              `,
+            });
+            console.log(`[HUMAIN TRIAL EMAIL] Sent to \${req.user!.email}`);
+          }
+        } catch (emailErr: any) {
+          console.error("[HUMAIN TRIAL EMAIL] Failed:", emailErr.message);
+        }
+
+        return res.json({ message: "Essai Module HUMAIN activé (8 jours)", subscription: sub });
+      } catch (err: any) {
+        return res.status(500).json({ message: err.message || "Erreur lors de l'activation de l'essai" });
+      }
+    }
+  );
+
   // ── EQRS V9 Humain — Module Tier 3 (Voie alimentaire) : accès outil ──────
   app.get(
     "/api/eqrs-v8-humain-tool",
