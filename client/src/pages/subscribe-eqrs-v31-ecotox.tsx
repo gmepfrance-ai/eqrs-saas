@@ -94,7 +94,7 @@ export default function SubscribeEqrsV31EcotoxPage() {
             <FlaskConical className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-extrabold text-foreground">EQRS V31.05 + ECOTOX V8</h1>
+            <h1 className="text-xl font-extrabold text-foreground">EQRS V9 + ECOTOX V9</h1>
             <p className="text-xs text-muted-foreground">HHRA + ERE — 104 substances + écotoxicologie — Abonnement mensuel</p>
           </div>
         </div>
@@ -111,7 +111,7 @@ export default function SubscribeEqrsV31EcotoxPage() {
           <p className="text-xs text-muted-foreground mb-6">Facturation mensuelle. Résiliable à tout moment.</p>
 
           <ul className="space-y-2 mb-6 text-sm">
-            <PricingItem>104 substances HHRA + 12 substances écotox</PricingItem>
+            <PricingItem>104 substances HHRA + 47 substances écotox Tier 3</PricingItem>
             <PricingItem>5 modules avancés (Monte-Carlo, calcul inverse, temporel, trophique, mélange)</PricingItem>
             <PricingItem>Écotoxicologie Tier 1 (7 récepteurs) + Tier 2 (5 prédateurs)</PricingItem>
             <PricingItem>Cascade PNEC INERIS / ECHA REACH / US EPA Eco-SSL</PricingItem>
@@ -150,7 +150,7 @@ export default function SubscribeEqrsV31EcotoxPage() {
             onClick={handleTrial}
           >
             {trialLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-            {user ? "Démarrer mon essai 14 jours" : "S'inscrire + Essai gratuit 14 jours"}
+            {user ? "Démarrer mon essai 8 jours" : "S'inscrire + Essai gratuit 8 jours"}
           </Button>
 
           {!user && (
@@ -167,7 +167,7 @@ export default function SubscribeEqrsV31EcotoxPage() {
         </div>
 
         <div className="mt-4 bg-blue-50 border border-blue-100 rounded-lg p-4 text-xs text-blue-800">
-          <strong>Note :</strong> l'essai gratuit de 14 jours et l'abonnement utilisent le même compte. Si vous testez déjà un autre logiciel GMEP, votre mot de passe reste identique.
+          <strong>Note :</strong> l'essai gratuit de 8 jours et l'abonnement utilisent le même compte. Si vous testez déjà un autre logiciel GMEP, votre mot de passe reste identique.
         </div>
       </div>
       <V2Footer />
