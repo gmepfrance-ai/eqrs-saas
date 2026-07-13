@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { V2Header } from "@/components/v2-header";
 import { V2Footer } from "@/components/v2-footer";
 import { useAuth } from "@/lib/auth";
@@ -7,6 +7,15 @@ import { useTranslation } from "@/lib/i18n";
 export default function LoginPage() {
   const { login } = useAuth();
   const { t } = useTranslation();
+
+  // Récupère un plan transmis depuis le site marketing (ex: ?plan=ssp3d_monthly)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const plan = params.get("plan");
+    if (plan) {
+      localStorage.setItem("pending_plan", plan);
+    }
+  }, []);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
