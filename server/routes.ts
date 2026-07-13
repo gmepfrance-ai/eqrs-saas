@@ -95,6 +95,17 @@ try {
   console.error("Warning: Could not load eaux-pluviales-tool.html", e);
 }
 
+// Load 3D_SSP (SAR³ — Superposition 3D pollution sols/nappe) tool HTML at startup
+let ssp3dToolHtml = "";
+try {
+  ssp3dToolHtml = fs.readFileSync(
+    path.resolve(process.cwd(), "3d-ssp-tool.html"),
+    "utf-8"
+  );
+} catch (e) {
+  console.error("Warning: Could not load 3d-ssp-tool.html", e);
+}
+
 // Load EQRS V9 Humain (Module Tier 3 — Voie alimentaire) tool HTML at startup
 let eqrsV8HumainToolHtml = "";
 try {
@@ -140,6 +151,10 @@ const STRIPE_PRICE_HUMAIN_ANNUAL =
   process.env.STRIPE_PRICE_HUMAIN_ANNUAL || "";
 const STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL =
   process.env.STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL || "";
+const STRIPE_PRICE_SSP3D_MONTHLY =
+  process.env.STRIPE_PRICE_SSP3D_MONTHLY || "price_1TslXb3A2g3lkch9jVPitmfl";
+const STRIPE_PRICE_SSP3D_ANNUAL =
+  process.env.STRIPE_PRICE_SSP3D_ANNUAL || "price_1TslXk3A2g3lkch9kk8hyq25";
 const STRIPE_WEBHOOK_SECRET =
   process.env.STRIPE_WEBHOOK_SECRET || "whsec_placeholder";
 
@@ -316,6 +331,31 @@ async function requireMspSubscription(
       try { await storage.updateSubscription(mspSub.id, { status: "expired" }); } catch {}
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       return res.status(403).send(trialExpiredHtml("/#/subscribe-msp", "MSP — Modélisation Sources de Pollution des Sols", 8));
+    }
+  }
+  next();
+}
+
+// Middleware spécifique au tool 3D_SSP — Superposition 3D pollution sols/nappe
+async function requireSsp3dSubscription(
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) {
+  if (!req.user) return res.status(401).json({ message: "Authentification requise" });
+  if (isAdminEmail((req.user as any).email)) return next();
+  const subs = await storage.getSubscriptionsByUserId(req.user.id);
+  const ssp3dSub = subs.find(
+    (s) => s.tool === "ssp3d" && (s.status === "active" || s.status === "trialing")
+  );
+  if (!ssp3dSub) {
+    return res.status(403).json({ message: "Abonnement 3D_SSP requis pour accéder à cet outil" });
+  }
+  if (ssp3dSub.status === "trialing" && ssp3dSub.currentPeriodEnd) {
+    if (new Date(ssp3dSub.currentPeriodEnd) < new Date()) {
+      try { await storage.updateSubscription(ssp3dSub.id, { status: "expired" }); } catch {}
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.status(403).send(trialExpiredHtml("/#/subscribe-ssp3d", "3D_SSP — Superposition 3D pollution sols/nappe", 8));
     }
   }
   next();
@@ -1139,6 +1179,8 @@ export async function registerRoutes(
           plan === "humain_monthly" ? STRIPE_PRICE_HUMAIN_MONTHLY :
           plan === "humain_annual" ? STRIPE_PRICE_HUMAIN_ANNUAL :
           plan === "eaux_pluviales_annual" ? STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL :
+          plan === "ssp3d_monthly" ? STRIPE_PRICE_SSP3D_MONTHLY :
+          plan === "ssp3d_annual" ? STRIPE_PRICE_SSP3D_ANNUAL :
           STRIPE_PRICE_MONTHLY;
 
 
@@ -1154,6 +1196,8 @@ export async function registerRoutes(
           plan === "humain_monthly" ? "humain" :
           plan === "humain_annual" ? "humain" :
           plan === "eaux_pluviales_annual" ? "eaux_pluviales" :
+          plan === "ssp3d_monthly" ? "ssp3d" :
+          plan === "ssp3d_annual" ? "ssp3d" :
           "je";
 
         // Chercher un abonnement existant pour ce tool (ou récupérer le customerId existant)
@@ -1276,6 +1320,8 @@ export async function registerRoutes(
             priceIdFromStripe === STRIPE_PRICE_MSP_MONTHLY ? "msp_monthly" :
             priceIdFromStripe === STRIPE_PRICE_MSP_ANNUAL ? "msp_annual" :
             (STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL && priceIdFromStripe === STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL) ? "eaux_pluviales_annual" :
+            priceIdFromStripe === STRIPE_PRICE_SSP3D_MONTHLY ? "ssp3d_monthly" :
+            priceIdFromStripe === STRIPE_PRICE_SSP3D_ANNUAL ? "ssp3d_annual" :
             priceIdFromStripe === STRIPE_PRICE_ANNUAL ? "annual" : "monthly";
           let tool =
             plan === "rabattement_annual" ? "rabattement" :
@@ -1286,6 +1332,7 @@ export async function registerRoutes(
             (plan === "msp_monthly" || plan === "msp_annual") ? "msp" :
             (plan === "humain_monthly" || plan === "humain_annual") ? "humain" :
             plan === "eaux_pluviales_annual" ? "eaux_pluviales" :
+            (plan === "ssp3d_monthly" || plan === "ssp3d_annual") ? "ssp3d" :
             "je";
 
           // Préférence : metadata de la subscription (plus fiable que le mapping par price ID)
@@ -1337,6 +1384,7 @@ export async function registerRoutes(
                     tool === "tsn" ? "TSN — Transfert Sol vers Nappe" :
                     tool === "eaux_pluviales" ? "Gestion des eaux pluviales — DLE / GEP v2.1" :
                     tool === "humain" ? "Module HUMAIN — EQRS V9 Tier 3" :
+                    tool === "ssp3d" ? "3D_SSP — Superposition 3D pollution sols/nappe" :
                     "EQRS — Johnson & Ettinger";
                   const toolUrl = "https://www.gmep-france.eu/#/dashboard";
                   const planLabel =
@@ -1345,6 +1393,8 @@ export async function registerRoutes(
                     plan === "eaux_pluviales_annual" ? "Annuel — 3 500 € HT/an" :
                     plan === "humain_monthly" ? "Mensuel — 550 € HT/mois" :
                     plan === "humain_annual" ? "Annuel — 5 200 € HT/an" :
+                    plan === "ssp3d_monthly" ? "Mensuel — 250 € HT/mois" :
+                    plan === "ssp3d_annual" ? "Annuel — 2 400 € HT/an" :
                     plan === "annual" ? "Annuel — 2 499 € HT/an" :
                     "Mensuel — 245 € HT/mois";
                   const periodEnd = new Date((subscription as any).current_period_end * 1000)
@@ -1930,6 +1980,109 @@ export async function registerRoutes(
       res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       return res.send(protectToolHtml(mspToolHtml));
+    }
+  );
+
+  // ══════════════════════════════════════════════════════════════════════
+  // 3D_SSP — SAR³ Superposition 3D pollution sols/nappe & implantations
+  // ══════════════════════════════════════════════════════════════════════
+
+  // ── 3D_SSP : activation essai 8 jours ──────────────────────────────
+  app.post(
+    "/api/ssp3d-trial/activate",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      try {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const existing = subs.find(s => s.tool === "ssp3d");
+        if (existing && (existing.status === "active" || existing.status === "trialing")) {
+          return res.status(409).json({ message: "Vous avez déjà un accès 3D_SSP actif ou en cours d'essai." });
+        }
+        const trialEnd = new Date();
+        trialEnd.setDate(trialEnd.getDate() + 8);
+        let sub;
+        if (existing) {
+          sub = await storage.updateSubscription(existing.id, {
+            status: "trialing",
+            plan: "ssp3d_trial",
+            tool: "ssp3d",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        } else {
+          sub = await storage.createSubscription(req.user!.id, {
+            status: "trialing",
+            plan: "ssp3d_trial",
+            tool: "ssp3d",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        }
+
+        // Email de confirmation activation essai 3D_SSP
+        try {
+          const resendKey = process.env.RESEND_API_KEY;
+          if (resendKey) {
+            const { Resend } = require("resend");
+            const resend = new Resend(resendKey);
+            const user = await storage.getUser(req.user!.id);
+            const trialEndFr = trialEnd.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+            await resend.emails.send({
+              from: "GMEP <noreply@gmep-france.eu>",
+              to: req.user!.email,
+              subject: "3D_SSP GMEP — Votre essai gratuit de 8 jours est activé",
+              html: `
+                <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+                  <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+                    <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+                    <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">3D_SSP — Superposition 3D pollution sols/nappe</p>
+                  </div>
+                  <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+                    <p style="font-size:16px;">Bonjour ${user?.name || req.user!.email},</p>
+                    <p>Votre essai gratuit <strong>3D_SSP GMEP</strong> est maintenant actif. Accès complet au logiciel pendant <strong>8 jours</strong>.</p>
+                    <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
+                      <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Outil</td><td style="padding:10px;border:1px solid #cce0f0;">3D_SSP — Superposition 3D pollution sols/nappe</td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Durée essai</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours</td></tr>
+                      <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Accès jusqu'au</td><td style="padding:10px;border:1px solid #e2e8f0;"><strong>${trialEndFr}</strong></td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #e2e8f0;">${req.user!.email}</td></tr>
+                    </table>
+                    <p style="font-size:13px;color:#64748b;">Après les 8 jours, l'accès est bloqué. Vous recevrez un rappel à J-2 et J-0.</p>
+                    <div style="text-align:center;margin:28px 0;">
+                      <a href="https://www.gmep-france.eu/#/dashboard" style="background:#0891b2;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à 3D_SSP GMEP →</a>
+                    </div>
+                    <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a> — Tél. 06 07 73 72 33</p>
+                    <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+                    <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+                  </div>
+                </div>
+              `,
+            });
+            console.log(`[SSP3D TRIAL EMAIL] Sent to ${req.user!.email}`);
+          }
+        } catch (emailErr: any) {
+          console.error("[SSP3D TRIAL EMAIL] Failed:", emailErr.message);
+        }
+
+        return res.json({ message: "Essai 3D_SSP activé (8 jours)", subscription: sub });
+      } catch (err: any) {
+        return res.status(500).json({ message: err.message || "Erreur lors de l'activation de l'essai" });
+      }
+    }
+  );
+
+  // ── 3D_SSP : accès outil (essai ou abonné) ─────────────────────────
+  app.get(
+    "/api/ssp3d-tool",
+    requireAuth as any,
+    requireSsp3dSubscription as any,
+    async (req: AuthRequest, res: Response) => {
+      if (!ssp3dToolHtml) return res.status(503).json({ message: "Outil 3D_SSP non disponible — fichier 3d-ssp-tool.html manquant" });
+      res.setHeader("X-Frame-Options", "SAMEORIGIN");
+      res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://unpkg.com"
+      );
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.send(protectToolHtml(ssp3dToolHtml));
     }
   );
 
