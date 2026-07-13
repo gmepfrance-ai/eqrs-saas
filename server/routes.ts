@@ -870,6 +870,28 @@ export async function registerRoutes(
 </html>`);
   });
 
+  // Endpoint JSON brut pour vérifications automatisées (protégé par le même secret
+  // que le digest quotidien). Utilisé par le suivi hebdomadaire (nouveaux comptes,
+  // essais, abonnements payants) sans nécessiter de connexion admin.
+  app.get("/api/admin/stats-json", async (req: Request, res: Response) => {
+    const secret = req.query.secret as string;
+    const expected = process.env.ADMIN_DIGEST_SECRET || "gmep-digest-2026-secret";
+    if (secret !== expected) {
+      return res.status(403).json({ message: "Secret invalide" });
+    }
+    try {
+      const anyStorage = storage as any;
+      if (typeof anyStorage.getAdminStats !== "function") {
+        return res.status(501).json({ message: "Stats admin disponibles uniquement avec PostgreSQL" });
+      }
+      const stats = await anyStorage.getAdminStats();
+      res.json(stats);
+    } catch (err: any) {
+      console.error("[ADMIN STATS JSON ERROR]", err);
+      res.status(500).json({ message: "Erreur serveur", error: err.message });
+    }
+  });
+
   // Endpoint trigger pour cron : envoi email digest (protégé par secret URL)
   app.get("/api/admin/send-daily-digest", async (req: Request, res: Response) => {
     const secret = req.query.secret as string;
