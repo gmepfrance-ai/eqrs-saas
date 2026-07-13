@@ -618,7 +618,7 @@ export async function registerRoutes(
     try {
       const testUser = await storage.getUserByEmail("health@test.com");
       const totalUsers = await storage.getUserCount();
-      const userEmails = await storage.getAllUserEmails();
+      // Note : les emails utilisateurs ne sont plus exposés ici (faille de confidentialite corrigee le 13/07/2026).
       res.json({
         status: "ok",
         time: new Date().toISOString(),
@@ -641,7 +641,6 @@ export async function registerRoutes(
         hasResendKey: !!process.env.RESEND_API_KEY,
         resendKeyPrefix: process.env.RESEND_API_KEY?.substring(0, 8) || "not set",
         totalUsers,
-        userEmails,
         port: process.env.PORT
       });
     } catch (err: any) {
