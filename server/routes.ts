@@ -950,6 +950,89 @@ export async function registerRoutes(
     }
   });
 
+  // GET /api/admin/send-msp-trial-reminders?secret=xxx
+  app.get("/api/admin/send-msp-trial-reminders", async (req: Request, res: Response) => {
+    const secret = req.query.secret as string;
+    const expected = process.env.ADMIN_DIGEST_SECRET || "gmep-digest-2026-secret";
+    if (secret !== expected) return res.status(403).json({ message: "Secret invalide" });
+    const resendKey = process.env.RESEND_API_KEY;
+    if (!resendKey) return res.status(503).json({ message: "Resend non configuré" });
+    const { Resend } = require("resend");
+    const resend = new Resend(resendKey);
+    const results: any[] = [];
+    try {
+      const anyStorage = storage as any;
+      let trialingSubs: any[] = [];
+      if (typeof anyStorage.getAllTrialingSubscriptionsByTool === "function") {
+        trialingSubs = await anyStorage.getAllTrialingSubscriptionsByTool("msp");
+      } else if (typeof anyStorage.getAllSubscriptions === "function") {
+        const all = await anyStorage.getAllSubscriptions();
+        trialingSubs = all.filter((s: any) => s.tool === "msp" && s.status === "trialing");
+      }
+
+      const now = new Date();
+      for (const sub of trialingSubs) {
+        if (!sub.currentPeriodEnd) continue;
+        const end = new Date(sub.currentPeriodEnd);
+        const daysLeft = (end.getTime() - now.getTime()) / 86400000;
+        const isJ2 = daysLeft >= 1.5 && daysLeft < 2.5;
+        const isJ0 = daysLeft >= 0 && daysLeft < 0.5;
+        if (!isJ2 && !isJ0) continue;
+
+        let user: any = null;
+        try { user = await storage.getUser(sub.userId); } catch {}
+        if (!user || !user.email) continue;
+
+        const endFr = end.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+        const subject = isJ2
+          ? "MSP GMEP — Il vous reste 2 jours d'essai"
+          : "MSP GMEP — Votre essai expire aujourd'hui";
+        const urgenceColor = isJ0 ? "#dc2626" : "#f59e0b";
+        const urgenceLabel = isJ0 ? "Expire aujourd'hui" : "2 jours restants";
+
+        const html = `
+          <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+            <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+              <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+              <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">MSP — Modélisation Sources de Pollution des Sols</p>
+            </div>
+            <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+              <div style="background:${urgenceColor};color:white;padding:8px 16px;border-radius:6px;text-align:center;font-weight:bold;font-size:14px;margin-bottom:20px;">${urgenceLabel}</div>
+              <p style="font-size:16px;">Bonjour ${user.name || user.email},</p>
+              <p>${isJ0
+                ? "Votre essai gratuit <strong>MSP GMEP</strong> expire <strong>aujourd'hui</strong>. Après expiration, l'accès est bloqué."
+                : `Votre essai gratuit <strong>MSP GMEP</strong> se termine dans <strong>2 jours</strong> (le ${endFr}).`
+              }</p>
+              <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
+                <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Essai valable jusqu'au</td><td style="padding:10px;border:1px solid #cce0f0;"><strong>${endFr}</strong></td></tr>
+                <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Mensuel</td><td style="padding:10px;border:1px solid #e2e8f0;">250 € HT/mois — 300 € TTC</td></tr>
+                <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Annuel</td><td style="padding:10px;border:1px solid #e2e8f0;">2 760 € HT/an — 3 312 € TTC (2 mois offerts)</td></tr>
+              </table>
+              <div style="text-align:center;margin:28px 0;">
+                <a href="https://www.gmep-france.eu/#/subscribe-msp" style="background:#16a34a;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">S'abonner — Accès permanent →</a>
+              </div>
+              <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a> — Tél. 06 07 73 72 33</p>
+              <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+              <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+            </div>
+          </div>
+        `;
+
+        try {
+          await resend.emails.send({ from: "GMEP <noreply@gmep-france.eu>", to: user.email, subject, html });
+          results.push({ userId: sub.userId, email: user.email, type: isJ0 ? "J-0" : "J-2", sent: true });
+          console.log(`[MSP REMINDER ${isJ0 ? "J-0" : "J-2"}] Sent to ${user.email}`);
+        } catch (emailErr: any) {
+          results.push({ userId: sub.userId, email: user.email, type: isJ0 ? "J-0" : "J-2", sent: false, error: emailErr.message });
+        }
+      }
+      return res.json({ processed: trialingSubs.length, reminders_sent: results.filter(r => r.sent).length, results });
+    } catch (err: any) {
+      console.error("[MSP REMINDER CRON ERROR]", err);
+      return res.status(500).json({ message: "Erreur cron rappels MSP", error: err.message });
+    }
+  });
+
   // ── Auth Routes ────────────────────────────────────────
 
   // Register
@@ -2338,88 +2421,6 @@ export async function registerRoutes(
 
   // ── MSP : cron rappels trial expiration (J-2 et J-0) ──────────────
   // Déclenché par URL externe protégée — Railway Cron ou Perplexity Scheduler
-  // GET /api/admin/send-msp-trial-reminders?secret=xxx
-  app.get("/api/admin/send-msp-trial-reminders", async (req: Request, res: Response) => {
-    const secret = req.query.secret as string;
-    const expected = process.env.ADMIN_DIGEST_SECRET || "gmep-digest-2026-secret";
-    if (secret !== expected) return res.status(403).json({ message: "Secret invalide" });
-    const resendKey = process.env.RESEND_API_KEY;
-    if (!resendKey) return res.status(503).json({ message: "Resend non configuré" });
-    const { Resend } = require("resend");
-    const resend = new Resend(resendKey);
-    const results: any[] = [];
-    try {
-      const anyStorage = storage as any;
-      let trialingSubs: any[] = [];
-      if (typeof anyStorage.getAllTrialingSubscriptionsByTool === "function") {
-        trialingSubs = await anyStorage.getAllTrialingSubscriptionsByTool("msp");
-      } else if (typeof anyStorage.getAllSubscriptions === "function") {
-        const all = await anyStorage.getAllSubscriptions();
-        trialingSubs = all.filter((s: any) => s.tool === "msp" && s.status === "trialing");
-      }
-
-      const now = new Date();
-      for (const sub of trialingSubs) {
-        if (!sub.currentPeriodEnd) continue;
-        const end = new Date(sub.currentPeriodEnd);
-        const daysLeft = (end.getTime() - now.getTime()) / 86400000;
-        const isJ2 = daysLeft >= 1.5 && daysLeft < 2.5;
-        const isJ0 = daysLeft >= 0 && daysLeft < 0.5;
-        if (!isJ2 && !isJ0) continue;
-
-        let user: any = null;
-        try { user = await storage.getUser(sub.userId); } catch {}
-        if (!user || !user.email) continue;
-
-        const endFr = end.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
-        const subject = isJ2
-          ? "MSP GMEP — Il vous reste 2 jours d'essai"
-          : "MSP GMEP — Votre essai expire aujourd'hui";
-        const urgenceColor = isJ0 ? "#dc2626" : "#f59e0b";
-        const urgenceLabel = isJ0 ? "Expire aujourd'hui" : "2 jours restants";
-
-        const html = `
-          <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
-            <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
-              <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
-              <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">MSP — Modélisation Sources de Pollution des Sols</p>
-            </div>
-            <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
-              <div style="background:${urgenceColor};color:white;padding:8px 16px;border-radius:6px;text-align:center;font-weight:bold;font-size:14px;margin-bottom:20px;">${urgenceLabel}</div>
-              <p style="font-size:16px;">Bonjour ${user.name || user.email},</p>
-              <p>${isJ0
-                ? "Votre essai gratuit <strong>MSP GMEP</strong> expire <strong>aujourd'hui</strong>. Après expiration, l'accès est bloqué."
-                : `Votre essai gratuit <strong>MSP GMEP</strong> se termine dans <strong>2 jours</strong> (le ${endFr}).`
-              }</p>
-              <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
-                <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Essai valable jusqu'au</td><td style="padding:10px;border:1px solid #cce0f0;"><strong>${endFr}</strong></td></tr>
-                <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Mensuel</td><td style="padding:10px;border:1px solid #e2e8f0;">250 € HT/mois — 300 € TTC</td></tr>
-                <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Annuel</td><td style="padding:10px;border:1px solid #e2e8f0;">2 760 € HT/an — 3 312 € TTC (2 mois offerts)</td></tr>
-              </table>
-              <div style="text-align:center;margin:28px 0;">
-                <a href="https://www.gmep-france.eu/#/subscribe-msp" style="background:#16a34a;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">S'abonner — Accès permanent →</a>
-              </div>
-              <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a> — Tél. 06 07 73 72 33</p>
-              <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
-              <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
-            </div>
-          </div>
-        `;
-
-        try {
-          await resend.emails.send({ from: "GMEP <noreply@gmep-france.eu>", to: user.email, subject, html });
-          results.push({ userId: sub.userId, email: user.email, type: isJ0 ? "J-0" : "J-2", sent: true });
-          console.log(`[MSP REMINDER ${isJ0 ? "J-0" : "J-2"}] Sent to ${user.email}`);
-        } catch (emailErr: any) {
-          results.push({ userId: sub.userId, email: user.email, type: isJ0 ? "J-0" : "J-2", sent: false, error: emailErr.message });
-        }
-      }
-      return res.json({ processed: trialingSubs.length, reminders_sent: results.filter(r => r.sent).length, results });
-    } catch (err: any) {
-      console.error("[MSP REMINDER CRON ERROR]", err);
-      return res.status(500).json({ message: "Erreur cron rappels MSP", error: err.message });
-    }
-  });
 
   // ── Dev route: reset password ──────────
   if (!isStripeConfigured) {
