@@ -674,11 +674,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   }
 
   // ─── Status ───────────────────────────────────────────────────────────────
+  // DESKTOP BUILD : licence complète activée en permanence (aucun blocage)
   function getLicenseStatus() {
-    var k = getSavedKey();
-    if (isKeyValid(k)) return { valid: true, type: 'full', key: k };
-    if (isTrialValid()) return { valid: true, type: 'trial', daysLeft: trialDaysRemaining() };
-    return { valid: false, type: 'expired' };
+    return { valid: true, type: 'full', key: 'DESKTOP-GMEP' };
   }
 
   // ─── Badge ────────────────────────────────────────────────────────────────
