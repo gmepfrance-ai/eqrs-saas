@@ -1589,6 +1589,10 @@ function generateFichePDF() {
     }
     y += 5;
 
+    // ── Pagination : réserve 88mm pour la courbe (titre + image), sinon nouvelle page ──
+    const PAGE_BOTTOM = 277;
+    if (y + 88 > PAGE_BOTTOM) { doc.addPage(); y = 20; }
+
     // ── Courbe ──
     doc.setTextColor(34, 34, 34);
     y = pdfSection(doc, y, "COURBE D'INFILTRATION RECONSTITUÉE — h(t)");
@@ -1600,9 +1604,10 @@ function generateFichePDF() {
 
     // ── Observations ──
     if (e.obs) {
-      y = pdfSection(doc, y, 'OBSERVATIONS DE TERRAIN');
       const lines = doc.splitTextToSize(e.obs, 176);
       const h = Math.max(10, lines.length * 4.2 + 4);
+      if (y + 6.5 + h > PAGE_BOTTOM) { doc.addPage(); y = 20; }
+      y = pdfSection(doc, y, 'OBSERVATIONS DE TERRAIN');
       doc.setFillColor(246, 250, 249); doc.setDrawColor(200, 212, 212); doc.setLineWidth(0.1);
       doc.rect(14, y, 182, h, 'FD');
       doc.setFontSize(8.5); doc.setTextColor(34, 34, 34); doc.setFont('helvetica', 'normal');
@@ -1611,18 +1616,23 @@ function generateFichePDF() {
     }
 
     // ── Rappel méthodologique ──
+    if (y + 12 > PAGE_BOTTOM) { doc.addPage(); y = 20; }
     doc.setFontSize(7.5); doc.setTextColor(110, 110, 110); doc.setFont('helvetica', 'italic');
     doc.text([
       "Méthode de Porchet (infiltromètre à niveau variable) — intégration de la loi de Darcy sur une surface d'infiltration hémisphérique,",
       "avec t1 = 0 et h2 = 0 (assèchement complet). Résultat conditionné par une saturation préalable suffisante du terrain.",
     ], 14, Math.min(y + 4, 276));
 
-    // ── Pied de page ──
-    doc.setDrawColor(ACCENT.r, ACCENT.g, ACCENT.b); doc.setLineWidth(0.5);
-    doc.line(14, 284, 196, 284);
-    doc.setFontSize(7); doc.setTextColor(120, 120, 120); doc.setFont('helvetica', 'normal');
-    doc.text("SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École — contact@gmep-france.eu", 14, 288.5);
-    doc.text('Éditée le ' + new Date().toLocaleDateString('fr-FR'), 196, 288.5, { align: 'right' });
+    // ── Pied de page (sur toutes les pages générées) ──
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let p = 1; p <= totalPages; p++) {
+      doc.setPage(p);
+      doc.setDrawColor(ACCENT.r, ACCENT.g, ACCENT.b); doc.setLineWidth(0.5);
+      doc.line(14, 284, 196, 284);
+      doc.setFontSize(7); doc.setTextColor(120, 120, 120); doc.setFont('helvetica', 'normal');
+      doc.text("SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École — contact@gmep-france.eu", 14, 288.5);
+      doc.text('Éditée le ' + new Date().toLocaleDateString('fr-FR') + (totalPages > 1 ? ` — Page ${p}/${totalPages}` : ''), 196, 288.5, { align: 'right' });
+    }
 
     const fname = `Fiche_Porchet_${safeName(e.repere, 'essai')}_${safeName(v('proj_ref'), 'GMEP')}.pdf`;
     doc.save(fname);
