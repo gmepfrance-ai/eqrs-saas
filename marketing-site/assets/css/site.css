@@ -901,3 +901,36 @@ section.bg-navy .section-eyebrow { color: var(--green-400); }
 .faq-list details[open] summary::after{content:"–"}
 .faq-list summary:hover{background:#f7faf9}
 .faq-list details p{margin:0;padding:0 22px 18px;color:#3a4a63;line-height:1.6}
+
+/* ===== SOUS-EN-TÊTES DE CATÉGORIE — MENU DÉROULANT "OUTILS" ===== */
+.nav-dropdown-menu .nav-mi-head {
+  grid-column: 1 / -1;
+  margin: 8px 0 2px;
+  padding: 8px 12px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-600);
+  border-top: 1px solid var(--border);
+}
+.nav-dropdown-menu .nav-mi-head:first-child { margin-top: 0; border-top: 0; }
+@media (max-width: 1024px) {
+  .nav-dropdown-menu .nav-mi-head {
+    color: var(--green-400);
+    border-top-color: rgba(255,255,255,0.15);
+  }
+}
+
+/* ===== SOUS-EN-TÊTES DE CATÉGORIE — GRILLE D'OUTILS ===== */
+.tools-cat-head {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--blue-600);
+  margin: var(--sp-7) 0 var(--sp-4);
+  padding-bottom: var(--sp-2);
+  border-bottom: 2px solid var(--border);
+}
+.tools-cat-head:first-of-type { margin-top: 0; }

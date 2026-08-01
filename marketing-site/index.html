@@ -129,6 +129,46 @@
       "operatingSystem": "Web",
       "description": "Modélisation du transfert de polluants sol vers nappe et captage. Modèle Domenico 1987, API Hub'eau, 24 polluants.",
       "publisher": {"@id": "https://www.gmep-france.eu/#organization"}
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "MSP — Modélisation Sources de Pollution des Sols",
+      "url": "https://www.gmep-france.eu/outils/msp.html",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "description": "Diagnostic de sources de pollution des sols. Conforme Arrêté du 12/12/2014 et Décret n°2023-1408 (réutilisation des terres excavées). Génère un rapport technique de diagnostic.",
+      "offers": {
+        "@type": "Offer",
+        "price": "250",
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "price": "250",
+          "priceCurrency": "EUR",
+          "unitText": "MONTH"
+        }
+      },
+      "publisher": {"@id": "https://www.gmep-france.eu/#organization"}
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "Piézomètres de Surveillance — GMEP v2.9c",
+      "url": "https://www.gmep-france.eu/outils/piezometres.html",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "description": "Suivi et gestion de réseaux de piézomètres de surveillance : relevés de niveaux de nappe, historique, export, alertes.",
+      "offers": {
+        "@type": "Offer",
+        "price": "1100",
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "price": "1100",
+          "priceCurrency": "EUR",
+          "unitText": "YEAR"
+        }
+      },
+      "publisher": {"@id": "https://www.gmep-france.eu/#organization"}
     }
   ]
 }
@@ -175,17 +215,21 @@
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div class="nav-dropdown-menu" role="menu">
-          <a href="outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modélisation 3D sols / nappe / ouvrages · NOUVEAU</span></a>
-          <a href="outils/eaux-pluviales-dle-gep.html" role="menuitem">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau<span class="nav-mi-desc">Dimensionnement EP + dossiers DLE/GEP · NOUVEAU</span></a>
-          <a href="outils/porchet-essai-permeabilite.html" role="menuitem">Modélisation Essai de Porchet<span class="nav-mi-desc">Calcul K terrain + comparaison GEP · NOUVEAU</span></a>
+          <p class="nav-mi-head" role="presentation">Sites et Sols Pollués (SSP)</p>
+          <a href="outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Intrusion de vapeurs — EPA 2004</span></a>
           <a href="outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V9 + ECOTOX V9<span class="nav-mi-desc">HHRA + écotoxicologie — 104 substances · NOUVEAU</span></a>
           <a href="outils/eqrs-v8-ecotox-humain.html" role="menuitem">EQRS V9 + ECOTOX + HUMAIN<span class="nav-mi-desc">Voie alimentaire humaine — 47 substances Tier 3 · NOUVEAU</span></a>
-          <a href="outils/rabattement-v15-87.html" role="menuitem">Rabattement V15.87<span class="nav-mi-desc">Multicouche + assistant IA · NOUVEAU</span></a>
           <a href="outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transfert Sol-Nappe<span class="nav-mi-desc">Domenico 1987 + API Hub'eau · NOUVEAU</span></a>
-          <a href="outils/schema-conceptuel.html" role="menuitem">Schéma Conceptuel<span class="nav-mi-desc">IEM + Plan de Gestion · NOUVEAU</span></a>
-          <a href="outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Intrusion de vapeurs — EPA 2004</span></a>
           <a href="outils/domenico.html" role="menuitem">Transfert Sol → Nappe → Captage<span class="nav-mi-desc">Modèle Domenico 1987</span></a>
+          <a href="outils/schema-conceptuel.html" role="menuitem">Schéma Conceptuel<span class="nav-mi-desc">IEM + Plan de Gestion · NOUVEAU</span></a>
+          <a href="outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modélisation 3D sols / nappe / ouvrages · NOUVEAU</span></a>
+          <a href="outils/msp.html" role="menuitem">MSP — Sources de Pollution des Sols<span class="nav-mi-desc">Diagnostic des sources · NOUVEAU</span></a>
+          <p class="nav-mi-head" role="presentation">Hydrogéologie</p>
+          <a href="outils/porchet-essai-permeabilite.html" role="menuitem">Modélisation Essai de Porchet<span class="nav-mi-desc">Calcul K terrain + comparaison GEP · NOUVEAU</span></a>
+          <a href="outils/eaux-pluviales-dle-gep.html" role="menuitem">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau<span class="nav-mi-desc">Dimensionnement EP + dossiers DLE/GEP · NOUVEAU</span></a>
           <a href="outils/rabattement/index.html" role="menuitem">Rabattement de nappe<span class="nav-mi-desc">Theis + IOTA</span></a>
+          <a href="outils/rabattement-v15-87.html" role="menuitem">Rabattement V15.87<span class="nav-mi-desc">Multicouche + assistant IA · NOUVEAU</span></a>
+          <a href="outils/piezometres.html" role="menuitem">Piézomètres de Surveillance<span class="nav-mi-desc">Réseaux de suivi de nappe v2.9c · NOUVEAU</span></a>
         </div>
       </div>
       <a href="tarifs.html">Tarifs</a>
@@ -250,62 +294,12 @@
       <h2>Nos logiciels phares</h2>
       <p>Moteurs de calcul indépendants, conçus pour les contraintes réelles du terrain. Conformes aux référentiels réglementaires français, EFSA 2020 et EPA. Démos interactives disponibles dans le navigateur, sans installation.</p>
     </div>
+
+    <!-- ==========================================================
+         CATÉGORIE 1 — SITES ET SOLS POLLUÉS (SSP)
+         ========================================================== -->
+    <h3 class="tools-cat-head" id="cat-ssp">Sites et Sols Pollués (SSP)</h3>
     <div class="tools-grid">
-
-      <!-- ======================================================
-           3D_SSP (NOUVEAU)
-           ====================================================== -->
-      <article class="tool-card" id="3d-ssp" style="border-color:#5865F2;">
-        <span class="badge" style="background:#5865F2;">NOUVEAU</span>
-        <div class="tool-icon" aria-hidden="true">
-          <svg viewBox="0 0 32 32" fill="none">
-            <path d="M16 3l12 6.5v13L16 29 4 22.5v-13L16 3z" stroke="#5865F2" stroke-width="1.6" stroke-linejoin="round" fill="rgba(88,101,242,0.12)"/>
-            <path d="M4 9.5L16 16l12-6.5M16 16v13" stroke="#1a2b4a" stroke-width="1.6" stroke-linejoin="round"/>
-            <circle cx="16" cy="16" r="2.4" fill="#3ddc84"/>
-          </svg>
-        </div>
-        <h3>3D_SSP</h3>
-        <p>Modélisation 3D interactive : superposition de la source de pollution des sols, du panache de pollution de la nappe et des ouvrages du site. Import automatique TSN &amp; MSP GMEP, module Plan de Gestion des terres excavées.</p>
-        <div class="tool-price">250 € HT/mois <span style="font-size:0.78em;font-weight:400;color:var(--text-mute)">ou 2 400 € HT/an</span></div>
-        <a href="outils/3d-ssp.html" class="btn btn-blue">Découvrir →</a>
-      </article>
-
-      <!-- ======================================================
-           Modélisation GEP — DLE & Loi sur l'Eau (NOUVEAU)
-           ====================================================== -->
-      <article class="tool-card" id="eaux-pluviales">
-        <span class="badge">NOUVEAU</span>
-        <div class="tool-icon" aria-hidden="true">
-          <svg viewBox="0 0 32 32" fill="none">
-            <path d="M16 4c-4 5-7 9-7 13a7 7 0 0014 0c0-4-3-8-7-13z" fill="#2563eb" opacity="0.8"/>
-            <path d="M16 13c-2 2.5-3.5 4.5-3.5 6.5a3.5 3.5 0 007 0c0-2-1.5-4-3.5-6.5z" fill="#3ddc84"/>
-            <path d="M5 27h22" stroke="#1a2b4a" stroke-width="1.6" stroke-linecap="round"/>
-            <path d="M9 30h14" stroke="#1a2b4a" stroke-width="1.6" stroke-linecap="round" opacity="0.5"/>
-          </svg>
-        </div>
-        <h3>Modélisation GEP — DLE &amp; Loi sur l'Eau</h3>
-        <p>Dimensionnement hydraulique, classification IOTA automatique (R.214-1 CE) et dossiers Loi sur l'Eau (DLE) + GEP. Compatible import des mesures de terrain issues de Modélisation Essai de Porchet. Passif environnemental SIS / BASOL / BASIAS.</p>
-        <div class="tool-price">5 500 € HT/an <span style="font-size:0.78em;font-weight:400;color:var(--text-mute)">(6 600 € TTC)</span></div>
-        <a href="outils/eaux-pluviales-dle-gep.html" class="btn btn-blue">Découvrir →</a>
-      </article>
-
-      <!-- ======================================================
-           Modélisation Essai de Porchet (NOUVEAU)
-           ====================================================== -->
-      <article class="tool-card" id="porchet" style="border-color:#20808D;">
-        <span class="badge" style="background:#20808D;">NOUVEAU</span>
-        <div class="tool-icon" aria-hidden="true">
-          <svg viewBox="0 0 32 32" fill="none">
-            <path d="M16 4 L26 10 V22 L16 28 L6 22 V10 Z" stroke="#20808D" stroke-width="1.6" stroke-linejoin="round" fill="rgba(32,128,141,0.10)"/>
-            <path d="M16 12v9M12 17l4 4 4-4" stroke="#1a2b4a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="16" cy="12" r="1.8" fill="#3ddc84"/>
-          </svg>
-        </div>
-        <h3>Modélisation Essai de Porchet</h3>
-        <p>Saisie terrain, calcul automatisé du coefficient de perméabilité K (formule hémisphérique) et comparaison directe avec les valeurs de dimensionnement du module GEP. Fiches de rapport et export JSON par essai.</p>
-        <div class="tool-price">550 € HT/an <span style="font-size:0.78em;font-weight:400;color:var(--text-mute)">(660 € TTC)</span></div>
-        <a href="outils/porchet-essai-permeabilite.html" class="btn btn-blue">Découvrir →</a>
-      </article>
 
       <article class="tool-card">
         <div class="tool-icon" aria-hidden="true">
@@ -324,43 +318,8 @@
         <a href="outils/eqrs-je.html" class="btn btn-blue">Découvrir →</a>
       </article>
 
-      <article class="tool-card">
-        <div class="tool-icon" aria-hidden="true">
-          <!-- Sol-Nappe-Captage -->
-          <svg viewBox="0 0 32 32" fill="none">
-            <rect x="2" y="6" width="28" height="6" rx="1" fill="#a16207"/>
-            <rect x="2" y="12" width="28" height="6" rx="1" fill="#2563eb" opacity="0.7"/>
-            <rect x="2" y="18" width="28" height="8" rx="1" fill="#1a2b4a"/>
-            <path d="M22 4v22" stroke="#3ddc84" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="22" cy="20" r="2" fill="#3ddc84"/>
-          </svg>
-        </div>
-        <h3>Transfert Sol → Nappe → Captage</h3>
-        <p>Modèle Domenico 1987. 24 polluants (BTEX, HAP, PFAS, métaux). Courbe d'atténuation Cc(x), DAF, gradient hydraulique.</p>
-        <div class="tool-price">1 020 € TTC/an</div>
-        <a href="outils/domenico.html" class="btn btn-blue">Découvrir →</a>
-      </article>
-
-      <article class="tool-card">
-        <span class="badge">NOUVEAU</span>
-        <div class="tool-icon" aria-hidden="true">
-          <!-- Puits + nappe -->
-          <svg viewBox="0 0 32 32" fill="none">
-            <path d="M3 14h26" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="2 2"/>
-            <path d="M3 20h26" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="2 2"/>
-            <rect x="13" y="3" width="6" height="22" rx="1" fill="#1a2b4a"/>
-            <path d="M16 14c-2 2-4 5-4 8a4 4 0 008 0c0-3-2-6-4-8z" fill="#3ddc84"/>
-            <path d="M10 26c2-3 5-3 6-2 1-1 4-1 6 2" stroke="#2563eb" stroke-width="1.5" fill="none"/>
-          </svg>
-        </div>
-        <h3>Rabattement de nappe</h3>
-        <p>Theis + Dupuit-Thiem. Classification IOTA automatique (R.214-1). Carte OpenStreetMap + dossier DDT 27 pages.</p>
-        <div class="tool-price">1 320 € TTC/an</div>
-        <a href="outils/rabattement/index.html" class="btn btn-blue">Découvrir →</a>
-      </article>
-
       <!-- ======================================================
-           EQRS V9 + ECOTOX V9 (logiciel principal) 
+           EQRS V9 + ECOTOX V9 (logiciel principal)
            ====================================================== -->
       <article class="tool-card" id="eqrs-v8-ecotox">
         <span class="badge">HHRA + ERE</span>
@@ -398,6 +357,146 @@
           <a href="outils/eqrs-v8-ecotox-humain.html" class="btn btn-blue" style="flex:1;text-align:center;">Découvrir →</a>
           <a href="tarifs.html#eqrs-v8-humain" class="btn btn-outline" style="flex:1;text-align:center;font-size:0.84em;">Tarifs</a>
         </div>
+      </article>
+
+      <article class="tool-card">
+        <div class="tool-icon" aria-hidden="true">
+          <!-- Sol-Nappe-Captage -->
+          <svg viewBox="0 0 32 32" fill="none">
+            <rect x="2" y="6" width="28" height="6" rx="1" fill="#a16207"/>
+            <rect x="2" y="12" width="28" height="6" rx="1" fill="#2563eb" opacity="0.7"/>
+            <rect x="2" y="18" width="28" height="8" rx="1" fill="#1a2b4a"/>
+            <path d="M22 4v22" stroke="#3ddc84" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="22" cy="20" r="2" fill="#3ddc84"/>
+          </svg>
+        </div>
+        <h3>Transfert Sol → Nappe → Captage</h3>
+        <p>Modèle Domenico 1987. 24 polluants (BTEX, HAP, PFAS, métaux). Courbe d'atténuation Cc(x), DAF, gradient hydraulique.</p>
+        <div class="tool-price">1 020 € TTC/an</div>
+        <a href="outils/domenico.html" class="btn btn-blue">Découvrir →</a>
+      </article>
+
+      <!-- ======================================================
+           3D_SSP (NOUVEAU)
+           ====================================================== -->
+      <article class="tool-card" id="3d-ssp" style="border-color:#5865F2;">
+        <span class="badge" style="background:#5865F2;">NOUVEAU</span>
+        <div class="tool-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <path d="M16 3l12 6.5v13L16 29 4 22.5v-13L16 3z" stroke="#5865F2" stroke-width="1.6" stroke-linejoin="round" fill="rgba(88,101,242,0.12)"/>
+            <path d="M4 9.5L16 16l12-6.5M16 16v13" stroke="#1a2b4a" stroke-width="1.6" stroke-linejoin="round"/>
+            <circle cx="16" cy="16" r="2.4" fill="#3ddc84"/>
+          </svg>
+        </div>
+        <h3>3D_SSP</h3>
+        <p>Modélisation 3D interactive : superposition de la source de pollution des sols, du panache de pollution de la nappe et des ouvrages du site. Import automatique TSN &amp; MSP GMEP, module Plan de Gestion des terres excavées.</p>
+        <div class="tool-price">250 € HT/mois <span style="font-size:0.78em;font-weight:400;color:var(--text-mute)">ou 2 400 € HT/an</span></div>
+        <a href="outils/3d-ssp.html" class="btn btn-blue">Découvrir →</a>
+      </article>
+
+      <!-- ======================================================
+           MSP — Modélisation Sources de Pollution des Sols (NOUVEAU)
+           ====================================================== -->
+      <article class="tool-card" id="msp" style="border-color:#1a5276;">
+        <span class="badge" style="background:#1a5276;">NOUVEAU</span>
+        <div class="tool-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <rect x="3" y="9" width="26" height="18" rx="2" fill="#1a5276" opacity="0.12" stroke="#1a5276" stroke-width="1.6"/>
+            <path d="M3 15h26" stroke="#1a5276" stroke-width="1.4" stroke-dasharray="2 2"/>
+            <ellipse cx="13" cy="20" rx="6" ry="4" fill="#a16207" opacity="0.75"/>
+            <path d="M22 5v8M19 10l3 3 3-3" stroke="#1a2b4a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="13" cy="20" r="1.8" fill="#3ddc84"/>
+          </svg>
+        </div>
+        <h3>MSP — Modélisation Sources de Pollution des Sols</h3>
+        <p>Diagnostic de sources de pollution des sols. Conforme Arrêté du 12/12/2014 et Décret n°2023-1408 (réutilisation des terres excavées). Génère un rapport technique de diagnostic.</p>
+        <div class="tool-price">250 € HT/mois <span style="font-size:0.78em;font-weight:400;color:var(--text-mute)">ou 2 760 € HT/an</span></div>
+        <a href="outils/msp.html" class="btn btn-blue">Découvrir →</a>
+      </article>
+
+    </div>
+
+    <!-- ==========================================================
+         CATÉGORIE 2 — HYDROGÉOLOGIE
+         ========================================================== -->
+    <h3 class="tools-cat-head" id="cat-hydrogeologie">Hydrogéologie</h3>
+    <div class="tools-grid">
+
+      <!-- ======================================================
+           Modélisation Essai de Porchet (NOUVEAU)
+           ====================================================== -->
+      <article class="tool-card" id="porchet" style="border-color:#20808D;">
+        <span class="badge" style="background:#20808D;">NOUVEAU</span>
+        <div class="tool-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <path d="M16 4 L26 10 V22 L16 28 L6 22 V10 Z" stroke="#20808D" stroke-width="1.6" stroke-linejoin="round" fill="rgba(32,128,141,0.10)"/>
+            <path d="M16 12v9M12 17l4 4 4-4" stroke="#1a2b4a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="16" cy="12" r="1.8" fill="#3ddc84"/>
+          </svg>
+        </div>
+        <h3>Modélisation Essai de Porchet</h3>
+        <p>Saisie terrain, calcul automatisé du coefficient de perméabilité K (formule hémisphérique) et comparaison directe avec les valeurs de dimensionnement du module GEP. Fiches de rapport et export JSON par essai.</p>
+        <div class="tool-price">550 € HT/an <span style="font-size:0.78em;font-weight:400;color:var(--text-mute)">(660 € TTC)</span></div>
+        <a href="outils/porchet-essai-permeabilite.html" class="btn btn-blue">Découvrir →</a>
+      </article>
+
+      <!-- ======================================================
+           Modélisation GEP — DLE & Loi sur l'Eau (NOUVEAU)
+           ====================================================== -->
+      <article class="tool-card" id="eaux-pluviales">
+        <span class="badge">NOUVEAU</span>
+        <div class="tool-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <path d="M16 4c-4 5-7 9-7 13a7 7 0 0014 0c0-4-3-8-7-13z" fill="#2563eb" opacity="0.8"/>
+            <path d="M16 13c-2 2.5-3.5 4.5-3.5 6.5a3.5 3.5 0 007 0c0-2-1.5-4-3.5-6.5z" fill="#3ddc84"/>
+            <path d="M5 27h22" stroke="#1a2b4a" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M9 30h14" stroke="#1a2b4a" stroke-width="1.6" stroke-linecap="round" opacity="0.5"/>
+          </svg>
+        </div>
+        <h3>Modélisation GEP — DLE &amp; Loi sur l'Eau</h3>
+        <p>Dimensionnement hydraulique, classification IOTA automatique (R.214-1 CE) et dossiers Loi sur l'Eau (DLE) + GEP. Compatible import des mesures de terrain issues de Modélisation Essai de Porchet. Passif environnemental SIS / BASOL / BASIAS.</p>
+        <div class="tool-price">5 500 € HT/an <span style="font-size:0.78em;font-weight:400;color:var(--text-mute)">(6 600 € TTC)</span></div>
+        <a href="outils/eaux-pluviales-dle-gep.html" class="btn btn-blue">Découvrir →</a>
+      </article>
+
+      <article class="tool-card">
+        <span class="badge">NOUVEAU</span>
+        <div class="tool-icon" aria-hidden="true">
+          <!-- Puits + nappe -->
+          <svg viewBox="0 0 32 32" fill="none">
+            <path d="M3 14h26" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="2 2"/>
+            <path d="M3 20h26" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="2 2"/>
+            <rect x="13" y="3" width="6" height="22" rx="1" fill="#1a2b4a"/>
+            <path d="M16 14c-2 2-4 5-4 8a4 4 0 008 0c0-3-2-6-4-8z" fill="#3ddc84"/>
+            <path d="M10 26c2-3 5-3 6-2 1-1 4-1 6 2" stroke="#2563eb" stroke-width="1.5" fill="none"/>
+          </svg>
+        </div>
+        <h3>Rabattement de nappe</h3>
+        <p>Theis + Dupuit-Thiem. Classification IOTA automatique (R.214-1). Carte OpenStreetMap + dossier DDT 27 pages.</p>
+        <div class="tool-price">1 320 € TTC/an</div>
+        <a href="outils/rabattement/index.html" class="btn btn-blue">Découvrir →</a>
+      </article>
+
+      <!-- ======================================================
+           Piézomètres de Surveillance — GMEP v2.9c (NOUVEAU)
+           ====================================================== -->
+      <article class="tool-card" id="piezometres" style="border-color:#1B474D;">
+        <span class="badge" style="background:#1B474D;">NOUVEAU</span>
+        <div class="tool-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <path d="M3 17h26" stroke="#1B474D" stroke-width="1.5" stroke-dasharray="2 2"/>
+            <rect x="7" y="5" width="4" height="22" rx="1" fill="#1a2b4a"/>
+            <rect x="15" y="8" width="4" height="19" rx="1" fill="#1a2b4a" opacity="0.75"/>
+            <rect x="23" y="6" width="4" height="21" rx="1" fill="#1a2b4a" opacity="0.55"/>
+            <circle cx="9" cy="17" r="1.8" fill="#3ddc84"/>
+            <circle cx="17" cy="20" r="1.8" fill="#3ddc84"/>
+            <circle cx="25" cy="15" r="1.8" fill="#3ddc84"/>
+          </svg>
+        </div>
+        <h3>Piézomètres de Surveillance</h3>
+        <p>Suivi et gestion de réseaux de piézomètres de surveillance (relevés de niveaux de nappe, historique, export, alertes). Version GMEP v2.9c.</p>
+        <div class="tool-price">1 100 € HT/an <span style="font-size:0.78em;font-weight:400;color:var(--text-mute)">(1 320 € TTC)</span></div>
+        <a href="outils/piezometres.html" class="btn btn-blue">Découvrir →</a>
       </article>
 
     </div>
@@ -468,16 +567,24 @@
         <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
       </div>
       <div class="footer-col">
-        <h6>Nos outils</h6>
+        <h6>Sites et Sols Pollués (SSP)</h6>
         <ul>
-          <li><a href="outils/3d-ssp.html">3D_SSP</a></li>
-          <li><a href="outils/eaux-pluviales-dle-gep.html">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau</a></li>
-          <li><a href="outils/porchet-essai-permeabilite.html">Modélisation Essai de Porchet</a></li>
+          <li><a href="outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
           <li><a href="outils/eqrs-v31-05-ecotox.html">EQRS V9 + ECOTOX V9</a></li>
           <li><a href="outils/eqrs-v8-ecotox-humain.html">EQRS V9 + Module HUMAIN</a></li>
-          <li><a href="outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="outils/tsn-transfert-sol-nappe.html">TSN — Transfert Sol-Nappe</a></li>
           <li><a href="outils/domenico.html">Transfert Sol → Nappe → Captage</a></li>
+          <li><a href="outils/schema-conceptuel.html">Schéma Conceptuel</a></li>
+          <li><a href="outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="outils/msp.html">MSP — Sources de Pollution des Sols</a></li>
+        </ul>
+        <h6 style="margin-top:var(--sp-5);">Hydrogéologie</h6>
+        <ul>
+          <li><a href="outils/porchet-essai-permeabilite.html">Modélisation Essai de Porchet</a></li>
+          <li><a href="outils/eaux-pluviales-dle-gep.html">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau</a></li>
           <li><a href="outils/rabattement/index.html">Rabattement de nappe IOTA</a></li>
+          <li><a href="outils/rabattement-v15-87.html">Rabattement V15.87</a></li>
+          <li><a href="outils/piezometres.html">Piézomètres de Surveillance</a></li>
         </ul>
       </div>
       <div class="footer-col">
