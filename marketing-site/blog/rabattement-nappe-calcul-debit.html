@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rabattement de nappe : calcul du débit (Theis, Dupuit-Thiem) et classification IOTA | GMEP</title>
+<meta name="description" content="Rabattement de nappe calcul : équations de Theis et Dupuit-Thiem, débit de pompage, transmissivité, classification IOTA R.214-1, dossier Loi sur l'Eau.">
+<meta name="keywords" content="rabattement de nappe calcul, débit pompage Theis, Dupuit-Thiem, IOTA R.214-1, Loi sur l'Eau, transmissivité, emmagasinement, rabattement multicouche">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html">
+<meta property="og:title" content="Rabattement de nappe : calcul du débit (Theis, Dupuit-Thiem) | GMEP">
+<meta property="og:description" content="Principe du rabattement de nappe, équations de Theis et Dupuit-Thiem, paramètres hydrogéologiques, classification IOTA et dossier Loi sur l'Eau.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Logiciels de modélisation environnementale">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Rabattement de nappe : calcul du débit (Theis, Dupuit-Thiem) | GMEP">
+<meta name="twitter:description" content="Principe du rabattement de nappe, équations de Theis et Dupuit-Thiem, paramètres hydrogéologiques, classification IOTA et dossier Loi sur l'Eau.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html#article",
+      "headline": "Rabattement de nappe : calcul du débit (Theis, Dupuit-Thiem) et classification IOTA",
+      "description": "Rabattement de nappe calcul : équations de Theis et Dupuit-Thiem, débit de pompage, transmissivité, classification IOTA R.214-1, dossier Loi sur l'Eau.",
+      "datePublished": "2026-07-03",
+      "dateModified": "2026-07-03",
+      "inLanguage": "fr-FR",
+      "author": {
+        "@type": "Person",
+        "name": "Eric Azulay",
+        "jobTitle": "Ingénieur sites et sols pollués",
+        "url": "https://www.gmep-france.eu/expertise.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "G.M.E.P",
+        "url": "https://www.gmep-france.eu",
+        "logo": { "@type": "ImageObject", "url": "https://www.gmep-france.eu/assets/img/og-image.png" }
+      },
+      "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html" },
+      "image": "https://www.gmep-france.eu/assets/img/og-image.png"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Quelle différence entre l'équation de Theis et celle de Dupuit-Thiem ?", "acceptedAnswer": { "@type": "Answer", "text": "L'équation de Theis s'applique aux nappes captives en régime transitoire et prend en compte le coefficient d'emmagasinement. L'équation de Dupuit-Thiem s'applique aux nappes libres en régime permanent et repose sur l'hypothèse d'écoulement horizontal radial vers le puits de pompage." } },
+        { "@type": "Question", "name": "Qu'est-ce que la transmissivité et l'emmagasinement ?", "acceptedAnswer": { "@type": "Answer", "text": "La transmissivité (T) caractérise la capacité de l'aquifère à transmettre l'eau horizontalement, exprimée en m²/s. Le coefficient d'emmagasinement (S) représente le volume d'eau libéré ou stocké par unité de surface pour une variation de charge hydraulique unitaire ; il est sans dimension pour une nappe captive." } },
+        { "@type": "Question", "name": "Qu'est-ce que la classification IOTA et la rubrique 2.1.3.0 ?", "acceptedAnswer": { "@type": "Answer", "text": "La classification IOTA (Installations, Ouvrages, Travaux et Activités) du code de l'environnement soumet les prélèvements et rejets d'eau à déclaration ou autorisation selon leur ampleur. La rubrique 2.1.3.0 (ex-1.1.1.0, ex-R.214-1) encadre les ouvrages de prélèvement dans une nappe souterraine selon leur profondeur et leur débit." } },
+        { "@type": "Question", "name": "Quand un dossier Loi sur l'Eau est-il nécessaire pour un rabattement de nappe ?", "acceptedAnswer": { "@type": "Answer", "text": "Un dossier Loi sur l'Eau (déclaration ou autorisation selon les seuils de la nomenclature IOTA) est nécessaire dès lors que le rabattement de nappe implique un prélèvement d'eau souterraine dépassant les seuils fixés par la rubrique 2.1.3.0 ou d'autres rubriques concernées (rejet, impact sur zone humide, etc.)." } },
+        { "@type": "Question", "name": "Le logiciel GMEP calcule-t-il le rabattement multicouche ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui, l'outil Rabattement V15.87 de GMEP intègre le calcul multicouche, les équations de Theis et Dupuit-Thiem, un assistant IA d'aide à l'interprétation et la classification IOTA conforme à la rubrique 2.1.3.0 du code de l'environnement." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Accueil GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Bureau d'études environnement &amp; hydrogéologie</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navigation principale">
+      <a href="../index.html">Accueil</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Outils
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modélisation 3D sols / nappe / ouvrages · NOUVEAU</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau<span class="nav-mi-desc">Dimensionnement EP + dossiers DLE/GEP · NOUVEAU</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modélisation Essai de Porchet<span class="nav-mi-desc">Calcul K terrain + comparaison GEP · NOUVEAU</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX<span class="nav-mi-desc">HHRA + écotoxicologie — 104 substances · NOUVEAU</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Rabattement V15.87<span class="nav-mi-desc">Multicouche + assistant IA · NOUVEAU</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transfert Sol-Nappe<span class="nav-mi-desc">Domenico 1987 + API Hub'eau · NOUVEAU</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Schéma Conceptuel<span class="nav-mi-desc">IEM + Plan de Gestion · NOUVEAU</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Intrusion de vapeurs — EPA 2004</span></a>
+          <a href="../outils/domenico.html" role="menuitem">Transfert Sol → Nappe → Captage<span class="nav-mi-desc">Modèle Domenico 1987</span></a>
+          <a href="../outils/rabattement/index.html" role="menuitem">Rabattement de nappe<span class="nav-mi-desc">Theis + IOTA</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Tarifs</a>
+      <a href="../expertise.html">Expertise</a>
+      <a href="index.html" aria-current="page">Blog</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Choix de langue">
+        <button class="lang-btn active" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Connexion</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Inscription</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <span class="hero-badge">Guide technique — Hydrogéologie</span>
+    <h1>Rabattement de nappe calcul : débit de pompage (Theis, Dupuit-Thiem) et classification IOTA</h1>
+    <p class="lead" style="max-width:780px;">
+      Le <strong>calcul du rabattement de nappe</strong> conditionne le dimensionnement des ouvrages de pompage et la
+      constitution des dossiers réglementaires. Cet article détaille les équations de <strong>Theis</strong> (nappe captive) et de
+      <strong>Dupuit-Thiem</strong> (nappe libre), les paramètres hydrogéologiques nécessaires, ainsi que la <strong>classification IOTA</strong>
+      (rubrique 2.1.3.0, ex-R.214-1) et les conditions de dépôt d'un dossier Loi sur l'Eau.
+    </p>
+  </div>
+</section>
+
+<article>
+<div class="container container-narrow" style="line-height:1.75;">
+
+<p style="font-size:13px;color:var(--text-mute);">Rédigé par <strong>Eric Azulay</strong> — Ingénieur sites et sols pollués, gérant SARL G.M.E.P · Publié le 3 juillet 2026</p>
+
+<h2>Principe du rabattement de nappe</h2>
+<p>
+Le <strong>rabattement</strong> désigne l'abaissement du niveau piézométrique d'une nappe souterraine provoqué par un pompage.
+Il se calcule comme la différence entre le niveau piézométrique initial (avant pompage) et le niveau observé à une
+distance donnée du point de pompage, à un instant donné. Le calcul du rabattement est central pour deux types
+d'usages : le <strong>dimensionnement des ouvrages de pompage</strong> (puits d'exhaure de chantier, pompage de réhabilitation
+de site pollué, alimentation en eau) et l'<strong>évaluation des impacts</strong> sur les usages voisins de la nappe (autres
+captages, zones humides, cours d'eau).
+</p>
+<p>
+Deux familles d'équations analytiques dominent la pratique des bureaux d'études hydrogéologiques : l'équation de
+<strong>Theis</strong>, adaptée aux nappes captives en régime transitoire, et l'équation de <strong>Dupuit-Thiem</strong>, adaptée aux nappes
+libres en régime permanent.
+</p>
+
+<h2>Équation de Theis — nappe captive, régime transitoire</h2>
+<p>
+L'équation de Theis (1935) décrit l'évolution du rabattement en fonction du temps et de la distance au puits de
+pompage, dans un aquifère captif supposé homogène, isotrope et d'extension infinie :
+</p>
+<p style="background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:16px 20px;font-family:var(--font-mono);font-size:14px;">
+s(r,t) = Q / (4πT) × W(u)<br>
+avec u = r²S / (4Tt)
+</p>
+<p>
+où <strong>s</strong> est le rabattement (m) à la distance <strong>r</strong> (m) du puits et au temps <strong>t</strong> (s), <strong>Q</strong> le débit de
+pompage (m³/s), <strong>T</strong> la transmissivité de l'aquifère (m²/s), <strong>S</strong> le coefficient d'emmagasinement (sans
+dimension) et <strong>W(u)</strong> la fonction de puits de Theis, fonction mathématique tabulée ou approchée numériquement.
+Cette équation permet notamment d'estimer T et S à partir d'un essai de pompage, par ajustement de la courbe de
+rabattement mesurée sur la courbe théorique de Theis.
+</p>
+
+<h2>Équation de Dupuit-Thiem — nappe libre, régime permanent</h2>
+<p>
+L'équation de Dupuit-Thiem s'applique aux nappes libres en régime permanent (rabattement stabilisé dans le temps) et
+repose sur l'hypothèse d'un écoulement radial horizontal vers le puits :
+</p>
+<p style="background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:16px 20px;font-family:var(--font-mono);font-size:14px;">
+Q = πK(h2² − h1²) / ln(r2/r1)
+</p>
+<p>
+où <strong>K</strong> est la perméabilité (ou conductivité hydraulique, m/s), <strong>h1</strong> et <strong>h2</strong> les charges hydrauliques (m)
+mesurées respectivement aux distances <strong>r1</strong> et <strong>r2</strong> du puits de pompage. Cette formule permet, à partir de
+mesures de rabattement dans deux piézomètres d'observation, de déterminer le débit maximal exploitable pour un
+rabattement cible, ou inversement d'estimer le rabattement attendu pour un débit de pompage donné.
+</p>
+
+<h2>Paramètres hydrogéologiques nécessaires</h2>
+<div style="overflow-x:auto;">
+<table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;margin:18px 0;">
+<thead>
+<tr style="background:#1a2b4a;color:#fff;">
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Paramètre</th>
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Symbole / Unité</th>
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Obtention</th>
+</tr>
+</thead>
+<tbody>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">Transmissivité</td><td style="padding:8px;border:1px solid #d1dce8;">T (m²/s)</td><td style="padding:8px;border:1px solid #d1dce8;">Essai de pompage, interprétation par la méthode de Theis ou Jacob</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Coefficient d'emmagasinement</td><td style="padding:8px;border:1px solid #d1dce8;">S (sans dimension)</td><td style="padding:8px;border:1px solid #d1dce8;">Essai de pompage avec piézomètre(s) d'observation</td></tr>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">Perméabilité (conductivité hydraulique)</td><td style="padding:8px;border:1px solid #d1dce8;">K (m/s)</td><td style="padding:8px;border:1px solid #d1dce8;">Essais Lefranc/Lugeon, essais de pompage, granulométrie</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Épaisseur de l'aquifère</td><td style="padding:8px;border:1px solid #d1dce8;">e (m)</td><td style="padding:8px;border:1px solid #d1dce8;">Sondages géologiques, log lithologique</td></tr>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">Niveau piézométrique initial</td><td style="padding:8px;border:1px solid #d1dce8;">h0 (m NGF)</td><td style="padding:8px;border:1px solid #d1dce8;">Suivi piézométrique préalable</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Rayon d'action du pompage</td><td style="padding:8px;border:1px solid #d1dce8;">R (m)</td><td style="padding:8px;border:1px solid #d1dce8;">Calculé (Theis/Dupuit) ou estimé (formule de Sichardt)</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Classification IOTA et rubrique 2.1.3.0</h2>
+<p>
+Tout ouvrage de prélèvement d'eau souterraine, y compris les pompages temporaires de rabattement de nappe pour un
+chantier ou une réhabilitation de site pollué, est susceptible de relever de la nomenclature <strong>IOTA</strong>
+(Installations, Ouvrages, Travaux et Activités) du code de l'environnement. La rubrique historiquement désignée
+<strong>R.214-1</strong> — aujourd'hui codifiée sous la <strong>rubrique 2.1.3.0</strong> (nomenclature eau, annexe à l'article R.214-1 du
+code de l'environnement) — encadre les prélèvements permanents ou temporaires dans un système aquifère selon leur
+profondeur et leur volume prélevé.
+</p>
+<p>
+Selon le débit et la durée du pompage, l'opération relève d'un régime de <strong>déclaration</strong> ou d'<strong>autorisation</strong>
+préalable auprès des services de l'État (DDT). D'autres rubriques de la nomenclature IOTA peuvent également
+s'appliquer en fonction du contexte : rejet des eaux pompées vers le milieu naturel, impact sur une zone humide,
+proximité d'un captage d'alimentation en eau potable.
+</p>
+
+<h2>Constitution du dossier Loi sur l'Eau</h2>
+<p>
+Lorsque le rabattement de nappe est soumis à déclaration ou autorisation au titre de la Loi sur l'Eau, le dossier
+technique transmis à l'administration doit généralement démontrer :
+</p>
+<ul>
+<li>La <strong>caractérisation hydrogéologique</strong> du site (nature de l'aquifère, paramètres T, S, K)</li>
+<li>Le <strong>dimensionnement du pompage</strong> (débit, durée, rayon d'action estimé par Theis ou Dupuit-Thiem)</li>
+<li>L'<strong>évaluation des incidences</strong> sur les usages sensibles à proximité (autres captages, zones humides, cours d'eau)</li>
+<li>Les <strong>mesures de suivi</strong> proposées (piézométrie de contrôle, seuils d'alerte) et, le cas échéant, les mesures compensatoires</li>
+</ul>
+
+<h2>Interprétation d'un essai de pompage</h2>
+<p>
+La détermination fiable de la transmissivité et de l'emmagasinement passe par la réalisation et l'interprétation d'un
+<strong>essai de pompage</strong> sur le terrain. La démarche type comprend plusieurs étapes :
+</p>
+<h3>1. Suivi piézométrique préalable</h3>
+<p>
+Avant tout démarrage de pompage, un suivi piézométrique de référence permet d'établir le niveau initial de la nappe
+et d'identifier d'éventuelles tendances naturelles (marnage, influence de précipitations ou d'un cours d'eau proche)
+qu'il faudra corriger dans l'interprétation des données de rabattement.
+</p>
+<h3>2. Pompage à débit constant ou par paliers</h3>
+<p>
+L'essai peut être mené à débit constant (essai longue durée, plusieurs heures à plusieurs jours) pour caractériser le
+régime transitoire selon Theis, ou par paliers de débit croissants pour évaluer les pertes de charge dans l'ouvrage
+et déterminer sa capacité optimale d'exploitation.
+</p>
+<h3>3. Mesure du rabattement en piézomètres d'observation</h3>
+<p>
+Le rabattement est mesuré non seulement dans l'ouvrage de pompage mais, idéalement, dans un ou plusieurs piézomètres
+d'observation situés à des distances croissantes, ce qui permet de séparer les pertes de charge propres à l'ouvrage
+(effets de puits) de la réponse hydrogéologique réelle de l'aquifère.
+</p>
+<h3>4. Ajustement du modèle analytique</h3>
+<p>
+Les courbes de rabattement mesurées sont ensuite ajustées sur les courbes théoriques de Theis (ou sur son
+approximation logarithmique de Jacob pour les temps longs), ce qui permet de retrouver par régression les valeurs de
+T et S les plus cohérentes avec les observations de terrain. Ces paramètres calibrés sont ensuite réinjectés dans le
+calcul prévisionnel du rabattement pour le débit d'exploitation envisagé.
+</p>
+
+<h2>Rabattement multicouche</h2>
+<p>
+Sur de nombreux sites, l'aquifère sollicité par le pompage n'est pas homogène sur toute son épaisseur mais comprend
+plusieurs couches de perméabilités différentes (aquifère multicouche), séparées ou non par des niveaux semi-perméables.
+Le calcul du <strong>rabattement multicouche</strong> nécessite alors une approche par couches équivalentes ou par
+superposition, prenant en compte la transmissivité propre à chaque couche et les échanges verticaux entre couches
+(drainance). Cette configuration est fréquente sur les sites industriels anciens, où plusieurs formations
+géologiques superposées peuvent chacune contribuer à l'écoulement vers l'ouvrage de pompage, avec des conséquences
+directes sur le rayon d'action réel du rabattement et sur le dimensionnement des dispositifs de traitement des eaux
+pompées en contexte de réhabilitation de site pollué.
+</p>
+
+<h2>Applications en réhabilitation de sites pollués</h2>
+<p>
+Le rabattement de nappe est fréquemment mobilisé dans le cadre de la <strong>gestion des sites et sols pollués</strong>, pour
+plusieurs finalités : rabattement de chantier pour permettre des travaux de terrassement ou d'excavation hors nappe,
+pompage de réhabilitation (pump &amp; treat) pour capter un panache de pollution dissoute, ou encore pompage d'essai pour
+caractériser les paramètres hydrodynamiques de l'aquifère avant modélisation du transfert sol-nappe-captage. Dans
+tous ces cas, le dimensionnement du débit et l'estimation du rayon d'action conditionnent directement l'efficacité
+du dispositif et la conformité du dossier réglementaire déposé.
+</p>
+
+<div style="background:linear-gradient(135deg,#1a2b4a 0%,#213354 100%);border-radius:16px;padding:32px;margin:32px 0;color:#fff;">
+  <h3 style="color:#fff;margin-top:0;">Calculer le rabattement de nappe avec l'outil GMEP</h3>
+  <p style="color:#dbe4f0;">
+    L'outil <strong>Rabattement de nappe</strong> de GMEP applique les équations de Theis et Dupuit-Thiem, gère le calcul
+    multicouche, et détermine automatiquement la classification IOTA (rubrique 2.1.3.0) applicable à votre projet.
+  </p>
+  <p style="margin-bottom:0;">
+    <a href="../outils/rabattement/index.html" class="btn btn-primary">Découvrir l'outil Rabattement de nappe</a>
+    <a href="../outils/rabattement-v15-87.html" class="btn btn-outline" style="margin-left:10px;color:#fff;border-color:#fff;">Voir Rabattement V15.87</a>
+  </p>
+</div>
+
+<h2>FAQ — Rabattement de nappe, calcul du débit et classification IOTA</h2>
+<div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">Quelle différence entre l'équation de Theis et celle de Dupuit-Thiem ?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">L'équation de Theis s'applique aux nappes captives en régime transitoire et prend en compte le coefficient d'emmagasinement. L'équation de Dupuit-Thiem s'applique aux nappes libres en régime permanent et repose sur l'hypothèse d'écoulement horizontal radial vers le puits de pompage.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">Qu'est-ce que la transmissivité et l'emmagasinement ?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">La transmissivité (T) caractérise la capacité de l'aquifère à transmettre l'eau horizontalement, exprimée en m²/s. Le coefficient d'emmagasinement (S) représente le volume d'eau libéré ou stocké par unité de surface pour une variation de charge hydraulique unitaire ; il est sans dimension pour une nappe captive.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">Qu'est-ce que la classification IOTA et la rubrique 2.1.3.0 ?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">La classification IOTA (Installations, Ouvrages, Travaux et Activités) du code de l'environnement soumet les prélèvements et rejets d'eau à déclaration ou autorisation selon leur ampleur. La rubrique 2.1.3.0 (ex-1.1.1.0, ex-R.214-1) encadre les ouvrages de prélèvement dans une nappe souterraine selon leur profondeur et leur débit.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">Quand un dossier Loi sur l'Eau est-il nécessaire pour un rabattement de nappe ?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Un dossier Loi sur l'Eau (déclaration ou autorisation selon les seuils de la nomenclature IOTA) est nécessaire dès lors que le rabattement de nappe implique un prélèvement d'eau souterraine dépassant les seuils fixés par la rubrique 2.1.3.0 ou d'autres rubriques concernées (rejet, impact sur zone humide, etc.).</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">Le logiciel GMEP calcule-t-il le rabattement multicouche ?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Oui, l'outil Rabattement V15.87 de GMEP intègre le calcul multicouche, les équations de Theis et Dupuit-Thiem, un assistant IA d'aide à l'interprétation et la classification IOTA conforme à la rubrique 2.1.3.0 du code de l'environnement.</p></div>
+  </details>
+</div>
+
+
+<section style="margin:40px 0;border-top:1px solid var(--border);padding-top:20px;" aria-labelledby="refs-title">
+  <h2 id="refs-title" style="font-size:1.15rem;">Références méthodologiques</h2>
+  <ul style="line-height:1.9;font-size:0.92rem;">
+      <li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006837384/" rel="noopener" target="_blank">Code de l'environnement — Rubriques nappes / IOTA (R.214-1)</a></li>
+      <li><a href="https://www.ecologie.gouv.fr/politiques-publiques/loi-leau" rel="noopener" target="_blank">Ministère de la Transition écologique — Procédure Loi sur l'Eau</a></li>
+      <li><a href="https://hubeau.eaufrance.fr/" rel="noopener" target="_blank">Hub'Eau — API données piézométriques (Banque Nationale de l'Eau)</a></li>
+      <li><a href="https://www.brgm.fr/fr" rel="noopener" target="_blank">BRGM — Méthodes d'essais de pompage et hydrogéologie</a></li>
+  </ul>
+</section>
+
+<div style="text-align:center;margin:40px 0;">
+  <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-primary" style="font-size:16px;padding:14px 32px;">Essai gratuit 14 jours — sans carte bancaire</a>
+  <p style="font-size:13px;color:var(--text-mute);margin-top:10px;">Voir aussi les <a href="../tarifs.html">tarifs</a> des logiciels GMEP.</p>
+</div>
+
+<p style="font-size:13px;color:var(--text-mute);border-top:1px solid var(--border);padding-top:16px;">
+Rédigé par <strong>Eric Azulay</strong> — Ingénieur sites et sols pollués, gérant SARL G.M.E.P
+</p>
+
+</div>
+</article>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tél. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nos outils</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modélisation Essai de Porchet</a></li>
+          <li><a href="../outils/eqrs-v31-05-ecotox.html">EQRS V8 + ECOTOX V8</a></li>
+          <li><a href="../outils/eqrs-v8-ecotox-humain.html">EQRS V8 + Module HUMAIN</a></li>
+          <li><a href="../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../outils/domenico.html">Transfert Sol → Nappe → Captage</a></li>
+          <li><a href="../outils/rabattement/index.html">Rabattement de nappe IOTA</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Société</h6>
+        <ul>
+          <li><a href="../expertise.html">Expertise</a></li>
+          <li><a href="../tarifs.html">Tarifs</a></li>
+          <li><a href="../guide-11-outils/index.html">Guide 11 outils (PDF)</a></li>
+          <li><a href="../mentions-legales.html">Mentions légales</a></li>
+          <li><a href="../cgv.html">CGV</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Tous droits réservés.</p>
+        <p>Tous nos logiciels sont la propriété exclusive de la SARL G.M.E.P. Toute reproduction, diffusion ou utilisation, même partielle, sans autorisation écrite préalable est interdite.</p>
+        <p class="credit">Conception et développement : Eric Azulay — Gérant SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/nav.js"></script>
+<script src="../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EQRS V9 + ECOTOX V9 — La référence française HHRA+ERE | GMEP</title>
+<meta name="description" content="EQRS V9 + ECOTOX V9 — Le seul logiciel français combinant évaluation des risques sanitaires humains (HHRA) et évaluation des risques écologiques (ERE). 104 substances HHRA + 47 substances écotox Tier 3, Tier 1+2, 5 modules avancés (Monte-Carlo, calcul inverse, temporel 70 ans, chaîne trophique, mélange organe). Conforme INERIS ERS 2021, US EPA, ANSES, ECHA REACH, Sample & Suter. Essai gratuit 8 jours.">
+<meta name="keywords" content="EQRS V9, ECOTOX V9, HHRA, ERE, évaluation risque écologique, PEC PNEC, 104 substances, PFAS UE 2020, Tier 1 Tier 2, récepteurs sentinelles, Sample Suter ORNL TM-13391, ECHA REACH PNEC, US EPA Eco-SSL, INERIS ERS 2021, MODUL'ERS alternative, RISC5 alternative, Monte-Carlo, calcul inverse, chaîne trophique, mélange organe cible, cartographie Leaflet IGN">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/outils/eqrs-v31-05-ecotox.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/outils/eqrs-v31-05-ecotox.html">
+<meta property="og:title" content="EQRS V9 + ECOTOX V9 — La référence française HHRA+ERE | GMEP">
+<meta property="og:description" content="EQRS V9 + ECOTOX V9 — Le seul logiciel français combinant évaluation des risques sanitaires humains (HHRA) et évaluation des risques écologiques (ERE). 104 substances HHRA + 47 substances écotox Tier 3, Tier 1+2, 5 modules avancés (Monte-Carlo, calcul inverse, temporel 70 ans, chaîne trophique, mélange organe). Conforme INERIS ERS 2021, US EPA, ANSES, ECHA REACH, Sample & Suter. Essai gratuit 8 jours.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Logiciels de modélisation environnementale">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="EQRS V9 + ECOTOX V9 — La référence française HHRA+ERE | GMEP">
+<meta name="twitter:description" content="EQRS V9 + ECOTOX V9 — Le seul logiciel français combinant évaluation des risques sanitaires humains (HHRA) et évaluation des risques écologiques (ERE). 104 substances HHRA + 47 substances écotox Tier 3, Tier 1+2, 5 modules avancés (Monte-Carlo, calcul inverse, temporel 70 ans, chaîne trophique, mélange organe). Conforme INERIS ERS 2021, US EPA, ANSES, ECHA REACH, Sample & Suter. Essai gratuit 8 jours.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Accueil GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Bureau d'études environnement &amp; hydrogéologie</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navigation principale">
+      <a href="../index.html">Accueil</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Outils
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modélisation 3D sols / nappe / ouvrages · NOUVEAU</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau<span class="nav-mi-desc">Dimensionnement EP + dossiers DLE/GEP · NOUVEAU</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modélisation Essai de Porchet<span class="nav-mi-desc">Calcul K terrain + comparaison GEP · NOUVEAU</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V9 + ECOTOX V9<span class="nav-mi-desc">104 substances HHRA + 47 substances écotox Tier 3 — NOUVEAU V9</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Rabattement V15.87<span class="nav-mi-desc">Multicouche IA — Loi sur l'Eau</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transfert Sol → Nappe<span class="nav-mi-desc">Domenico 1987 — API Hub'eau</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Schéma Conceptuel<span class="nav-mi-desc">IEM + Plan de Gestion</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS V7 Johnson &amp; Ettinger<span class="nav-mi-desc">+ 5 modules avancés</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Tarifs</a>
+      <a href="../expertise.html">Expertise</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Choix de langue">
+        <button class="lang-btn active" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Connexion</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Inscription</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge" style="background:linear-gradient(135deg,#39e07a 0%,#1a5276 100%);color:#fff;">NOUVEAU — ECOTOX V9 disponible</span>
+        <h1>EQRS V9 + ECOTOX V9</h1>
+        <p class="lead">La <strong>référence française HHRA + ERE</strong>. 104 substances en risque sanitaire humain + 47 substances écotox Tier 3, approche <strong>Tier 1, Tier 2 et Tier 3</strong>, et 5 modules avancés exclusifs : <strong>Monte-Carlo</strong>, <strong>calcul inverse</strong>, <strong>simulation temporelle 70 ans</strong>, <strong>chaîne trophique</strong> et <strong>mélange par organe</strong>. Conforme INERIS ERS 2021, US EPA, ANSES, ECHA REACH et Sample &amp; Suter.</p>
+        <div class="hero-cta">
+          <a href="../tarifs.html#je_annual" class="btn btn-primary">S'abonner — 395 € HT/mois</a>
+          <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-outline">Essai gratuit 8 jours</a>
+        </div>
+      </div>
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">eqrs · v31.05 · ecotox</span>
+        </div>
+        <div class="hero-mock-row"><span class="l">Substance</span><span class="v">Plomb (Pb)</span></div>
+        <div class="hero-mock-row"><span class="l">Σ QD (humain, enfant)</span><span class="v">0,42 — vigilance</span></div>
+        <div class="hero-mock-row"><span class="l">Récepteur écotox</span><span class="v">🐦 Rouge-gorge</span></div>
+        <div class="hero-mock-row"><span class="l">PEC / PNEC (Tier 2)</span><span class="v">0,8</span></div>
+        <div class="hero-mock-result"><strong>RQ écologique</strong><span>🟠 faible — &lt; 1</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 1. Présentation EQRS V9 -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Présentation</span>
+      <h2>EQRS V9 — l'évaluation des risques sanitaires nouvelle génération</h2>
+      <p>104 substances paramétrées, 22 onglets interactifs, rapport PDF 14 pages et cartographie Leaflet native. Toutes les VTR sont issues du référentiel ANSES et tenues à jour.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="18" r="3" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="6" r="3" stroke="currentColor" stroke-width="2"/><path d="M9 9l-3 6M15 9l3 6" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>104 substances</h3>
+        <p>70 substances de base + 30 substances émergentes : PFAS suite UE 2020 (20 substances), phtalates, retardateurs de flamme, pesticides récents et dioxines individuelles.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 9h18M9 3v18" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>22 onglets interactifs</h3>
+        <p>Paramètres, localisation cartographique, VTR seuil/sans seuil, concentrations, modèle J&amp;E, DJE, résultats QD/ERI, VLEP, et les 5 modules avancés.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="currentColor" stroke-width="2"/><path d="M15 3v5h5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Rapport PDF 14 pages</h3>
+        <p>Notes de calcul, tableaux VTR à seuil et sans seuil, détail QD/ERI par voie et par cible, localisation cartographique — prêt à transmettre aux autorités compétentes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Cartographie Leaflet 1.9.4</h3>
+        <p>Fonds OSM / Plan IGN v2 / BD ORTHO, conversion Lambert 93 ↔ WGS84 (proj4js), marqueurs site et récepteurs, ellipse de panache Domenico, export PNG.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Nouveauté V9 — Module ECOTOX -->
+<section style="background:linear-gradient(180deg,#f0fff4 0%,#e8f5ec 100%);border-top:3px solid #39e07a;border-bottom:3px solid #39e07a;">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow" style="background:#1a5276;color:#fff;padding:4px 12px;border-radius:4px;letter-spacing:0.5px;">NOUVEAUTÉ V9 — MODULE ECOTOX</span>
+      <h2>Le risque écologique (ERE) ajouté au risque sanitaire (HHRA)</h2>
+      <p>Là où EQRS V9 évalue le <strong>risque sanitaire humain</strong> (QD, ERI, VLEP), l'ECOTOX V9 ajoute le <strong>risque écologique</strong> par quotient PEC/PNEC et transferts trophiques vers la faune sauvage — dans la même interface.</p>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature-card" style="border-left:4px solid #39e07a;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 12h4l3-8 4 16 3-8h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Tier 1 — 7 récepteurs sentinelles</h3>
+        <p>Quotient PEC/PNEC sur le sol (plantes terrestres, vers de terre <em>Eisenia fetida</em>, micro-organismes), l'eau superficielle (poisson, daphnie <em>D. magna</em>, algue <em>P. subcapitata</em>) et l'eau souterraine (macro-invertébrés hyporhéiques).</p>
+      </div>
+      <div class="feature-card" style="border-left:4px solid #39e07a;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22V12M6 12c0-3 2-6 6-6s6 3 6 6M9 17c-2 0-4-2-4-4M15 17c2 0 4-2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Tier 2 — 5 prédateurs trophiques</h3>
+        <p>Transferts trophiques (Sample &amp; Suter ORNL/TM-13391) sur <strong>🐦 Rouge-gorge</strong>, <strong>🐭 Musaraigne</strong>, <strong>🐹 Campagnol</strong>, <strong>🦩 Héron</strong> et <strong>🦦 Loutre</strong>.</p>
+      </div>
+      <div class="feature-card" style="border-left:4px solid #39e07a;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M8 12l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Cascade PNEC</h3>
+        <p>Dérivation hiérarchisée des PNEC : INERIS → ECHA REACH (R.10) → US EPA Eco-SSL. 47 substances en V9 : Pb, Cd, Zn, Cu, Ni, As, Hg, Cr VI, benzène, toluène, B(a)P, PCB total.</p>
+      </div>
+      <div class="feature-card" style="border-left:4px solid #39e07a;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Code couleur RQ</h3>
+        <p>Risk Quotient lisible : <strong>🟢 &lt; 0,1</strong> négligeable, <strong>🟠 &lt; 1</strong> faible, <strong>🔴 ≥ 1</strong> potentiel — pour chaque récepteur et chaque substance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Comparatif détaillé -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Comparatif</span>
+      <h2>EQRS V9 + ECOTOX V9 vs MODUL'ERS vs RISC5</h2>
+      <p>Le seul outil français combinant HHRA (humain) et ERE (écologique) dans une même interface.</p>
+    </div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;">
+        <thead>
+          <tr style="background:#1a5276;color:#fff;">
+            <th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Critère</th>
+            <th style="padding:10px;text-align:center;border:1px solid #0e2f44;width:20%;">RISC5</th>
+            <th style="padding:10px;text-align:center;border:1px solid #0e2f44;width:20%;">MODUL'ERS (INERIS)</th>
+            <th style="padding:10px;text-align:center;border:1px solid #0e2f44;width:22%;background:#39e07a;color:#0e2f44;">EQRS V9 + ECOTOX V9</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Dernière mise à jour</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">2014 (gelé)</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;">Actif</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">Juin 2026</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Plateforme</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Windows desktop</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Windows + clé USB</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">Web + Excel</td></tr>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Formation préalable obligatoire</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Recommandée</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">2 jours RC41</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">Aucune</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Substances couvertes</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Bibliothèque US EPA</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">~100 (INERIS)</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">104 HHRA + 47 ECOTOX V9</td></tr>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">PFAS UE 2020 (20 subst.)</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Partiel</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Calcul inverse (Cmax pour QD/ERI cible)</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Partiel</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓</td></tr>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Monte-Carlo 1000 tirages</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Limité</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;">✓</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ (+visuel)</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Simulation temporelle 70 ans</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Partiel</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;">✓</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ DeVaull 2007</td></tr>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Chaîne trophique humaine</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;">✓</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ Trapp + Travis + INCA 3</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;"><strong>Écotoxicologie Tier 1 + 2</strong></td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Partiel</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ ECOTOX V9</td></tr>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Cascade PNEC INERIS/ECHA/EPA</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">INERIS uniquement</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ Triple cascade</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Cartographie Leaflet + IGN + BRGM</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Partiel</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ native</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:#666;margin-top:14px;line-height:1.6;"><strong>Sources :</strong> <a href="https://www.ineris.fr/fr/recherche-appui/risques-chroniques/logiciel-modulers">INERIS MODUL'ERS</a>, RISC5 User's Guide Nov 2014, <a href="https://substances.ineris.fr/">substances.ineris.fr</a>, <a href="https://echa.europa.eu/">ECHA REACH</a>, <a href="https://www.epa.gov/chemical-research/ecological-soil-screening-level">US EPA Eco-SSL</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Cadre réglementaire et scientifique -->
+<section>
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Conformité réglementaire</span>
+      <h2>Cadre normatif et scientifique</h2>
+    </div>
+    <div class="compliance-list">
+      <h3>Références appliquées</h3>
+      <ul>
+        <li><strong>INERIS ERS 2021</strong> — cadre national d'évaluation des risques sanitaires (ICPE, ARR, IEM).</li>
+        <li><strong>INERIS DRC-09-103096-09387C</strong> — cumul des QD par organe cible et des ERI par effet cancérigène.</li>
+        <li><strong>INERIS DRC-08-94882</strong> — méthodologie d'évaluation des risques écologiques (ERE).</li>
+        <li><strong>US EPA RAGS Part A §8.2 / §8.3</strong> — sommation par organe / par type de cancer.</li>
+        <li><strong>US EPA Mixture Risk Assessment 2000</strong> — mélange par organe cible.</li>
+        <li><strong>US EPA IRIS 2024</strong> — 5 nouvelles ERU cancérogènes (PFOA, PFOS, DEHP, 2,3,7,8-TCDD, bromodichlorométhane).</li>
+        <li><strong>ANSES 2018 + INCA 3</strong> — VTR, méthodologie IEM et rations alimentaires (chaîne trophique).</li>
+        <li><strong>ECHA REACH Technical Guidance R.10</strong> — dérivation des PNEC.</li>
+        <li><strong>US EPA Eco-SSL OSWER 9285.7-55</strong> — Ecological Soil Screening Levels.</li>
+        <li><strong>Sample &amp; Suter ORNL/TM-13391</strong> — transferts trophiques faune sauvage.</li>
+        <li><strong>OECD TG 201/202/203/207/208/222</strong> — essais d'écotoxicité.</li>
+        <li><strong>OFB 2016</strong> — paramètres ESO/ESU hyporhéiques. <strong>Méthodologie nationale SSP MEEM/MTES 2017</strong>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Tarif -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Tarif</span>
+      <h2>Abonnez-vous à EQRS V9 + ECOTOX V9</h2>
+    </div>
+    <div class="pricing-grid" style="max-width:520px;margin:0 auto;">
+      <div class="price-card featured">
+        <span class="badge">HHRA + ERE</span>
+        <h3>Abonnement mensuel</h3>
+        <p class="sub">EQRS V9 + ECOTOX V9</p>
+        <div class="price-amount"><span class="currency">€</span>395</div>
+        <div class="price-period">HT / mois</div>
+        <ul class="price-features">
+          <li>104 substances HHRA + 47 substances écotox Tier 3</li>
+          <li>5 modules avancés (Monte-Carlo, calcul inverse, temporel, trophique, mélange)</li>
+          <li>Écotoxicologie Tier 1 + Tier 2</li>
+          <li>Rapport PDF 14 pages + cartographie Leaflet</li>
+          <li>Mises à jour réglementaires incluses</li>
+        </ul>
+        <a href="../tarifs.html#je_annual" class="btn btn-primary btn-block">S'abonner</a>
+      </div>
+    </div>
+    <div class="text-center mt-6" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-ghost">Essai gratuit 8 jours</a>
+      <a href="../contact.html" class="btn btn-ghost">Demander une démo</a>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Note technique PDF -->
+<section>
+  <div class="container">
+    <div class="demo-placeholder">
+      <h3>Note technique — EQRS V9 + ECOTOX V9</h3>
+      <p>Téléchargez la note technique complète : architecture des 22 onglets, méthodologie HHRA et ERE, références scientifiques et exemples de calcul.</p>
+      <a href="/notes-techniques/Note_Technique_EQRS_V9_ECOTOX.pdf" class="btn btn-primary">Télécharger la note technique (PDF)</a>
+    </div>
+  </div>
+</section>
+
+<!-- 7. Captures fonctionnalités (CSS/SVG) -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Aperçu</span>
+      <h2>Aperçu des fonctionnalités</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card" style="padding:0;overflow:hidden;">
+        <div style="background:#0e2f44;padding:8px 12px;display:flex;gap:6px;align-items:center;"><span style="width:9px;height:9px;border-radius:50%;background:#ed5d5d;"></span><span style="width:9px;height:9px;border-radius:50%;background:#f5b94d;"></span><span style="width:9px;height:9px;border-radius:50%;background:#62c87f;"></span><span style="margin-left:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#fff;">interface · 22 onglets</span></div>
+        <div style="padding:16px;">
+          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;">
+            <span style="font-size:10px;background:#1a5276;color:#fff;padding:3px 7px;border-radius:4px;">Paramètres</span>
+            <span style="font-size:10px;background:#e5e7eb;color:#4b5563;padding:3px 7px;border-radius:4px;">VTR</span>
+            <span style="font-size:10px;background:#e5e7eb;color:#4b5563;padding:3px 7px;border-radius:4px;">QD/ERI</span>
+            <span style="font-size:10px;background:#e5e7eb;color:#4b5563;padding:3px 7px;border-radius:4px;">Écotox</span>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#4b5563;line-height:1.9;">
+            <div>α (J&amp;E) ......... 2,4 × 10⁻⁴</div>
+            <div>Σ QD enfant ...... <span style="color:#27ae60;">0,42</span></div>
+            <div>Σ ERI adulte ..... <span style="color:#27ae60;">3,1 × 10⁻⁶</span></div>
+          </div>
+        </div>
+        <div style="padding:0 16px 16px;"><strong style="font-size:14px;">Interface 22 onglets</strong></div>
+      </div>
+      <div class="feature-card" style="padding:0;overflow:hidden;">
+        <div style="background:#0e2f44;padding:8px 12px;display:flex;gap:6px;align-items:center;"><span style="width:9px;height:9px;border-radius:50%;background:#ed5d5d;"></span><span style="width:9px;height:9px;border-radius:50%;background:#f5b94d;"></span><span style="width:9px;height:9px;border-radius:50%;background:#62c87f;"></span><span style="margin-left:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#fff;">monte-carlo · 1000 tirages</span></div>
+        <div style="padding:16px;">
+          <svg viewBox="0 0 200 90" style="width:100%;height:auto;"><g fill="#1a5276">
+            <rect x="6" y="70" width="14" height="14"/><rect x="24" y="58" width="14" height="26"/><rect x="42" y="40" width="14" height="44"/><rect x="60" y="22" width="14" height="62" fill="#39e07a"/><rect x="78" y="34" width="14" height="50"/><rect x="96" y="50" width="14" height="34"/><rect x="114" y="64" width="14" height="20"/><rect x="132" y="72" width="14" height="12"/><rect x="150" y="76" width="14" height="8"/><rect x="168" y="79" width="14" height="5"/></g>
+            <line x1="69" y1="10" x2="69" y2="84" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="3 2"/><text x="72" y="16" font-size="8" fill="#c0392b" font-family="monospace">P95</text>
+          </svg>
+        </div>
+        <div style="padding:0 16px 16px;"><strong style="font-size:14px;">Module Monte-Carlo</strong><p style="font-size:12px;margin:4px 0 0;">Médiane, P95, CV, ratio P95/P50.</p></div>
+      </div>
+      <div class="feature-card" style="padding:0;overflow:hidden;">
+        <div style="background:#0e2f44;padding:8px 12px;display:flex;gap:6px;align-items:center;"><span style="width:9px;height:9px;border-radius:50%;background:#ed5d5d;"></span><span style="width:9px;height:9px;border-radius:50%;background:#f5b94d;"></span><span style="width:9px;height:9px;border-radius:50%;background:#62c87f;"></span><span style="margin-left:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#fff;">ecotox · Tier 1+2</span></div>
+        <div style="padding:16px;font-size:12px;line-height:2;">
+          <div style="display:flex;justify-content:space-between;"><span>🐦 Rouge-gorge</span><span style="color:#27ae60;">🟢 0,08</span></div>
+          <div style="display:flex;justify-content:space-between;"><span>🐭 Musaraigne</span><span style="color:#d97706;">🟠 0,6</span></div>
+          <div style="display:flex;justify-content:space-between;"><span>🦦 Loutre</span><span style="color:#c0392b;">🔴 1,4</span></div>
+          <div style="display:flex;justify-content:space-between;"><span>🦩 Héron</span><span style="color:#d97706;">🟠 0,9</span></div>
+        </div>
+        <div style="padding:0 16px 16px;"><strong style="font-size:14px;">Module ECOTOX</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="bg-soft" aria-labelledby="faq-title">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">FAQ</span>
+      <h2 id="faq-title">Questions fréquentes — EQRS V9 + ECOTOX V9</h2>
+    </div>
+    <div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
+      <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+        <summary itemprop="name">Qu'est-ce que l'EQRS (Évaluation Quantitative des Risques Sanitaires) ?</summary>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">L'EQRS quantifie les risques sanitaires liés à l'exposition à des substances polluantes présentes sur un site (sols, eaux, air intérieur). Elle compare une Quotité de danger (QD) à un Excès de Risque Individuel (ERI) pour juger de l'acceptabilité des risques pour les populations exposées, dans le cadre des démarches IEM et de gestion des sites et sols pollués.</p></div>
+      </details>
+      <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+        <summary itemprop="name">Quelle différence entre HHRA et ERE ?</summary>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">La HHRA (Human Health Risk Assessment) évalue les risques pour la santé humaine. L'ERE (Évaluation des Risques Écologiques) évalue les risques pour les écosystèmes et récepteurs sentinelles (PEC/PNEC, éco-SSL). EQRS V9 + ECOTOX V9 est le seul logiciel français qui combine les deux approches dans une même plateforme.</p></div>
+      </details>
+      <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+        <summary itemprop="name">Le logiciel est-il conforme aux référentiels réglementaires français ?</summary>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Oui. Les calculs sont conformes à l'US EPA 2004, à l'ANSES 2018, à la méthodologie INERIS ERS 2021, ainsi qu'à ECHA REACH pour les PNEC et aux éco-SSL de l'US EPA. Les mises à jour réglementaires sont incluses dans l'abonnement.</p></div>
+      </details>
+      <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+        <summary itemprop="name">Combien de substances sont prises en compte ?</summary>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">104 substances pour l'évaluation des risques sanitaires humains (COV, solvants chlorés, HAP, métaux, PFAS) et 47 substances écotoxicologiques (Tier 3), en Tier 1 et Tier 2.</p></div>
+      </details>
+      <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+        <summary itemprop="name">Que sont les 5 modules avancés ?</summary>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Les 5 modules avancés exclusifs sont : l'analyse de sensibilité par Monte-Carlo, le calcul inverse (concentration source admissible), le calcul temporel sur 70 ans, la chaîne trophique, et le mélange par organe cible.</p></div>
+      </details>
+      <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+        <summary itemprop="name">Le rapport PDF est-il utilisable pour un dossier administratif ?</summary>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Oui. Le logiciel génère un rapport PDF de 14 pages incluant les notes de calcul, les VTR et le détail QD/ERI, prêt à intégrer dans un dossier IEM ou un dossier de gestion de site et sols pollués destiné à l'administration (DDT, DREAL, ARS).</p></div>
+      </details>
+      <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+        <summary itemprop="name">Proposez-vous un essai gratuit ?</summary>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Oui, un essai gratuit de 8 jours est disponible sans installation, directement dans le navigateur. Aucune carte bancaire n'est requise pour démarrer la période d'essai.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Schema.org JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Qu'est-ce que l'EQRS (Évaluation Quantitative des Risques Sanitaires) ?", "acceptedAnswer": { "@type": "Answer", "text": "L'EQRS quantifie les risques sanitaires liés à l'exposition à des substances polluantes présentes sur un site (sols, eaux, air intérieur). Elle compare une Quotité de danger (QD) à un Excès de Risque Individuel (ERI) pour juger de l'acceptabilité des risques pour les populations exposées, dans le cadre des démarches IEM et de gestion des sites et sols pollués." } },
+    { "@type": "Question", "name": "Quelle différence entre HHRA et ERE ?", "acceptedAnswer": { "@type": "Answer", "text": "La HHRA (Human Health Risk Assessment) évalue les risques pour la santé humaine. L'ERE (Évaluation des Risques Écologiques) évalue les risques pour les écosystèmes et récepteurs sentinelles (PEC/PNEC, éco-SSL). EQRS V9 + ECOTOX V9 est le seul logiciel français qui combine les deux approches dans une même plateforme." } },
+    { "@type": "Question", "name": "Le logiciel est-il conforme aux référentiels réglementaires français ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui. Les calculs sont conformes à l'US EPA 2004, à l'ANSES 2018, à la méthodologie INERIS ERS 2021, ainsi qu'à ECHA REACH pour les PNEC et aux éco-SSL de l'US EPA. Les mises à jour réglementaires sont incluses dans l'abonnement." } },
+    { "@type": "Question", "name": "Combien de substances sont prises en compte ?", "acceptedAnswer": { "@type": "Answer", "text": "104 substances pour l'évaluation des risques sanitaires humains (COV, solvants chlorés, HAP, métaux, PFAS) et 47 substances écotoxicologiques (Tier 3), en Tier 1 et Tier 2." } },
+    { "@type": "Question", "name": "Que sont les 5 modules avancés ?", "acceptedAnswer": { "@type": "Answer", "text": "Les 5 modules avancés exclusifs sont : l'analyse de sensibilité par Monte-Carlo, le calcul inverse (concentration source admissible), le calcul temporel sur 70 ans, la chaîne trophique, et le mélange par organe cible." } },
+    { "@type": "Question", "name": "Le rapport PDF est-il utilisable pour un dossier administratif ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui. Le logiciel génère un rapport PDF de 14 pages incluant les notes de calcul, les VTR et le détail QD/ERI, prêt à intégrer dans un dossier IEM ou un dossier de gestion de site et sols pollués destiné à l'administration (DDT, DREAL, ARS)." } },
+    { "@type": "Question", "name": "Proposez-vous un essai gratuit ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui, un essai gratuit de 8 jours est disponible sans installation, directement dans le navigateur. Aucune carte bancaire n'est requise pour démarrer la période d'essai." } }
+  ]
+}
+</script>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tél. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a><br>
+        <a href="https://www.gmep-france.eu">www.gmep-france.eu</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nos outils</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modélisation Essai de Porchet</a></li>
+          <li><a href="../outils/eqrs-v31-05-ecotox.html">EQRS V9 + ECOTOX V9</a></li>
+          <li><a href="../outils/rabattement-v15-87.html">Rabattement V15.87</a></li>
+          <li><a href="../outils/tsn-transfert-sol-nappe.html">TSN — Transfert Sol → Nappe</a></li>
+          <li><a href="../outils/schema-conceptuel.html">Schéma Conceptuel</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Société</h6>
+        <ul>
+          <li><a href="../tarifs.html">Tarifs</a></li>
+          <li><a href="../guide-11-outils/index.html">Guide 11 outils (PDF)</a></li>
+          <li><a href="../expertise.html">Expertise</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../mentions-legales.html">Mentions légales</a></li>
+          <li><a href="../cgv.html">CGV</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Tous droits réservés.</p>
+        <p>Tous nos logiciels sont la propriété exclusive de la SARL G.M.E.P. Toute reproduction, diffusion ou utilisation, même partielle, sans autorisation écrite préalable est interdite.</p>
+        <p class="credit">Conception et développement : Eric Azulay — Gérant SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/nav.js"></script>
+<script src="../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

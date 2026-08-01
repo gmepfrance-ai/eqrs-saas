@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>G.M.E.P — Plaquette de présentation</title>
+  <meta name="description" content="G.M.E.P — Bureau d'études spécialisé Sites & Sols Pollués, Hydrogéologie et Intelligence Artificielle. Plus de 25 ans d'expertise." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1a2e45;
+      --teal: #1e6a8a;
+      --teal-light: #2a8ab0;
+      --accent: #e8f4f9;
+      --text: #1a2e45;
+      --muted: #6b7c93;
+      --border: #d0dde8;
+      --white: #ffffff;
+      --radius: 8px;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f0f5f9;
+      color: var(--text);
+    }
+
+    /* Header */
+    header { background: var(--navy); }
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .logo-block { display: flex; align-items: center; gap: 16px; }
+    .brand-text h1 { font-size: 22px; font-weight: 700; color: var(--white); letter-spacing: 0.04em; }
+    .brand-text p { font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 3px; }
+    .header-contact { text-align: right; }
+    .header-contact a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 13px; display: block; line-height: 1.7; }
+    .header-contact a:hover { color: var(--white); }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+      padding: 64px 32px 56px;
+      text-align: center;
+      color: var(--white);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.9);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .hero h2 {
+      font-size: clamp(24px, 4vw, 38px);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero p {
+      font-size: 16px;
+      color: rgba(255,255,255,0.75);
+      max-width: 560px;
+      margin: 0 auto 36px;
+      line-height: 1.65;
+    }
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--white);
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 15px;
+      padding: 14px 32px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+    .btn-download:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+
+    /* Stats */
+    .stats { background: var(--white); border-bottom: 1px solid var(--border); }
+    .stats-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .stat { text-align: center; padding: 0 16px; border-right: 1px solid var(--border); }
+    .stat:last-child { border-right: none; }
+    .stat-value { font-size: 28px; font-weight: 800; color: var(--teal); line-height: 1; margin-bottom: 6px; }
+    .stat-label { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+    /* Services */
+    .section { max-width: 960px; margin: 0 auto; padding: 56px 32px; }
+    .section-title { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
+    .section-heading { font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: var(--navy); margin-bottom: 40px; line-height: 1.25; }
+
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .service-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .service-card:hover { box-shadow: 0 6px 24px rgba(30,106,138,0.12); transform: translateY(-2px); }
+    .service-icon {
+      width: 40px; height: 40px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .service-card h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .service-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* PDF Viewer */
+    .pdf-section { background: var(--navy); padding: 56px 32px; }
+    .pdf-inner { max-width: 960px; margin: 0 auto; }
+    .pdf-section .section-title { color: rgba(255,255,255,0.6); }
+    .pdf-section .section-heading { color: var(--white); margin-bottom: 24px; }
+    .pdf-frame {
+      width: 100%; height: 700px;
+      border: none; border-radius: var(--radius);
+      background: #fff;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    }
+
+    /* Contact */
+    .contact-section { background: var(--accent); padding: 48px 32px; }
+    .contact-inner {
+      max-width: 960px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 32px; flex-wrap: wrap;
+    }
+    .contact-text h3 { font-size: 20px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .contact-text p { font-size: 14px; color: var(--muted); }
+    .contact-links { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 2px solid var(--teal); color: var(--teal);
+      font-weight: 600; font-size: 14px;
+      padding: 10px 22px; border-radius: 6px; text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-outline:hover { background: var(--teal); color: var(--white); }
+    .btn-solid {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--teal); color: var(--white);
+      font-weight: 600; font-size: 14px;
+      padding: 10px 22px; border-radius: 6px; text-decoration: none;
+      transition: background 0.15s;
+    }
+    .btn-solid:hover { background: var(--navy); }
+
+    footer {
+      background: var(--navy); padding: 24px 32px;
+      text-align: center; font-size: 12px; color: rgba(255,255,255,0.45);
+    }
+    footer a { color: rgba(255,255,255,0.6); text-decoration: none; }
+
+    @media (max-width: 680px) {
+      .header-inner { flex-direction: column; align-items: flex-start; }
+      .header-contact { text-align: left; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+      .stat { border-right: none; }
+      .services-grid { grid-template-columns: 1fr; }
+      .pdf-frame { height: 480px; }
+      .contact-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/plaquette/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/plaquette/">
+<meta property="og:title" content="G.M.E.P — Plaquette de présentation">
+<meta property="og:description" content="G.M.E.P — Bureau d'études spécialisé Sites & Sols Pollués, Hydrogéologie et Intelligence Artificielle. Plus de 25 ans d'expertise.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Logiciels de modélisation environnementale">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="G.M.E.P — Plaquette de présentation">
+<meta name="twitter:description" content="G.M.E.P — Bureau d'études spécialisé Sites & Sols Pollués, Hydrogéologie et Intelligence Artificielle. Plus de 25 ans d'expertise.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo-block">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-label="Logo G.M.E.P">
+          <rect width="48" height="48" rx="8" fill="#1e6a8a"/>
+          <path d="M10 24C10 16.268 16.268 10 24 10C28.418 10 32.37 12.01 35 15.2" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="24" cy="24" r="5" fill="white"/>
+          <path d="M24 19V10M24 29V38M19 24H10M29 24H38" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+          <path d="M34 14L38 10M14 34L10 38M34 34L38 38M14 14L10 10" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.25"/>
+        </svg>
+        <div class="brand-text">
+          <h1>G.M.E.P</h1>
+          <p>Gestion et Maîtrise de l'Environnement et de la Pollution</p>
+        </div>
+      </div>
+      <div class="header-contact">
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+        <a href="https://www.gmep-france.eu" target="_blank">www.gmep-france.eu</a>
+        <a>9 rue de la Marne, 79400 Saint-Maixent-l'École</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-badge">Bureau d'études · +25 ans d'expertise</div>
+    <h2>Sites & Sols Pollués · Hydrogéologie · Intelligence Artificielle</h2>
+    <p>G.M.E.P accompagne les acteurs publics et privés dans la caractérisation, l'évaluation et la remédiation des sites et sols pollués, ainsi que dans la gestion des eaux souterraines.</p>
+    <a class="btn-download" href="plaquette.pdf" download="Plaquette_GMEP.pdf">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Télécharger la plaquette PDF
+    </a>
+  </div>
+
+  <div class="stats">
+    <div class="stats-inner">
+      <div class="stat"><div class="stat-value">−60%</div><div class="stat-label">Temps de production<br>d'un rapport SSP</div></div>
+      <div class="stat"><div class="stat-value">×8</div><div class="stat-label">Volume de données<br>traité par jour·ingénieur</div></div>
+      <div class="stat"><div class="stat-value">100%</div><div class="stat-label">Traçabilité<br>des calculs et sources VTR</div></div>
+      <div class="stat"><div class="stat-value">25 ans</div><div class="stat-label">D'expertise<br>en hydrogéologie & SSP</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Nos missions</div>
+    <div class="section-heading">Une expertise complète de la caractérisation à la remédiation</div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e6a8a" stroke-width="2" stroke-linecap="round">
+            <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+          </svg>
+        </div>
+        <h3>Diagnostics environnementaux</h3>
+        <p>Études historiques, documentaires et de vulnérabilité, diagnostics initiaux et approfondis (sols, eaux, gaz du sol, air ambiant) — NF X31-620.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e6a8a" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+          </svg>
+        </div>
+        <h3>Évaluation des risques sanitaires</h3>
+        <p>EQRS (avant travaux) et ARR (après travaux). Modélisation Johnson & Ettinger, Domenico, Monte-Carlo. Schéma Conceptuel dynamique.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e6a8a" stroke-width="2" stroke-linecap="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <h3>Plans de gestion & dépollution</h3>
+        <p>ISCO (persulfate de sodium), oxydo-réduction, venting, sparging, pompage sur séparateur multiphase, traitement hors site.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e6a8a" stroke-width="2" stroke-linecap="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <h3>Hydrogéologie opérationnelle</h3>
+        <p>Modélisation des écoulements, essais de pompage, suivi piézométrique, dimensionnement de captages, rabattement de fouilles.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e6a8a" stroke-width="2" stroke-linecap="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+          </svg>
+        </div>
+        <h3>Modélisations propriétaires</h3>
+        <p>Suite EQRS, TSN (transfert nappe), Rabattement multicouche (v15.87+). Outils web HTML5 conformes méthodologie SSP nationale.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e6a8a" stroke-width="2" stroke-linecap="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <h3>Dossiers réglementaires</h3>
+        <p>Dossiers Loi sur l'Eau (R.214-1), ICPE, IOTA, porter-à-connaissance, maîtrise d'œuvre travaux, rédaction CCTP.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pdf-section">
+    <div class="pdf-inner">
+      <div class="section-title">Plaquette complète</div>
+      <div class="section-heading">Découvrez l'intégralité de nos services</div>
+      <iframe class="pdf-frame" src="plaquette.pdf" title="Plaquette G.M.E.P"></iframe>
+    </div>
+  </div>
+
+  <div class="contact-section">
+    <div class="contact-inner">
+      <div class="contact-text">
+        <h3>Discutons de votre projet</h3>
+        <p>Éric AZULAY — Ingénieur SSP · Gérant G.M.E.P · SIRET 753 097 625 00010</p>
+      </div>
+      <div class="contact-links">
+        <a class="btn-outline" href="mailto:gmep.france@gmail.com">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Envoyer un email
+        </a>
+        <a class="btn-solid" href="https://www.gmep-france.eu" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          www.gmep-france.eu
+        </a>
+        <a class="btn-outline" href="plaquette.pdf" download="Plaquette_GMEP.pdf">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Télécharger PDF
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 G.M.E.P · 9 rue de la Marne, 79400 Saint-Maixent-l'École · SIRET 753 097 625 00010 · <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a></p>
+  </footer>
+
+</body>
+</html>

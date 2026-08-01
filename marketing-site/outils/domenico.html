@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transfert Sol → Nappe → Captage (Domenico 1987) | GMEP — Logiciel SSP</title>
+<meta name="description" content="Logiciel en ligne de modélisation du transfert de polluants sol vers nappe et captage d'eau potable. Modèle Domenico 1987, 24 polluants (BTEX, HAP, métaux, PFAS), 24 faciès de sols, API Hub'eau. Conforme méthodologie nationale SSP.">
+<meta name="keywords" content="modèle Domenico, transfert sol nappe captage, polluants nappe phréatique, logiciel SSP, sites sols pollués, Hub'eau, BTEX HAP PFAS transfert, hydrogéologie pollution">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/outils/domenico.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/outils/domenico.html">
+<meta property="og:title" content="Transfert Sol → Nappe → Captage (Domenico 1987) | GMEP — Logiciel SSP">
+<meta property="og:description" content="Logiciel en ligne de modélisation du transfert de polluants sol vers nappe et captage d'eau potable. Modèle Domenico 1987, 24 polluants (BTEX, HAP, métaux, PFAS), 24 faciès de sols, API Hub'eau. Conforme méthodologie nationale SSP.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Logiciels de modélisation environnementale">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Transfert Sol → Nappe → Captage (Domenico 1987) | GMEP — Logiciel SSP">
+<meta name="twitter:description" content="Logiciel en ligne de modélisation du transfert de polluants sol vers nappe et captage d'eau potable. Modèle Domenico 1987, 24 polluants (BTEX, HAP, métaux, PFAS), 24 faciès de sols, API Hub'eau. Conforme méthodologie nationale SSP.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Accueil GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Bureau d'études environnement &amp; hydrogéologie</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navigation principale">
+      <a href="../index.html">Accueil</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Outils
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modélisation 3D sols / nappe / ouvrages · NOUVEAU</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau<span class="nav-mi-desc">Dimensionnement EP + dossiers DLE/GEP · NOUVEAU</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modélisation Essai de Porchet<span class="nav-mi-desc">Calcul K terrain + comparaison GEP · NOUVEAU</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX V8<span class="nav-mi-desc">HHRA + écotoxicologie — 104 substances · NOUVEAU</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Rabattement V15.87<span class="nav-mi-desc">Multicouche + assistant IA · NOUVEAU</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transfert Sol-Nappe<span class="nav-mi-desc">Domenico 1987 + API Hub'eau · NOUVEAU</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Schéma Conceptuel<span class="nav-mi-desc">IEM + Plan de Gestion · NOUVEAU</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Intrusion de vapeurs — EPA 2004</span></a>
+          <a href="../outils/domenico.html" role="menuitem">Transfert Sol → Nappe → Captage<span class="nav-mi-desc">Modèle Domenico 1987</span></a>
+          <a href="../outils/rabattement/index.html" role="menuitem">Rabattement de nappe<span class="nav-mi-desc">Theis + IOTA</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Tarifs</a>
+      <a href="../expertise.html">Expertise</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Choix de langue">
+        <button class="lang-btn active" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Connexion</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Inscription</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge">Modèle Domenico 1987</span>
+        <h1>Transfert Sol → Nappe → Captage</h1>
+        <p class="lead">Modélisation analytique du transfert de polluants depuis une source dans les sols vers la nappe souterraine puis vers un captage AEP. 24 polluants, 24 types de sols, courbe d'atténuation Cc(x).</p>
+        <div class="hero-cta">
+          <a href="../tarifs.html#domenico_annual" class="btn btn-primary">S'abonner</a>
+          <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-outline">Essai gratuit 14 jours</a>
+        </div>
+      </div>
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">domenico · 1987</span>
+        </div>
+        <div class="hero-mock-row"><span class="l">Polluant</span><span class="v">Benzène (BTEX)</span></div>
+        <div class="hero-mock-row"><span class="l">Cs source</span><span class="v">85 mg/kg</span></div>
+        <div class="hero-mock-row"><span class="l">Cc,2 nappe (x=0)</span><span class="v">410 µg/L</span></div>
+        <div class="hero-mock-row"><span class="l">DAF à 250 m</span><span class="v">87,4</span></div>
+        <div class="hero-mock-result"><strong>Cc,3 captage</strong><span>4,7 µg/L</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Fonctionnalités</span>
+      <h2>De la source au robinet</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 8l3-5h12l3 5v13H3V8z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M3 8h18" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>24 polluants paramétrés</h3>
+        <p>COHV, BTEX, HAP, PFAS, métaux — propriétés Kd, demi-vie, solubilité, log Koc intégrées.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="4" rx="1" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="18" height="6" rx="1" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>24 types de sols</h3>
+        <p>Sables, limons, argiles, calcaires, granites… avec K, porosité, capacité d'échange, fraction organique.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 17c4-8 10-8 14 0M21 17c-2-3-4-3-6 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+        <h3>Courbe d'atténuation Cc(x)</h3>
+        <p>Tracé graphique de la concentration en aval, calcul du DAF (Dilution-Attenuation Factor).</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 3v18M3 12h18" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Gradient hydraulique</h3>
+        <p>Saisie du gradient i et du vitesse de Darcy, calcul de la vitesse réelle de transfert.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v4H4zM4 12h10v8H4z" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Éditeur PDF intégré</h3>
+        <p>Personnalisation directe du rapport : titres, commentaires, ajout d'illustrations.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3L4 7v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V7l-8-4z" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Schéma conceptuel automatique</h3>
+        <p>Coupe géologique stylisée générée à partir des paramètres saisis, incluse dans le PDF.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Polluants couverts</span>
+      <h2>24 substances paramétrées</h2>
+    </div>
+    <table class="substances-table">
+      <thead><tr><th>Famille</th><th>Exemples</th><th>Nb</th></tr></thead>
+      <tbody>
+        <tr><td>COHV (solvants chlorés)</td><td>Trichloroéthylène, Perchloroéthylène, Chlorure de vinyle, DCE</td><td>6</td></tr>
+        <tr><td>BTEX</td><td>Benzène, Toluène, Éthylbenzène, Xylènes</td><td>4</td></tr>
+        <tr><td>HAP</td><td>Benzo(a)pyrène, Naphtalène, Anthracène, Pyrène</td><td>5</td></tr>
+        <tr><td>PFAS</td><td>PFOS, PFOA, PFHxS, PFNA</td><td>4</td></tr>
+        <tr><td>Métaux et métalloïdes</td><td>Arsenic, Plomb, Cadmium, Chrome VI, Mercure</td><td>5</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Conformité réglementaire</span>
+      <h2>Cadre normatif</h2>
+    </div>
+    <div class="compliance-list">
+      <h3>Références appliquées</h3>
+      <ul>
+        <li><strong>Modèle Domenico (1987)</strong> — solution analytique 3D du transport de soluté en milieu poreux saturé.</li>
+        <li><strong>EPA Soil Screening Guidance</strong> — calcul du DAF (Dilution-Attenuation Factor).</li>
+        <li><strong>Méthodologie nationale sites pollués</strong> (MTES 2017) — gestion des sites pollués, transfert vers les eaux souterraines.</li>
+        <li><strong>Code de la santé publique</strong> — valeurs limites de qualité des eaux destinées à la consommation humaine (art. R.1321-2).</li>
+        <li><strong>VTR ANSES</strong> — pour l'évaluation des risques sanitaires en sortie de captage.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="bg-soft">
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Tarif</span>
+      <h2>Licence annuelle</h2>
+    </div>
+    <div class="pricing-grid" style="max-width:380px;margin:0 auto;">
+      <div class="price-card featured">
+        <h3>Domenico — Annuel</h3>
+        <p class="sub">Licence annuelle 1 utilisateur</p>
+        <div class="price-amount"><span class="currency">€</span>850</div>
+        <div class="price-period">HT / an</div>
+        <ul class="price-features">
+          <li>24 polluants &amp; 24 sols</li>
+          <li>Courbe d'atténuation Cc(x)</li>
+          <li>Calcul DAF, gradient hydraulique</li>
+          <li>Éditeur PDF intégré</li>
+          <li>Schéma conceptuel auto</li>
+          <li>Mises à jour incluses</li>
+        </ul>
+        <a href="../tarifs.html#domenico_annual" class="btn btn-primary btn-block">S'abonner</a>
+      </div>
+    </div>
+    <div class="text-center mt-6">
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-ghost">Essai gratuit 14 jours — sans carte bancaire</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="demo-placeholder">
+      <h3>Démo en ligne — disponible prochainement</h3>
+      <p>La démo interactive complète (saisie polluant + sol, calcul Cc,1/Cc,2/Cc,3, tracé de la courbe d'atténuation, export PDF) sera réintégrée dans une prochaine version. En attendant, créez votre compte d'essai pour un accès complet 14 jours.</p>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-primary">Activer l'essai gratuit</a>
+    </div>
+  </div>
+</section>
+
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tél. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nos outils</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modélisation Essai de Porchet</a></li>
+          <li><a href="../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../outils/domenico.html">Transfert Sol → Nappe → Captage</a></li>
+          <li><a href="../outils/rabattement/index.html">Rabattement de nappe IOTA</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Société</h6>
+        <ul>
+          <li><a href="../tarifs.html">Tarifs</a></li>
+          <li><a href="../guide-11-outils/index.html">Guide 11 outils (PDF)</a></li>
+          <li><a href="../expertise.html">Expertise</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../mentions-legales.html">Mentions légales</a></li>
+          <li><a href="../cgv.html">CGV</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Tous droits réservés.</p>
+        <p>Tous nos logiciels sont la propriété exclusive de la SARL G.M.E.P. Toute reproduction, diffusion ou utilisation, même partielle, sans autorisation écrite préalable est interdite.</p>
+        <p class="credit">Conception et développement : Eric Azulay — Gérant SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/nav.js"></script>
+<script src="../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

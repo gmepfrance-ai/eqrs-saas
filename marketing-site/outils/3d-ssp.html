@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D_SSP — Modélisation 3D intégrée sols · nappe · ouvrages | GMEP</title>
+<meta name="description" content="3D_SSP GMEP — Logiciel de modélisation 3D interactive superposant la source de pollution des sols, le panache de pollution de la nappe et les ouvrages du site (bâtiments, voiries, espaces verts). Import automatique depuis TSN et MSP, module Plan de Gestion des terres excavées, analyse de recouvrement structures/panache. Essai gratuit 8 jours. 250 € HT/mois ou 2 400 € HT/an.">
+<meta name="keywords" content="modélisation 3D, SSP, source vecteur cible, panache de pollution, plan de gestion, terres excavées, ISDI, HP14, écotoxicité, 3D_SSP, GMEP">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/outils/3d-ssp.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/outils/3d-ssp.html">
+<meta property="og:title" content="3D_SSP — Modélisation 3D intégrée sols · nappe · ouvrages | GMEP">
+<meta property="og:description" content="Superposition 3D interactive de la source de pollution des sols, du panache de pollution de la nappe et des ouvrages du site. Module Plan de Gestion des terres excavées intégré. Essai gratuit 8 jours.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — 3D_SSP, modélisation 3D sols / nappe / ouvrages">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="3D_SSP — Modélisation 3D intégrée sols · nappe · ouvrages | GMEP">
+<meta name="twitter:description" content="Superposition 3D interactive sols / nappe / ouvrages. Import automatique TSN &amp; MSP, module Plan de Gestion. Essai gratuit 8 jours.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Accueil GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Bureau d'études environnement &amp; hydrogéologie</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navigation principale">
+      <a href="../index.html">Accueil</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Outils
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modélisation 3D sols / nappe / ouvrages · NOUVEAU</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau<span class="nav-mi-desc">Dimensionnement EP + dossiers DLE/GEP · NOUVEAU</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modélisation Essai de Porchet<span class="nav-mi-desc">Calcul K terrain + comparaison GEP · NOUVEAU</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX<span class="nav-mi-desc">104 substances HHRA + 12 écotox</span></a>
+          <a href="../outils/eqrs-v8-ecotox-humain.html" role="menuitem">EQRS V8 + ECOTOX + HUMAIN<span class="nav-mi-desc">Voie alimentaire humaine — PFAS, PCB, métaux</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Rabattement V15.87<span class="nav-mi-desc">Multicouche IA — Loi sur l'Eau</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transfert Sol → Nappe<span class="nav-mi-desc">Domenico 1987 — API Hub'eau</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Schéma Conceptuel<span class="nav-mi-desc">IEM + Plan de Gestion</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS V7 Johnson &amp; Ettinger<span class="nav-mi-desc">+ 5 modules avancés</span></a>
+          <a href="../outils/domenico.html" role="menuitem">Transfert Sol → Nappe → Captage<span class="nav-mi-desc">Modèle Domenico 1987</span></a>
+          <a href="../outils/rabattement/index.html" role="menuitem">Rabattement de nappe<span class="nav-mi-desc">Theis + IOTA</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Tarifs</a>
+      <a href="../expertise.html">Expertise</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Choix de langue">
+        <button class="lang-btn active" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Connexion</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Inscription</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge" style="background:linear-gradient(135deg,#39e07a 0%,#1a5276 100%);color:#fff;">NOUVEAU — MODÉLISATION 3D INTÉGRÉE</span>
+        <h1>3D_SSP — Sols · Nappe · Ouvrages en une scène 3D</h1>
+        <p class="lead">Logiciel de modélisation 3D interactive qui superpose, dans une scène unique, la <strong>source de pollution des sols</strong>, le <strong>panache de pollution de la nappe</strong> et les <strong>ouvrages du site</strong> (bâtiments, voiries, parkings, espaces verts). Import automatique des données depuis <strong>TSN</strong> et <strong>MSP GMEP</strong>, module intégré de <strong>Plan de Gestion</strong> des terres excavées et export PDF prêt à transmettre.</p>
+        <div class="hero-cta">
+          <a href="../tarifs.html#3dssp" class="btn btn-primary">S'abonner — 250 € HT/mois</a>
+          <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-outline">Essai gratuit 8 jours</a>
+          <a href="../contact.html" class="btn btn-outline">Démo sur demande</a>
+        </div>
+      </div>
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">3d_ssp · scène 3d</span>
+        </div>
+        <svg viewBox="0 0 280 130" style="width:100%;height:auto;font-family:Inter,sans-serif;">
+          <polygon points="20,100 130,100 155,80 45,80" fill="rgba(88,101,242,0.14)" stroke="#5865F2" stroke-width="1.2"/>
+          <text x="70" y="72" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">TERRAIN</text>
+          <rect x="55" y="55" width="34" height="24" fill="rgba(245,185,77,0.22)" stroke="#f5b94d" stroke-width="1.2"/>
+          <text x="72" y="50" font-size="7.5" fill="#fff" text-anchor="middle">Ouvrage</text>
+          <ellipse cx="95" cy="92" rx="26" ry="10" fill="rgba(192,57,43,0.28)" stroke="#c0392b" stroke-width="1.2"/>
+          <text x="95" y="112" font-size="7.5" fill="#fff" text-anchor="middle">Source sols</text>
+          <ellipse cx="150" cy="96" rx="42" ry="13" fill="rgba(61,224,122,0.22)" stroke="#39e07a" stroke-width="1.2"/>
+          <text x="150" y="118" font-size="7.5" fill="#fff" text-anchor="middle">Panache nappe</text>
+          <line x1="235" y1="35" x2="235" y2="15" stroke="#fff" stroke-width="1.2"/>
+          <polygon points="235,10 231,20 239,20" fill="#fff"/>
+          <text x="235" y="45" font-size="7.5" fill="rgba(255,255,255,0.6)" text-anchor="middle">N</text>
+        </svg>
+        <div class="hero-mock-row"><span class="l">Source sols</span><span class="v">Recouvrement détecté</span></div>
+        <div class="hero-mock-row"><span class="l">Panache nappe</span><span class="v">Import TSN automatique</span></div>
+        <div class="hero-mock-row"><span class="l">Terres excavées</span><span class="v">17 05 04 — non dangereux</span></div>
+        <div class="hero-mock-result"><strong>Scène 3D</strong><span>Export PDF + JSON réutilisable</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Fonctionnalités</span>
+      <h2>Une seule scène 3D pour visualiser tous les enjeux du site</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2l9 5-9 5-9-5 9-5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M3 12l9 5 9-5M3 17l9 5 9-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Superposition 3D interactive</h3>
+        <p>Source de pollution des sols, panache de pollution de la nappe et ouvrages du site (bâtiments, voiries, parkings, espaces verts) réunis dans une même scène 3D navigable, avec repère nord et caméra libre.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4z" stroke="currentColor" stroke-width="2"/><path d="M9 4v16M4 9h16" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Import automatique multi-outils</h3>
+        <p>Récupération automatique des données depuis <strong>TSN</strong> et <strong>MSP GMEP</strong> au format JSON, avec détection automatique du format et éditeur de données intégré pour ajustement manuel.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Module Plan de Gestion intégré</h3>
+        <p>Classification des terres excavées (codes déchets <strong>17 05 04</strong> non dangereux / <strong>17 05 03*</strong> dangereux) avec estimation des coûts de gestion associés.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
+        <h3>Analyse de recouvrement &amp; alertes</h3>
+        <p>Détection automatique des zones de recouvrement polygonal entre les ouvrages et le panache de pollution, avec alertes visuelles directement dans la scène 3D.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="currentColor" stroke-width="2"/><path d="M15 3v5h5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Export PDF &amp; sauvegarde JSON</h3>
+        <p>Rapport PDF de la superposition sols / nappe / ouvrages prêt à transmettre, et fichier de projet JSON réutilisable pour reprendre ou faire évoluer le modèle 3D ultérieurement.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33h0A1.65 1.65 0 009 4.09V4a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v0a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <h3>Caméra navigable</h3>
+        <p>Rotation, zoom et déplacement libre dans la scène 3D pour explorer chaque niveau (sols, nappe, ouvrages) et présenter le site sous tous les angles.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION 1 — PUBLIC CIBLE -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Public cible</span>
+      <h2>Un outil de visualisation pour tous les acteurs du site</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Propriétaires, exploitants et aménageurs</h3>
+        <p>Visualisation claire des enjeux de pollution pour les sites soumis à Servitudes d'Utilité Publique Sols Pollués (SSP) ou classés ICPE, et pour les projets d'aménagement.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Services techniques des collectivités</h3>
+        <p>Support de compréhension et d'instruction pour les services techniques amenés à examiner des dossiers de pollution ou des projets sur sites potentiellement pollués.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Organismes tiers de vérification</h3>
+        <p>Support à la vérification et au contrôle indépendant des données de pollution des sols et de la nappe présentées dans le cadre d'un projet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION 2 — CADRE RÉGLEMENTAIRE -->
+<!-- ==================================================================== -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Référentiels</span>
+      <h2>Un module aligné sur les textes de référence en vigueur</h2>
+    </div>
+    <table class="substances-table">
+      <thead><tr><th>Référentiel</th><th>Objet</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Arrêté du 12/12/2014</strong></td>
+          <td>Conditions d'admission des déchets inertes en installation de stockage de déchets inertes (ISDI) — critères pris en compte dans le module Plan de Gestion.</td>
+        </tr>
+        <tr>
+          <td><strong>Règlement (UE) 2017/997</strong></td>
+          <td>Modification de l'annexe III de la directive 2008/98/CE — propriété de danger HP14 « Écotoxique », intégrée à la classification des terres excavées.</td>
+        </tr>
+        <tr>
+          <td><strong>Guide méthodologique national (2020)</strong></td>
+          <td>Guide méthodologique national de réutilisation hors site des terres excavées issues de sites potentiellement pollués.</td>
+        </tr>
+        <tr>
+          <td><strong>NF EN ISO 10381-5</strong></td>
+          <td>Norme de qualité du sol relative aux lignes directrices pour l'investigation des sites urbains et industriels en ce qui concerne la pollution des sols.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:var(--text-mute,#6b7280);margin-top:18px;">3D_SSP constitue un outil d'aide à la visualisation et à la décision ; il ne se substitue pas à l'expertise de l'ingénieur ni aux prescriptions des services instructeurs compétents.</p>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION 3 — LIVRABLES -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Livrables</span>
+      <h2>Des sorties prêtes à transmettre</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Scène 3D interactive</h3>
+        <p>Navigation par caméra libre, repère nord, superposition sols / nappe / ouvrages consultable directement dans l'application.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Rapport PDF de superposition</h3>
+        <p>Export PDF de la scène 3D et des enjeux identifiés (recouvrements, alertes), prêt à joindre à un dossier ou à transmettre à un tiers.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Tableau de classification des déchets</h3>
+        <p>Classification des terres excavées (17 05 04 / 17 05 03*) avec estimation des coûts de gestion associés.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Fichier JSON réutilisable</h3>
+        <p>Sauvegarde du projet au format JSON, pour reprendre ou faire évoluer le modèle 3D à tout moment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- TARIF -->
+<!-- ==================================================================== -->
+<section id="3dssp">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Tarif</span>
+      <h2>Mensuel ou annuel — sans engagement</h2>
+    </div>
+    <div class="pricing-grid" style="max-width:760px;margin:0 auto;">
+      <div class="price-card">
+        <span class="badge" style="background:#5865F2;color:#fff;">NOUVEAU</span>
+        <h3>3D_SSP — Mensuel</h3>
+        <p class="sub">Abonnement mensuel — 1 poste</p>
+        <div class="price-amount" style="color:#1a2b4a;"><span class="currency">€</span>250</div>
+        <div class="price-period">HT / mois (300 € TTC)</div>
+        <ul class="price-features">
+          <li>Scène 3D interactive sols / nappe / ouvrages</li>
+          <li>Import automatique TSN &amp; MSP GMEP</li>
+          <li>Module Plan de Gestion des terres excavées</li>
+          <li>Export PDF + sauvegarde JSON</li>
+          <li>Essai gratuit 8 jours inclus</li>
+        </ul>
+        <button class="btn btn-primary btn-block" style="margin-bottom:8px;" onclick="GmepCheckout.start('ssp3d_monthly', 'FR')">Souscrire — Paiement Stripe</button>
+      </div>
+      <div class="price-card featured" style="border-color:#5865F2;">
+        <span class="badge" style="background:#5865F2;color:#fff;">Économisez 600 € HT/an</span>
+        <h3>3D_SSP — Annuel</h3>
+        <p class="sub">Abonnement annuel — 1 poste</p>
+        <div class="price-amount" style="color:#1a2b4a;"><span class="currency">€</span>2 400</div>
+        <div class="price-period">HT / an (2 880 € TTC)</div>
+        <ul class="price-features">
+          <li>Scène 3D interactive sols / nappe / ouvrages</li>
+          <li>Import automatique TSN &amp; MSP GMEP</li>
+          <li>Module Plan de Gestion des terres excavées</li>
+          <li>Export PDF + sauvegarde JSON</li>
+          <li>Essai gratuit 8 jours inclus</li>
+          <li>2 mois offerts par rapport au mensuel</li>
+        </ul>
+        <button class="btn btn-primary btn-block" style="margin-bottom:8px;" onclick="GmepCheckout.start('ssp3d_annual', 'FR')">Souscrire — Paiement Stripe</button>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:13px;color:var(--text-mute,#6b7280);margin-top:16px;">Tarifs et détail TVA par pays disponibles sur la page <a href="../tarifs.html#3dssp">Tarifs</a>. Résiliable à tout moment.</p>
+    <div class="text-center mt-6">
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-ghost">Essai gratuit 8 jours — sans carte bancaire</a>
+    </div>
+    <p style="text-align:center;font-size:13px;color:var(--text-mute,#6b7280);margin-top:16px;">Formation, paramétrage spécifique ou accompagnement personnalisé : sur devis — <a href="../contact.html">contactez GMEP</a>.</p>
+  </div>
+</section>
+
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tél. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nos outils</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modélisation Essai de Porchet</a></li>
+          <li><a href="../outils/eqrs-v31-05-ecotox.html">EQRS V9 + ECOTOX V9</a></li>
+          <li><a href="../outils/eqrs-v8-ecotox-humain.html">EQRS V9 + Module HUMAIN</a></li>
+          <li><a href="../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../outils/domenico.html">Transfert Sol → Nappe → Captage</a></li>
+          <li><a href="../outils/rabattement/index.html">Rabattement de nappe IOTA</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Société</h6>
+        <ul>
+          <li><a href="../tarifs.html">Tarifs</a></li>
+          <li><a href="../guide-11-outils/index.html">Guide 11 outils (PDF)</a></li>
+          <li><a href="../expertise.html">Expertise</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../mentions-legales.html">Mentions légales</a></li>
+          <li><a href="../cgv.html">CGV</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Tous droits réservés.</p>
+        <p>Tous nos logiciels sont la propriété exclusive de la SARL G.M.E.P. Toute reproduction, diffusion ou utilisation, même partielle, sans autorisation écrite préalable est interdite.</p>
+        <p class="credit">Conception et développement : Eric Azulay — Gérant SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/nav.js"></script>
+<script src="../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>
