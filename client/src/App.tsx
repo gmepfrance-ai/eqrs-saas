@@ -31,6 +31,7 @@ import SubscribeSchemaConceptuelPage from "@/pages/subscribe-schema-conceptuel";
 import SubscribePiezometresPage from "@/pages/subscribe-piezometres";
 import SubscribeMspPage from "@/pages/subscribe-msp";
 import SubscribeEauxPluvialesPage from "@/pages/subscribe-eaux-pluviales";
+import SubscribePorchetPage from "@/pages/subscribe-porchet";
 import SubscribeEqrsV8HumainPage from "@/pages/subscribe-eqrs-v8-humain";
 import SubscribeSsp3dPage from "@/pages/subscribe-ssp3d";
 import NotFound from "@/pages/not-found";
@@ -92,6 +93,7 @@ function AppRouter() {
       <Route path="/subscribe-piezometres" component={SubscribePiezometresPage} />
       <Route path="/subscribe-msp" component={SubscribeMspPage} />
       <Route path="/subscribe-eaux-pluviales" component={SubscribeEauxPluvialesPage} />
+      <Route path="/subscribe-porchet" component={SubscribePorchetPage} />
       <Route path="/subscribe-eqrs-v8-humain" component={SubscribeEqrsV8HumainPage} />
       <Route path="/subscribe-ssp3d" component={SubscribeSsp3dPage} />
       <Route component={NotFound} />

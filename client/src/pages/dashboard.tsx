@@ -88,6 +88,11 @@ export default function DashboardPage() {
           .then(r => r.json())
           .then(() => { window.location.href = `/api/eaux-pluviales-tool?token=${token}`; })
           .catch(() => { navigateTo("/subscribe-eaux-pluviales"); });
+      } else if (plan === "porchet_trial") {
+        fetch(`/api/porchet-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
+          .then(r => r.json())
+          .then(() => { window.location.href = `/api/porchet-tool?token=${token}`; })
+          .catch(() => { navigateTo("/subscribe-porchet"); });
       } else if (plan === "ssp3d_trial") {
         fetch(`/api/ssp3d-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
           .then(r => r.json())
@@ -342,12 +347,30 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-bold text-foreground">Eaux Pluviales DLE/GEP v2.1</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-3">Loi sur l'Eau IOTA 2.1.5.0 / 3.3.1.0 — IA Porchet — Bassin rétention</p>
-              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 3 500 € HT/an ensuite</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 5 500 € HT/an ensuite</p>
               <button className="w-full bg-[#1A6FB5] text-white py-2 rounded font-semibold text-sm hover:opacity-90"
                 onClick={() => {
                   fetch(`/api/eaux-pluviales-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
                     .then(() => { window.location.href = `/api/eaux-pluviales-tool?token=${token}`; })
                     .catch(() => { window.location.href = `/api/eaux-pluviales-tool?token=${token}`; });
+                }}>
+                Accéder →
+              </button>
+            </div>
+
+            {/* Modélisation Essai de Porchet */}
+            <div className="bg-white border-2 border-[#0F766E] rounded-lg p-4 shadow-sm hover:shadow-md transition">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded bg-[#0F766E] text-white flex items-center justify-center text-xs font-bold">PCH</div>
+                <h3 className="text-sm font-bold text-foreground">Modélisation Essai de Porchet</h3>
+              </div>
+              <p className="text-xs text-muted-foreground mb-3">Perméabilité des sols — coefficient K hémisphérique — concordance GEP — fiches PDF</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 550 € HT/an ensuite</p>
+              <button className="w-full bg-[#0F766E] text-white py-2 rounded font-semibold text-sm hover:opacity-90"
+                onClick={() => {
+                  fetch(`/api/porchet-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
+                    .then(() => { window.location.href = `/api/porchet-tool?token=${token}`; })
+                    .catch(() => { window.location.href = `/api/porchet-tool?token=${token}`; });
                 }}>
                 Accéder →
               </button>

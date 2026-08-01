@@ -10,13 +10,13 @@ import { apiRequest } from "@/lib/queryClient";
 function PricingItem({ children }: { children: React.ReactNode }) {
   return (
     <li className="flex items-start gap-2">
-      <Check className="w-3.5 h-3.5 text-[#1A6FB5] flex-shrink-0 mt-0.5" />
+      <Check className="w-3.5 h-3.5 text-[#0F766E] flex-shrink-0 mt-0.5" />
       <span>{children}</span>
     </li>
   );
 }
 
-export default function SubscribeEauxPluvialesPage() {
+export default function SubscribePorchetPage() {
   const { user, token } = useAuth();
   const [loading, setLoading] = useState(false);
   const [trialLoading, setTrialLoading] = useState(false);
@@ -24,19 +24,19 @@ export default function SubscribeEauxPluvialesPage() {
 
   async function handleTrial() {
     if (!user || !token) {
-      localStorage.setItem("pending_plan", "eaux_pluviales_trial");
+      localStorage.setItem("pending_plan", "porchet_trial");
       navigateTo("/register");
       return;
     }
     setTrialLoading(true);
     setError("");
     try {
-      await apiRequest("POST", `/api/eaux-pluviales-trial/activate?token=${token}`, {});
-      window.location.href = `/api/eaux-pluviales-tool?token=${token}`;
+      await apiRequest("POST", `/api/porchet-trial/activate?token=${token}`, {});
+      window.location.href = `/api/porchet-tool?token=${token}`;
     } catch (err: any) {
       const msg = err.message || "";
       if (msg.startsWith("409:") || msg.toLowerCase().includes("déjà un accès")) {
-        window.location.href = `/api/eaux-pluviales-tool?token=${token}`;
+        window.location.href = `/api/porchet-tool?token=${token}`;
         return;
       }
       const match = msg.match(/^\d+:\s*(.+)/);
@@ -53,14 +53,14 @@ export default function SubscribeEauxPluvialesPage() {
 
   async function handleSubscribe() {
     if (!user || !token) {
-      localStorage.setItem("pending_plan", "eaux_pluviales_annual");
+      localStorage.setItem("pending_plan", "porchet_annual");
       navigateTo("/register");
       return;
     }
     setLoading(true);
     setError("");
     try {
-      const res = await apiRequest("POST", `/api/stripe/create-checkout?token=${token}`, { plan: "eaux_pluviales_annual" });
+      const res = await apiRequest("POST", `/api/stripe/create-checkout?token=${token}`, { plan: "porchet_annual" });
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;
@@ -94,36 +94,37 @@ export default function SubscribeEauxPluvialesPage() {
         </button>
 
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white" style={{ background: "#1A6FB5" }}>
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white" style={{ background: "#0F766E" }}>
             <Droplets className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-extrabold text-foreground">Eaux Pluviales DLE/GEP v2.1</h1>
-            <p className="text-xs text-muted-foreground">Loi sur l'Eau — IOTA R.214-1 rubriques 2.1.5.0 / 3.3.1.0</p>
+            <h1 className="text-xl font-extrabold text-foreground">Modélisation Essai de Porchet</h1>
+            <p className="text-xs text-muted-foreground">Perméabilité des sols — Dossier Loi sur l'Eau (DLE)</p>
           </div>
         </div>
 
-        <div className="rounded-xl border-2 p-6 shadow-md relative bg-white" style={{ borderColor: "#1A6FB5" }}>
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold text-white px-4 py-1 rounded-full" style={{ background: "#1A6FB5" }}>
+        <div className="rounded-xl border-2 p-6 shadow-md relative bg-white" style={{ borderColor: "#0F766E" }}>
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-semibold text-white px-4 py-1 rounded-full" style={{ background: "#0F766E" }}>
             Licence annuelle
           </div>
 
           <div className="flex items-baseline gap-1 mb-1">
-            <span className="text-4xl font-extrabold text-foreground">5 500€</span>
+            <span className="text-4xl font-extrabold text-foreground">550€</span>
             <span className="text-sm text-muted-foreground">HT/an</span>
           </div>
           <p className="text-xs text-muted-foreground mb-6">Facturation annuelle. Résiliable à l'échéance.</p>
 
           <ul className="space-y-2 mb-6 text-sm">
-            <PricingItem>Dossiers Loi sur l'Eau L.214-1 à L.214-6 CE — Déclaration IOTA</PricingItem>
-            <PricingItem>Nomenclature IOTA rubriques 2.1.5.0 / 3.3.1.0 / 3.2.2.0 / 1.1.1.0</PricingItem>
-            <PricingItem>Module IA appliquée — évite les essais de perméabilité Porchet</PricingItem>
-            <PricingItem>DLE : note hydraulique + dimensionnement bassin de rétention</PricingItem>
-            <PricingItem>GEP : note technique annexe (calculs + ouvrages EP)</PricingItem>
-            <PricingItem>Méthode des pluies — coefficients de Montana — orifice calibré Torricelli</PricingItem>
-            <PricingItem>Prise en compte du passif environnemental (SIS / BASOL / BASIAS)</PricingItem>
-            <PricingItem>Génération PDF automatique DLE + GEP conforme charte GMEP</PricingItem>
-            <PricingItem>Carte Leaflet IGN + export PDF + CSV des résultats</PricingItem>
+            <PricingItem>Saisie terrain des essais de perméabilité — saisie illimitée organisée par projet</PricingItem>
+            <PricingItem>Repère, date, diamètre et profondeur du trou, faciès géologique, volume versé, temps d'assèchement</PricingItem>
+            <PricingItem>Calcul automatisé du coefficient K — formule hémisphérique</PricingItem>
+            <PricingItem>Coefficient de sécurité Cs paramétrable (défaut 1,5) — Kdim = K / Cs</PricingItem>
+            <PricingItem>Comparaison directe avec le K théorique retenu par le module Modélisation GEP</PricingItem>
+            <PricingItem>Badge de concordance automatique (écart log₁₀ ≤ 0,5)</PricingItem>
+            <PricingItem>Courbe d'infiltration reconstituée pour chaque essai</PricingItem>
+            <PricingItem>Tableau de synthèse multi-essais et interprétation d'aptitude à l'infiltration</PricingItem>
+            <PricingItem>Fiches de rapport PDF prêtes à joindre au dossier Loi sur l'Eau</PricingItem>
+            <PricingItem>Export / import JSON du projet ou d'un essai unique</PricingItem>
             <PricingItem>Support par e-mail + mises à jour réglementaires</PricingItem>
           </ul>
 
@@ -135,7 +136,7 @@ export default function SubscribeEauxPluvialesPage() {
 
           <Button
             className="w-full text-white font-semibold text-sm py-3"
-            style={{ background: "#1A6FB5" }}
+            style={{ background: "#0F766E" }}
             disabled={loading}
             onClick={handleSubscribe}
           >
@@ -164,7 +165,7 @@ export default function SubscribeEauxPluvialesPage() {
               Déjà un compte ?{" "}
               <button
                 className="text-primary hover:underline font-medium"
-                onClick={() => { localStorage.setItem("pending_plan", "eaux_pluviales_annual"); navigateTo("/login"); }}
+                onClick={() => { localStorage.setItem("pending_plan", "porchet_annual"); navigateTo("/login"); }}
               >
                 Se connecter
               </button>
@@ -172,8 +173,8 @@ export default function SubscribeEauxPluvialesPage() {
           )}
         </div>
 
-        <div className="mt-4 bg-blue-50 border border-blue-100 rounded-lg p-4 text-xs text-blue-800">
-          <strong>Note :</strong> L'outil Eaux Pluviales DLE/GEP v2.1 est disponible en licence annuelle (5 500 € HT/an). L'essai gratuit de 8 jours donne accès à toutes les fonctionnalités sans engagement.
+        <div className="mt-4 bg-teal-50 border border-teal-100 rounded-lg p-4 text-xs text-teal-800">
+          <strong>Note :</strong> L'outil Modélisation Essai de Porchet est disponible en licence annuelle (550 € HT/an). L'essai gratuit de 8 jours donne accès à toutes les fonctionnalités sans engagement.
         </div>
       </div>
       <V2Footer />

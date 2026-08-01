@@ -95,6 +95,17 @@ try {
   console.error("Warning: Could not load eaux-pluviales-tool.html", e);
 }
 
+// Load Modélisation Essai de Porchet tool HTML at startup
+let porchetToolHtml = "";
+try {
+  porchetToolHtml = fs.readFileSync(
+    path.resolve(process.cwd(), "porchet-tool.html"),
+    "utf-8"
+  );
+} catch (e) {
+  console.error("Warning: Could not load porchet-tool.html", e);
+}
+
 // Load 3D_SSP (SAR³ — Superposition 3D pollution sols/nappe) tool HTML at startup
 let ssp3dToolHtml = "";
 try {
@@ -151,6 +162,7 @@ const STRIPE_PRICE_HUMAIN_ANNUAL =
   process.env.STRIPE_PRICE_HUMAIN_ANNUAL || "";
 const STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL =
   process.env.STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL || "";
+const STRIPE_PRICE_PORCHET_ANNUAL = process.env.STRIPE_PRICE_PORCHET_ANNUAL || "";
 const STRIPE_PRICE_SSP3D_MONTHLY =
   process.env.STRIPE_PRICE_SSP3D_MONTHLY || "price_1TslXb3A2g3lkch9jVPitmfl";
 const STRIPE_PRICE_SSP3D_ANNUAL =
@@ -671,6 +683,8 @@ export async function registerRoutes(
         hasPriceTsnAnnual: !!process.env.STRIPE_PRICE_TSN_ANNUAL || true,
         hasPriceEauxPluvialesAnnual: !!process.env.STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL,
         eauxPluvialesPriceId: process.env.STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL || null,
+        hasPricePorchetAnnual: !!process.env.STRIPE_PRICE_PORCHET_ANNUAL,
+        porchetPriceId: process.env.STRIPE_PRICE_PORCHET_ANNUAL || null,
         hasPriceHumainMonthly: !!process.env.STRIPE_PRICE_HUMAIN_MONTHLY,
         humainMonthlyPriceId: process.env.STRIPE_PRICE_HUMAIN_MONTHLY || null,
         hasPriceHumainAnnual: !!process.env.STRIPE_PRICE_HUMAIN_ANNUAL,
@@ -1284,6 +1298,7 @@ export async function registerRoutes(
           plan === "humain_monthly" ? STRIPE_PRICE_HUMAIN_MONTHLY :
           plan === "humain_annual" ? STRIPE_PRICE_HUMAIN_ANNUAL :
           plan === "eaux_pluviales_annual" ? STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL :
+          plan === "porchet_annual" ? STRIPE_PRICE_PORCHET_ANNUAL :
           plan === "ssp3d_monthly" ? STRIPE_PRICE_SSP3D_MONTHLY :
           plan === "ssp3d_annual" ? STRIPE_PRICE_SSP3D_ANNUAL :
           STRIPE_PRICE_MONTHLY;
@@ -1301,6 +1316,7 @@ export async function registerRoutes(
           plan === "humain_monthly" ? "humain" :
           plan === "humain_annual" ? "humain" :
           plan === "eaux_pluviales_annual" ? "eaux_pluviales" :
+          plan === "porchet_annual" ? "porchet" :
           plan === "ssp3d_monthly" ? "ssp3d" :
           plan === "ssp3d_annual" ? "ssp3d" :
           "je";
@@ -1425,6 +1441,7 @@ export async function registerRoutes(
             priceIdFromStripe === STRIPE_PRICE_MSP_MONTHLY ? "msp_monthly" :
             priceIdFromStripe === STRIPE_PRICE_MSP_ANNUAL ? "msp_annual" :
             (STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL && priceIdFromStripe === STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL) ? "eaux_pluviales_annual" :
+            (STRIPE_PRICE_PORCHET_ANNUAL && priceIdFromStripe === STRIPE_PRICE_PORCHET_ANNUAL) ? "porchet_annual" :
             priceIdFromStripe === STRIPE_PRICE_SSP3D_MONTHLY ? "ssp3d_monthly" :
             priceIdFromStripe === STRIPE_PRICE_SSP3D_ANNUAL ? "ssp3d_annual" :
             priceIdFromStripe === STRIPE_PRICE_ANNUAL ? "annual" : "monthly";
@@ -1437,6 +1454,7 @@ export async function registerRoutes(
             (plan === "msp_monthly" || plan === "msp_annual") ? "msp" :
             (plan === "humain_monthly" || plan === "humain_annual") ? "humain" :
             plan === "eaux_pluviales_annual" ? "eaux_pluviales" :
+            plan === "porchet_annual" ? "porchet" :
             (plan === "ssp3d_monthly" || plan === "ssp3d_annual") ? "ssp3d" :
             "je";
 
@@ -1488,6 +1506,7 @@ export async function registerRoutes(
                     tool === "rabattement" ? "Rabattement de nappe — Theis + Dupuit-Thiem" :
                     tool === "tsn" ? "TSN — Transfert Sol vers Nappe" :
                     tool === "eaux_pluviales" ? "Gestion des eaux pluviales — DLE / GEP v2.1" :
+                    tool === "porchet" ? "Modélisation Essai de Porchet — Perméabilité des sols" :
                     tool === "humain" ? "Module HUMAIN — EQRS V9 Tier 3" :
                     tool === "ssp3d" ? "3D_SSP — Superposition 3D pollution sols/nappe" :
                     "EQRS — Johnson & Ettinger";
@@ -1495,7 +1514,8 @@ export async function registerRoutes(
                   const planLabel =
                     plan === "rabattement_annual" ? "Annuel — 1 100 € HT/an" :
                     plan === "tsn_annual" ? "Annuel — 850 € HT/an" :
-                    plan === "eaux_pluviales_annual" ? "Annuel — 3 500 € HT/an" :
+                    plan === "eaux_pluviales_annual" ? "Annuel — 5 500 € HT/an" :
+                    plan === "porchet_annual" ? "Annuel — 550 € HT/an" :
                     plan === "humain_monthly" ? "Mensuel — 550 € HT/mois" :
                     plan === "humain_annual" ? "Annuel — 5 200 € HT/an" :
                     plan === "ssp3d_monthly" ? "Mensuel — 250 € HT/mois" :
@@ -2252,7 +2272,7 @@ export async function registerRoutes(
                       <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Accès jusqu'au</td><td style="padding:10px;border:1px solid #e2e8f0;"><strong>${trialEndFr}</strong></td></tr>
                       <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #e2e8f0;">${req.user!.email}</td></tr>
                     </table>
-                    <p style="font-size:13px;color:#64748b;">Après les 8 jours, l'accès est bloqué. Souscription : 3 500 € HT/an.</p>
+                    <p style="font-size:13px;color:#64748b;">Après les 8 jours, l'accès est bloqué. Souscription : 5 500 € HT/an.</p>
                     <div style="text-align:center;margin:28px 0;">
                       <a href="https://www.gmep-france.eu/#/dashboard" style="background:#1A6FB5;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à GMEP Eaux Pluviales →</a>
                     </div>
@@ -2303,6 +2323,121 @@ export async function registerRoutes(
       res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       return res.send(protectToolHtml(eauxPluvialesToolHtml));
+    }
+  );
+
+  // ══════════════════════════════════════════════════════════════════════
+  // Modélisation Essai de Porchet — Perméabilité des sols (DLE)
+  // ══════════════════════════════════════════════════════════════════════
+
+  // ── Porchet : activation essai 8 jours ────────────────────────────────
+  app.post(
+    "/api/porchet-trial/activate",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      try {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const existing = subs.find(s => s.tool === "porchet");
+        if (existing && (existing.status === "active" || existing.status === "trialing")) {
+          return res.status(409).json({ message: "Vous avez déjà un accès Essai de Porchet actif ou en cours d'essai." });
+        }
+        const trialEnd = new Date();
+        trialEnd.setDate(trialEnd.getDate() + 8);
+        let sub;
+        if (existing) {
+          sub = await storage.updateSubscription(existing.id, {
+            status: "trialing",
+            plan: "porchet_trial",
+            tool: "porchet",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        } else {
+          sub = await storage.createSubscription(req.user!.id, {
+            status: "trialing",
+            plan: "porchet_trial",
+            tool: "porchet",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        }
+
+        // Email de confirmation activation essai Porchet
+        try {
+          const resendKey = process.env.RESEND_API_KEY;
+          if (resendKey) {
+            const { Resend } = require("resend");
+            const resend = new Resend(resendKey);
+            const user = await storage.getUser(req.user!.id);
+            const trialEndFr = trialEnd.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+            await resend.emails.send({
+              from: "GMEP <noreply@gmep-france.eu>",
+              to: req.user!.email,
+              subject: "GMEP Essai de Porchet — Votre essai gratuit de 8 jours est activé",
+              html: `
+                <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+                  <div style="background:#0F766E;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+                    <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+                    <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">Modélisation Essai de Porchet — Perméabilité des sols</p>
+                  </div>
+                  <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+                    <p style="font-size:16px;">Bonjour ${user?.name || req.user!.email},</p>
+                    <p>Votre essai gratuit <strong>GMEP Modélisation Essai de Porchet</strong> est maintenant actif. Accès complet au logiciel pendant <strong>8 jours</strong>.</p>
+                    <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
+                      <tr style="background:#e0f2f1;"><td style="padding:10px;border:1px solid #b2dfdb;font-weight:bold;">Outil</td><td style="padding:10px;border:1px solid #b2dfdb;">Modélisation Essai de Porchet</td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Durée essai</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours</td></tr>
+                      <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Accès jusqu'au</td><td style="padding:10px;border:1px solid #e2e8f0;"><strong>${trialEndFr}</strong></td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #e2e8f0;">${req.user!.email}</td></tr>
+                    </table>
+                    <p style="font-size:13px;color:#64748b;">Après les 8 jours, l'accès est bloqué. Souscription : 550 € HT/an.</p>
+                    <div style="text-align:center;margin:28px 0;">
+                      <a href="https://www.gmep-france.eu/#/dashboard" style="background:#0F766E;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à GMEP Essai de Porchet →</a>
+                    </div>
+                    <p style="font-size:13px;color:#64748b;">Calcul du coefficient K par la formule hémisphérique, comparaison avec le K théorique du module Modélisation GEP et fiches de rapport PDF prêtes à joindre au dossier Loi sur l'Eau.</p>
+                    <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a> — Tél. 06 07 73 72 33</p>
+                    <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+                    <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+                  </div>
+                </div>
+              `,
+            });
+            console.log(`[PORCHET TRIAL EMAIL] Sent to ${req.user!.email}`);
+          }
+        } catch (emailErr: any) {
+          console.error("[PORCHET TRIAL EMAIL] Failed:", emailErr.message);
+        }
+
+        return res.json({ message: "Essai Porchet activé (8 jours)", subscription: sub });
+      } catch (err: any) {
+        return res.status(500).json({ message: err.message || "Erreur lors de l'activation de l'essai" });
+      }
+    }
+  );
+
+  // ── Porchet : accès outil (essai ou abonné) ───────────────────────────
+  app.get(
+    "/api/porchet-tool",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      if (!porchetToolHtml) return res.status(503).json({ message: "Outil Essai de Porchet non disponible — fichier porchet-tool.html manquant" });
+      if (!isAdminEmail((req.user as any).email)) {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const pSub = subs.find(s => s.tool === "porchet" && (s.status === "active" || s.status === "trialing"));
+        if (!pSub) {
+          return res.status(403).json({ message: "Abonnement Essai de Porchet requis pour accéder à cet outil." });
+        }
+        if (pSub.status === "trialing" && pSub.currentPeriodEnd && new Date(pSub.currentPeriodEnd) < new Date()) {
+          try { await storage.updateSubscription(pSub.id, { status: "expired" }); } catch {}
+          res.setHeader("Content-Type", "text/html; charset=utf-8");
+          return res.status(403).send(trialExpiredHtml("/#/subscribe-porchet", "Modélisation Essai de Porchet", 8));
+        }
+      }
+      res.setHeader("X-Frame-Options", "SAMEORIGIN");
+      res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://unpkg.com"
+      );
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.send(protectToolHtml(porchetToolHtml));
     }
   );
 
