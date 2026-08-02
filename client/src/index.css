@@ -389,6 +389,17 @@
 .v2-btn-header-cta { padding: 8px 16px; background: var(--v2-green-500); color: var(--v2-navy-900); border-radius: var(--v2-r-md); text-decoration: none; font-weight: 700; font-size: 0.9rem; }
 .v2-btn-header-cta:hover { background: var(--v2-green-400); color: var(--v2-navy-900); }
 .v2-burger { display: none; background: none; border: none; color: #fff; cursor: pointer; padding: 8px; }
+/* Compact desktop nav for tablet-landscape / small laptop widths to prevent header overflow */
+@media (min-width: 1025px) and (max-width: 1650px) {
+  .v2-brand-tag { display: none; }
+  .v2-header .container { gap: 6px; }
+  .v2-nav-center { gap: 2px; }
+  .v2-nav-center a, .v2-nav-center .v2-nav-trigger { padding: 8px 8px; font-size: 0.86rem; }
+  .v2-nav-right { gap: 6px; }
+  .v2-lang-switcher { gap: 2px; margin-right: 2px; }
+  .v2-lang-btn { padding: 4px 6px; font-size: 0.72rem; }
+  .v2-btn-header-outline, .v2-btn-header-cta { padding: 6px 10px; font-size: 0.82rem; }
+}
 @media (max-width: 1024px) {
   .v2-nav-center, .v2-nav-right { display: none; }
   .v2-burger { display: inline-flex; }
