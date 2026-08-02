@@ -215,13 +215,13 @@
   .nav-center, .nav-right { display: none; }
   .burger { display: inline-flex; }
   .brand-tag { display: none; }
+  .site-header.menu-open { position: static; }
+  .site-header.menu-open .container { flex-wrap: wrap; }
   .site-header.menu-open .nav-center,
   .site-header.menu-open .nav-right {
     display: flex;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
+    flex: 0 0 100%;
+    width: 100%;
     background: var(--navy-800);
     flex-direction: column;
     padding: var(--sp-4);
@@ -229,7 +229,7 @@
     border-top: 1px solid rgba(255,255,255,0.1);
   }
   .site-header.menu-open .nav-center { padding-bottom: 0; }
-  .site-header.menu-open .nav-right { padding-top: 0; padding-bottom: var(--sp-5); align-items: stretch; }
+  .site-header.menu-open .nav-right { padding-top: 0; padding-bottom: var(--sp-5); align-items: stretch; border-top: none; }
   .site-header.menu-open .nav-center a,
   .site-header.menu-open .nav-center .nav-trigger { width: 100%; padding: 12px 14px; }
   .nav-dropdown-menu { position: static; box-shadow: none; background: rgba(255,255,255,0.05); max-height: none; overflow-y: visible; }
