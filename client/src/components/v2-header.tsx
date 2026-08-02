@@ -93,45 +93,59 @@ export function V2Header() {
               </svg>
             </button>
             <div className="v2-nav-dropdown-menu" role="menu">
-              <a href="/subscribe-eqrs-v8-humain" onClick={() => setDropdownOpen(false)}>
-                {t("nav.tools.humain")}
-                <span className="v2-nav-mi-desc">{t("nav.tools.humain.desc")}</span>
-              </a>
+              <p className="v2-nav-mi-head" role="presentation">{t("nav.tools.groupSSP")}</p>
               <a href="/app" onClick={() => setDropdownOpen(false)}>
                 {t("nav.tools.eqrs")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.eqrs.desc")}</span>
-              </a>
-              <a href="/subscribe-tsn" onClick={() => setDropdownOpen(false)}>
-                {t("nav.tools.tsn")}
-                <span className="v2-nav-mi-desc">{t("nav.tools.tsn.desc")}</span>
-              </a>
-              <a href="/subscribe-rabattement" onClick={() => setDropdownOpen(false)}>
-                {t("nav.tools.rabattement")}
-                <span className="v2-nav-mi-desc">{t("nav.tools.rabattement.desc")}</span>
               </a>
               <a href="/eqrs-v31-05-ecotox" onClick={() => setDropdownOpen(false)}>
                 {t("nav.tools.eqrsEcotox")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.eqrsEcotox.desc")}</span>
               </a>
-              <a href="/rabattement-v15-89" onClick={() => setDropdownOpen(false)}>
-                {t("nav.tools.rabattement1585")}
-                <span className="v2-nav-mi-desc">{t("nav.tools.rabattement1585.desc")}</span>
+              <a href="/subscribe-eqrs-v8-humain" onClick={() => setDropdownOpen(false)}>
+                {t("nav.tools.humain")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.humain.desc")}</span>
               </a>
               <a href="/tsn-transfert-sol-nappe" onClick={() => setDropdownOpen(false)}>
                 {t("nav.tools.tsnSolNappe")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.tsnSolNappe.desc")}</span>
               </a>
-              <a href="/subscribe-piezometres" onClick={() => setDropdownOpen(false)}>
-                {t("nav.tools.piezometres")}
-                <span className="v2-nav-mi-desc">{t("nav.tools.piezometres.desc")}</span>
+              <a href="/subscribe-tsn" onClick={() => setDropdownOpen(false)}>
+                {t("nav.tools.tsn")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.tsn.desc")}</span>
               </a>
               <a href="/schema-conceptuel" onClick={() => setDropdownOpen(false)}>
                 {t("nav.tools.schemaConceptuel")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.schemaConceptuel.desc")}</span>
               </a>
+              <a href="/subscribe-ssp3d" onClick={() => setDropdownOpen(false)}>
+                {t("nav.tools.ssp3d")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.ssp3d.desc")}</span>
+              </a>
               <a href="/msp-gmep.html" onClick={() => setDropdownOpen(false)}>
                 {t("nav.tools.msp")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.msp.desc")}</span>
+              </a>
+              <p className="v2-nav-mi-head" role="presentation">{t("nav.tools.groupHydro")}</p>
+              <a href="/subscribe-porchet" onClick={() => setDropdownOpen(false)}>
+                {t("nav.tools.porchet")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.porchet.desc")}</span>
+              </a>
+              <a href="/subscribe-eaux-pluviales" onClick={() => setDropdownOpen(false)}>
+                {t("nav.tools.gep")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.gep.desc")}</span>
+              </a>
+              <a href="/subscribe-rabattement" onClick={() => setDropdownOpen(false)}>
+                {t("nav.tools.rabattement")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.rabattement.desc")}</span>
+              </a>
+              <a href="/rabattement-v15-89" onClick={() => setDropdownOpen(false)}>
+                {t("nav.tools.rabattement1585")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.rabattement1585.desc")}</span>
+              </a>
+              <a href="/subscribe-piezometres" onClick={() => setDropdownOpen(false)}>
+                {t("nav.tools.piezometres")}
+                <span className="v2-nav-mi-desc">{t("nav.tools.piezometres.desc")}</span>
               </a>
             </div>
           </div>
