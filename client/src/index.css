@@ -435,7 +435,8 @@
   pointer-events: none;
 }
 .v2-hero .container { position: relative; }
-.v2-hero h1 { color: #fff; font-size: clamp(2.2rem, 4vw + 1rem, 3.4rem); margin-bottom: 16px; }
+.v2-hero h1 { color: #fff; font-size: clamp(2.2rem, 4vw + 1rem, 3.4rem); margin-bottom: 16px; overflow-wrap: break-word; }
+@media (max-width: 400px) { .v2-hero h1 { font-size: 1.9rem; } }
 .v2-hero .accent { color: var(--v2-green-400); background: linear-gradient(180deg, transparent 60%, rgba(61,220,132,0.15) 60%); padding: 0 4px; }
 .v2-hero p.lead { font-size: 1.15rem; color: rgba(255,255,255,0.85); max-width: 720px; margin-bottom: 32px; }
 .v2-hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }

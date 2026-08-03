@@ -273,7 +273,9 @@
   color: #fff;
   font-size: clamp(2.2rem, 4vw + 1rem, 3.4rem);
   margin-bottom: var(--sp-4);
+  overflow-wrap: break-word;
 }
+@media (max-width: 400px) { .hero h1 { font-size: 1.9rem; } }
 .hero .accent {
   color: var(--green-400);
   background: linear-gradient(180deg, transparent 60%, rgba(61,220,132,0.15) 60%);
