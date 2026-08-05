@@ -15,8 +15,10 @@ import DashboardPage from "@/pages/dashboard";
 import ToolPage from "@/pages/tool";
 import TsnPage from "@/pages/tsn";
 import SubscribeTsnPage from "@/pages/subscribe-tsn";
+import SubscribeDomenicoPage from "@/pages/subscribe-domenico";
 import RabattementPage from "@/pages/rabattement";
 import SubscribeRabattementPage from "@/pages/subscribe-rabattement";
+import SubscribeRabattementV15Page from "@/pages/subscribe-rabattement-v15";
 import TarifsPage from "@/pages/tarifs";
 import ContactPage from "@/pages/contact";
 import MentionsLegalesPage from "@/pages/mentions-legales";
@@ -76,8 +78,10 @@ function AppRouter() {
       <Route path="/app" component={ToolPage} />
       <Route path="/tsn" component={TsnPage} />
       <Route path="/subscribe-tsn" component={SubscribeTsnPage} />
+      <Route path="/subscribe-domenico" component={SubscribeDomenicoPage} />
       <Route path="/rabattement" component={RabattementPage} />
       <Route path="/subscribe-rabattement" component={SubscribeRabattementPage} />
+      <Route path="/subscribe-rabattement-v15" component={SubscribeRabattementV15Page} />
       <Route path="/stats" component={StatsPage} />
       <Route path="/tarifs" component={TarifsPage} />
       <Route path="/contact" component={ContactPage} />

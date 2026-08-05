@@ -4,9 +4,8 @@ import { V2Footer } from "@/components/v2-footer";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { useTranslation } from "@/lib/i18n";
-import { Check, Droplets, ArrowLeft, CreditCard, Loader2 } from "lucide-react";
+import { Check, MapPin, ArrowLeft, CreditCard, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { useLocation } from "wouter";
 import { apiRequest } from "@/lib/queryClient";
 
 function PricingItem({ children }: { children: React.ReactNode }) {
@@ -35,11 +34,9 @@ export default function SubscribeTsnPage() {
     setError("");
     try {
       await apiRequest("POST", `/api/tsn-trial/activate?token=${token}`, {});
-      // Rediriger vers l'outil en mode essai
       window.location.href = `/api/tsn-trial?token=${token}`;
     } catch (err: any) {
       const msg = err.message || "";
-      // Si l'utilisateur a déjà un essai/abonnement actif (409), on ouvre directement l'outil
       if (msg.startsWith("409:") || msg.toLowerCase().includes("déjà un accès")) {
         window.location.href = `/api/tsn-trial?token=${token}`;
         return;
@@ -58,7 +55,6 @@ export default function SubscribeTsnPage() {
 
   async function handleSubscribe() {
     if (!user || !token) {
-      // Mémoriser le plan et rediriger vers inscription
       localStorage.setItem("pending_plan", "tsn_annual");
       navigateTo("/register");
       return;
@@ -96,11 +92,11 @@ export default function SubscribeTsnPage() {
 
         <div className="flex items-center gap-3 mb-8">
           <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white" style={{ background: "#1e8449" }}>
-            <Droplets className="w-5 h-5" />
+            <MapPin className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-extrabold text-foreground">Transfert Sol → Nappe → Captage</h1>
-            <p className="text-xs text-muted-foreground">Modèle Domenico (1987) — Licence annuelle</p>
+            <h1 className="text-xl font-extrabold text-foreground">TSN — Transfert Sol-Nappe</h1>
+            <p className="text-xs text-muted-foreground">Modèle Domenico 1987 + API Hub'eau — Licence annuelle</p>
           </div>
         </div>
 
@@ -110,17 +106,17 @@ export default function SubscribeTsnPage() {
           </div>
 
           <div className="flex items-baseline gap-1 mb-1">
-            <span className="text-4xl font-extrabold text-foreground">850€</span>
+            <span className="text-4xl font-extrabold text-foreground">1 100€</span>
             <span className="text-sm text-muted-foreground">HT/an</span>
           </div>
-          <p className="text-xs text-muted-foreground mb-6">Facturation annuelle. Résiliable à l'échéance.</p>
+          <p className="text-xs text-muted-foreground mb-6">1 320 € TTC/an (TVA 20 %). Facturation annuelle, résiliable à l'échéance.</p>
 
           <ul className="space-y-2 mb-6 text-sm">
-            <PricingItem>Transfert Sol→Nappe→Captage complet</PricingItem>
-            <PricingItem>24 polluants (COHV, BTEX, HAP, PFAS, Métaux)</PricingItem>
-            <PricingItem>24 types de sol avec propriétés hydrauliques</PricingItem>
-            <PricingItem>Rapport PDF + éditeur de texte intégré</PricingItem>
-            <PricingItem>Schéma conceptuel automatique</PricingItem>
+            <PricingItem>Évaluation Tier 1 (30 min) de l'impact d'un site SSP sur un captage AEP</PricingItem>
+            <PricingItem>API Hub'eau native — puits, forages, qualité en temps réel</PricingItem>
+            <PricingItem>Cartographie isodistances 500-3000 m + criticité</PricingItem>
+            <PricingItem>Conversion automatique Lambert 93 ↔ WGS84</PricingItem>
+            <PricingItem>Conformité IOTA R.214-1 (Loi sur l'Eau)</PricingItem>
             <PricingItem>Licence mono-poste + mises à jour</PricingItem>
             <PricingItem>Support par e-mail</PricingItem>
           </ul>
@@ -171,7 +167,7 @@ export default function SubscribeTsnPage() {
         </div>
 
         <div className="mt-4 bg-green-50 border border-green-100 rounded-lg p-4 text-xs text-green-800">
-          <strong>Note :</strong> L'outil Transfert Sol→Nappe est disponible uniquement en licence annuelle. Aucun abonnement mensuel pour ce module.
+          <strong>Note :</strong> L'outil TSN est disponible uniquement en licence annuelle. Aucun abonnement mensuel pour ce module. Le tarif 1 100 € HT/an couvre l'accès Hub'eau et la cartographie isodistances — pour la modélisation Domenico seule, voir <a href="#/domenico" className="underline">Transfert Sol → Nappe → Captage (850 € HT/an)</a>.
         </div>
       </div>
       <V2Footer />

@@ -143,27 +143,31 @@ const STRIPE_PRICE_MONTHLY =
 const STRIPE_PRICE_ANNUAL =
   process.env.STRIPE_PRICE_ANNUAL || "price_annual_placeholder";
 const STRIPE_PRICE_TSN_ANNUAL =
-  process.env.STRIPE_PRICE_TSN_ANNUAL || "price_1TOK7o3A2g3lkch9UDnnjOWw";
+  process.env.STRIPE_PRICE_TSN_ANNUAL || "price_1TiYjL3A2g3lkch9lRTAksYc";
+const STRIPE_PRICE_DOMENICO_ANNUAL =
+  process.env.STRIPE_PRICE_DOMENICO_ANNUAL || "price_1U177L3A2g3lkch93BeMoud5";
 const STRIPE_PRICE_RABATTEMENT_ANNUAL =
-  process.env.STRIPE_PRICE_RABATTEMENT_ANNUAL || "price_1TZT293A2g3lkch9bGF7hcgA";
+  process.env.STRIPE_PRICE_RABATTEMENT_ANNUAL || "price_1TiYgX3A2g3lkch9t0mghple";
+const STRIPE_PRICE_RABATTEMENT_SIMPLE_ANNUAL =
+  process.env.STRIPE_PRICE_RABATTEMENT_SIMPLE_ANNUAL || "price_1U171F3A2g3lkch9euyej9Ek";
 const STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY =
-  process.env.STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY || "";
+  process.env.STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY || "price_1TiYe43A2g3lkch9P8imRRvG";
 const STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL =
-  process.env.STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL || "";
+  process.env.STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL || "price_1TiYqB3A2g3lkch9s0brXOXq";
 const STRIPE_PRICE_PIEZOMETRES_ANNUAL =
-  process.env.STRIPE_PRICE_PIEZOMETRES_ANNUAL || "";
+  process.env.STRIPE_PRICE_PIEZOMETRES_ANNUAL || "price_1TiYnI3A2g3lkch9RLQs5tDu";
 const STRIPE_PRICE_MSP_MONTHLY =
   process.env.STRIPE_PRICE_MSP_MONTHLY || "price_1TlY2z3A2g3lkch9xdWCjChC";
 const STRIPE_PRICE_MSP_ANNUAL =
   process.env.STRIPE_PRICE_MSP_ANNUAL || "price_1TlY523A2g3lkch9r3B65h5U";
 const STRIPE_PRICE_HUMAIN_MONTHLY =
-  process.env.STRIPE_PRICE_HUMAIN_MONTHLY || "";
+  process.env.STRIPE_PRICE_HUMAIN_MONTHLY || "price_1Tndv23A2g3lkch96MR6NnQA";
 const STRIPE_PRICE_HUMAIN_ANNUAL =
-  process.env.STRIPE_PRICE_HUMAIN_ANNUAL || "";
+  process.env.STRIPE_PRICE_HUMAIN_ANNUAL || "price_1Tndw73A2g3lkch92OjkFT0I";
 const STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL =
-  process.env.STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL || "";
-const STRIPE_PRICE_PORCHET_ANNUAL = process.env.STRIPE_PRICE_PORCHET_ANNUAL || "";
-const STRIPE_PRICE_ANC_ANNUAL = process.env.STRIPE_PRICE_ANC_ANNUAL || "";
+  process.env.STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL || "price_1TzJOO3A2g3lkch9Tm324JK5";
+const STRIPE_PRICE_PORCHET_ANNUAL = process.env.STRIPE_PRICE_PORCHET_ANNUAL || "price_1TzJOO3A2g3lkch9xIQL6evH";
+const STRIPE_PRICE_ANC_ANNUAL = process.env.STRIPE_PRICE_ANC_ANNUAL || "price_1U11vL3A2g3lkch9ZIGO9YUJ";
 const STRIPE_PRICE_SSP3D_MONTHLY =
   process.env.STRIPE_PRICE_SSP3D_MONTHLY || "price_1TslXb3A2g3lkch9jVPitmfl";
 const STRIPE_PRICE_SSP3D_ANNUAL =
@@ -1291,8 +1295,12 @@ export async function registerRoutes(
         const { plan } = req.body;
         const priceId =
           plan === "rabattement_annual" ? STRIPE_PRICE_RABATTEMENT_ANNUAL :
+          plan === "rabattement_simple_annual" ? STRIPE_PRICE_RABATTEMENT_SIMPLE_ANNUAL :
           plan === "tsn_annual" ? STRIPE_PRICE_TSN_ANNUAL :
+          plan === "domenico_annual" ? STRIPE_PRICE_DOMENICO_ANNUAL :
           plan === "annual" ? STRIPE_PRICE_ANNUAL :
+          plan === "je_annual" ? STRIPE_PRICE_ANNUAL :
+          plan === "je_monthly" ? STRIPE_PRICE_MONTHLY :
           plan === "eqrs_v31_ecotox_monthly" ? STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY :
           plan === "schema_conceptuel_annual" ? STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL :
           plan === "piezometres_annual" ? STRIPE_PRICE_PIEZOMETRES_ANNUAL :
@@ -1311,7 +1319,9 @@ export async function registerRoutes(
         // Déterminer le tool associé au plan
         const tool =
           plan === "rabattement_annual" ? "rabattement" :
+          plan === "rabattement_simple_annual" ? "rabattement" :
           plan === "tsn_annual" ? "tsn" :
+          plan === "domenico_annual" ? "tsn" :
           plan === "eqrs_v31_ecotox_monthly" ? "eqrs_v31" :
           plan === "schema_conceptuel_annual" ? "schema" :
           plan === "piezometres_annual" ? "piezometres" :
@@ -1439,7 +1449,9 @@ export async function registerRoutes(
           const priceIdFromStripe = subscription.items.data[0]?.price?.id;
           let plan =
             priceIdFromStripe === STRIPE_PRICE_RABATTEMENT_ANNUAL ? "rabattement_annual" :
+            priceIdFromStripe === STRIPE_PRICE_RABATTEMENT_SIMPLE_ANNUAL ? "rabattement_simple_annual" :
             priceIdFromStripe === STRIPE_PRICE_TSN_ANNUAL ? "tsn_annual" :
+            priceIdFromStripe === STRIPE_PRICE_DOMENICO_ANNUAL ? "domenico_annual" :
             (STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY && priceIdFromStripe === STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY) ? "eqrs_v31_ecotox_monthly" :
             (STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL && priceIdFromStripe === STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL) ? "schema_conceptuel_annual" :
             (STRIPE_PRICE_PIEZOMETRES_ANNUAL && priceIdFromStripe === STRIPE_PRICE_PIEZOMETRES_ANNUAL) ? "piezometres_annual" :
@@ -1453,7 +1465,9 @@ export async function registerRoutes(
             priceIdFromStripe === STRIPE_PRICE_ANNUAL ? "annual" : "monthly";
           let tool =
             plan === "rabattement_annual" ? "rabattement" :
+            plan === "rabattement_simple_annual" ? "rabattement" :
             plan === "tsn_annual" ? "tsn" :
+            plan === "domenico_annual" ? "tsn" :
             plan === "eqrs_v31_ecotox_monthly" ? "eqrs_v31" :
             plan === "schema_conceptuel_annual" ? "schema" :
             plan === "piezometres_annual" ? "piezometres" :
@@ -1510,18 +1524,24 @@ export async function registerRoutes(
                   const { Resend } = require("resend");
                   const resend = new Resend(resendKey);
                   const toolName =
-                    tool === "rabattement" ? "Rabattement de nappe — Theis + Dupuit-Thiem" :
-                    tool === "tsn" ? "TSN — Transfert Sol vers Nappe" :
+                    tool === "rabattement" ? (plan === "rabattement_simple_annual" ? "Rabattement de nappe — Theis + Dupuit-Thiem" : "Rabattement V15.87 — Multicouche + assistant IA") :
+                    tool === "tsn" ? (plan === "domenico_annual" ? "Transfert Sol → Nappe → Captage (Domenico)" : "TSN — Transfert Sol vers Nappe") :
                     tool === "eaux_pluviales" ? "Gestion des eaux pluviales — DLE / GEP v2.1" :
                     tool === "porchet" ? "Modélisation Essai de Porchet — Perméabilité des sols" :
                     tool === "anc" ? "Dimensionnement ANC — Assainissement Individuel & Collectif" :
                     tool === "humain" ? "Module HUMAIN — EQRS V9 Tier 3" :
                     tool === "ssp3d" ? "3D_SSP — Superposition 3D pollution sols/nappe" :
+                    tool === "eqrs_v31" ? "EQRS V9 + ECOTOX V9" :
+                    tool === "schema" ? "Schéma Conceptuel IEM + Plan de Gestion" :
+                    tool === "piezometres" ? "Piézomètres de Surveillance v2.9c" :
+                    tool === "msp" ? "MSP — Sources de Pollution des Sols" :
                     "EQRS — Johnson & Ettinger";
                   const toolUrl = "https://www.gmep-france.eu/#/dashboard";
                   const planLabel =
-                    plan === "rabattement_annual" ? "Annuel — 1 100 € HT/an" :
-                    plan === "tsn_annual" ? "Annuel — 850 € HT/an" :
+                    plan === "rabattement_annual" ? "Annuel — 1 500 € HT/an" :
+                    plan === "rabattement_simple_annual" ? "Annuel — 1 100 € HT/an" :
+                    plan === "tsn_annual" ? "Annuel — 1 100 € HT/an" :
+                    plan === "domenico_annual" ? "Annuel — 850 € HT/an" :
                     plan === "eaux_pluviales_annual" ? "Annuel — 5 500 € HT/an" :
                     plan === "porchet_annual" ? "Annuel — 550 € HT/an" :
                     plan === "anc_annual" ? "Annuel — 550 € HT/an" :
@@ -1529,6 +1549,13 @@ export async function registerRoutes(
                     plan === "humain_annual" ? "Annuel — 5 200 € HT/an" :
                     plan === "ssp3d_monthly" ? "Mensuel — 250 € HT/mois" :
                     plan === "ssp3d_annual" ? "Annuel — 2 400 € HT/an" :
+                    plan === "eqrs_v31_ecotox_monthly" ? "Mensuel — 395 € HT/mois" :
+                    plan === "schema_conceptuel_annual" ? "Annuel — 850 € HT/an" :
+                    plan === "piezometres_annual" ? "Annuel — 1 100 € HT/an" :
+                    plan === "msp_monthly" ? "Mensuel — 250 € HT/mois" :
+                    plan === "msp_annual" ? "Annuel — 2 760 € HT/an" :
+                    plan === "je_annual" ? "Annuel — 2 499 € HT/an" :
+                    plan === "je_monthly" ? "Mensuel — 208 € HT/mois" :
                     plan === "annual" ? "Annuel — 2 499 € HT/an" :
                     "Mensuel — 245 € HT/mois";
                   const periodEnd = new Date((subscription as any).current_period_end * 1000)
