@@ -30,6 +30,21 @@ export interface Subscription {
   createdAt: string;
 }
 
+// Codes d'essai administration (DREAL / DRIEAT / ARS / DDT) — campagne
+// d'information réglementaire, site "Bis" sans tarifs (administration.gmep-france.eu)
+export interface TrialCode {
+  id: number;
+  code: string;
+  organismeType: string;      // "DREAL" | "DRIEAT" | "ARS" | "DDT"
+  organismeNom: string;       // ex. "DREAL Auvergne-Rhône-Alpes"
+  contactEmail: string | null;
+  status: string;             // "unused" | "used" | "expired"
+  userId: number | null;
+  usedAt: string | null;
+  expiresTrialAt: string | null;
+  createdAt: string;
+}
+
 // Validation schemas
 export const insertUserSchema = z.object({
   password: z.string().min(8, "Le mot de passe doit contenir au moins 8 caractères"),

@@ -5,6 +5,7 @@ import {
   type SafeUser,
   type Session,
   type Subscription,
+  type TrialCode,
 } from "@shared/schema";
 import { type IStorage } from "./storage";
 
@@ -58,6 +59,21 @@ function rowToSubscription(row: any): Subscription {
       ? row.current_period_end.toISOString()
       : row.current_period_end,
     licenseKey: row.license_key,
+    createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
+  };
+}
+
+function rowToTrialCode(row: any): TrialCode {
+  return {
+    id: row.id,
+    code: row.code,
+    organismeType: row.organisme_type,
+    organismeNom: row.organisme_nom,
+    contactEmail: row.contact_email,
+    status: row.status,
+    userId: row.user_id,
+    usedAt: row.used_at instanceof Date ? row.used_at.toISOString() : row.used_at,
+    expiresTrialAt: row.expires_trial_at instanceof Date ? row.expires_trial_at.toISOString() : row.expires_trial_at,
     createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
   };
 }
@@ -137,6 +153,19 @@ export class PgStorage implements IStorage {
           city TEXT,
           path TEXT,
           ip TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS trial_codes (
+          id SERIAL PRIMARY KEY,
+          code TEXT UNIQUE NOT NULL,
+          organisme_type TEXT NOT NULL,
+          organisme_nom TEXT NOT NULL,
+          contact_email TEXT,
+          status TEXT DEFAULT 'unused',
+          user_id INTEGER REFERENCES users(id),
+          used_at TIMESTAMPTZ,
+          expires_trial_at TIMESTAMPTZ,
+          created_at TIMESTAMPTZ DEFAULT NOW()
         );
       `);
       // Migration : ajouter colonne tool si elle n'existe pas (tables déjà créées en prod)
@@ -524,5 +553,45 @@ export class PgStorage implements IStorage {
       active_paying: activePaying.rows,
       detailed_users: detailed.rows,
     };
+  }
+
+  // ── Trial Codes (campagne administrations DREAL/DRIEAT/ARS/DDT) ──────
+
+  async createTrialCode(data: {
+    code: string;
+    organismeType: string;
+    organismeNom: string;
+    contactEmail?: string | null;
+  }): Promise<TrialCode> {
+    const result = await this.pool.query(
+      `INSERT INTO trial_codes (code, organisme_type, organisme_nom, contact_email)
+       VALUES ($1, $2, $3, $4) RETURNING *`,
+      [data.code, data.organismeType, data.organismeNom, data.contactEmail || null]
+    );
+    return rowToTrialCode(result.rows[0]);
+  }
+
+  async getTrialCodeByCode(code: string): Promise<TrialCode | undefined> {
+    const result = await this.pool.query(
+      "SELECT * FROM trial_codes WHERE code = $1",
+      [code]
+    );
+    return result.rows[0] ? rowToTrialCode(result.rows[0]) : undefined;
+  }
+
+  async getAllTrialCodes(): Promise<TrialCode[]> {
+    const result = await this.pool.query(
+      "SELECT * FROM trial_codes ORDER BY created_at DESC"
+    );
+    return result.rows.map(rowToTrialCode);
+  }
+
+  async markTrialCodeUsed(code: string, userId: number, expiresTrialAt: string): Promise<TrialCode | undefined> {
+    const result = await this.pool.query(
+      `UPDATE trial_codes SET status = 'used', user_id = $1, used_at = NOW(), expires_trial_at = $2
+       WHERE code = $3 RETURNING *`,
+      [userId, expiresTrialAt, code]
+    );
+    return result.rows[0] ? rowToTrialCode(result.rows[0]) : undefined;
   }
 }

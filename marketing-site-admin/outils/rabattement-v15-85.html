@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rabattement V15.85 — Modélisation multicouche assistée par IA | GMEP</title>
+<meta name="description" content="Rabattement V15.85 — Modélisation de rabattement de nappe multicouche assistée par IA. 42 lithologies intégrées, 15 couches max, formule Forchheimer/Dupuit, Mode A/B, rayon de Sichardt automatique, recalage piézométrique terrain et génération automatique du Dossier Loi sur l'Eau (IOTA R.214-1). Validation terrain Oucques-la-Nouvelle. Essai gratuit 14 jours.">
+<meta name="keywords" content="Rabattement V15.85, rabattement de nappe, multicouche, Forchheimer, Dupuit, 42 lithologies, rayon Sichardt, IOTA R.214-1, Dossier Loi sur l'Eau, assistant IA, recalage piézométrique, coupe géologique, Lambert 93, MODFLOW alternative, MARTHE alternative, hydrogéologie, GMEP">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/outils/rabattement-v15-85.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/outils/rabattement-v15-85.html">
+<meta property="og:title" content="Rabattement V15.85 — Modélisation multicouche assistée par IA | GMEP">
+<meta property="og:description" content="Rabattement V15.85 — Modélisation de rabattement de nappe multicouche assistée par IA. 42 lithologies intégrées, 15 couches max, formule Forchheimer/Dupuit, Mode A/B, rayon de Sichardt automatique, recalage piézométrique terrain et génération automatique du Dossier Loi sur l'Eau (IOTA R.214-1). Validation terrain Oucques-la-Nouvelle. Essai gratuit 14 jours.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Logiciels de modélisation environnementale">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Rabattement V15.85 — Modélisation multicouche assistée par IA | GMEP">
+<meta name="twitter:description" content="Rabattement V15.85 — Modélisation de rabattement de nappe multicouche assistée par IA. 42 lithologies intégrées, 15 couches max, formule Forchheimer/Dupuit, Mode A/B, rayon de Sichardt automatique, recalage piézométrique terrain et génération automatique du Dossier Loi sur l'Eau (IOTA R.214-1). Validation terrain Oucques-la-Nouvelle. Essai gratuit 14 jours.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+</head>
+<body>
+<div style="background:#1a365d;color:#fff;text-align:center;padding:10px 16px;font-size:0.85rem;">
+  Version d'information présentée aux services de l'État (DREAL · DRIEAT · ARS · DDT/DDTM) — sans tarif public. Essai fonctionnel réel de 15 jours sur code d'accès. Pour un devis, contactez l'éditeur : <a href="mailto:gmep.france@gmail.com" style="color:#7fd6ff;">gmep.france@gmail.com</a>
+</div>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Accueil GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Bureau d'études environnement &amp; hydrogéologie</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navigation principale">
+      <a href="../index.html">Accueil</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Outils
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modélisation 3D sols / nappe / ouvrages · NOUVEAU</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau<span class="nav-mi-desc">Dimensionnement EP + dossiers DLE/GEP · NOUVEAU</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">Dimensionnement ANC<span class="nav-mi-desc">Assainissement individuel &amp; collectif · NOUVEAU</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modélisation Essai de Porchet<span class="nav-mi-desc">Calcul K terrain + comparaison GEP · NOUVEAU</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX<span class="nav-mi-desc">104 substances HHRA + 12 écotox — NOUVEAU V8</span></a>
+          <a href="../outils/rabattement-v15-85.html" role="menuitem">Rabattement V15.85<span class="nav-mi-desc">Multicouche IA — Loi sur l'Eau</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transfert Sol → Nappe<span class="nav-mi-desc">Domenico 1987 — API Hub'eau</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Schéma Conceptuel<span class="nav-mi-desc">IEM + Plan de Gestion</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS V7 Johnson &amp; Ettinger<span class="nav-mi-desc">+ 5 modules avancés</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Tarifs</a>
+      <a href="../expertise.html">Expertise</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Choix de langue">
+        <button class="lang-btn active" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Connexion</a>
+      <a href="/essai-administration.html" rel="noopener" class="btn-header-cta">Inscription</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge" style="background:linear-gradient(135deg,#39e07a 0%,#1a5276 100%);color:#fff;">ASSISTANT IA INTÉGRÉ</span>
+        <h1>Rabattement V15.85 — Modélisation multicouche IA</h1>
+        <p class="lead">Modélisation de rabattement de nappe <strong>multicouche</strong> assistée par intelligence artificielle. 42 lithologies intégrées, jusqu'à 15 couches, formules <strong>Forchheimer/Dupuit</strong>, <strong>Mode A/B</strong>, rayon de Sichardt automatique, recalage piézométrique terrain et <strong>Dossier Loi sur l'Eau (IOTA R.214-1)</strong> généré automatiquement. Validation terrain Oucques-la-Nouvelle.</p>
+        <div class="hero-cta">
+          <a href="../tarifs.html#rabattement_annual" class="btn btn-primary">S'abonner — 1 500 € HT/an</a>
+          <a href="/essai-administration.html" rel="noopener" class="btn btn-outline">Essai gratuit 14 jours</a>
+          <a href="../contact.html" class="btn btn-outline">Démo sur demande</a>
+        </div>
+      </div>
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">rabattement · v15.85</span>
+        </div>
+        <div class="hero-mock-row"><span class="l">Mode</span><span class="v">A — Q imposé</span></div>
+        <div class="hero-mock-row"><span class="l">Couches</span><span class="v">3 / 15</span></div>
+        <div class="hero-mock-row"><span class="l">K_max</span><span class="v">5 × 10⁻⁴ m/s</span></div>
+        <div class="hero-mock-row"><span class="l">R (Sichardt)</span><span class="v">212 m</span></div>
+        <div class="hero-mock-result"><strong>Rabattement s</strong><span>2,4 m — calculé</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 1. Présentation -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Présentation</span>
+      <h2>Rabattement V15.85 — la modélisation multicouche simplifiée</h2>
+      <p>Une approche analytique Forchheimer/Dupuit, 42 lithologies prêtes à l'emploi et un assistant IA pour interpréter les résultats et suggérer les paramètres.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>42 lithologies intégrées</h3>
+        <p>Liste déroulante VLOOKUP avec perméabilités K typiques par famille lithologique, jusqu'à 15 couches par forage (de / à / lithologie / K).</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 12h4l3-8 4 16 3-8h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Forchheimer / Dupuit</h3>
+        <p>Q_i = 2π·K_i·e_sat_i·s / ln(R/r) × 3600, bilan multicouche Q_total = Σ Q_i sur 15 couches, saturation automatique par couche.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 9h18M9 3v18" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Mode A / Mode B</h3>
+        <p><strong>Mode A</strong> : débit Q imposé → rabattement s calculé. <strong>Mode B</strong> : rabattement s imposé → débit Q et volumes calculés.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Assistant IA intégré</h3>
+        <p>Interprétation automatique des résultats et suggestions de paramètres pour fiabiliser la modélisation, sans expertise modélisation préalable.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Fonctionnalités clés -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Fonctionnalités clés</span>
+      <h2>Du terrain au Dossier Loi sur l'Eau</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card" style="border-left:4px solid #1a5276;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 20h18M5 20V8M9 20V5M13 20V11M17 20V14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Recalage piézométrique terrain</h3>
+        <p>Le niveau statique (NS) mesuré sur site est prioritaire sur les données BRGM pour un calage fidèle aux conditions réelles.</p>
+      </div>
+      <div class="feature-card" style="border-left:4px solid #1a5276;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 3v9l6 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Rayon de Sichardt automatique</h3>
+        <p>R = 3000 × s × √(K_max) calculé automatiquement à partir du rabattement et de la perméabilité maximale des couches.</p>
+      </div>
+      <div class="feature-card" style="border-left:4px solid #1a5276;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><path d="M7 8h10M7 12h7M7 16h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Coupe géologique illustrée</h3>
+        <p>Tableau lithologie (de/à/libellé), arrivées d'eau (profondeur/débit), légende colorée par famille, algorithme anti-chevauchement des annotations. Synchronisation Lambert 93 bidirectionnelle.</p>
+      </div>
+      <div class="feature-card" style="border-left:4px solid #1a5276;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="currentColor" stroke-width="2"/><path d="M15 3v5h5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Génération PDF Dossier Loi sur l'Eau</h3>
+        <p>Production automatique du Dossier de Déclaration Loi sur l'Eau, avec cartographie IGN / BRGM / ZNIEFF intégrée.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Comparatif -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Comparatif</span>
+      <h2>Rabattement V15.85 vs MODFLOW vs MARTHE</h2>
+      <p>Un outil « Tier 1 » analytique complémentaire des codes numériques lourds — accessible aux bureaux d'études non spécialistes de la modélisation.</p>
+    </div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;">
+        <thead>
+          <tr style="background:#1a5276;color:#fff;">
+            <th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Critère</th>
+            <th style="padding:10px;text-align:center;border:1px solid #0e2f44;width:22%;">MODFLOW (USGS)</th>
+            <th style="padding:10px;text-align:center;border:1px solid #0e2f44;width:22%;">MARTHE (BRGM)</th>
+            <th style="padding:10px;text-align:center;border:1px solid #0e2f44;width:22%;background:#39e07a;color:#0e2f44;">Rabattement V15.85</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Méthode</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Différences finies 3D</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Volumes finis 3D</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">Analytique Forchheimer/Dupuit</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Maillage</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Milliers de mailles</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Jusqu'à 3000×3000×999</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">Aucun maillage</td></tr>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Niveau d'expertise requis</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Modélisateur expérimenté</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Modélisateur expérimenté</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">BE SSP non spécialiste</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Temps de mise en œuvre</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Semaines/mois</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Semaines/mois</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">Minutes</td></tr>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Lithologies prêtes à l'emploi</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ 42 lithologies</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Assistant IA</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓</td></tr>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Rayon de Sichardt automatique</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Manuel</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Manuel</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ auto</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Recalage piézométrique terrain</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Multi-points lourd</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Multi-points lourd</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ NS terrain prioritaire</td></tr>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Conformité IOTA R.214-1</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗ (générique)</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗ (générique)</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ native</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Génération Dossier Loi sur l'Eau</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ PDF auto</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:#666;margin-top:14px;line-height:1.6;"><strong>Sources :</strong> <a href="https://www.usgs.gov/mission-areas/water-resources/science/modflow-and-related-programs">USGS MODFLOW</a>, <a href="https://www.brgm.fr/fr/logiciel/marthe-logiciel-modelisation-ecoulements-souterrains">BRGM MARTHE</a>, Code de l'environnement R.214-1.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Cadre réglementaire -->
+<section>
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Conformité réglementaire</span>
+      <h2>Cadre normatif</h2>
+    </div>
+    <div class="compliance-list">
+      <h3>Références appliquées</h3>
+      <ul>
+        <li><strong>Loi sur l'Eau</strong> — Code de l'environnement L.214-1 et suivants.</li>
+        <li><strong>IOTA</strong> — Installations, Ouvrages, Travaux et Activités soumis à déclaration / autorisation.</li>
+        <li><strong>R.214-1 du Code de l'environnement</strong> — rubrique relative aux sondages, forages, puits et prélèvements en nappe.</li>
+        <li><strong>Dossier de Déclaration Loi sur l'Eau</strong> — généré automatiquement par l'outil.</li>
+        <li><strong>Formule de Forchheimer / Dupuit</strong> — modélisation analytique multicouche du rabattement.</li>
+        <li><strong>Rayon d'influence de Sichardt</strong> — R = 3000 × s × √(K_max).</li>
+        <li><strong>Référentiels IGN / BRGM / ZNIEFF</strong> — cartographie intégrée.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Tarif -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Tarification</span>
+      <h2>Devis sur demande auprès de l'éditeur</h2>
+    </div>
+    <div style="max-width:640px;margin:0 auto;text-align:center;">
+      <p style="font-size:1.05rem;line-height:1.6;">Cette version d'information, présentée aux services de l'État (DREAL, DRIEAT, ARS, DDT/DDTM), ne diffuse pas de tarif public. Pour toute demande de devis ou d'abonnement, adressez-vous directement à l'éditeur du logiciel :</p>
+      <p style="margin:20px 0;"><a href="mailto:gmep.france@gmail.com" class="btn btn-primary">gmep.france@gmail.com</a></p>
+      <p style="font-size:0.95rem;color:#64748b;">Un essai fonctionnel réel de 15 jours est disponible sur présentation d'un code d'accès unique transmis à votre organisme.</p>
+      <div class="text-center mt-6">
+        <a href="/essai-administration.html" class="btn btn-ghost">J'ai reçu un code d'essai — Activer mon accès</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Note technique PDF -->
+<section>
+  <div class="container">
+    <div class="demo-placeholder">
+      <h3>Note technique — Rabattement V15.85</h3>
+      <p>Téléchargez la note technique : formulation Forchheimer/Dupuit multicouche, méthode de recalage piézométrique, rayon de Sichardt et constitution du Dossier Loi sur l'Eau.</p>
+      <a href="/notes-techniques/Note_Technique_Rabattement_V15_85.pdf" class="btn btn-primary">Télécharger la note technique (PDF)</a>
+    </div>
+  </div>
+</section>
+
+<!-- 7. Cas d'usage -->
+<section class="bg-soft">
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Cas d'usage</span>
+      <h2>Validation terrain — Oucques-la-Nouvelle</h2>
+    </div>
+    <div class="compliance-list">
+      <h3>Configuration testée</h3>
+      <ul>
+        <li><strong>Site</strong> — Oucques-la-Nouvelle (Loir-et-Cher).</li>
+        <li><strong>Couches modélisées</strong> — 3 couches saturées sur 15 disponibles.</li>
+        <li><strong>Perméabilité maximale</strong> — K_max = 5 × 10⁻⁴ m/s.</li>
+        <li><strong>Recalage</strong> — niveau statique terrain prioritaire sur données BRGM.</li>
+        <li><strong>Sortie</strong> — bilan Q_total multicouche, rayon de Sichardt et Dossier Loi sur l'Eau générés automatiquement.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tél. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a><br>
+        <a href="https://www.gmep-france.eu">www.gmep-france.eu</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nos outils</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau</a></li>
+          <li><a href="../outils/anc-assainissement.html">Dimensionnement ANC</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modélisation Essai de Porchet</a></li>
+          <li><a href="../outils/eqrs-v31-05-ecotox.html">EQRS V31.05 + ECOTOX</a></li>
+          <li><a href="../outils/rabattement-v15-85.html">Rabattement V15.85</a></li>
+          <li><a href="../outils/tsn-transfert-sol-nappe.html">TSN — Transfert Sol → Nappe</a></li>
+          <li><a href="../outils/schema-conceptuel.html">Schéma Conceptuel</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Société</h6>
+        <ul>
+          <li><a href="../tarifs.html">Tarifs</a></li>
+          <li><a href="../guide-11-outils/index.html">Guide 13 outils (PDF)</a></li>
+          <li><a href="../expertise.html">Expertise</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../mentions-legales.html">Mentions légales</a></li>
+          <li><a href="../cgv.html">CGV</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Tous droits réservés.</p>
+        <p>Tous nos logiciels sont la propriété exclusive de la SARL G.M.E.P. Toute reproduction, diffusion ou utilisation, même partielle, sans autorisation écrite préalable est interdite.</p>
+        <p class="credit">Conception et développement : Eric Azulay — Gérant SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/nav.js"></script>
+<script src="../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "gmep-france-site",
+  "version": "1.0.0",
+  "description": "Site GMEP (SARL G.M.E.P) — multi-outils SaaS + backend Stripe Checkout. Déployé sur Railway, domaine www.gmep-france.eu.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "stripe": "^14.25.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "body-parser": "^1.20.2"
+  },
+  "author": "Eric Azulay — SARL G.M.E.P",
+  "license": "UNLICENSED",
+  "private": true
+}

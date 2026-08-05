@@ -1200,6 +1200,171 @@ export async function registerRoutes(
     }
   });
 
+  // ── Trial Codes : campagne administrations (DREAL / DRIEAT / ARS / DDT) ──
+  // Site Bis sans tarifs : chaque organisme reçoit un code unique donnant
+  // acces a un essai fonctionnel reel de 15 jours sur les 12 outils gates.
+
+  const ALL_GATED_TOOLS = ["je", "eqrs_v31", "tsn", "rabattement", "schema", "piezometres", "msp", "ssp3d", "eaux_pluviales", "porchet", "anc", "humain"];
+
+  function generateTrialCode(): string {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    const seg = () => Array.from({ length: 4 }, () => chars[crypto.randomInt(chars.length)]).join("");
+    return `GMEP-${seg()}-${seg()}`;
+  }
+
+  // Génération d'un code (admin uniquement)
+  app.post("/api/admin/trial-codes", requireAdmin as any, async (req: AuthRequest, res: Response) => {
+    try {
+      const { organismeType, organismeNom, contactEmail } = req.body;
+      if (!organismeType || !organismeNom) {
+        return res.status(400).json({ message: "organismeType et organismeNom sont requis" });
+      }
+      let code = generateTrialCode();
+      let attempts = 0;
+      while (await storage.getTrialCodeByCode(code)) {
+        code = generateTrialCode();
+        if (++attempts > 10) throw new Error("Impossible de générer un code unique");
+      }
+      const trialCode = await storage.createTrialCode({ code, organismeType, organismeNom, contactEmail: contactEmail || null });
+      return res.json(trialCode);
+    } catch (err: any) {
+      console.error("[TRIAL CODE CREATE ERROR]", err);
+      return res.status(500).json({ message: "Erreur serveur", error: err.message });
+    }
+  });
+
+  // Génération en masse (admin) — pour la campagne DREAL/DRIEAT/ARS/DDT
+  app.post("/api/admin/trial-codes/bulk", requireAdmin as any, async (req: AuthRequest, res: Response) => {
+    try {
+      const { organismes } = req.body as { organismes: Array<{ organismeType: string; organismeNom: string; contactEmail?: string }> };
+      if (!Array.isArray(organismes) || organismes.length === 0) {
+        return res.status(400).json({ message: "organismes doit être un tableau non vide" });
+      }
+      const created: any[] = [];
+      for (const o of organismes) {
+        let code = generateTrialCode();
+        let attempts = 0;
+        while (await storage.getTrialCodeByCode(code)) {
+          code = generateTrialCode();
+          if (++attempts > 10) break;
+        }
+        const tc = await storage.createTrialCode({ code, organismeType: o.organismeType, organismeNom: o.organismeNom, contactEmail: o.contactEmail || null });
+        created.push(tc);
+      }
+      return res.json({ created: created.length, codes: created });
+    } catch (err: any) {
+      console.error("[TRIAL CODE BULK CREATE ERROR]", err);
+      return res.status(500).json({ message: "Erreur serveur", error: err.message });
+    }
+  });
+
+  // Liste des codes (admin)
+  app.get("/api/admin/trial-codes", requireAdmin as any, async (_req: AuthRequest, res: Response) => {
+    try {
+      const codes = await storage.getAllTrialCodes();
+      return res.json(codes);
+    } catch (err: any) {
+      console.error("[TRIAL CODE LIST ERROR]", err);
+      return res.status(500).json({ message: "Erreur serveur", error: err.message });
+    }
+  });
+
+  // Vérification publique d'un code (site Bis — avant de remplir le formulaire de compte)
+  app.get("/api/trial/check-code/:code", async (req: Request, res: Response) => {
+    try {
+      const tc = await storage.getTrialCodeByCode(String(req.params.code).trim().toUpperCase());
+      if (!tc) return res.status(404).json({ valid: false, message: "Code inconnu" });
+      if (tc.status !== "unused") return res.status(410).json({ valid: false, message: "Ce code a déjà été utilisé" });
+      return res.json({ valid: true, organismeType: tc.organismeType, organismeNom: tc.organismeNom });
+    } catch (err: any) {
+      return res.status(500).json({ valid: false, message: "Erreur serveur" });
+    }
+  });
+
+  // Rédemption d'un code : crée le compte réel (app.gmep-france.eu) avec essai
+  // 15 jours sur les 12 outils gates. Appelé depuis le site Bis.
+  app.post("/api/trial/redeem", async (req: Request, res: Response) => {
+    try {
+      const { code, email, password, name } = req.body;
+      if (!code || !email || !password || !name) {
+        return res.status(400).json({ message: "Tous les champs sont requis (code, email, mot de passe, nom)" });
+      }
+      if (password.length < 8) {
+        return res.status(400).json({ message: "Le mot de passe doit contenir au moins 8 caractères" });
+      }
+
+      const trialCode = await storage.getTrialCodeByCode(String(code).trim().toUpperCase());
+      if (!trialCode) {
+        return res.status(404).json({ message: "Code d'essai inconnu. Vérifiez le code reçu par e-mail." });
+      }
+      if (trialCode.status !== "unused") {
+        return res.status(410).json({ message: "Ce code d'essai a déjà été utilisé." });
+      }
+
+      const existing = await storage.getUserByEmail(email);
+      if (existing) {
+        return res.status(409).json({ message: "Un compte avec cet e-mail existe déjà. Connectez-vous sur app.gmep-france.eu." });
+      }
+
+      const passwordHash = await bcrypt.hash(password, 12);
+      const user = await storage.createUser(email, passwordHash, name);
+
+      const trial15 = new Date();
+      trial15.setDate(trial15.getDate() + 15);
+
+      for (const tool of ALL_GATED_TOOLS) {
+        await storage.createSubscription(user.id, {
+          status: "trialing",
+          plan: "admin_trial",
+          tool,
+          currentPeriodEnd: trial15.toISOString(),
+        });
+      }
+
+      await storage.markTrialCodeUsed(trialCode.code, user.id, trial15.toISOString());
+
+      const token = crypto.randomUUID();
+      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+      await storage.createSession(token, user.id, expiresAt);
+
+      try {
+        const resendKey = process.env.RESEND_API_KEY;
+        if (resendKey) {
+          const { Resend } = require("resend");
+          const resend = new Resend(resendKey);
+          await resend.emails.send({
+            from: "GMEP <noreply@gmep-france.eu>",
+            to: email,
+            subject: "GMEP — Votre essai administration de 15 jours est activé",
+            html: `<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+              <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+                <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+                <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">Suite logicielle environnementale — 14 outils</p>
+              </div>
+              <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+                <p style="font-size:16px;">Bonjour ${name},</p>
+                <p>Votre compte d'essai <strong>${trialCode.organismeNom}</strong> a bien été créé. Les 14 logiciels GMEP sont activés en essai fonctionnel réel pour <strong>15 jours</strong>, sans engagement.</p>
+                <p style="font-size:13px;color:#64748b;">Pour toute demande de tarif ou de devis, merci de vous adresser directement à l'éditeur : <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>.</p>
+                <div style="text-align:center;margin:28px 0;">
+                  <a href="https://app.gmep-france.eu/#/dashboard" style="background:#1a365d;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à mon espace d'essai</a>
+                </div>
+                <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+                <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P</p>
+              </div>
+            </div>`,
+          });
+        }
+      } catch (emailErr: any) {
+        console.error("[TRIAL REDEEM EMAIL] Failed:", emailErr.message);
+      }
+
+      return res.json({ token, user: storage.toSafeUser(user), trialDays: 15, redirectUrl: "https://app.gmep-france.eu/#/dashboard" });
+    } catch (err: any) {
+      console.error("[TRIAL REDEEM ERROR]", err);
+      return res.status(500).json({ message: "Erreur interne du serveur" });
+    }
+  });
+
   // Login
   app.post("/api/auth/login", async (req: Request, res: Response) => {
     try {

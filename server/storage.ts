@@ -3,6 +3,7 @@ import {
   type SafeUser,
   type Session,
   type Subscription,
+  type TrialCode,
 } from "@shared/schema";
 import * as fs from "fs";
 import * as path from "path";
@@ -31,9 +32,11 @@ interface DBData {
   sessions: Session[];
   subscriptions: Subscription[];
   pageViews: PageView[];
+  trialCodes: TrialCode[];
   nextUserId: number;
   nextSessionId: number;
   nextSubscriptionId: number;
+  nextTrialCodeId: number;
 }
 
 function loadDB(): DBData {
@@ -49,9 +52,11 @@ function loadDB(): DBData {
     sessions: [],
     subscriptions: [],
     pageViews: [],
+    trialCodes: [],
     nextUserId: 1,
     nextSessionId: 1,
     nextSubscriptionId: 1,
+    nextTrialCodeId: 1,
   };
 }
 
@@ -96,6 +101,12 @@ export interface IStorage {
   addPageView(view: { country: string; countryCode: string; city: string; path: string; ip: string }): Promise<void>;
   getPageViews(): Promise<PageView[]>;
   getViewStats(): Promise<{ byCountry: Record<string, number>; byDate: Record<string, number>; total: number; byCity: Record<string, number> }>;
+
+  // Trial Codes (campagne administrations)
+  createTrialCode(data: { code: string; organismeType: string; organismeNom: string; contactEmail?: string | null }): Promise<TrialCode>;
+  getTrialCodeByCode(code: string): Promise<TrialCode | undefined>;
+  getAllTrialCodes(): Promise<TrialCode[]>;
+  markTrialCodeUsed(code: string, userId: number, expiresTrialAt: string): Promise<TrialCode | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -298,6 +309,45 @@ export class DatabaseStorage implements IStorage {
     }
 
     return { byCountry, byDate, total: views.length, byCity };
+  }
+
+  // Trial Codes
+  async createTrialCode(data: { code: string; organismeType: string; organismeNom: string; contactEmail?: string | null }): Promise<TrialCode> {
+    if (!db.trialCodes) db.trialCodes = [];
+    const trialCode: TrialCode = {
+      id: db.nextTrialCodeId++,
+      code: data.code,
+      organismeType: data.organismeType,
+      organismeNom: data.organismeNom,
+      contactEmail: data.contactEmail || null,
+      status: "unused",
+      userId: null,
+      usedAt: null,
+      expiresTrialAt: null,
+      createdAt: new Date().toISOString(),
+    };
+    db.trialCodes.push(trialCode);
+    saveDB(db);
+    return trialCode;
+  }
+
+  async getTrialCodeByCode(code: string): Promise<TrialCode | undefined> {
+    return (db.trialCodes || []).find((t) => t.code === code);
+  }
+
+  async getAllTrialCodes(): Promise<TrialCode[]> {
+    return db.trialCodes || [];
+  }
+
+  async markTrialCodeUsed(code: string, userId: number, expiresTrialAt: string): Promise<TrialCode | undefined> {
+    const idx = (db.trialCodes || []).findIndex((t) => t.code === code);
+    if (idx === -1) return undefined;
+    db.trialCodes[idx].status = "used";
+    db.trialCodes[idx].userId = userId;
+    db.trialCodes[idx].usedAt = new Date().toISOString();
+    db.trialCodes[idx].expiresTrialAt = expiresTrialAt;
+    saveDB(db);
+    return db.trialCodes[idx];
   }
 }
 
