@@ -28,6 +28,7 @@
     humain_annual:         'humain_annual',
     eaux_pluviales_annual: 'eaux_pluviales_annual',
     porchet_annual:        'porchet_annual',
+    anc_annual:            'anc_annual',
     ssp3d_monthly:         'ssp3d_monthly',
     ssp3d_annual:          'ssp3d_annual'
   };
@@ -46,6 +47,8 @@
     eaux_pluviales_annual:'Modélisation GEP — DLE & Loi sur l\'Eau — Abonnement annuel (5 500 € HT/an)',
     // Modélisation Essai de Porchet — juillet 2026
     porchet_annual:      'Modélisation Essai de Porchet — Abonnement annuel (550 € HT/an)',
+    // Dimensionnement ANC — Assainissement Individuel & Collectif — août 2026
+    anc_annual:          'Dimensionnement ANC — Assainissement Individuel & Collectif — Abonnement annuel (550 € HT/an)',
     // 3D_SSP — juillet 2026
     ssp3d_monthly:       '3D_SSP — Modélisation 3D intégrée — Abonnement mensuel (250 € HT/mois)',
     ssp3d_annual:        '3D_SSP — Modélisation 3D intégrée — Abonnement annuel (2 400 € HT/an)'

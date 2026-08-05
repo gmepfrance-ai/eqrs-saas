@@ -98,6 +98,11 @@ export default function DashboardPage() {
           .then(r => r.json())
           .then(() => { window.location.href = `/api/ssp3d-tool?token=${token}`; })
           .catch(() => { navigateTo("/subscribe-ssp3d"); });
+      } else if (plan === "anc_trial") {
+        fetch(`/api/anc-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
+          .then(r => r.json())
+          .then((data) => { window.location.href = data.toolUrl || "https://gmep-anc.pplx.app"; })
+          .catch(() => { navigateTo("/subscribe-anc"); });
       } else {
         handleCheckout(plan);
       }
@@ -371,6 +376,24 @@ export default function DashboardPage() {
                   fetch(`/api/porchet-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
                     .then(() => { window.location.href = `/api/porchet-tool?token=${token}`; })
                     .catch(() => { window.location.href = `/api/porchet-tool?token=${token}`; });
+                }}>
+                Accéder →
+              </button>
+            </div>
+            {/* Dimensionnement ANC — Assainissement Individuel & Collectif */}
+            <div className="bg-white border-2 border-[#2E7D5B] rounded-lg p-4 shadow-sm hover:shadow-md transition">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded bg-[#2E7D5B] text-white flex items-center justify-center text-xs font-bold">ANC</div>
+                <h3 className="text-sm font-bold text-foreground">Dimensionnement ANC</h3>
+              </div>
+              <p className="text-xs text-muted-foreground mb-3">Assainissement Individuel &amp; Collectif — NF DTU 64.1 — rapport SPANC</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 550 € HT/an ensuite</p>
+              <button className="w-full text-white py-2 rounded font-semibold text-sm hover:opacity-90" style={{backgroundColor:"#2E7D5B"}}
+                onClick={() => {
+                  fetch(`/api/anc-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
+                    .then(r => r.json())
+                    .then((data) => { window.location.href = data.toolUrl || "https://gmep-anc.pplx.app"; })
+                    .catch(() => { window.location.href = "https://gmep-anc.pplx.app"; });
                 }}>
                 Accéder →
               </button>

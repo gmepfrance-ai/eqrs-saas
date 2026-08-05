@@ -163,6 +163,7 @@ const STRIPE_PRICE_HUMAIN_ANNUAL =
 const STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL =
   process.env.STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL || "";
 const STRIPE_PRICE_PORCHET_ANNUAL = process.env.STRIPE_PRICE_PORCHET_ANNUAL || "";
+const STRIPE_PRICE_ANC_ANNUAL = process.env.STRIPE_PRICE_ANC_ANNUAL || "";
 const STRIPE_PRICE_SSP3D_MONTHLY =
   process.env.STRIPE_PRICE_SSP3D_MONTHLY || "price_1TslXb3A2g3lkch9jVPitmfl";
 const STRIPE_PRICE_SSP3D_ANNUAL =
@@ -685,6 +686,8 @@ export async function registerRoutes(
         eauxPluvialesPriceId: process.env.STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL || null,
         hasPricePorchetAnnual: !!process.env.STRIPE_PRICE_PORCHET_ANNUAL,
         porchetPriceId: process.env.STRIPE_PRICE_PORCHET_ANNUAL || null,
+        hasPriceAncAnnual: !!process.env.STRIPE_PRICE_ANC_ANNUAL,
+        ancPriceId: process.env.STRIPE_PRICE_ANC_ANNUAL || null,
         hasPriceHumainMonthly: !!process.env.STRIPE_PRICE_HUMAIN_MONTHLY,
         humainMonthlyPriceId: process.env.STRIPE_PRICE_HUMAIN_MONTHLY || null,
         hasPriceHumainAnnual: !!process.env.STRIPE_PRICE_HUMAIN_ANNUAL,
@@ -1299,6 +1302,7 @@ export async function registerRoutes(
           plan === "humain_annual" ? STRIPE_PRICE_HUMAIN_ANNUAL :
           plan === "eaux_pluviales_annual" ? STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL :
           plan === "porchet_annual" ? STRIPE_PRICE_PORCHET_ANNUAL :
+          plan === "anc_annual" ? STRIPE_PRICE_ANC_ANNUAL :
           plan === "ssp3d_monthly" ? STRIPE_PRICE_SSP3D_MONTHLY :
           plan === "ssp3d_annual" ? STRIPE_PRICE_SSP3D_ANNUAL :
           STRIPE_PRICE_MONTHLY;
@@ -1317,6 +1321,7 @@ export async function registerRoutes(
           plan === "humain_annual" ? "humain" :
           plan === "eaux_pluviales_annual" ? "eaux_pluviales" :
           plan === "porchet_annual" ? "porchet" :
+          plan === "anc_annual" ? "anc" :
           plan === "ssp3d_monthly" ? "ssp3d" :
           plan === "ssp3d_annual" ? "ssp3d" :
           "je";
@@ -1442,6 +1447,7 @@ export async function registerRoutes(
             priceIdFromStripe === STRIPE_PRICE_MSP_ANNUAL ? "msp_annual" :
             (STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL && priceIdFromStripe === STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL) ? "eaux_pluviales_annual" :
             (STRIPE_PRICE_PORCHET_ANNUAL && priceIdFromStripe === STRIPE_PRICE_PORCHET_ANNUAL) ? "porchet_annual" :
+            (STRIPE_PRICE_ANC_ANNUAL && priceIdFromStripe === STRIPE_PRICE_ANC_ANNUAL) ? "anc_annual" :
             priceIdFromStripe === STRIPE_PRICE_SSP3D_MONTHLY ? "ssp3d_monthly" :
             priceIdFromStripe === STRIPE_PRICE_SSP3D_ANNUAL ? "ssp3d_annual" :
             priceIdFromStripe === STRIPE_PRICE_ANNUAL ? "annual" : "monthly";
@@ -1455,6 +1461,7 @@ export async function registerRoutes(
             (plan === "humain_monthly" || plan === "humain_annual") ? "humain" :
             plan === "eaux_pluviales_annual" ? "eaux_pluviales" :
             plan === "porchet_annual" ? "porchet" :
+            plan === "anc_annual" ? "anc" :
             (plan === "ssp3d_monthly" || plan === "ssp3d_annual") ? "ssp3d" :
             "je";
 
@@ -1507,6 +1514,7 @@ export async function registerRoutes(
                     tool === "tsn" ? "TSN — Transfert Sol vers Nappe" :
                     tool === "eaux_pluviales" ? "Gestion des eaux pluviales — DLE / GEP v2.1" :
                     tool === "porchet" ? "Modélisation Essai de Porchet — Perméabilité des sols" :
+                    tool === "anc" ? "Dimensionnement ANC — Assainissement Individuel & Collectif" :
                     tool === "humain" ? "Module HUMAIN — EQRS V9 Tier 3" :
                     tool === "ssp3d" ? "3D_SSP — Superposition 3D pollution sols/nappe" :
                     "EQRS — Johnson & Ettinger";
@@ -1516,6 +1524,7 @@ export async function registerRoutes(
                     plan === "tsn_annual" ? "Annuel — 850 € HT/an" :
                     plan === "eaux_pluviales_annual" ? "Annuel — 5 500 € HT/an" :
                     plan === "porchet_annual" ? "Annuel — 550 € HT/an" :
+                    plan === "anc_annual" ? "Annuel — 550 € HT/an" :
                     plan === "humain_monthly" ? "Mensuel — 550 € HT/mois" :
                     plan === "humain_annual" ? "Annuel — 5 200 € HT/an" :
                     plan === "ssp3d_monthly" ? "Mensuel — 250 € HT/mois" :
@@ -2438,6 +2447,114 @@ export async function registerRoutes(
       res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       return res.send(protectToolHtml(porchetToolHtml));
+    }
+  );
+
+
+  // ══════════════════════════════════════════════════════════════════════
+  // Dimensionnement ANC — Assainissement Individuel & Collectif
+  // ══════════════════════════════════════════════════════════════════════
+
+  // ── ANC : activation essai 8 jours ────────────────────────────────────
+  app.post(
+    "/api/anc-trial/activate",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      try {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const existing = subs.find(s => s.tool === "anc");
+        if (existing && (existing.status === "active" || existing.status === "trialing")) {
+          return res.status(409).json({ message: "Vous avez déjà un accès Dimensionnement ANC actif ou en cours d'essai." });
+        }
+        const trialEnd = new Date();
+        trialEnd.setDate(trialEnd.getDate() + 8);
+        let sub;
+        if (existing) {
+          sub = await storage.updateSubscription(existing.id, {
+            status: "trialing",
+            plan: "anc_trial",
+            tool: "anc",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        } else {
+          sub = await storage.createSubscription(req.user!.id, {
+            status: "trialing",
+            plan: "anc_trial",
+            tool: "anc",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        }
+
+        // Email de confirmation activation essai ANC
+        try {
+          const resendKey = process.env.RESEND_API_KEY;
+          if (resendKey) {
+            const { Resend } = require("resend");
+            const resend = new Resend(resendKey);
+            const user = await storage.getUser(req.user!.id);
+            const trialEndFr = trialEnd.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+            await resend.emails.send({
+              from: "GMEP <noreply@gmep-france.eu>",
+              to: req.user!.email,
+              subject: "GMEP Dimensionnement ANC — Votre essai gratuit de 8 jours est activé",
+              html: `
+                <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+                  <div style="background:#2E7D5B;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+                    <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+                    <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">Dimensionnement ANC — Assainissement Individuel &amp; Collectif</p>
+                  </div>
+                  <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+                    <p style="font-size:16px;">Bonjour ${user?.name || req.user!.email},</p>
+                    <p>Votre essai gratuit <strong>GMEP Dimensionnement ANC</strong> est maintenant actif. Accès complet au logiciel pendant <strong>8 jours</strong>.</p>
+                    <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
+                      <tr style="background:#e6f4ec;"><td style="padding:10px;border:1px solid #b7dcc6;font-weight:bold;">Outil</td><td style="padding:10px;border:1px solid #b7dcc6;">Dimensionnement ANC</td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Durée essai</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours</td></tr>
+                      <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Accès jusqu'au</td><td style="padding:10px;border:1px solid #e2e8f0;"><strong>${trialEndFr}</strong></td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #e2e8f0;">${req.user!.email}</td></tr>
+                    </table>
+                    <p style="font-size:13px;color:#64748b;">Après les 8 jours, l'accès est bloqué. Souscription : 550 € HT/an.</p>
+                    <div style="text-align:center;margin:28px 0;">
+                      <a href="https://gmep-anc.pplx.app" style="background:#2E7D5B;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à GMEP Dimensionnement ANC →</a>
+                    </div>
+                    <p style="font-size:13px;color:#64748b;">Import des essais Porchet, sol multicouche, triple croisement BRGM, vulnérabilité des eaux souterraines et moteur de dimensionnement complet NF DTU 64.1. Rapport instructible SPANC.</p>
+                    <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a> — Tél. 06 07 73 72 33</p>
+                    <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+                    <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+                  </div>
+                </div>
+              `,
+            });
+            console.log(`[ANC TRIAL EMAIL] Sent to ${req.user!.email}`);
+          }
+        } catch (emailErr: any) {
+          console.error("[ANC TRIAL EMAIL] Failed:", emailErr.message);
+        }
+
+        return res.json({ message: "Essai ANC activé (8 jours)", subscription: sub, toolUrl: "https://gmep-anc.pplx.app" });
+      } catch (err: any) {
+        return res.status(500).json({ message: err.message || "Erreur lors de l'activation de l'essai" });
+      }
+    }
+  );
+
+  // ── ANC : statut d'accès (essai ou abonné) — utilisé par le client pour rediriger vers l'outil ──
+  app.get(
+    "/api/anc-access",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      if (isAdminEmail((req.user as any).email)) {
+        return res.json({ access: true, toolUrl: "https://gmep-anc.pplx.app" });
+      }
+      const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+      const sub = subs.find(s => s.tool === "anc" && (s.status === "active" || s.status === "trialing"));
+      if (!sub) {
+        return res.status(403).json({ access: false, message: "Abonnement Dimensionnement ANC requis pour accéder à cet outil." });
+      }
+      if (sub.status === "trialing" && sub.currentPeriodEnd && new Date(sub.currentPeriodEnd) < new Date()) {
+        try { await storage.updateSubscription(sub.id, { status: "expired" }); } catch {}
+        return res.status(403).json({ access: false, expired: true, message: "Votre essai gratuit Dimensionnement ANC a expiré." });
+      }
+      return res.json({ access: true, toolUrl: "https://gmep-anc.pplx.app" });
     }
   );
 

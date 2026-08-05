@@ -59,6 +59,7 @@
           <a href="outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V9 + ECOTOX V9<span class="nav-mi-desc">HHRA + écotoxicologie — 104 substances · NOUVEAU</span></a>
           <a href="outils/eqrs-v8-ecotox-humain.html" role="menuitem">EQRS V9 + ECOTOX V9 + HUMAIN<span class="nav-mi-desc">Voie alimentaire humaine — 47 substances Tier 3 · NOUVEAU</span></a>
           <a href="outils/rabattement-v15-87.html" role="menuitem">Rabattement V15.87<span class="nav-mi-desc">Multicouche + assistant IA · NOUVEAU</span></a>
+          <a href="outils/anc-assainissement.html" role="menuitem">Dimensionnement ANC<span class="nav-mi-desc">Assainissement individuel &amp; collectif · NOUVEAU</span></a>
           <a href="outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transfert Sol-Nappe<span class="nav-mi-desc">Domenico 1987 + API Hub'eau · NOUVEAU</span></a>
           <a href="outils/schema-conceptuel.html" role="menuitem">Schéma Conceptuel<span class="nav-mi-desc">IEM + Plan de Gestion · NOUVEAU</span></a>
           <a href="outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Intrusion de vapeurs — EPA 2004</span></a>
@@ -273,6 +274,55 @@
           <li>Essai gratuit 8 jours inclus</li>
         </ul>
         <button class="btn btn-primary btn-block" style="margin-bottom:8px;background:#20808D;border-color:#20808D;" onclick="GmepCheckout.start('porchet_annual', document.getElementById('country-porchet-a').value)">Souscrire — Paiement Stripe</button>
+        <p style="text-align:center;font-size:0.74rem;color:var(--text-mute);margin-top:6px;">
+          <svg width="11" height="13" viewBox="0 0 12 14" fill="none" style="vertical-align:middle;margin-right:3px;" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="6" width="10" height="8" rx="2" stroke="#6B7280" stroke-width="1.5"/><path d="M3.5 6V4a2.5 2.5 0 0 1 5 0v2" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Paiement sécurisé par <strong style="color:#635BFF;">Stripe</strong> — résiliable à tout moment
+        </p>
+      </div>
+    </div>
+
+    <!-- ── NOUVEAU — Dimensionnement ANC ── -->
+    <div style="margin-bottom:var(--sp-5);">
+      <h2 style="font-size:1.3rem;font-weight:700;color:var(--navy,#1a2b4a);margin-bottom:0.5rem;">
+        <span style="background:#2E7D5B;color:#fff;font-size:0.75rem;font-weight:700;padding:3px 12px;border-radius:999px;margin-right:10px;vertical-align:middle;">NOUVEAU</span>
+        Dimensionnement ANC — Assainissement Individuel &amp; Collectif
+      </h2>
+      <p style="font-size:0.9rem;color:var(--text-mute,#6b7280);">Import des essais Porchet, sol multicouche, triple croisement BRGM, vulnérabilité des eaux souterraines et moteur de dimensionnement complet NF DTU 64.1. <a href="outils/anc-assainissement.html" style="color:var(--navy,#1a2b4a);font-weight:600;">Voir la fiche détaillée →</a></p>
+    </div>
+    <div class="pricing-grid" style="max-width:560px;margin:0 auto var(--sp-7) auto;">
+
+      <!-- ══ Dimensionnement ANC — Annuel ══ -->
+      <div class="price-card featured" id="anc_annual" style="border-color:#2E7D5B;">
+        <span class="badge" style="background:#2E7D5B;color:#fff;">NOUVEAU</span>
+        <h3>Dimensionnement ANC</h3>
+        <p class="sub">Abonnement annuel — 1 poste</p>
+        <div class="price-amount" style="color:#1a2b4a;"><span class="currency">€</span>550</div>
+        <div class="price-period">HT / an (660 € TTC)</div>
+        <div class="country-select">
+          <label for="country-anc-a">Pays de facturation</label>
+          <select id="country-anc-a">
+            <option value="FR">France métropolitaine (TVA 20 %)</option>
+            <option value="FR-DOM">DROM (Guadeloupe, Martinique, Réunion, Mayotte, Guyane)</option>
+            <option value="EU">Union européenne (hors France)</option>
+            <option value="INTL">Hors Union européenne</option>
+          </select>
+        </div>
+        <div class="price-breakdown">
+          <div class="pb-row"><span>Montant HT</span><span data-ht="550">550,00 €</span></div>
+          <div class="pb-row"><span data-tva-label>TVA 20 %</span><span data-tva-val>110,00 €</span></div>
+          <div class="pb-row pb-total"><span>Total TTC</span><span data-ttc-val>660,00 €</span></div>
+        </div>
+        <p style="font-size:12px;color:var(--text-mute);margin-bottom:var(--sp-4)" data-vat-note>TVA française au taux normal de 20 % (art. 278 du CGI).</p>
+        <ul class="price-features">
+          <li>Import direct des essais Porchet (JSON) + saisie manuelle</li>
+          <li>Profil de sol multicouche + bandeau de 24 faciès géologiques</li>
+          <li>Triple croisement mesuré / théorique / carte géologique BRGM</li>
+          <li>Vulnérabilité eaux souterraines + recensement automatique des cibles</li>
+          <li>Moteur de dimensionnement complet NF DTU 64.1</li>
+          <li>Rapport PDF instructible SPANC + export JSON</li>
+          <li>Essai gratuit 8 jours inclus</li>
+        </ul>
+        <button class="btn btn-primary btn-block" style="margin-bottom:8px;background:#2E7D5B;border-color:#2E7D5B;" onclick="GmepCheckout.start('anc_annual', document.getElementById('country-anc-a').value)">Souscrire — Paiement Stripe</button>
         <p style="text-align:center;font-size:0.74rem;color:var(--text-mute);margin-top:6px;">
           <svg width="11" height="13" viewBox="0 0 12 14" fill="none" style="vertical-align:middle;margin-right:3px;" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="6" width="10" height="8" rx="2" stroke="#6B7280" stroke-width="1.5"/><path d="M3.5 6V4a2.5 2.5 0 0 1 5 0v2" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round"/></svg>
           Paiement sécurisé par <strong style="color:#635BFF;">Stripe</strong> — résiliable à tout moment
@@ -565,6 +615,7 @@
           <li><a href="outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
           <li><a href="outils/domenico.html">Transfert Sol → Nappe → Captage</a></li>
           <li><a href="outils/rabattement/index.html">Rabattement de nappe IOTA</a></li>
+          <li><a href="outils/anc-assainissement.html">Dimensionnement ANC</a></li>
         </ul>
       </div>
       <div class="footer-col">
