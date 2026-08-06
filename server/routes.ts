@@ -1258,6 +1258,35 @@ export async function registerRoutes(
     }
   });
 
+  // Génération en masse via secret (sans session admin) — pour scripts d'automatisation
+  // de la campagne DREAL/DRIEAT/ARS/DDT. Usage ponctuel, protégé par secret.
+  app.post("/api/admin/trial-codes/bulk-secret", async (req: Request, res: Response) => {
+    const secret = (req.query.secret as string) || (req.body && (req.body as any).secret);
+    const expected = process.env.ADMIN_TRIAL_SECRET || "gmep-trial-bulk-2026-secret";
+    if (secret !== expected) return res.status(403).json({ message: "Secret invalide" });
+    try {
+      const { organismes } = req.body as { organismes: Array<{ organismeType: string; organismeNom: string; contactEmail?: string }> };
+      if (!Array.isArray(organismes) || organismes.length === 0) {
+        return res.status(400).json({ message: "organismes doit être un tableau non vide" });
+      }
+      const created: any[] = [];
+      for (const o of organismes) {
+        let code = generateTrialCode();
+        let attempts = 0;
+        while (await storage.getTrialCodeByCode(code)) {
+          code = generateTrialCode();
+          if (++attempts > 10) break;
+        }
+        const tc = await storage.createTrialCode({ code, organismeType: o.organismeType, organismeNom: o.organismeNom, contactEmail: o.contactEmail || null });
+        created.push(tc);
+      }
+      return res.json({ created: created.length, codes: created });
+    } catch (err: any) {
+      console.error("[TRIAL CODE BULK-SECRET CREATE ERROR]", err);
+      return res.status(500).json({ message: "Erreur serveur", error: err.message });
+    }
+  });
+
   // Liste des codes (admin)
   app.get("/api/admin/trial-codes", requireAdmin as any, async (_req: AuthRequest, res: Response) => {
     try {
