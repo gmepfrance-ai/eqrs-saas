@@ -30,7 +30,8 @@
     porchet_annual:        'porchet_annual',
     anc_annual:            'anc_annual',
     ssp3d_monthly:         'ssp3d_monthly',
-    ssp3d_annual:          'ssp3d_annual'
+    ssp3d_annual:          'ssp3d_annual',
+    schema_conceptuel_annual: 'schema_conceptuel_annual'
   };
 
   const PLAN_LABELS = {
@@ -51,7 +52,9 @@
     anc_annual:          'Dimensionnement ANC — Assainissement Individuel & Collectif — Abonnement annuel (550 € HT/an)',
     // 3D_SSP — juillet 2026
     ssp3d_monthly:       '3D_SSP — Modélisation 3D intégrée — Abonnement mensuel (250 € HT/mois)',
-    ssp3d_annual:        '3D_SSP — Modélisation 3D intégrée — Abonnement annuel (2 400 € HT/an)'
+    ssp3d_annual:        '3D_SSP — Modélisation 3D intégrée — Abonnement annuel (2 400 € HT/an)',
+    // Schéma Conceptuel — août 2026
+    schema_conceptuel_annual: 'Schéma Conceptuel — Abonnement annuel (850 € HT/an)'
   };
 
   // Calcul TVA selon pays (identique à demo.js du module Rabattement)

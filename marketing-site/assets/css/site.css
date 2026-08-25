@@ -544,6 +544,9 @@ section.bg-navy .section-eyebrow { color: var(--green-400); }
   background: #fff;
   color: var(--text-dark);
   font-size: 13.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 /* ============ PAGE OUTIL DÉTAILLÉE ============ */
