@@ -157,7 +157,7 @@ export default function SubscribePorchetPage() {
             onClick={handleTrial}
           >
             {trialLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-            {user ? "Essai gratuit 8 jours" : "S'inscrire + Essai gratuit 8 jours"}
+            {user ? "Essai gratuit 14 jours" : "S'inscrire + Essai gratuit 14 jours"}
           </Button>
 
           {!user && (
@@ -174,7 +174,7 @@ export default function SubscribePorchetPage() {
         </div>
 
         <div className="mt-4 bg-teal-50 border border-teal-100 rounded-lg p-4 text-xs text-teal-800">
-          <strong>Note :</strong> L'outil Modélisation Essai de Porchet est disponible en licence annuelle (550 € HT/an). L'essai gratuit de 8 jours donne accès à toutes les fonctionnalités sans engagement.
+          <strong>Note :</strong> L'outil Modélisation Essai de Porchet est disponible en licence annuelle (550 € HT/an). L'essai gratuit de 14 jours donne accès à toutes les fonctionnalités sans engagement.
         </div>
       </div>
       <V2Footer />

@@ -156,7 +156,7 @@ export default function SubscribeAncPage() {
             onClick={handleTrial}
           >
             {trialLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-            {user ? "Essai gratuit 8 jours" : "S'inscrire + Essai gratuit 8 jours"}
+            {user ? "Essai gratuit 14 jours" : "S'inscrire + Essai gratuit 14 jours"}
           </Button>
 
           {!user && (
@@ -173,7 +173,7 @@ export default function SubscribeAncPage() {
         </div>
 
         <div className="mt-4 bg-emerald-50 border border-emerald-100 rounded-lg p-4 text-xs text-emerald-800">
-          <strong>Note :</strong> L'outil Dimensionnement ANC est disponible en licence annuelle (550 € HT/an). L'essai gratuit de 8 jours donne accès à toutes les fonctionnalités sans engagement, sans carte bancaire.
+          <strong>Note :</strong> L'outil Dimensionnement ANC est disponible en licence annuelle (550 € HT/an). L'essai gratuit de 14 jours donne accès à toutes les fonctionnalités sans engagement, sans carte bancaire.
         </div>
       </div>
       <V2Footer />

@@ -1,13 +1,13 @@
 /* ════════════════════════════════════════════════════════════
-   GMEP — Gestion du quota démo 8 jours
+   GMEP — Gestion du quota démo 14 jours
    - Stocke la date de démarrage en localStorage + cookie
-   - Bloque la génération PDF passé 8 jours
+   - Bloque la génération PDF passé 14 jours
    - Modal email obligatoire avant la 1re génération
    ════════════════════════════════════════════════════════════ */
 
 const QUOTA_KEY = "gmep_demo_start";
 const QUOTA_EMAIL = "gmep_demo_email";
-const QUOTA_DURATION_MS = 8 * 24 * 3600 * 1000; // 8 jours
+const QUOTA_DURATION_MS = 14 * 24 * 3600 * 1000; // 14 jours
 
 // ─── Endpoint serveur (à brancher par l'opérateur) ───
 // Remplacer ci-dessous par votre endpoint Formspree / Google Sheet / Airtable / Make
@@ -138,7 +138,7 @@ function refreshQuotaBanner() {
   if (!banner) return;
   const q = checkQuota();
   if (q.state === "new") {
-    banner.innerHTML = `<strong>Mode démonstration</strong> — La 1re génération PDF déclenchera le démarrage de votre essai gratuit de 8 jours.`;
+    banner.innerHTML = `<strong>Mode démonstration</strong> — La 1re génération PDF déclenchera le démarrage de votre essai gratuit de 14 jours.`;
     banner.className = "quota-banner ok";
     if (lock) lock.classList.remove("open");
   } else if (q.state === "active") {
@@ -148,7 +148,7 @@ function refreshQuotaBanner() {
     if (lock) lock.classList.remove("open");
   } else {
     const checkoutURL = `https://www.gmep-france.eu/#/register?plan=rabattement_annual&country=${encodeURIComponent(document.getElementById('buyer-country')?.value || 'FR')}`;
-    banner.innerHTML = `<strong>Essai expiré</strong> — Votre période de démonstration de 8 jours est terminée. <a href="${checkoutURL}" target="_blank" rel="noopener">💳 Souscrire en ligne (Stripe) →</a>`;
+    banner.innerHTML = `<strong>Essai expiré</strong> — Votre période de démonstration de 14 jours est terminée. <a href="${checkoutURL}" target="_blank" rel="noopener">💳 Souscrire en ligne (Stripe) →</a>`;
     banner.className = "quota-banner expired";
     if (lock) lock.classList.add("open");
   }

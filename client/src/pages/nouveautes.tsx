@@ -54,7 +54,7 @@ export default function NouveautesPage() {
           <p className="lead" style={{ color: "rgba(255,255,255,0.85)", maxWidth: 760, margin: "0 auto" }}>
             Suivez les dernières évolutions de notre logiciel de modélisation du rabattement de nappe
             (méthode TSN). Ces améliorations sont disponibles dès maintenant pour les abonnés et les
-            utilisateurs en essai gratuit de 8 jours.
+            utilisateurs en essai gratuit de 14 jours.
           </p>
         </div>
       </section>
@@ -124,10 +124,10 @@ export default function NouveautesPage() {
               }}
             >
               <h3 style={{ margin: "0 0 12px 0", fontSize: 18, color: "#0d1b2e" }}>
-                Essai gratuit de 8 jours
+                Essai gratuit de 14 jours
               </h3>
               <p style={{ margin: "0 auto 24px", maxWidth: 640, fontSize: 14.5, color: "#374151", lineHeight: 1.7 }}>
-                Essai gratuit de 8 jours, puis abonnement annuel 1 500 € HT/an renouvelable
+                Essai gratuit de 14 jours, puis abonnement annuel 1 500 € HT/an renouvelable
                 (renouvellement manuel sans reconduction ni prélèvement automatique). Projets et
                 calculs illimités pendant toute la durée de l'abonnement.
               </p>
@@ -149,7 +149,7 @@ export default function NouveautesPage() {
                   className="v2-btn v2-btn-blue"
                   onClick={() => navigateTo("/subscribe-rabattement")}
                 >
-                  Essai gratuit 8 jours
+                  Essai gratuit 14 jours
                 </button>
               </div>
             </div>

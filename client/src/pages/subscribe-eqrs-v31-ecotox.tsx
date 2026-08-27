@@ -150,7 +150,7 @@ export default function SubscribeEqrsV31EcotoxPage() {
             onClick={handleTrial}
           >
             {trialLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-            {user ? "Démarrer mon essai 8 jours" : "S'inscrire + Essai gratuit 8 jours"}
+            {user ? "Démarrer mon essai 14 jours" : "S'inscrire + Essai gratuit 14 jours"}
           </Button>
 
           {!user && (
@@ -167,7 +167,7 @@ export default function SubscribeEqrsV31EcotoxPage() {
         </div>
 
         <div className="mt-4 bg-blue-50 border border-blue-100 rounded-lg p-4 text-xs text-blue-800">
-          <strong>Note :</strong> l'essai gratuit de 8 jours et l'abonnement utilisent le même compte. Si vous testez déjà un autre logiciel GMEP, votre mot de passe reste identique.
+          <strong>Note :</strong> l'essai gratuit de 14 jours et l'abonnement utilisent le même compte. Si vous testez déjà un autre logiciel GMEP, votre mot de passe reste identique.
         </div>
       </div>
       <V2Footer />

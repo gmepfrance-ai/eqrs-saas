@@ -185,7 +185,7 @@ export default function SubscribeEqrsV8HumainPage() {
             onClick={handleTrial}
           >
             {trialLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-            {user ? "Démarrer mon essai gratuit 8 jours" : "S'inscrire + Essai gratuit 8 jours (sans CB)"}
+            {user ? "Démarrer mon essai gratuit 14 jours" : "S'inscrire + Essai gratuit 14 jours (sans CB)"}
           </Button>
           {!user && (
             <p className="text-center text-xs text-muted-foreground mt-3">

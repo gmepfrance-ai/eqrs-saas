@@ -194,7 +194,7 @@ export default function SubscribeSsp3dPage() {
             onClick={handleTrial}
           >
             {trialLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-            {user ? "Essai gratuit 8 jours" : "S'inscrire + Essai gratuit 8 jours"}
+            {user ? "Essai gratuit 14 jours" : "S'inscrire + Essai gratuit 14 jours"}
           </Button>
 
           {!user && (
@@ -211,7 +211,7 @@ export default function SubscribeSsp3dPage() {
         </div>
 
         <div className="mt-4 bg-cyan-50 border border-cyan-100 rounded-lg p-4 text-xs text-cyan-800">
-          <strong>Essai gratuit 8 jours</strong> — Aucune carte bancaire requise pour démarrer. Accès complet au logiciel 3D_SSP pendant 8 jours.
+          <strong>Essai gratuit 14 jours</strong> — Aucune carte bancaire requise pour démarrer. Accès complet au logiciel 3D_SSP pendant 14 jours.
         </div>
       </div>
       <V2Footer />

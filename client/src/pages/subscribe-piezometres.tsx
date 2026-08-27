@@ -156,7 +156,7 @@ export default function SubscribePiezometresPage() {
             onClick={handleTrial}
           >
             {trialLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-            {user ? "Essai gratuit 8 jours" : "S'inscrire + Essai gratuit 8 jours"}
+            {user ? "Essai gratuit 14 jours" : "S'inscrire + Essai gratuit 14 jours"}
           </Button>
 
           {!user && (

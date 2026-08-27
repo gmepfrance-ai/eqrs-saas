@@ -156,7 +156,7 @@ export default function SubscribeEauxPluvialesPage() {
             onClick={handleTrial}
           >
             {trialLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-            {user ? "Essai gratuit 8 jours" : "S'inscrire + Essai gratuit 8 jours"}
+            {user ? "Essai gratuit 14 jours" : "S'inscrire + Essai gratuit 14 jours"}
           </Button>
 
           {!user && (
@@ -173,7 +173,7 @@ export default function SubscribeEauxPluvialesPage() {
         </div>
 
         <div className="mt-4 bg-blue-50 border border-blue-100 rounded-lg p-4 text-xs text-blue-800">
-          <strong>Note :</strong> L'outil Eaux Pluviales DLE/GEP v2.1 est disponible en licence annuelle (5 500 € HT/an). L'essai gratuit de 8 jours donne accès à toutes les fonctionnalités sans engagement.
+          <strong>Note :</strong> L'outil Eaux Pluviales DLE/GEP v2.1 est disponible en licence annuelle (5 500 € HT/an). L'essai gratuit de 14 jours donne accès à toutes les fonctionnalités sans engagement.
         </div>
       </div>
       <V2Footer />

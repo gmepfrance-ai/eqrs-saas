@@ -50,11 +50,11 @@ export default function RabattementV1585Page() {
                 <button className="v2-btn v2-btn-primary" style={{ cursor: "pointer", border: "none" }} onClick={subscribe}>
                   S'abonner — 1 500 € HT/an
                 </button>
-                <button className="v2-btn v2-btn-outline" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 8 jours</button>
+                <button className="v2-btn v2-btn-outline" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 14 jours</button>
                 <a href="/contact" className="v2-btn v2-btn-outline">Démo sur demande</a>
               </div>
               <p style={{ marginTop: 12, fontSize: 13.5, color: "#cfe3f2" }}>
-                Essai gratuit de 8 jours, puis abonnement annuel 1 500 € HT/an renouvelable.
+                Essai gratuit de 14 jours, puis abonnement annuel 1 500 € HT/an renouvelable.
               </p>
             </div>
             <div className="v2-hero-mock" aria-hidden="true">
@@ -223,11 +223,11 @@ export default function RabattementV1585Page() {
             </div>
           </div>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginTop: 24 }}>
-            <button className="v2-btn v2-btn-ghost" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 8 jours</button>
+            <button className="v2-btn v2-btn-ghost" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 14 jours</button>
             <a href="/contact" className="v2-btn v2-btn-ghost">Démo sur demande</a>
           </div>
           <p style={{ textAlign: "center", marginTop: 14, fontSize: 13.5, color: "#374151" }}>
-            Essai gratuit de 8 jours, puis abonnement annuel 1 500 € HT/an renouvelable.
+            Essai gratuit de 14 jours, puis abonnement annuel 1 500 € HT/an renouvelable.
           </p>
         </div>
       </section>

@@ -236,7 +236,7 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-bold text-foreground">EQRS V7 Johnson &amp; Ettinger</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-3">74 substances — Calcul QD &amp; ERI — EPA 2004</p>
-              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 208 € HT/mois ensuite</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 208 € HT/mois ensuite</p>
               <button className="w-full bg-[#1a5276] text-white py-2 rounded font-semibold text-sm hover:bg-[#0e2f44]"
                 onClick={() => { window.location.href = `/api/tool?token=${token}`; }}>
                 Accéder →
@@ -250,7 +250,7 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-bold text-foreground">EQRS V9 + ECOTOX V9</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-3">104 substances HHRA + 47 écotox Tier 3 — PFAS, PCB, métaux</p>
-              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 395 € HT/mois ensuite</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 395 € HT/mois ensuite</p>
               <button className="w-full bg-[#1a5276] text-white py-2 rounded font-semibold text-sm hover:bg-[#0e2f44]"
                 onClick={() => { window.location.href = `/api/eqrs-v31-ecotox-tool?token=${token}`; }}>
                 Accéder →
@@ -264,7 +264,7 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-bold text-foreground">TSN Transfert Sol-Nappe</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-3">Domenico 1987 — Hub'eau — IOTA R.214-1</p>
-              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 1 100 € HT/an ensuite</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 1 100 € HT/an ensuite</p>
               <button className="w-full bg-[#1e8449] text-white py-2 rounded font-semibold text-sm hover:opacity-90"
                 onClick={() => { window.location.href = `/api/tsn-tool?token=${token}`; }}>
                 Accéder →
@@ -278,7 +278,7 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-bold text-foreground">Rabattement V15.89</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-3">Forchheimer multicouche — IA — Loi sur l'Eau</p>
-              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 1 500 € HT/an ensuite</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 1 500 € HT/an ensuite</p>
               <button className="w-full bg-[#1a365d] text-white py-2 rounded font-semibold text-sm hover:opacity-90"
                 onClick={() => { window.location.href = `/api/rabattement-tool?token=${token}`; }}>
                 Accéder →
@@ -292,7 +292,7 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-bold text-foreground">GMEP Piézomètres v2.9c</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-3">Dimensionnement — Loi sur l'Eau — IOTA R.214-1</p>
-              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 1 100 € HT/an ensuite</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 1 100 € HT/an ensuite</p>
               <button className="w-full bg-[#0e6b3c] text-white py-2 rounded font-semibold text-sm hover:opacity-90"
                 onClick={() => { window.location.href = `/api/piezometres-tool?token=${token}`; }}>
                 Accéder →
@@ -306,7 +306,7 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-bold text-foreground">Schéma Conceptuel</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-3">SVG Source › Vecteur › Cible — IEM + PG</p>
-              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 850 € HT/an ensuite</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 850 € HT/an ensuite</p>
               <button className="w-full bg-[#6f42c1] text-white py-2 rounded font-semibold text-sm hover:opacity-90"
                 onClick={() => { window.location.href = `/api/schema-conceptuel-tool?token=${token}`; }}>
                 Accéder →
@@ -322,7 +322,7 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-bold text-foreground">MSP — Pollution des Sols</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-3">ISDI · Arrêté 12/12/2014 · Décret 2023-1408 · Purge IDW</p>
-              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 250 € HT/mois ou 2 760 € HT/an</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 250 € HT/mois ou 2 760 € HT/an</p>
               <button className="w-full bg-[#16a34a] text-white py-2 rounded font-semibold text-sm hover:opacity-90"
                 onClick={() => { window.location.href = `/api/msp-tool?token=${token}`; }}>
                 Accéder →
@@ -338,7 +338,7 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-bold text-foreground">3D_SSP — Superposition 3D</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-3">Pollution sols/nappe · implantations · imports SAR³/TNS/MSP</p>
-              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 250 € HT/mois ou 2 400 € HT/an</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 250 € HT/mois ou 2 400 € HT/an</p>
               <button className="w-full bg-[#0891b2] text-white py-2 rounded font-semibold text-sm hover:opacity-90"
                 onClick={() => { window.location.href = `/api/ssp3d-tool?token=${token}`; }}>
                 Accéder →
@@ -352,7 +352,7 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-bold text-foreground">Eaux Pluviales DLE/GEP v2.1</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-3">Loi sur l'Eau IOTA 2.1.5.0 / 3.3.1.0 — IA Porchet — Bassin rétention</p>
-              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 5 500 € HT/an ensuite</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 5 500 € HT/an ensuite</p>
               <button className="w-full bg-[#1A6FB5] text-white py-2 rounded font-semibold text-sm hover:opacity-90"
                 onClick={() => {
                   fetch(`/api/eaux-pluviales-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
@@ -370,7 +370,7 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-bold text-foreground">Modélisation Essai de Porchet</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-3">Perméabilité des sols — coefficient K hémisphérique — concordance GEP — fiches PDF</p>
-              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 550 € HT/an ensuite</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 550 € HT/an ensuite</p>
               <button className="w-full bg-[#0F766E] text-white py-2 rounded font-semibold text-sm hover:opacity-90"
                 onClick={() => {
                   fetch(`/api/porchet-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
@@ -387,7 +387,7 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-bold text-foreground">Dimensionnement ANC</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-3">Assainissement Individuel &amp; Collectif — NF DTU 64.1 — rapport SPANC</p>
-              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 550 € HT/an ensuite</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 550 € HT/an ensuite</p>
               <button className="w-full text-white py-2 rounded font-semibold text-sm hover:opacity-90" style={{backgroundColor:"#2E7D5B"}}
                 onClick={() => {
                   fetch(`/api/anc-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
@@ -406,7 +406,7 @@ export default function DashboardPage() {
                 <h3 className="text-sm font-bold text-foreground">EQRS V9 + Module HUMAIN</h3>
               </div>
               <p className="text-xs text-muted-foreground mb-3">Voie alimentaire humaine — 47 substances Tier 3 — PFAS, PCB, métaux, HAP</p>
-              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 8 jours</span> — 550 € HT/mois ensuite</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 550 € HT/mois ensuite</p>
               <button className="w-full text-white py-2 rounded font-semibold text-sm hover:opacity-90" style={{backgroundColor:"#2ECC71"}}
                 onClick={() => {
                   fetch(`/api/eqrs-v8-humain-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
