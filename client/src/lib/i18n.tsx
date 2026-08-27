@@ -336,7 +336,7 @@ const translations = {
     "v2.why.pdf.title": "PDF prêts à déposer",
     "v2.why.pdf.desc": "Dossiers de 27 pages pour DDT, IEM sites pollués, rapports d'étude.",
     "v2.why.trial.title": "Essai gratuit sans CB",
-    "v2.why.trial.desc": "8 à 14 jours d'accès complet, aucune carte bancaire requise.",
+    "v2.why.trial.desc": "14 jours d'accès complet, aucune carte bancaire requise.",
 
     "v2.license.title": "Conditions de licence — mono-poste",
     "v2.license.p1.before": "Le tarif indiqué pour chaque logiciel correspond à ",
@@ -350,7 +350,7 @@ const translations = {
     "v2.license.p2.strong2": "autant d'abonnements que de postes",
     "v2.license.p2.after": ", chacun avec sa propre clé d'activation et sa durée (mensuelle ou annuelle). Chaque licence supplémentaire est facturée au même tarif unitaire.",
 
-    "v2.cta.title": "Essai gratuit 8 à 14 jours",
+    "v2.cta.title": "Essai gratuit 14 jours",
     "v2.cta.desc": "Testez les démos interactives dans votre navigateur. Aucune installation, aucune carte bancaire.",
     "v2.cta.btn": "Créer mon compte",
 
@@ -563,7 +563,7 @@ const translations = {
     "ml.s4.rights": "Vos droits",
     "ml.s4.rightsP": "Vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation, de portabilité et d'opposition concernant vos données personnelles. Vous pouvez exercer ces droits à tout moment en écrivant à gmep.france@gmail.com. Vous disposez également du droit d'introduire une réclamation auprès de la CNIL (www.cnil.fr).",
     "ml.s4.retention": "Durée de conservation",
-    "ml.s4.retentionP": "Les données des comptes d'essai sont conservées pour la durée de l'essai (8 à 14 jours) puis supprimées sauf souscription. Les données des abonnés sont conservées pendant toute la durée du contrat puis archivées 10 ans pour obligations comptables et fiscales.",
+    "ml.s4.retentionP": "Les données des comptes d'essai sont conservées pour la durée de l'essai (14 jours) puis supprimées sauf souscription. Les données des abonnés sont conservées pendant toute la durée du contrat puis archivées 10 ans pour obligations comptables et fiscales.",
     "ml.s5.title": "5. Cookies",
     "ml.s5.p1": "Ce site dépose uniquement des cookies techniques nécessaires à son fonctionnement (session, authentification, paiement Stripe). Aucun cookie de mesure d'audience ou publicitaire n'est utilisé sans votre consentement explicite. Vous pouvez configurer votre navigateur pour bloquer les cookies à tout moment.",
     "ml.s6.title": "6. Paiement sécurisé",
@@ -584,7 +584,7 @@ const translations = {
     "login.errorGeneric": "Erreur de connexion",
 
     // ===== Register =====
-    "register.sub": "Essai gratuit 8 à 14 jours, aucune carte bancaire requise.",
+    "register.sub": "Essai gratuit 14 jours, aucune carte bancaire requise.",
     "register.company": "Société / bureau d'études",
     "register.passwordHint": "Au moins 8 caractères, incluant lettres et chiffres.",
     "register.cgu.before": "J'accepte les ",
@@ -1463,7 +1463,7 @@ const translations = {
     "v2.why.pdf.title": "PDF listos para presentar",
     "v2.why.pdf.desc": "Expedientes de 27 páginas para DDT, IEM de sitios contaminados, informes de estudio.",
     "v2.why.trial.title": "Prueba gratuita sin tarjeta",
-    "v2.why.trial.desc": "8 a 14 días de acceso completo, sin tarjeta de crédito.",
+    "v2.why.trial.desc": "14 días de acceso completo, sin tarjeta de crédito.",
 
     "v2.license.title": "Condiciones de licencia — monopuesto",
     "v2.license.p1.before": "El precio indicado para cada programa corresponde a ",
@@ -1477,7 +1477,7 @@ const translations = {
     "v2.license.p2.strong2": "tantas suscripciones como puestos",
     "v2.license.p2.after": ", cada una con su propia clave de activación y su duración (mensual o anual). Cada licencia adicional se factura al mismo precio unitario.",
 
-    "v2.cta.title": "Prueba gratuita 8 a 14 días",
+    "v2.cta.title": "Prueba gratuita 14 días",
     "v2.cta.desc": "Pruebe las demostraciones interactivas en su navegador. Sin instalación, sin tarjeta de crédito.",
     "v2.cta.btn": "Crear mi cuenta",
 
@@ -1690,7 +1690,7 @@ const translations = {
     "ml.s4.rights": "Sus derechos",
     "ml.s4.rightsP": "Dispone de un derecho de acceso, rectificación, supresión, limitación, portabilidad y oposición relativos a sus datos personales. Puede ejercer estos derechos en cualquier momento escribiendo a gmep.france@gmail.com. También dispone del derecho a presentar una reclamación ante la CNIL (www.cnil.fr).",
     "ml.s4.retention": "Duración de conservación",
-    "ml.s4.retentionP": "Los datos de las cuentas de prueba se conservan durante el periodo de la prueba (8 a 14 días) y luego se suprimen salvo suscripción. Los datos de los suscriptores se conservan durante toda la duración del contrato y después se archivan 10 años por obligaciones contables y fiscales.",
+    "ml.s4.retentionP": "Los datos de las cuentas de prueba se conservan durante el periodo de la prueba (14 días) y luego se suprimen salvo suscripción. Los datos de los suscriptores se conservan durante toda la duración del contrato y después se archivan 10 años por obligaciones contables y fiscales.",
     "ml.s5.title": "5. Cookies",
     "ml.s5.p1": "Este sitio solo deposita cookies técnicas necesarias para su funcionamiento (sesión, autenticación, pago Stripe). No se utiliza ninguna cookie de medición de audiencia o publicitaria sin su consentimiento explícito. Puede configurar su navegador para bloquear las cookies en cualquier momento.",
     "ml.s6.title": "6. Pago seguro",
@@ -1711,7 +1711,7 @@ const translations = {
     "login.errorGeneric": "Error de conexión",
 
     // ===== Register =====
-    "register.sub": "Prueba gratuita 8 a 14 días, sin tarjeta de crédito.",
+    "register.sub": "Prueba gratuita 14 días, sin tarjeta de crédito.",
     "register.company": "Empresa / consultora",
     "register.passwordHint": "Al menos 8 caracteres, incluyendo letras y dígitos.",
     "register.cgu.before": "Acepto las ",
