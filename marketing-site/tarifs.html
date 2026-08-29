@@ -103,6 +103,19 @@
 
 <section>
   <div class="container">
+    <!-- ── Point de contact humain avant souscription ── -->
+    <div class="gmep-contact-banner">
+      <p><strong>Un doute sur le bon outil, sur un pack métier ou sur la facturation ?</strong><br>Décrivez votre besoin, un hydrogéologue vous rappelle personnellement sous 24 à 48h — avant tout engagement.</p>
+      <button type="button" class="btn btn-primary" data-gmep-contact data-tool="Question tarifs">Demander à être rappelé</button>
+    </div>
+
+    <div class="gmep-trust-strip">
+      <div class="gmep-trust-item"><strong>Conçu par un hydrogéologue</strong>Gérant d'un bureau d'études environnementales en activité, confronté aux mêmes dossiers que vous</div>
+      <div class="gmep-trust-item"><strong>Conformité réglementaire</strong>Méthodes alignées USEPA 2004, ANSES 2018, BRGM et Loi sur l'Eau</div>
+      <div class="gmep-trust-item"><strong>Société immatriculée</strong>SARL G.M.E.P — SIREN 753 097 625, Saint-Maixent-l'École (79)</div>
+      <div class="gmep-trust-item"><strong>Sans risque</strong>Essai gratuit 14 jours sans carte bancaire, résiliable à tout moment</div>
+    </div>
+
     <!-- ── NOUVEAU — Packs métiers (SSP, Hydrogéologie, Assainissement) ── -->
     <div id="packs-metiers" style="margin-bottom:var(--sp-5);">
       <h2 style="font-size:1.3rem;font-weight:700;color:var(--navy,#1a2b4a);margin-bottom:0.5rem;">
@@ -682,6 +695,17 @@
   </div>
 </section>
 
+<!-- Section témoignages — masquée (.gmep-testimonials{display:none} dans site.css) en attendant les avis clients réels. À activer et compléter dès réception (retour prévu 06/09/2026). -->
+<section class="gmep-testimonials">
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Avis clients</span>
+      <h2>Ils utilisent les logiciels GMEP</h2>
+    </div>
+    <!-- TODO : remplacer par des témoignages réels (nom, bureau d'études, citation) -->
+  </div>
+</section>
+
 <section class="bg-soft">
   <div class="container container-narrow">
     <div class="section-head">
@@ -760,5 +784,6 @@
 <script src="assets/js/nav.js"></script>
 <script src="assets/js/stripe-checkout.js"></script>
 
+<script src="assets/js/contact-widget.js"></script>
 </body>
 </html>

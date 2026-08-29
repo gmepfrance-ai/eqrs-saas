@@ -117,7 +117,7 @@
 <section>
   <div class="container">
     <div class="contact-grid">
-      <form action="mailto:gmep.france@gmail.com" method="post" enctype="text/plain" class="contact-form">
+      <form id="gmep-contact-page-form" class="contact-form">
         <div class="form-field">
           <label for="ct-nom">Nom *</label>
           <input type="text" id="ct-nom" name="nom" required>
@@ -138,9 +138,13 @@
           <label for="ct-msg">Message *</label>
           <textarea id="ct-msg" name="message" rows="6" required placeholder="Décrivez votre besoin…"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Envoyer le message</button>
+        <button type="submit" class="btn btn-primary" id="gmep-contact-page-submit">Envoyer le message</button>
         <p style="font-size:12.5px;color:var(--text-mute);margin-top:12px;">En soumettant ce formulaire, vous acceptez que vos données soient utilisées pour répondre à votre demande. Conformité RGPD — voir <a href="mentions-legales.html">mentions légales</a>.</p>
       </form>
+      <div id="gmep-contact-page-success" hidden style="padding:18px;background:#eafaf0;border:1px solid #bfe8cf;border-radius:10px;">
+        <p style="margin:0 0 6px;font-weight:700;color:#1a2b4a;">Merci, votre message a bien été envoyé.</p>
+        <p style="margin:0;color:var(--text-mute);">Nous vous répondons sous 48h ouvrées.</p>
+      </div>
 
       <aside class="contact-info">
         <h3>Coordonnées</h3>
@@ -217,6 +221,50 @@
 
 <script src="assets/js/nav.js"></script>
 <script src="assets/js/stripe-checkout.js"></script>
+<script>
+(function () {
+  var form = document.getElementById('gmep-contact-page-form');
+  if (!form) return;
+  var APP_BASE = (typeof window.GMEP_APP_BASE === 'string') ? window.GMEP_APP_BASE : 'https://app.gmep-france.eu';
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var btn = document.getElementById('gmep-contact-page-submit');
+    var data = {
+      name: form.nom.value.trim(),
+      email: form.email.value.trim(),
+      company: form.societe.value.trim(),
+      phone: form.telephone.value.trim(),
+      message: form.message.value.trim(),
+      source: 'contact.html'
+    };
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours…';
+    fetch(APP_BASE + '/api/contact-request', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function (res) {
+      if (!res.ok) throw new Error('http_' + res.status);
+      return res.json();
+    }).then(function () {
+      form.hidden = true;
+      document.getElementById('gmep-contact-page-success').hidden = false;
+    }).catch(function () {
+      var subject = encodeURIComponent('Contact site GMEP — ' + (data.name || ''));
+      var body = encodeURIComponent(
+        'Nom : ' + data.name + '\nEmail : ' + data.email + '\nSociété : ' + data.company +
+        '\nTéléphone : ' + data.phone + '\nMessage : ' + data.message
+      );
+      window.location.href = 'mailto:gmep.france@gmail.com?subject=' + subject + '&body=' + body;
+      form.hidden = true;
+      document.getElementById('gmep-contact-page-success').hidden = false;
+    }).finally(function () {
+      btn.disabled = false;
+      btn.textContent = 'Envoyer le message';
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
