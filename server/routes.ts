@@ -95,6 +95,17 @@ try {
   console.error("Warning: Could not load eaux-pluviales-tool.html", e);
 }
 
+// Load Modélisation Essai de Porchet tool HTML at startup
+let porchetToolHtml = "";
+try {
+  porchetToolHtml = fs.readFileSync(
+    path.resolve(process.cwd(), "porchet-tool.html"),
+    "utf-8"
+  );
+} catch (e) {
+  console.error("Warning: Could not load porchet-tool.html", e);
+}
+
 // Load 3D_SSP (SAR³ — Superposition 3D pollution sols/nappe) tool HTML at startup
 let ssp3dToolHtml = "";
 try {
@@ -132,25 +143,31 @@ const STRIPE_PRICE_MONTHLY =
 const STRIPE_PRICE_ANNUAL =
   process.env.STRIPE_PRICE_ANNUAL || "price_annual_placeholder";
 const STRIPE_PRICE_TSN_ANNUAL =
-  process.env.STRIPE_PRICE_TSN_ANNUAL || "price_1TOK7o3A2g3lkch9UDnnjOWw";
+  process.env.STRIPE_PRICE_TSN_ANNUAL || "price_1TiYjL3A2g3lkch9lRTAksYc";
+const STRIPE_PRICE_DOMENICO_ANNUAL =
+  process.env.STRIPE_PRICE_DOMENICO_ANNUAL || "price_1U177L3A2g3lkch93BeMoud5";
 const STRIPE_PRICE_RABATTEMENT_ANNUAL =
-  process.env.STRIPE_PRICE_RABATTEMENT_ANNUAL || "price_1TZT293A2g3lkch9bGF7hcgA";
+  process.env.STRIPE_PRICE_RABATTEMENT_ANNUAL || "price_1TiYgX3A2g3lkch9t0mghple";
+const STRIPE_PRICE_RABATTEMENT_SIMPLE_ANNUAL =
+  process.env.STRIPE_PRICE_RABATTEMENT_SIMPLE_ANNUAL || "price_1U171F3A2g3lkch9euyej9Ek";
 const STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY =
-  process.env.STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY || "";
+  process.env.STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY || "price_1TiYe43A2g3lkch9P8imRRvG";
 const STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL =
-  process.env.STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL || "";
+  process.env.STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL || "price_1TiYqB3A2g3lkch9s0brXOXq";
 const STRIPE_PRICE_PIEZOMETRES_ANNUAL =
-  process.env.STRIPE_PRICE_PIEZOMETRES_ANNUAL || "";
+  process.env.STRIPE_PRICE_PIEZOMETRES_ANNUAL || "price_1TiYnI3A2g3lkch9RLQs5tDu";
 const STRIPE_PRICE_MSP_MONTHLY =
   process.env.STRIPE_PRICE_MSP_MONTHLY || "price_1TlY2z3A2g3lkch9xdWCjChC";
 const STRIPE_PRICE_MSP_ANNUAL =
   process.env.STRIPE_PRICE_MSP_ANNUAL || "price_1TlY523A2g3lkch9r3B65h5U";
 const STRIPE_PRICE_HUMAIN_MONTHLY =
-  process.env.STRIPE_PRICE_HUMAIN_MONTHLY || "";
+  process.env.STRIPE_PRICE_HUMAIN_MONTHLY || "price_1Tndv23A2g3lkch96MR6NnQA";
 const STRIPE_PRICE_HUMAIN_ANNUAL =
-  process.env.STRIPE_PRICE_HUMAIN_ANNUAL || "";
+  process.env.STRIPE_PRICE_HUMAIN_ANNUAL || "price_1Tndw73A2g3lkch92OjkFT0I";
 const STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL =
-  process.env.STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL || "";
+  process.env.STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL || "price_1TzJOO3A2g3lkch9Tm324JK5";
+const STRIPE_PRICE_PORCHET_ANNUAL = process.env.STRIPE_PRICE_PORCHET_ANNUAL || "price_1TzJOO3A2g3lkch9xIQL6evH";
+const STRIPE_PRICE_ANC_ANNUAL = process.env.STRIPE_PRICE_ANC_ANNUAL || "price_1U11vL3A2g3lkch9ZIGO9YUJ";
 const STRIPE_PRICE_SSP3D_MONTHLY =
   process.env.STRIPE_PRICE_SSP3D_MONTHLY || "price_1TslXb3A2g3lkch9jVPitmfl";
 const STRIPE_PRICE_SSP3D_ANNUAL =
@@ -284,7 +301,7 @@ async function requireTsnSubscription(
     if (new Date(tsnSub.currentPeriodEnd) < new Date()) {
       try { await storage.updateSubscription(tsnSub.id, { status: "expired" }); } catch {}
       res.setHeader("Content-Type", "text/html; charset=utf-8");
-      return res.status(403).send(trialExpiredHtml("/#/subscribe-tsn", "TSN — Transfert Sol-Nappe", 8));
+      return res.status(403).send(trialExpiredHtml("/#/subscribe-tsn", "TSN — Transfert Sol-Nappe", 14));
     }
   }
   next();
@@ -311,7 +328,7 @@ async function requireRabattementSubscription(
     if (new Date(rabSub.currentPeriodEnd) < new Date()) {
       try { await storage.updateSubscription(rabSub.id, { status: "expired" }); } catch {}
       res.setHeader("Content-Type", "text/html; charset=utf-8");
-      return res.status(403).send(trialExpiredHtml("/#/subscribe-rabattement", "Rabattement V15.89", 8));
+      return res.status(403).send(trialExpiredHtml("/#/subscribe-rabattement", "Rabattement V15.89", 14));
     }
   }
   next();
@@ -336,7 +353,7 @@ async function requireMspSubscription(
     if (new Date(mspSub.currentPeriodEnd) < new Date()) {
       try { await storage.updateSubscription(mspSub.id, { status: "expired" }); } catch {}
       res.setHeader("Content-Type", "text/html; charset=utf-8");
-      return res.status(403).send(trialExpiredHtml("/#/subscribe-msp", "MSP — Modélisation Sources de Pollution des Sols", 8));
+      return res.status(403).send(trialExpiredHtml("/#/subscribe-msp", "MSP — Modélisation Sources de Pollution des Sols", 14));
     }
   }
   next();
@@ -361,7 +378,7 @@ async function requireSsp3dSubscription(
     if (new Date(ssp3dSub.currentPeriodEnd) < new Date()) {
       try { await storage.updateSubscription(ssp3dSub.id, { status: "expired" }); } catch {}
       res.setHeader("Content-Type", "text/html; charset=utf-8");
-      return res.status(403).send(trialExpiredHtml("/#/subscribe-ssp3d", "3D_SSP — Superposition 3D pollution sols/nappe", 8));
+      return res.status(403).send(trialExpiredHtml("/#/subscribe-ssp3d", "3D_SSP — Superposition 3D pollution sols/nappe", 14));
     }
   }
   next();
@@ -746,6 +763,10 @@ export async function registerRoutes(
         hasPriceTsnAnnual: !!process.env.STRIPE_PRICE_TSN_ANNUAL || true,
         hasPriceEauxPluvialesAnnual: !!process.env.STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL,
         eauxPluvialesPriceId: process.env.STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL || null,
+        hasPricePorchetAnnual: !!process.env.STRIPE_PRICE_PORCHET_ANNUAL,
+        porchetPriceId: process.env.STRIPE_PRICE_PORCHET_ANNUAL || null,
+        hasPriceAncAnnual: !!process.env.STRIPE_PRICE_ANC_ANNUAL,
+        ancPriceId: process.env.STRIPE_PRICE_ANC_ANNUAL || null,
         hasPriceHumainMonthly: !!process.env.STRIPE_PRICE_HUMAIN_MONTHLY,
         humainMonthlyPriceId: process.env.STRIPE_PRICE_HUMAIN_MONTHLY || null,
         hasPriceHumainAnnual: !!process.env.STRIPE_PRICE_HUMAIN_ANNUAL,
@@ -1213,6 +1234,89 @@ export async function registerRoutes(
     }
   });
 
+  // GET /api/admin/send-msp-trial-reminders?secret=xxx
+  app.get("/api/admin/send-msp-trial-reminders", async (req: Request, res: Response) => {
+    const secret = req.query.secret as string;
+    const expected = process.env.ADMIN_DIGEST_SECRET || "gmep-digest-2026-secret";
+    if (secret !== expected) return res.status(403).json({ message: "Secret invalide" });
+    const resendKey = process.env.RESEND_API_KEY;
+    if (!resendKey) return res.status(503).json({ message: "Resend non configuré" });
+    const { Resend } = require("resend");
+    const resend = new Resend(resendKey);
+    const results: any[] = [];
+    try {
+      const anyStorage = storage as any;
+      let trialingSubs: any[] = [];
+      if (typeof anyStorage.getAllTrialingSubscriptionsByTool === "function") {
+        trialingSubs = await anyStorage.getAllTrialingSubscriptionsByTool("msp");
+      } else if (typeof anyStorage.getAllSubscriptions === "function") {
+        const all = await anyStorage.getAllSubscriptions();
+        trialingSubs = all.filter((s: any) => s.tool === "msp" && s.status === "trialing");
+      }
+
+      const now = new Date();
+      for (const sub of trialingSubs) {
+        if (!sub.currentPeriodEnd) continue;
+        const end = new Date(sub.currentPeriodEnd);
+        const daysLeft = (end.getTime() - now.getTime()) / 86400000;
+        const isJ2 = daysLeft >= 1.5 && daysLeft < 2.5;
+        const isJ0 = daysLeft >= 0 && daysLeft < 0.5;
+        if (!isJ2 && !isJ0) continue;
+
+        let user: any = null;
+        try { user = await storage.getUser(sub.userId); } catch {}
+        if (!user || !user.email) continue;
+
+        const endFr = end.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+        const subject = isJ2
+          ? "MSP GMEP — Il vous reste 2 jours d'essai"
+          : "MSP GMEP — Votre essai expire aujourd'hui";
+        const urgenceColor = isJ0 ? "#dc2626" : "#f59e0b";
+        const urgenceLabel = isJ0 ? "Expire aujourd'hui" : "2 jours restants";
+
+        const html = `
+          <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+            <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+              <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+              <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">MSP — Modélisation Sources de Pollution des Sols</p>
+            </div>
+            <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+              <div style="background:${urgenceColor};color:white;padding:8px 16px;border-radius:6px;text-align:center;font-weight:bold;font-size:14px;margin-bottom:20px;">${urgenceLabel}</div>
+              <p style="font-size:16px;">Bonjour ${user.name || user.email},</p>
+              <p>${isJ0
+                ? "Votre essai gratuit <strong>MSP GMEP</strong> expire <strong>aujourd'hui</strong>. Après expiration, l'accès est bloqué."
+                : `Votre essai gratuit <strong>MSP GMEP</strong> se termine dans <strong>2 jours</strong> (le ${endFr}).`
+              }</p>
+              <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
+                <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Essai valable jusqu'au</td><td style="padding:10px;border:1px solid #cce0f0;"><strong>${endFr}</strong></td></tr>
+                <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Mensuel</td><td style="padding:10px;border:1px solid #e2e8f0;">250 € HT/mois — 300 € TTC</td></tr>
+                <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Annuel</td><td style="padding:10px;border:1px solid #e2e8f0;">2 760 € HT/an — 3 312 € TTC (2 mois offerts)</td></tr>
+              </table>
+              <div style="text-align:center;margin:28px 0;">
+                <a href="https://www.gmep-france.eu/#/subscribe-msp" style="background:#16a34a;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">S'abonner — Accès permanent →</a>
+              </div>
+              <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a> — Tél. 06 07 73 72 33</p>
+              <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+              <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+            </div>
+          </div>
+        `;
+
+        try {
+          await resend.emails.send({ from: "GMEP <noreply@gmep-france.eu>", to: user.email, subject, html });
+          results.push({ userId: sub.userId, email: user.email, type: isJ0 ? "J-0" : "J-2", sent: true });
+          console.log(`[MSP REMINDER ${isJ0 ? "J-0" : "J-2"}] Sent to ${user.email}`);
+        } catch (emailErr: any) {
+          results.push({ userId: sub.userId, email: user.email, type: isJ0 ? "J-0" : "J-2", sent: false, error: emailErr.message });
+        }
+      }
+      return res.json({ processed: trialingSubs.length, reminders_sent: results.filter(r => r.sent).length, results });
+    } catch (err: any) {
+      console.error("[MSP REMINDER CRON ERROR]", err);
+      return res.status(500).json({ message: "Erreur cron rappels MSP", error: err.message });
+    }
+  });
+
   // ── Auth Routes ────────────────────────────────────────
 
   // Register
@@ -1245,7 +1349,7 @@ export async function registerRoutes(
       // ─── ACTIVATION AUTOMATIQUE DES 5 ESSAIS à l'inscription ──────────────
       // EQRS V7 Johnson & Ettinger : 14 jours
       const trial14 = new Date(); trial14.setDate(trial14.getDate() + 14);
-      const trial8 = new Date(); trial8.setDate(trial8.getDate() + 8);
+      const trial14b = new Date(); trial14b.setDate(trial14b.getDate() + 14);
 
       // 1. EQRS V7 J&E (tool='je' ou null pour compat légacy) — 14 jours
       await storage.createSubscription(user.id, {
@@ -1263,20 +1367,20 @@ export async function registerRoutes(
         currentPeriodEnd: trial14.toISOString(),
       });
 
-      // 3. TSN — 8 jours
+      // 3. TSN — 14 jours
       await storage.createSubscription(user.id, {
         status: "trialing",
         plan: "tsn_trial",
         tool: "tsn",
-        currentPeriodEnd: trial8.toISOString(),
+        currentPeriodEnd: trial14b.toISOString(),
       });
 
-      // 4. Rabattement V15.89 — 8 jours
+      // 4. Rabattement V15.89 — 14 jours
       await storage.createSubscription(user.id, {
         status: "trialing",
         plan: "rabattement_trial",
         tool: "rabattement",
-        currentPeriodEnd: trial8.toISOString(),
+        currentPeriodEnd: trial14b.toISOString(),
       });
 
       // 5. Schéma Conceptuel — 14 jours
@@ -1287,12 +1391,12 @@ export async function registerRoutes(
         currentPeriodEnd: trial14.toISOString(),
       });
 
-      // 6. GMEP Piézomètres v2.9c — 8 jours
+      // 6. GMEP Piézomètres v2.9c — 14 jours
       await storage.createSubscription(user.id, {
         status: "trialing",
         plan: "piezometres_trial",
         tool: "piezometres",
-        currentPeriodEnd: trial8.toISOString(),
+        currentPeriodEnd: trial14b.toISOString(),
       });
 
       const token = crypto.randomUUID();
@@ -1324,11 +1428,11 @@ export async function registerRoutes(
                     <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #cce0f0;">${email}</td></tr>
                     <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">EQRS V7 Johnson &amp; Ettinger</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 208 € HT/mois</td></tr>
                     <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">EQRS V31.05 + ECOTOX V8</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 395 € HT/mois</td></tr>
-                    <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">TSN Transfert Sol-Nappe</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours — 1 100 € HT/an</td></tr>
-                    <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Rabattement V15.89</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours — 1 500 € HT/an</td></tr>
-                    <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">GMEP Piézomètres v2.9c</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours — 1 100 € HT/an</td></tr>
+                    <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">TSN Transfert Sol-Nappe</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 1 100 € HT/an</td></tr>
+                    <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Rabattement V15.89</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 1 500 € HT/an</td></tr>
+                    <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">GMEP Piézomètres v2.9c</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 1 100 € HT/an</td></tr>
                     <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Schéma Conceptuel</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 850 € HT/an</td></tr>
-                    <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">MSP — Pollution des Sols</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours — 250 € HT/mois ou 2 760 € HT/an</td></tr>
+                    <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">MSP — Pollution des Sols</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 250 € HT/mois ou 2 760 € HT/an</td></tr>
                   </table>
                   <p style="font-size:13px;color:#64748b;">À l'expiration de chaque essai, l'outil affiche une page d'avertissement et vous propose de souscrire l'abonnement correspondant. Vous restez maître du choix : aucun prélèvement automatique.</p>
                   <div style="text-align:center;margin:28px 0;">
@@ -1356,6 +1460,200 @@ export async function registerRoutes(
       return res
         .status(500)
         .json({ message: "Erreur interne du serveur" });
+    }
+  });
+
+  // ── Trial Codes : campagne administrations (DREAL / DRIEAT / ARS / DDT) ──
+  // Site Bis sans tarifs : chaque organisme reçoit un code unique donnant
+  // acces a un essai fonctionnel reel de 15 jours sur les 12 outils gates.
+
+  const ALL_GATED_TOOLS = ["je", "eqrs_v31", "tsn", "rabattement", "schema", "piezometres", "msp", "ssp3d", "eaux_pluviales", "porchet", "anc", "humain"];
+
+  function generateTrialCode(): string {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    const seg = () => Array.from({ length: 4 }, () => chars[crypto.randomInt(chars.length)]).join("");
+    return `GMEP-${seg()}-${seg()}`;
+  }
+
+  // Génération d'un code (admin uniquement)
+  app.post("/api/admin/trial-codes", requireAdmin as any, async (req: AuthRequest, res: Response) => {
+    try {
+      const { organismeType, organismeNom, contactEmail } = req.body;
+      if (!organismeType || !organismeNom) {
+        return res.status(400).json({ message: "organismeType et organismeNom sont requis" });
+      }
+      let code = generateTrialCode();
+      let attempts = 0;
+      while (await storage.getTrialCodeByCode(code)) {
+        code = generateTrialCode();
+        if (++attempts > 10) throw new Error("Impossible de générer un code unique");
+      }
+      const trialCode = await storage.createTrialCode({ code, organismeType, organismeNom, contactEmail: contactEmail || null });
+      return res.json(trialCode);
+    } catch (err: any) {
+      console.error("[TRIAL CODE CREATE ERROR]", err);
+      return res.status(500).json({ message: "Erreur serveur", error: err.message });
+    }
+  });
+
+  // Génération en masse (admin) — pour la campagne DREAL/DRIEAT/ARS/DDT
+  app.post("/api/admin/trial-codes/bulk", requireAdmin as any, async (req: AuthRequest, res: Response) => {
+    try {
+      const { organismes } = req.body as { organismes: Array<{ organismeType: string; organismeNom: string; contactEmail?: string }> };
+      if (!Array.isArray(organismes) || organismes.length === 0) {
+        return res.status(400).json({ message: "organismes doit être un tableau non vide" });
+      }
+      const created: any[] = [];
+      for (const o of organismes) {
+        let code = generateTrialCode();
+        let attempts = 0;
+        while (await storage.getTrialCodeByCode(code)) {
+          code = generateTrialCode();
+          if (++attempts > 10) break;
+        }
+        const tc = await storage.createTrialCode({ code, organismeType: o.organismeType, organismeNom: o.organismeNom, contactEmail: o.contactEmail || null });
+        created.push(tc);
+      }
+      return res.json({ created: created.length, codes: created });
+    } catch (err: any) {
+      console.error("[TRIAL CODE BULK CREATE ERROR]", err);
+      return res.status(500).json({ message: "Erreur serveur", error: err.message });
+    }
+  });
+
+  // Génération en masse via secret (sans session admin) — pour scripts d'automatisation
+  // de la campagne DREAL/DRIEAT/ARS/DDT. Usage ponctuel, protégé par secret.
+  app.post("/api/admin/trial-codes/bulk-secret", async (req: Request, res: Response) => {
+    const secret = (req.query.secret as string) || (req.body && (req.body as any).secret);
+    const expected = process.env.ADMIN_TRIAL_SECRET || "gmep-trial-bulk-2026-secret";
+    if (secret !== expected) return res.status(403).json({ message: "Secret invalide" });
+    try {
+      const { organismes } = req.body as { organismes: Array<{ organismeType: string; organismeNom: string; contactEmail?: string }> };
+      if (!Array.isArray(organismes) || organismes.length === 0) {
+        return res.status(400).json({ message: "organismes doit être un tableau non vide" });
+      }
+      const created: any[] = [];
+      for (const o of organismes) {
+        let code = generateTrialCode();
+        let attempts = 0;
+        while (await storage.getTrialCodeByCode(code)) {
+          code = generateTrialCode();
+          if (++attempts > 10) break;
+        }
+        const tc = await storage.createTrialCode({ code, organismeType: o.organismeType, organismeNom: o.organismeNom, contactEmail: o.contactEmail || null });
+        created.push(tc);
+      }
+      return res.json({ created: created.length, codes: created });
+    } catch (err: any) {
+      console.error("[TRIAL CODE BULK-SECRET CREATE ERROR]", err);
+      return res.status(500).json({ message: "Erreur serveur", error: err.message });
+    }
+  });
+
+  // Liste des codes (admin)
+  app.get("/api/admin/trial-codes", requireAdmin as any, async (_req: AuthRequest, res: Response) => {
+    try {
+      const codes = await storage.getAllTrialCodes();
+      return res.json(codes);
+    } catch (err: any) {
+      console.error("[TRIAL CODE LIST ERROR]", err);
+      return res.status(500).json({ message: "Erreur serveur", error: err.message });
+    }
+  });
+
+  // Vérification publique d'un code (site Bis — avant de remplir le formulaire de compte)
+  app.get("/api/trial/check-code/:code", async (req: Request, res: Response) => {
+    try {
+      const tc = await storage.getTrialCodeByCode(String(req.params.code).trim().toUpperCase());
+      if (!tc) return res.status(404).json({ valid: false, message: "Code inconnu" });
+      if (tc.status !== "unused") return res.status(410).json({ valid: false, message: "Ce code a déjà été utilisé" });
+      return res.json({ valid: true, organismeType: tc.organismeType, organismeNom: tc.organismeNom });
+    } catch (err: any) {
+      return res.status(500).json({ valid: false, message: "Erreur serveur" });
+    }
+  });
+
+  // Rédemption d'un code : crée le compte réel (app.gmep-france.eu) avec essai
+  // 15 jours sur les 12 outils gates. Appelé depuis le site Bis.
+  app.post("/api/trial/redeem", async (req: Request, res: Response) => {
+    try {
+      const { code, email, password, name } = req.body;
+      if (!code || !email || !password || !name) {
+        return res.status(400).json({ message: "Tous les champs sont requis (code, email, mot de passe, nom)" });
+      }
+      if (password.length < 8) {
+        return res.status(400).json({ message: "Le mot de passe doit contenir au moins 8 caractères" });
+      }
+
+      const trialCode = await storage.getTrialCodeByCode(String(code).trim().toUpperCase());
+      if (!trialCode) {
+        return res.status(404).json({ message: "Code d'essai inconnu. Vérifiez le code reçu par e-mail." });
+      }
+      if (trialCode.status !== "unused") {
+        return res.status(410).json({ message: "Ce code d'essai a déjà été utilisé." });
+      }
+
+      const existing = await storage.getUserByEmail(email);
+      if (existing) {
+        return res.status(409).json({ message: "Un compte avec cet e-mail existe déjà. Connectez-vous sur app.gmep-france.eu." });
+      }
+
+      const passwordHash = await bcrypt.hash(password, 12);
+      const user = await storage.createUser(email, passwordHash, name);
+
+      const trial15 = new Date();
+      trial15.setDate(trial15.getDate() + 15);
+
+      for (const tool of ALL_GATED_TOOLS) {
+        await storage.createSubscription(user.id, {
+          status: "trialing",
+          plan: "admin_trial",
+          tool,
+          currentPeriodEnd: trial15.toISOString(),
+        });
+      }
+
+      await storage.markTrialCodeUsed(trialCode.code, user.id, trial15.toISOString());
+
+      const token = crypto.randomUUID();
+      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+      await storage.createSession(token, user.id, expiresAt);
+
+      try {
+        const resendKey = process.env.RESEND_API_KEY;
+        if (resendKey) {
+          const { Resend } = require("resend");
+          const resend = new Resend(resendKey);
+          await resend.emails.send({
+            from: "GMEP <noreply@gmep-france.eu>",
+            to: email,
+            subject: "GMEP — Votre essai administration de 15 jours est activé",
+            html: `<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+              <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+                <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+                <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">Suite logicielle environnementale — 14 outils</p>
+              </div>
+              <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+                <p style="font-size:16px;">Bonjour ${name},</p>
+                <p>Votre compte d'essai <strong>${trialCode.organismeNom}</strong> a bien été créé. Les 14 logiciels GMEP sont activés en essai fonctionnel réel pour <strong>15 jours</strong>, sans engagement.</p>
+                <p style="font-size:13px;color:#64748b;">Pour toute demande de tarif ou de devis, merci de vous adresser directement à l'éditeur : <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>.</p>
+                <div style="text-align:center;margin:28px 0;">
+                  <a href="https://app.gmep-france.eu/#/dashboard" style="background:#1a365d;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à mon espace d'essai</a>
+                </div>
+                <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+                <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P</p>
+              </div>
+            </div>`,
+          });
+        }
+      } catch (emailErr: any) {
+        console.error("[TRIAL REDEEM EMAIL] Failed:", emailErr.message);
+      }
+
+      return res.json({ token, user: storage.toSafeUser(user), trialDays: 15, redirectUrl: "https://app.gmep-france.eu/#/dashboard" });
+    } catch (err: any) {
+      console.error("[TRIAL REDEEM ERROR]", err);
+      return res.status(500).json({ message: "Erreur interne du serveur" });
     }
   });
 
@@ -1454,8 +1752,12 @@ export async function registerRoutes(
         const { plan } = req.body;
         const priceId =
           plan === "rabattement_annual" ? STRIPE_PRICE_RABATTEMENT_ANNUAL :
+          plan === "rabattement_simple_annual" ? STRIPE_PRICE_RABATTEMENT_SIMPLE_ANNUAL :
           plan === "tsn_annual" ? STRIPE_PRICE_TSN_ANNUAL :
+          plan === "domenico_annual" ? STRIPE_PRICE_DOMENICO_ANNUAL :
           plan === "annual" ? STRIPE_PRICE_ANNUAL :
+          plan === "je_annual" ? STRIPE_PRICE_ANNUAL :
+          plan === "je_monthly" ? STRIPE_PRICE_MONTHLY :
           plan === "eqrs_v31_ecotox_monthly" ? STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY :
           plan === "schema_conceptuel_annual" ? STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL :
           plan === "piezometres_annual" ? STRIPE_PRICE_PIEZOMETRES_ANNUAL :
@@ -1464,6 +1766,8 @@ export async function registerRoutes(
           plan === "humain_monthly" ? STRIPE_PRICE_HUMAIN_MONTHLY :
           plan === "humain_annual" ? STRIPE_PRICE_HUMAIN_ANNUAL :
           plan === "eaux_pluviales_annual" ? STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL :
+          plan === "porchet_annual" ? STRIPE_PRICE_PORCHET_ANNUAL :
+          plan === "anc_annual" ? STRIPE_PRICE_ANC_ANNUAL :
           plan === "ssp3d_monthly" ? STRIPE_PRICE_SSP3D_MONTHLY :
           plan === "ssp3d_annual" ? STRIPE_PRICE_SSP3D_ANNUAL :
           plan === "bundle_annual" ? STRIPE_PRICE_BUNDLE_ANNUAL :
@@ -1473,7 +1777,9 @@ export async function registerRoutes(
         // Déterminer le tool associé au plan
         const tool =
           plan === "rabattement_annual" ? "rabattement" :
+          plan === "rabattement_simple_annual" ? "rabattement" :
           plan === "tsn_annual" ? "tsn" :
+          plan === "domenico_annual" ? "tsn" :
           plan === "eqrs_v31_ecotox_monthly" ? "eqrs_v31" :
           plan === "schema_conceptuel_annual" ? "schema" :
           plan === "piezometres_annual" ? "piezometres" :
@@ -1482,6 +1788,8 @@ export async function registerRoutes(
           plan === "humain_monthly" ? "humain" :
           plan === "humain_annual" ? "humain" :
           plan === "eaux_pluviales_annual" ? "eaux_pluviales" :
+          plan === "porchet_annual" ? "porchet" :
+          plan === "anc_annual" ? "anc" :
           plan === "ssp3d_monthly" ? "ssp3d" :
           plan === "ssp3d_annual" ? "ssp3d" :
           plan === "bundle_annual" ? "bundle" :
@@ -1600,25 +1908,33 @@ export async function registerRoutes(
           const priceIdFromStripe = subscription.items.data[0]?.price?.id;
           let plan =
             priceIdFromStripe === STRIPE_PRICE_RABATTEMENT_ANNUAL ? "rabattement_annual" :
+            priceIdFromStripe === STRIPE_PRICE_RABATTEMENT_SIMPLE_ANNUAL ? "rabattement_simple_annual" :
             priceIdFromStripe === STRIPE_PRICE_TSN_ANNUAL ? "tsn_annual" :
+            priceIdFromStripe === STRIPE_PRICE_DOMENICO_ANNUAL ? "domenico_annual" :
             (STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY && priceIdFromStripe === STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY) ? "eqrs_v31_ecotox_monthly" :
             (STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL && priceIdFromStripe === STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL) ? "schema_conceptuel_annual" :
             (STRIPE_PRICE_PIEZOMETRES_ANNUAL && priceIdFromStripe === STRIPE_PRICE_PIEZOMETRES_ANNUAL) ? "piezometres_annual" :
             priceIdFromStripe === STRIPE_PRICE_MSP_MONTHLY ? "msp_monthly" :
             priceIdFromStripe === STRIPE_PRICE_MSP_ANNUAL ? "msp_annual" :
             (STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL && priceIdFromStripe === STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL) ? "eaux_pluviales_annual" :
+            (STRIPE_PRICE_PORCHET_ANNUAL && priceIdFromStripe === STRIPE_PRICE_PORCHET_ANNUAL) ? "porchet_annual" :
+            (STRIPE_PRICE_ANC_ANNUAL && priceIdFromStripe === STRIPE_PRICE_ANC_ANNUAL) ? "anc_annual" :
             priceIdFromStripe === STRIPE_PRICE_SSP3D_MONTHLY ? "ssp3d_monthly" :
             priceIdFromStripe === STRIPE_PRICE_SSP3D_ANNUAL ? "ssp3d_annual" :
             priceIdFromStripe === STRIPE_PRICE_ANNUAL ? "annual" : "monthly";
           let tool =
             plan === "rabattement_annual" ? "rabattement" :
+            plan === "rabattement_simple_annual" ? "rabattement" :
             plan === "tsn_annual" ? "tsn" :
+            plan === "domenico_annual" ? "tsn" :
             plan === "eqrs_v31_ecotox_monthly" ? "eqrs_v31" :
             plan === "schema_conceptuel_annual" ? "schema" :
             plan === "piezometres_annual" ? "piezometres" :
             (plan === "msp_monthly" || plan === "msp_annual") ? "msp" :
             (plan === "humain_monthly" || plan === "humain_annual") ? "humain" :
             plan === "eaux_pluviales_annual" ? "eaux_pluviales" :
+            plan === "porchet_annual" ? "porchet" :
+            plan === "anc_annual" ? "anc" :
             (plan === "ssp3d_monthly" || plan === "ssp3d_annual") ? "ssp3d" :
             "je";
 
@@ -1667,21 +1983,38 @@ export async function registerRoutes(
                   const { Resend } = require("resend");
                   const resend = new Resend(resendKey);
                   const toolName =
-                    tool === "rabattement" ? "Rabattement de nappe — Theis + Dupuit-Thiem" :
-                    tool === "tsn" ? "TSN — Transfert Sol vers Nappe" :
+                    tool === "rabattement" ? (plan === "rabattement_simple_annual" ? "Rabattement de nappe — Theis + Dupuit-Thiem" : "Rabattement V15.87 — Multicouche + assistant IA") :
+                    tool === "tsn" ? (plan === "domenico_annual" ? "Transfert Sol → Nappe → Captage (Domenico)" : "TSN — Transfert Sol vers Nappe") :
                     tool === "eaux_pluviales" ? "Gestion des eaux pluviales — DLE / GEP v2.1" :
+                    tool === "porchet" ? "Modélisation Essai de Porchet — Perméabilité des sols" :
+                    tool === "anc" ? "Dimensionnement ANC — Assainissement Individuel & Collectif" :
                     tool === "humain" ? "Module HUMAIN — EQRS V9 Tier 3" :
                     tool === "ssp3d" ? "3D_SSP — Superposition 3D pollution sols/nappe" :
+                    tool === "eqrs_v31" ? "EQRS V9 + ECOTOX V9" :
+                    tool === "schema" ? "Schéma Conceptuel IEM + Plan de Gestion" :
+                    tool === "piezometres" ? "Piézomètres de Surveillance v2.9c" :
+                    tool === "msp" ? "MSP — Sources de Pollution des Sols" :
                     "EQRS — Johnson & Ettinger";
                   const toolUrl = "https://www.gmep-france.eu/#/dashboard";
                   const planLabel =
-                    plan === "rabattement_annual" ? "Annuel — 1 100 € HT/an" :
-                    plan === "tsn_annual" ? "Annuel — 850 € HT/an" :
-                    plan === "eaux_pluviales_annual" ? "Annuel — 3 500 € HT/an" :
+                    plan === "rabattement_annual" ? "Annuel — 1 500 € HT/an" :
+                    plan === "rabattement_simple_annual" ? "Annuel — 1 100 € HT/an" :
+                    plan === "tsn_annual" ? "Annuel — 1 100 € HT/an" :
+                    plan === "domenico_annual" ? "Annuel — 850 € HT/an" :
+                    plan === "eaux_pluviales_annual" ? "Annuel — 5 500 € HT/an" :
+                    plan === "porchet_annual" ? "Annuel — 550 € HT/an" :
+                    plan === "anc_annual" ? "Annuel — 550 € HT/an" :
                     plan === "humain_monthly" ? "Mensuel — 550 € HT/mois" :
                     plan === "humain_annual" ? "Annuel — 5 200 € HT/an" :
                     plan === "ssp3d_monthly" ? "Mensuel — 250 € HT/mois" :
                     plan === "ssp3d_annual" ? "Annuel — 2 400 € HT/an" :
+                    plan === "eqrs_v31_ecotox_monthly" ? "Mensuel — 395 € HT/mois" :
+                    plan === "schema_conceptuel_annual" ? "Annuel — 850 € HT/an" :
+                    plan === "piezometres_annual" ? "Annuel — 1 100 € HT/an" :
+                    plan === "msp_monthly" ? "Mensuel — 250 € HT/mois" :
+                    plan === "msp_annual" ? "Annuel — 2 760 € HT/an" :
+                    plan === "je_annual" ? "Annuel — 2 499 € HT/an" :
+                    plan === "je_monthly" ? "Mensuel — 208 € HT/mois" :
                     plan === "annual" ? "Annuel — 2 499 € HT/an" :
                     "Mensuel — 245 € HT/mois";
                   const periodEnd = new Date((subscription as any).current_period_end * 1000)
@@ -1838,7 +2171,7 @@ export async function registerRoutes(
     }
   );
 
-  // ── TSN Trial : activer essai 8 jours ─────────────────────────────────
+  // ── TSN Trial : activer essai 14 jours ─────────────────────────────────
   app.post(
     "/api/tsn-trial/activate",
     requireAuth as any,
@@ -1850,7 +2183,7 @@ export async function registerRoutes(
           return res.status(409).json({ message: "Vous avez déjà un accès TSN actif ou en cours d'essai." });
         }
         const trialEnd = new Date();
-        trialEnd.setDate(trialEnd.getDate() + 8);
+        trialEnd.setDate(trialEnd.getDate() + 14);
         let sub;
         if (existing) {
           sub = await storage.updateSubscription(existing.id, {
@@ -1867,7 +2200,7 @@ export async function registerRoutes(
             currentPeriodEnd: trialEnd.toISOString(),
           });
         }
-        return res.json({ message: "Essai TSN activé (8 jours, 3 molécules)", subscription: sub });
+        return res.json({ message: "Essai TSN activé (14 jours, 3 molécules)", subscription: sub });
       } catch (err: any) {
         return res.status(500).json({ message: err.message });
       }
@@ -1894,7 +2227,7 @@ export async function registerRoutes(
       if (tsnSub.currentPeriodEnd && new Date(tsnSub.currentPeriodEnd) < new Date()) {
         try { await storage.updateSubscription(tsnSub.id, { status: "expired" }); } catch {}
         res.setHeader("Content-Type", "text/html; charset=utf-8");
-        return res.status(403).send(trialExpiredHtml("/#/subscribe-tsn", "TSN — Transfert Sol-Nappe", 8));
+        return res.status(403).send(trialExpiredHtml("/#/subscribe-tsn", "TSN — Transfert Sol-Nappe", 14));
       }
       const daysLeft = tsnSub.currentPeriodEnd
         ? Math.max(0, Math.ceil((new Date(tsnSub.currentPeriodEnd).getTime() - Date.now()) / 86400000))
@@ -1932,7 +2265,7 @@ export async function registerRoutes(
     }
   );
 
-  // ── Rabattement Trial : activer essai 8 jours ───────────────────────────
+  // ── Rabattement Trial : activer essai 14 jours ───────────────────────────
   app.post(
     "/api/rabattement-trial/activate",
     requireAuth as any,
@@ -1944,7 +2277,7 @@ export async function registerRoutes(
           return res.status(409).json({ message: "Vous avez déjà un accès Rabattement actif ou en cours d'essai." });
         }
         const trialEnd = new Date();
-        trialEnd.setDate(trialEnd.getDate() + 8);
+        trialEnd.setDate(trialEnd.getDate() + 14);
         let sub;
         if (existing) {
           sub = await storage.updateSubscription(existing.id, {
@@ -1961,7 +2294,7 @@ export async function registerRoutes(
             currentPeriodEnd: trialEnd.toISOString(),
           });
         }
-        return res.json({ message: "Essai Rabattement activé (8 jours)", subscription: sub });
+        return res.json({ message: "Essai Rabattement activé (14 jours)", subscription: sub });
       } catch (err: any) {
         return res.status(500).json({ message: err.message });
       }
@@ -2115,7 +2448,7 @@ export async function registerRoutes(
         if (toolSub.status === "trialing" && toolSub.currentPeriodEnd && new Date(toolSub.currentPeriodEnd) < new Date()) {
           try { await storage.updateSubscription(toolSub.id, { status: "expired" }); } catch {}
           res.setHeader("Content-Type", "text/html; charset=utf-8");
-          return res.status(403).send(trialExpiredHtml("/#/subscribe-piezometres", "GMEP Piézomètres v2.9c", 8));
+          return res.status(403).send(trialExpiredHtml("/#/subscribe-piezometres", "GMEP Piézomètres v2.9c", 14));
         }
       }
       res.setHeader("X-Frame-Options", "SAMEORIGIN");
@@ -2129,7 +2462,7 @@ export async function registerRoutes(
     }
   );
 
-  // ── GMEP Piézomètres : activation essai 8 jours ────────────────────────────────────────
+  // ── GMEP Piézomètres : activation essai 14 jours ────────────────────────────────────────
   app.post(
     "/api/piezometres-trial/activate",
     requireAuth as any,
@@ -2140,14 +2473,14 @@ export async function registerRoutes(
         if (existing) {
           return res.status(409).json({ message: "Vous avez déjà un accès GMEP Piézomètres actif ou en cours d'essai." });
         }
-        const trialEnd = new Date(); trialEnd.setDate(trialEnd.getDate() + 8);
+        const trialEnd = new Date(); trialEnd.setDate(trialEnd.getDate() + 14);
         const sub = await storage.createSubscription(req.user!.id, {
           status: "trialing",
           plan: "piezometres_trial",
           tool: "piezometres",
           currentPeriodEnd: trialEnd.toISOString(),
         });
-        return res.json({ message: "Essai GMEP Piézomètres activé (8 jours)", subscription: sub });
+        return res.json({ message: "Essai GMEP Piézomètres activé (14 jours)", subscription: sub });
       } catch (err: any) {
         return res.status(500).json({ message: err.message || "Erreur lors de l'activation de l'essai" });
       }
@@ -2159,7 +2492,7 @@ export async function registerRoutes(
   // MSP GMEP — Modélisation Sources de Pollution des Sols
   // ══════════════════════════════════════════════════════════════════════
 
-  // ── MSP : activation essai 8 jours ──────────────────────────────────
+  // ── MSP : activation essai 14 jours ──────────────────────────────────
   app.post(
     "/api/msp-trial/activate",
     requireAuth as any,
@@ -2171,7 +2504,7 @@ export async function registerRoutes(
           return res.status(409).json({ message: "Vous avez déjà un accès MSP actif ou en cours d'essai." });
         }
         const trialEnd = new Date();
-        trialEnd.setDate(trialEnd.getDate() + 8);
+        trialEnd.setDate(trialEnd.getDate() + 14);
         let sub;
         if (existing) {
           sub = await storage.updateSubscription(existing.id, {
@@ -2200,7 +2533,7 @@ export async function registerRoutes(
             await resend.emails.send({
               from: "GMEP <noreply@gmep-france.eu>",
               to: req.user!.email,
-              subject: "MSP GMEP — Votre essai gratuit de 8 jours est activé",
+              subject: "MSP GMEP — Votre essai gratuit de 14 jours est activé",
               html: `
                 <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
                   <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
@@ -2209,14 +2542,14 @@ export async function registerRoutes(
                   </div>
                   <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
                     <p style="font-size:16px;">Bonjour ${user?.name || req.user!.email},</p>
-                    <p>Votre essai gratuit <strong>MSP GMEP</strong> est maintenant actif. Accès complet au logiciel pendant <strong>8 jours</strong>.</p>
+                    <p>Votre essai gratuit <strong>MSP GMEP</strong> est maintenant actif. Accès complet au logiciel pendant <strong>14 jours</strong>.</p>
                     <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
                       <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Outil</td><td style="padding:10px;border:1px solid #cce0f0;">MSP — Modélisation Sources de Pollution</td></tr>
-                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Durée essai</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours</td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Durée essai</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours</td></tr>
                       <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Accès jusqu'au</td><td style="padding:10px;border:1px solid #e2e8f0;"><strong>${trialEndFr}</strong></td></tr>
                       <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #e2e8f0;">${req.user!.email}</td></tr>
                     </table>
-                    <p style="font-size:13px;color:#64748b;">Après les 8 jours, l'accès est bloqué. Vous recevrez un rappel à J-2 et J-0.</p>
+                    <p style="font-size:13px;color:#64748b;">Après les 14 jours, l'accès est bloqué. Vous recevrez un rappel à J-2 et J-0.</p>
                     <div style="text-align:center;margin:28px 0;">
                       <a href="https://www.gmep-france.eu/#/dashboard" style="background:#16a34a;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à MSP GMEP →</a>
                     </div>
@@ -2234,7 +2567,7 @@ export async function registerRoutes(
           console.error("[MSP TRIAL EMAIL] Failed:", emailErr.message);
         }
 
-        return res.json({ message: "Essai MSP activé (8 jours)", subscription: sub });
+        return res.json({ message: "Essai MSP activé (14 jours)", subscription: sub });
       } catch (err: any) {
         return res.status(500).json({ message: err.message || "Erreur lors de l'activation de l'essai" });
       }
@@ -2256,7 +2589,7 @@ export async function registerRoutes(
         if (mspSub.status === "trialing" && mspSub.currentPeriodEnd && new Date(mspSub.currentPeriodEnd) < new Date()) {
           try { await storage.updateSubscription(mspSub.id, { status: "expired" }); } catch {}
           res.setHeader("Content-Type", "text/html; charset=utf-8");
-          return res.status(403).send(trialExpiredHtml("/#/subscribe-msp", "MSP — Modélisation Sources de Pollution des Sols", 8));
+          return res.status(403).send(trialExpiredHtml("/#/subscribe-msp", "MSP — Modélisation Sources de Pollution des Sols", 14));
         }
       }
       res.setHeader("X-Frame-Options", "SAMEORIGIN");
@@ -2274,7 +2607,7 @@ export async function registerRoutes(
   // 3D_SSP — SAR³ Superposition 3D pollution sols/nappe & implantations
   // ══════════════════════════════════════════════════════════════════════
 
-  // ── 3D_SSP : activation essai 8 jours ──────────────────────────────
+  // ── 3D_SSP : activation essai 14 jours ──────────────────────────────
   app.post(
     "/api/ssp3d-trial/activate",
     requireAuth as any,
@@ -2286,7 +2619,7 @@ export async function registerRoutes(
           return res.status(409).json({ message: "Vous avez déjà un accès 3D_SSP actif ou en cours d'essai." });
         }
         const trialEnd = new Date();
-        trialEnd.setDate(trialEnd.getDate() + 8);
+        trialEnd.setDate(trialEnd.getDate() + 14);
         let sub;
         if (existing) {
           sub = await storage.updateSubscription(existing.id, {
@@ -2315,7 +2648,7 @@ export async function registerRoutes(
             await resend.emails.send({
               from: "GMEP <noreply@gmep-france.eu>",
               to: req.user!.email,
-              subject: "3D_SSP GMEP — Votre essai gratuit de 8 jours est activé",
+              subject: "3D_SSP GMEP — Votre essai gratuit de 14 jours est activé",
               html: `
                 <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
                   <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
@@ -2324,14 +2657,14 @@ export async function registerRoutes(
                   </div>
                   <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
                     <p style="font-size:16px;">Bonjour ${user?.name || req.user!.email},</p>
-                    <p>Votre essai gratuit <strong>3D_SSP GMEP</strong> est maintenant actif. Accès complet au logiciel pendant <strong>8 jours</strong>.</p>
+                    <p>Votre essai gratuit <strong>3D_SSP GMEP</strong> est maintenant actif. Accès complet au logiciel pendant <strong>14 jours</strong>.</p>
                     <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
                       <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Outil</td><td style="padding:10px;border:1px solid #cce0f0;">3D_SSP — Superposition 3D pollution sols/nappe</td></tr>
-                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Durée essai</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours</td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Durée essai</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours</td></tr>
                       <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Accès jusqu'au</td><td style="padding:10px;border:1px solid #e2e8f0;"><strong>${trialEndFr}</strong></td></tr>
                       <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #e2e8f0;">${req.user!.email}</td></tr>
                     </table>
-                    <p style="font-size:13px;color:#64748b;">Après les 8 jours, l'accès est bloqué. Vous recevrez un rappel à J-2 et J-0.</p>
+                    <p style="font-size:13px;color:#64748b;">Après les 14 jours, l'accès est bloqué. Vous recevrez un rappel à J-2 et J-0.</p>
                     <div style="text-align:center;margin:28px 0;">
                       <a href="https://www.gmep-france.eu/#/dashboard" style="background:#0891b2;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à 3D_SSP GMEP →</a>
                     </div>
@@ -2348,7 +2681,7 @@ export async function registerRoutes(
           console.error("[SSP3D TRIAL EMAIL] Failed:", emailErr.message);
         }
 
-        return res.json({ message: "Essai 3D_SSP activé (8 jours)", subscription: sub });
+        return res.json({ message: "Essai 3D_SSP activé (14 jours)", subscription: sub });
       } catch (err: any) {
         return res.status(500).json({ message: err.message || "Erreur lors de l'activation de l'essai" });
       }
@@ -2377,7 +2710,7 @@ export async function registerRoutes(
   // Eaux Pluviales — DLE / GEP v2.1 (Loi sur l'Eau — IOTA 2.1.5.0 / 3.3.1.0)
   // ══════════════════════════════════════════════════════════════════════
 
-  // ── Eaux Pluviales : activation essai 8 jours ──────────────────────────
+  // ── Eaux Pluviales : activation essai 14 jours ──────────────────────────
   app.post(
     "/api/eaux-pluviales-trial/activate",
     requireAuth as any,
@@ -2389,7 +2722,7 @@ export async function registerRoutes(
           return res.status(409).json({ message: "Vous avez déjà un accès Eaux Pluviales (DLE/GEP) actif ou en cours d'essai." });
         }
         const trialEnd = new Date();
-        trialEnd.setDate(trialEnd.getDate() + 8);
+        trialEnd.setDate(trialEnd.getDate() + 14);
         let sub;
         if (existing) {
           sub = await storage.updateSubscription(existing.id, {
@@ -2418,7 +2751,7 @@ export async function registerRoutes(
             await resend.emails.send({
               from: "GMEP <noreply@gmep-france.eu>",
               to: req.user!.email,
-              subject: "GMEP Eaux Pluviales — Votre essai gratuit de 8 jours est activé",
+              subject: "GMEP Eaux Pluviales — Votre essai gratuit de 14 jours est activé",
               html: `
                 <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
                   <div style="background:#1A6FB5;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
@@ -2427,14 +2760,14 @@ export async function registerRoutes(
                   </div>
                   <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
                     <p style="font-size:16px;">Bonjour ${user?.name || req.user!.email},</p>
-                    <p>Votre essai gratuit <strong>GMEP Eaux Pluviales (DLE/GEP)</strong> est maintenant actif. Accès complet au logiciel pendant <strong>8 jours</strong>.</p>
+                    <p>Votre essai gratuit <strong>GMEP Eaux Pluviales (DLE/GEP)</strong> est maintenant actif. Accès complet au logiciel pendant <strong>14 jours</strong>.</p>
                     <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
                       <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Outil</td><td style="padding:10px;border:1px solid #cce0f0;">Gestion des eaux pluviales — DLE / GEP v2.1</td></tr>
-                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Durée essai</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours</td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Durée essai</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours</td></tr>
                       <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Accès jusqu'au</td><td style="padding:10px;border:1px solid #e2e8f0;"><strong>${trialEndFr}</strong></td></tr>
                       <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #e2e8f0;">${req.user!.email}</td></tr>
                     </table>
-                    <p style="font-size:13px;color:#64748b;">Après les 8 jours, l'accès est bloqué. Souscription : 3 500 € HT/an.</p>
+                    <p style="font-size:13px;color:#64748b;">Après les 14 jours, l'accès est bloqué. Souscription : 5 500 € HT/an.</p>
                     <div style="text-align:center;margin:28px 0;">
                       <a href="https://www.gmep-france.eu/#/dashboard" style="background:#1A6FB5;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à GMEP Eaux Pluviales →</a>
                     </div>
@@ -2452,7 +2785,7 @@ export async function registerRoutes(
           console.error("[EAUX PLUVIALES TRIAL EMAIL] Failed:", emailErr.message);
         }
 
-        return res.json({ message: "Essai Eaux Pluviales activé (8 jours)", subscription: sub });
+        return res.json({ message: "Essai Eaux Pluviales activé (14 jours)", subscription: sub });
       } catch (err: any) {
         return res.status(500).json({ message: err.message || "Erreur lors de l'activation de l'essai" });
       }
@@ -2474,7 +2807,7 @@ export async function registerRoutes(
         if (epSub.status === "trialing" && epSub.currentPeriodEnd && new Date(epSub.currentPeriodEnd) < new Date()) {
           try { await storage.updateSubscription(epSub.id, { status: "expired" }); } catch {}
           res.setHeader("Content-Type", "text/html; charset=utf-8");
-          return res.status(403).send(trialExpiredHtml("/#/subscribe-eaux-pluviales", "Gestion des eaux pluviales — DLE/GEP v2.1", 8));
+          return res.status(403).send(trialExpiredHtml("/#/subscribe-eaux-pluviales", "Gestion des eaux pluviales — DLE/GEP v2.1", 14));
         }
       }
       res.setHeader("X-Frame-Options", "SAMEORIGIN");
@@ -2488,8 +2821,231 @@ export async function registerRoutes(
     }
   );
 
+  // ══════════════════════════════════════════════════════════════════════
+  // Modélisation Essai de Porchet — Perméabilité des sols (DLE)
+  // ══════════════════════════════════════════════════════════════════════
 
-  // ── EQRS V9 Humain — Module Tier 3 : activation essai gratuit 8 jours ──
+  // ── Porchet : activation essai 14 jours ────────────────────────────────
+  app.post(
+    "/api/porchet-trial/activate",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      try {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const existing = subs.find(s => s.tool === "porchet");
+        if (existing && (existing.status === "active" || existing.status === "trialing")) {
+          return res.status(409).json({ message: "Vous avez déjà un accès Essai de Porchet actif ou en cours d'essai." });
+        }
+        const trialEnd = new Date();
+        trialEnd.setDate(trialEnd.getDate() + 14);
+        let sub;
+        if (existing) {
+          sub = await storage.updateSubscription(existing.id, {
+            status: "trialing",
+            plan: "porchet_trial",
+            tool: "porchet",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        } else {
+          sub = await storage.createSubscription(req.user!.id, {
+            status: "trialing",
+            plan: "porchet_trial",
+            tool: "porchet",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        }
+
+        // Email de confirmation activation essai Porchet
+        try {
+          const resendKey = process.env.RESEND_API_KEY;
+          if (resendKey) {
+            const { Resend } = require("resend");
+            const resend = new Resend(resendKey);
+            const user = await storage.getUser(req.user!.id);
+            const trialEndFr = trialEnd.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+            await resend.emails.send({
+              from: "GMEP <noreply@gmep-france.eu>",
+              to: req.user!.email,
+              subject: "GMEP Essai de Porchet — Votre essai gratuit de 14 jours est activé",
+              html: `
+                <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+                  <div style="background:#0F766E;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+                    <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+                    <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">Modélisation Essai de Porchet — Perméabilité des sols</p>
+                  </div>
+                  <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+                    <p style="font-size:16px;">Bonjour ${user?.name || req.user!.email},</p>
+                    <p>Votre essai gratuit <strong>GMEP Modélisation Essai de Porchet</strong> est maintenant actif. Accès complet au logiciel pendant <strong>14 jours</strong>.</p>
+                    <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
+                      <tr style="background:#e0f2f1;"><td style="padding:10px;border:1px solid #b2dfdb;font-weight:bold;">Outil</td><td style="padding:10px;border:1px solid #b2dfdb;">Modélisation Essai de Porchet</td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Durée essai</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours</td></tr>
+                      <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Accès jusqu'au</td><td style="padding:10px;border:1px solid #e2e8f0;"><strong>${trialEndFr}</strong></td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #e2e8f0;">${req.user!.email}</td></tr>
+                    </table>
+                    <p style="font-size:13px;color:#64748b;">Après les 14 jours, l'accès est bloqué. Souscription : 550 € HT/an.</p>
+                    <div style="text-align:center;margin:28px 0;">
+                      <a href="https://www.gmep-france.eu/#/dashboard" style="background:#0F766E;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à GMEP Essai de Porchet →</a>
+                    </div>
+                    <p style="font-size:13px;color:#64748b;">Calcul du coefficient K par la formule hémisphérique, comparaison avec le K théorique du module Modélisation GEP et fiches de rapport PDF prêtes à joindre au dossier Loi sur l'Eau.</p>
+                    <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a> — Tél. 06 07 73 72 33</p>
+                    <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+                    <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+                  </div>
+                </div>
+              `,
+            });
+            console.log(`[PORCHET TRIAL EMAIL] Sent to ${req.user!.email}`);
+          }
+        } catch (emailErr: any) {
+          console.error("[PORCHET TRIAL EMAIL] Failed:", emailErr.message);
+        }
+
+        return res.json({ message: "Essai Porchet activé (14 jours)", subscription: sub });
+      } catch (err: any) {
+        return res.status(500).json({ message: err.message || "Erreur lors de l'activation de l'essai" });
+      }
+    }
+  );
+
+  // ── Porchet : accès outil (essai ou abonné) ───────────────────────────
+  app.get(
+    "/api/porchet-tool",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      if (!porchetToolHtml) return res.status(503).json({ message: "Outil Essai de Porchet non disponible — fichier porchet-tool.html manquant" });
+      if (!isAdminEmail((req.user as any).email)) {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const pSub = subs.find(s => s.tool === "porchet" && (s.status === "active" || s.status === "trialing"));
+        if (!pSub) {
+          return res.status(403).json({ message: "Abonnement Essai de Porchet requis pour accéder à cet outil." });
+        }
+        if (pSub.status === "trialing" && pSub.currentPeriodEnd && new Date(pSub.currentPeriodEnd) < new Date()) {
+          try { await storage.updateSubscription(pSub.id, { status: "expired" }); } catch {}
+          res.setHeader("Content-Type", "text/html; charset=utf-8");
+          return res.status(403).send(trialExpiredHtml("/#/subscribe-porchet", "Modélisation Essai de Porchet", 14));
+        }
+      }
+      res.setHeader("X-Frame-Options", "SAMEORIGIN");
+      res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://unpkg.com"
+      );
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.send(protectToolHtml(porchetToolHtml));
+    }
+  );
+
+
+  // ══════════════════════════════════════════════════════════════════════
+  // Dimensionnement ANC — Assainissement Individuel & Collectif
+  // ══════════════════════════════════════════════════════════════════════
+
+  // ── ANC : activation essai 14 jours ────────────────────────────────────
+  app.post(
+    "/api/anc-trial/activate",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      try {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const existing = subs.find(s => s.tool === "anc");
+        if (existing && (existing.status === "active" || existing.status === "trialing")) {
+          return res.status(409).json({ message: "Vous avez déjà un accès Dimensionnement ANC actif ou en cours d'essai." });
+        }
+        const trialEnd = new Date();
+        trialEnd.setDate(trialEnd.getDate() + 14);
+        let sub;
+        if (existing) {
+          sub = await storage.updateSubscription(existing.id, {
+            status: "trialing",
+            plan: "anc_trial",
+            tool: "anc",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        } else {
+          sub = await storage.createSubscription(req.user!.id, {
+            status: "trialing",
+            plan: "anc_trial",
+            tool: "anc",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        }
+
+        // Email de confirmation activation essai ANC
+        try {
+          const resendKey = process.env.RESEND_API_KEY;
+          if (resendKey) {
+            const { Resend } = require("resend");
+            const resend = new Resend(resendKey);
+            const user = await storage.getUser(req.user!.id);
+            const trialEndFr = trialEnd.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+            await resend.emails.send({
+              from: "GMEP <noreply@gmep-france.eu>",
+              to: req.user!.email,
+              subject: "GMEP Dimensionnement ANC — Votre essai gratuit de 14 jours est activé",
+              html: `
+                <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+                  <div style="background:#2E7D5B;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+                    <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+                    <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">Dimensionnement ANC — Assainissement Individuel &amp; Collectif</p>
+                  </div>
+                  <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+                    <p style="font-size:16px;">Bonjour ${user?.name || req.user!.email},</p>
+                    <p>Votre essai gratuit <strong>GMEP Dimensionnement ANC</strong> est maintenant actif. Accès complet au logiciel pendant <strong>14 jours</strong>.</p>
+                    <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
+                      <tr style="background:#e6f4ec;"><td style="padding:10px;border:1px solid #b7dcc6;font-weight:bold;">Outil</td><td style="padding:10px;border:1px solid #b7dcc6;">Dimensionnement ANC</td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Durée essai</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours</td></tr>
+                      <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Accès jusqu'au</td><td style="padding:10px;border:1px solid #e2e8f0;"><strong>${trialEndFr}</strong></td></tr>
+                      <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #e2e8f0;">${req.user!.email}</td></tr>
+                    </table>
+                    <p style="font-size:13px;color:#64748b;">Après les 14 jours, l'accès est bloqué. Souscription : 550 € HT/an.</p>
+                    <div style="text-align:center;margin:28px 0;">
+                      <a href="https://gmep-anc.pplx.app" style="background:#2E7D5B;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à GMEP Dimensionnement ANC →</a>
+                    </div>
+                    <p style="font-size:13px;color:#64748b;">Import des essais Porchet, sol multicouche, triple croisement BRGM, vulnérabilité des eaux souterraines et moteur de dimensionnement complet NF DTU 64.1. Rapport instructible SPANC.</p>
+                    <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a> — Tél. 06 07 73 72 33</p>
+                    <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+                    <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+                  </div>
+                </div>
+              `,
+            });
+            console.log(`[ANC TRIAL EMAIL] Sent to ${req.user!.email}`);
+          }
+        } catch (emailErr: any) {
+          console.error("[ANC TRIAL EMAIL] Failed:", emailErr.message);
+        }
+
+        return res.json({ message: "Essai ANC activé (14 jours)", subscription: sub, toolUrl: "https://gmep-anc.pplx.app" });
+      } catch (err: any) {
+        return res.status(500).json({ message: err.message || "Erreur lors de l'activation de l'essai" });
+      }
+    }
+  );
+
+  // ── ANC : statut d'accès (essai ou abonné) — utilisé par le client pour rediriger vers l'outil ──
+  app.get(
+    "/api/anc-access",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      if (isAdminEmail((req.user as any).email)) {
+        return res.json({ access: true, toolUrl: "https://gmep-anc.pplx.app" });
+      }
+      const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+      const sub = subs.find(s => s.tool === "anc" && (s.status === "active" || s.status === "trialing"));
+      if (!sub) {
+        return res.status(403).json({ access: false, message: "Abonnement Dimensionnement ANC requis pour accéder à cet outil." });
+      }
+      if (sub.status === "trialing" && sub.currentPeriodEnd && new Date(sub.currentPeriodEnd) < new Date()) {
+        try { await storage.updateSubscription(sub.id, { status: "expired" }); } catch {}
+        return res.status(403).json({ access: false, expired: true, message: "Votre essai gratuit Dimensionnement ANC a expiré." });
+      }
+      return res.json({ access: true, toolUrl: "https://gmep-anc.pplx.app" });
+    }
+  );
+
+
+  // ── EQRS V9 Humain — Module Tier 3 : activation essai gratuit 14 jours ──
   app.post(
     "/api/eqrs-v8-humain-trial/activate",
     requireAuth as any,
@@ -2501,7 +3057,7 @@ export async function registerRoutes(
           return res.status(409).json({ message: "Vous avez déjà un accès Module HUMAIN actif ou en cours d'essai." });
         }
         const trialEnd = new Date();
-        trialEnd.setDate(trialEnd.getDate() + 8);
+        trialEnd.setDate(trialEnd.getDate() + 14);
         let sub;
         if (existing) {
           sub = await storage.updateSubscription(existing.id, {
@@ -2530,7 +3086,7 @@ export async function registerRoutes(
             await resend.emails.send({
               from: "GMEP <noreply@gmep-france.eu>",
               to: req.user!.email,
-              subject: "GMEP EQRS V9 + Module HUMAIN — Votre essai gratuit de 8 jours est activé",
+              subject: "GMEP EQRS V9 + Module HUMAIN — Votre essai gratuit de 14 jours est activé",
               html: `
                 <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
                   <div style="background:#2ECC71;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
@@ -2539,15 +3095,15 @@ export async function registerRoutes(
                   </div>
                   <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
                     <p style="font-size:16px;">Bonjour \${user?.name || req.user!.email},</p>
-                    <p>Votre essai gratuit <strong>EQRS V9 + Module HUMAIN Tier 3</strong> est maintenant actif. Accès complet pendant <strong>8 jours</strong>.</p>
+                    <p>Votre essai gratuit <strong>EQRS V9 + Module HUMAIN Tier 3</strong> est maintenant actif. Accès complet pendant <strong>14 jours</strong>.</p>
                     <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
                       <tr style="background:#eafaf1;"><td style="padding:10px;border:1px solid #a9dfbf;font-weight:bold;">Outil</td><td style="padding:10px;border:1px solid #a9dfbf;">EQRS V9 + ECOTOX V9 + Module HUMAIN Tier 3</td></tr>
                       <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Substances</td><td style="padding:10px;border:1px solid #e2e8f0;">47 substances — PFAS, métaux, HAP, PCB, BTEX, solvants, pesticides</td></tr>
-                      <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Durée essai</td><td style="padding:10px;border:1px solid #e2e8f0;">8 jours</td></tr>
+                      <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Durée essai</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours</td></tr>
                       <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Accès jusqu'au</td><td style="padding:10px;border:1px solid #e2e8f0;"><strong>\${trialEndFr}</strong></td></tr>
                       <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #e2e8f0;">\${req.user!.email}</td></tr>
                     </table>
-                    <p style="font-size:13px;color:#64748b;">Après les 8 jours, l'accès est bloqué. Abonnement : 550 € HT/mois ou 5 200 € HT/an.</p>
+                    <p style="font-size:13px;color:#64748b;">Après les 14 jours, l'accès est bloqué. Abonnement : 550 € HT/mois ou 5 200 € HT/an.</p>
                     <div style="text-align:center;margin:28px 0;">
                       <a href="https://app.gmep-france.eu/api/eqrs-v8-humain-tool" style="background:#2ECC71;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder au Module HUMAIN →</a>
                     </div>
@@ -2565,7 +3121,7 @@ export async function registerRoutes(
           console.error("[HUMAIN TRIAL EMAIL] Failed:", emailErr.message);
         }
 
-        return res.json({ message: "Essai Module HUMAIN activé (8 jours)", subscription: sub });
+        return res.json({ message: "Essai Module HUMAIN activé (14 jours)", subscription: sub });
       } catch (err: any) {
         return res.status(500).json({ message: err.message || "Erreur lors de l'activation de l'essai" });
       }
@@ -2587,7 +3143,7 @@ export async function registerRoutes(
         if (humainSub.status === "trialing" && humainSub.currentPeriodEnd && new Date(humainSub.currentPeriodEnd) < new Date()) {
           try { await storage.updateSubscription(humainSub.id, { status: "expired" }); } catch {}
           res.setHeader("Content-Type", "text/html; charset=utf-8");
-          return res.status(403).send(trialExpiredHtml("/#/subscribe-eqrs-v8-humain", "Module HUMAIN — EQRS V9 Tier 3 Voie alimentaire", 8));
+          return res.status(403).send(trialExpiredHtml("/#/subscribe-eqrs-v8-humain", "Module HUMAIN — EQRS V9 Tier 3 Voie alimentaire", 14));
         }
       }
       res.setHeader("X-Frame-Options", "SAMEORIGIN");
@@ -2603,88 +3159,6 @@ export async function registerRoutes(
 
   // ── MSP : cron rappels trial expiration (J-2 et J-0) ──────────────
   // Déclenché par URL externe protégée — Railway Cron ou Perplexity Scheduler
-  // GET /api/admin/send-msp-trial-reminders?secret=xxx
-  app.get("/api/admin/send-msp-trial-reminders", async (req: Request, res: Response) => {
-    const secret = req.query.secret as string;
-    const expected = process.env.ADMIN_DIGEST_SECRET || "gmep-digest-2026-secret";
-    if (secret !== expected) return res.status(403).json({ message: "Secret invalide" });
-    const resendKey = process.env.RESEND_API_KEY;
-    if (!resendKey) return res.status(503).json({ message: "Resend non configuré" });
-    const { Resend } = require("resend");
-    const resend = new Resend(resendKey);
-    const results: any[] = [];
-    try {
-      const anyStorage = storage as any;
-      let trialingSubs: any[] = [];
-      if (typeof anyStorage.getAllTrialingSubscriptionsByTool === "function") {
-        trialingSubs = await anyStorage.getAllTrialingSubscriptionsByTool("msp");
-      } else if (typeof anyStorage.getAllSubscriptions === "function") {
-        const all = await anyStorage.getAllSubscriptions();
-        trialingSubs = all.filter((s: any) => s.tool === "msp" && s.status === "trialing");
-      }
-
-      const now = new Date();
-      for (const sub of trialingSubs) {
-        if (!sub.currentPeriodEnd) continue;
-        const end = new Date(sub.currentPeriodEnd);
-        const daysLeft = (end.getTime() - now.getTime()) / 86400000;
-        const isJ2 = daysLeft >= 1.5 && daysLeft < 2.5;
-        const isJ0 = daysLeft >= 0 && daysLeft < 0.5;
-        if (!isJ2 && !isJ0) continue;
-
-        let user: any = null;
-        try { user = await storage.getUser(sub.userId); } catch {}
-        if (!user || !user.email) continue;
-
-        const endFr = end.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
-        const subject = isJ2
-          ? "MSP GMEP — Il vous reste 2 jours d'essai"
-          : "MSP GMEP — Votre essai expire aujourd'hui";
-        const urgenceColor = isJ0 ? "#dc2626" : "#f59e0b";
-        const urgenceLabel = isJ0 ? "Expire aujourd'hui" : "2 jours restants";
-
-        const html = `
-          <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
-            <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
-              <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
-              <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">MSP — Modélisation Sources de Pollution des Sols</p>
-            </div>
-            <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
-              <div style="background:${urgenceColor};color:white;padding:8px 16px;border-radius:6px;text-align:center;font-weight:bold;font-size:14px;margin-bottom:20px;">${urgenceLabel}</div>
-              <p style="font-size:16px;">Bonjour ${user.name || user.email},</p>
-              <p>${isJ0
-                ? "Votre essai gratuit <strong>MSP GMEP</strong> expire <strong>aujourd'hui</strong>. Après expiration, l'accès est bloqué."
-                : `Votre essai gratuit <strong>MSP GMEP</strong> se termine dans <strong>2 jours</strong> (le ${endFr}).`
-              }</p>
-              <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
-                <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Essai valable jusqu'au</td><td style="padding:10px;border:1px solid #cce0f0;"><strong>${endFr}</strong></td></tr>
-                <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Mensuel</td><td style="padding:10px;border:1px solid #e2e8f0;">250 € HT/mois — 300 € TTC</td></tr>
-                <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Annuel</td><td style="padding:10px;border:1px solid #e2e8f0;">2 760 € HT/an — 3 312 € TTC (2 mois offerts)</td></tr>
-              </table>
-              <div style="text-align:center;margin:28px 0;">
-                <a href="https://www.gmep-france.eu/#/subscribe-msp" style="background:#16a34a;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">S'abonner — Accès permanent →</a>
-              </div>
-              <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a> — Tél. 06 07 73 72 33</p>
-              <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
-              <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
-            </div>
-          </div>
-        `;
-
-        try {
-          await resend.emails.send({ from: "GMEP <noreply@gmep-france.eu>", to: user.email, subject, html });
-          results.push({ userId: sub.userId, email: user.email, type: isJ0 ? "J-0" : "J-2", sent: true });
-          console.log(`[MSP REMINDER ${isJ0 ? "J-0" : "J-2"}] Sent to ${user.email}`);
-        } catch (emailErr: any) {
-          results.push({ userId: sub.userId, email: user.email, type: isJ0 ? "J-0" : "J-2", sent: false, error: emailErr.message });
-        }
-      }
-      return res.json({ processed: trialingSubs.length, reminders_sent: results.filter(r => r.sent).length, results });
-    } catch (err: any) {
-      console.error("[MSP REMINDER CRON ERROR]", err);
-      return res.status(500).json({ message: "Erreur cron rappels MSP", error: err.message });
-    }
-  });
 
   // ── Dev route: reset password ──────────
   if (!isStripeConfigured) {

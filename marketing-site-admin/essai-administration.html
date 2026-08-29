@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activer mon essai administration — GMEP</title>
+<meta name="description" content="Activez votre essai fonctionnel réel de 15 jours sur les 14 logiciels GMEP à l'aide du code d'accès transmis à votre organisme (DREAL, DRIEAT, ARS, DDT/DDTM).">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="canonical" href="https://administration.gmep-france.eu/essai-administration.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+<style>
+  .trial-form-wrap{max-width:520px;margin:0 auto;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:36px;box-shadow:0 4px 24px rgba(0,0,0,0.06);}
+  .trial-form-wrap label{display:block;font-weight:600;margin:16px 0 6px;font-size:0.92rem;}
+  .trial-form-wrap input{width:100%;padding:11px 14px;border:1px solid #cbd5e1;border-radius:8px;font-size:0.95rem;box-sizing:border-box;}
+  .trial-form-wrap input:focus{outline:2px solid #1a365d;border-color:#1a365d;}
+  .trial-msg{margin-top:16px;padding:12px 14px;border-radius:8px;font-size:0.9rem;display:none;}
+  .trial-msg.error{background:#fef2f2;color:#991b1b;border:1px solid #fecaca;display:block;}
+  .trial-msg.success{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;display:block;}
+  .trial-submit{width:100%;margin-top:22px;padding:13px;font-size:1rem;}
+  .code-hint{font-size:0.82rem;color:#64748b;margin-top:4px;}
+</style>
+</head>
+<body>
+<div style="background:#1a365d;color:#fff;text-align:center;padding:10px 16px;font-size:0.85rem;">
+  Version d'information présentée aux services de l'État (DREAL · DRIEAT · ARS · DDT/DDTM) — sans tarif public. Essai fonctionnel réel de 15 jours sur code d'accès. Pour un devis, contactez l'éditeur : <a href="mailto:gmep.france@gmail.com" style="color:#7fd6ff;">gmep.france@gmail.com</a>
+</div>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="index.html" class="brand" aria-label="Accueil GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Bureau d'études environnement &amp; hydrogéologie</span>
+    </a>
+    <nav class="nav-center" aria-label="Navigation principale">
+      <a href="index.html">Accueil</a>
+      <a href="outils/index.html">Outils</a>
+      <a href="tarifs.html">Tarification</a>
+      <a href="expertise.html">Expertise</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Connexion</a>
+    </div>
+  </div>
+</header>
+
+<section class="outil-hero">
+  <div class="container text-center">
+    <h1>Activer mon essai administration</h1>
+    <p class="lead" style="max-width:680px;margin:0 auto;">Saisissez le code d'accès unique transmis à votre organisme pour créer votre compte d'essai fonctionnel réel, valable 15 jours sur les 14 logiciels GMEP.</p>
+  </div>
+</section>
+
+<section class="bg-soft" style="padding:48px 0 80px;">
+  <div class="container">
+    <div class="trial-form-wrap">
+      <form id="trial-form" autocomplete="off">
+        <label for="code">Code d'essai reçu par e-mail</label>
+        <input type="text" id="code" name="code" placeholder="GMEP-XXXX-XXXX" required style="text-transform:uppercase;letter-spacing:1px;">
+        <p class="code-hint">Ce code vous a été transmis nominativement par la SARL G.M.E.P suite à un échange d'information avec votre organisme (DREAL, DRIEAT, ARS ou DDT/DDTM).</p>
+
+        <label for="name">Nom complet</label>
+        <input type="text" id="name" name="name" placeholder="Prénom Nom" required>
+
+        <label for="email">E-mail professionnel</label>
+        <input type="email" id="email" name="email" placeholder="prenom.nom@developpement-durable.gouv.fr" required>
+
+        <label for="password">Mot de passe (8 caractères min.)</label>
+        <input type="password" id="password" name="password" minlength="8" required>
+
+        <button type="submit" class="btn btn-primary trial-submit">Activer mon essai de 15 jours</button>
+        <div id="trial-msg" class="trial-msg"></div>
+      </form>
+    </div>
+    <p style="text-align:center;margin-top:24px;font-size:0.9rem;color:#64748b;">Pour toute demande de tarif, d'abonnement ou de devis, contactez directement l'éditeur : <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a> — 06 07 73 72 33.</p>
+  </div>
+</section>
+
+<script>
+document.getElementById('trial-form').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  const msg = document.getElementById('trial-msg');
+  msg.className = 'trial-msg';
+  msg.textContent = '';
+
+  const code = document.getElementById('code').value.trim().toUpperCase();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Activation en cours…';
+
+  try {
+    const res = await fetch('/api/trial/redeem', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, name, email, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      msg.className = 'trial-msg error';
+      msg.textContent = data.message || 'Une erreur est survenue. Vérifiez votre code.';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Activer mon essai de 15 jours';
+      return;
+    }
+    msg.className = 'trial-msg success';
+    msg.textContent = 'Compte créé ! Redirection vers votre espace d\'essai…';
+    setTimeout(() => {
+      window.location.href = data.redirectUrl || 'https://app.gmep-france.eu/#/dashboard';
+    }, 1500);
+  } catch (err) {
+    msg.className = 'trial-msg error';
+    msg.textContent = 'Erreur réseau. Merci de réessayer.';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Activer mon essai de 15 jours';
+  }
+});
+</script>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tél. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nos outils</h6>
+        <ul>
+          <li><a href="outils/index.html">Voir les 14 logiciels</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Société</h6>
+        <ul>
+          <li><a href="tarifs.html">Tarification</a></li>
+          <li><a href="expertise.html">Expertise</a></li>
+          <li><a href="mentions-legales.html">Mentions légales</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Tous droits réservés.</p>
+        <p>Tous nos logiciels sont la propriété exclusive de la SARL G.M.E.P.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

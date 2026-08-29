@@ -49,7 +49,7 @@ export default function EqrsV3105EcotoxPage() {
                   S'abonner — 395 € HT/mois
                 </button>
                 <button className="v2-btn v2-btn-outline" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>
-                  Essai gratuit 8 jours
+                  Essai gratuit 14 jours
                 </button>
               </div>
             </div>
@@ -237,7 +237,7 @@ export default function EqrsV3105EcotoxPage() {
             </div>
           </div>
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginTop: 24 }}>
-            <button className="v2-btn v2-btn-ghost" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 8 jours</button>
+            <button className="v2-btn v2-btn-ghost" style={{ cursor: "pointer", border: "none" }} onClick={startTrial}>Essai gratuit 14 jours</button>
             <a href="/contact" className="v2-btn v2-btn-ghost">Demander une démo</a>
           </div>
         </div>

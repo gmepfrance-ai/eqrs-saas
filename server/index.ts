@@ -1,10 +1,62 @@
 import express, { type Request, Response, NextFunction } from "express";
+import path from "path";
+import fs from "fs";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
 
 const app = express();
 const httpServer = createServer(app);
+
+// ─── Routage par nom de domaine : www.gmep-france.eu / gmep-france.eu ───
+// Ce service (eqrs-saas) sert aussi le site vitrine GMEP (marketing-site/)
+// quand la requête arrive sur le domaine www.gmep-france.eu, en attendant
+// que le certificat SSL du service dédié (gmep-france-site) soit débloqué.
+// app.gmep-france.eu continue de servir l'app SaaS normalement (inchangé).
+const MARKETING_HOSTS = new Set(["www.gmep-france.eu", "gmep-france.eu"]);
+const marketingRoot = path.resolve(__dirname, "..", "marketing-site");
+if (fs.existsSync(marketingRoot)) {
+  app.use((req, res, next) => {
+    const host = (req.headers.host || "").split(":")[0].toLowerCase();
+    if (!MARKETING_HOSTS.has(host)) return next();
+    return express.static(marketingRoot, {
+      extensions: ["html"],
+      setHeaders: (resx, filePath) => {
+        if (filePath.endsWith(".html")) {
+          resx.setHeader("Cache-Control", "no-cache, must-revalidate");
+        }
+      },
+    })(req, res, () => {
+      if (req.path.startsWith("/api/")) return next();
+      res.status(404).sendFile(path.join(marketingRoot, "index.html"));
+    });
+  });
+}
+
+// ─── Site « Bis » administration (DREAL / DRIEAT / ARS / DDT) ────────────
+// Même service, sous-domaine officiel administration.gmep-france.eu.
+// Version sans tarif public + parcours d'essai fonctionnel réel 15 jours
+// sur code d'accès unique par organisme (voir /api/trial/redeem).
+const ADMIN_HOSTS = new Set(["administration.gmep-france.eu"]);
+const marketingAdminRoot = path.resolve(__dirname, "..", "marketing-site-admin");
+if (fs.existsSync(marketingAdminRoot)) {
+  app.use((req, res, next) => {
+    const host = (req.headers.host || "").split(":")[0].toLowerCase();
+    if (!ADMIN_HOSTS.has(host)) return next();
+    if (req.path.startsWith("/api/")) return next();
+    return express.static(marketingAdminRoot, {
+      extensions: ["html"],
+      setHeaders: (resx, filePath) => {
+        if (filePath.endsWith(".html")) {
+          resx.setHeader("Cache-Control", "no-cache, must-revalidate");
+        }
+        resx.setHeader("X-Robots-Tag", "noindex, nofollow");
+      },
+    })(req, res, () => {
+      res.status(404).sendFile(path.join(marketingAdminRoot, "index.html"));
+    });
+  });
+}
 
 declare module "http" {
   interface IncomingMessage {
@@ -100,3 +152,5 @@ app.use((req, res, next) => {
     },
   );
 })();
+
+// deploy trigger 20260714-1404

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <!-- Goutte d'eau, à gauche du sigle -->
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z"
+          fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <!-- Sigle G.M.E.P -->
+  <text x="22" y="22"
+        font-family="Inter, system-ui, sans-serif"
+        font-size="17"
+        font-weight="700"
+        letter-spacing="0.5"
+        fill="#ffffff">G.M.E.P</text>
+</svg>

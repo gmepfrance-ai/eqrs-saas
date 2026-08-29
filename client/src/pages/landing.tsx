@@ -68,7 +68,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* === NOS TROIS LOGICIELS === */}
+      {/* === CATALOGUE COMPLET — 13 LOGICIELS === */}
       <section className="v2-section" id="v2-outils">
         <div className="container">
           <div className="v2-section-head">
@@ -385,6 +385,74 @@ export default function LandingPage() {
                 <br />
                 <a href="/notes-techniques/Plaquette_MSP_Promoteurs_Enseignes.pdf" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.85rem", color: "#16a34a", textDecoration: "underline", fontWeight: 500 }}>📋 Plaquette de présentation MSP GMEP</a>
               </div>
+            </article>
+
+            {/* Carte 3D_SSP : Superposition 3D pollution sols/nappe */}
+            <article className="v2-tool-card">
+              <span className="v2-badge" style={{background:"#0891b2",color:"#fff"}}>NOUVEAU</span>
+              <div className="v2-tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <path d="M16 3l12 6v14l-12 6-12-6V9z" stroke="#0891b2" strokeWidth="1.6" strokeLinejoin="round"/>
+                  <path d="M4 9l12 6 12-6M16 15v14" stroke="#0891b2" strokeWidth="1.6" strokeLinejoin="round"/>
+                  <circle cx="16" cy="15" r="2.2" fill="#3ddc84"/>
+                </svg>
+              </div>
+              <h3>{t("v2.tools.ssp3d.title")}</h3>
+              <p>{t("v2.tools.ssp3d.desc")}</p>
+              <p style={{ marginTop: "0.5rem", fontSize: "0.92rem", color: "#1a2b4a", fontWeight: 500 }}>
+                ✓ {t("v2.tools.ssp3d.feat1")}<br />
+                ✓ {t("v2.tools.ssp3d.feat2")}<br />
+                ✓ {t("v2.tools.ssp3d.feat3")}
+              </p>
+              <div className="v2-tool-price">{t("v2.tools.ssp3d.price")}</div>
+              <a href="/subscribe-ssp3d" className="v2-btn v2-btn-blue" style={{background:"#0891b2"}}>
+                {t("v2.tools.ssp3d.cta")}
+              </a>
+            </article>
+
+            {/* Carte Porchet : Modélisation Essai de Porchet */}
+            <article className="v2-tool-card">
+              <span className="v2-badge" style={{background:"#0F766E",color:"#fff"}}>NOUVEAU</span>
+              <div className="v2-tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <path d="M16 4c4 5 7 9 7 13a7 7 0 11-14 0c0-4 3-8 7-13z" stroke="#0F766E" strokeWidth="1.8" strokeLinejoin="round"/>
+                  <path d="M12 20c0 2 1.8 3.5 4 3.5" stroke="#3ddc84" strokeWidth="1.4" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <h3>{t("v2.tools.porchet.title")}</h3>
+              <p>{t("v2.tools.porchet.desc")}</p>
+              <p style={{ marginTop: "0.5rem", fontSize: "0.92rem", color: "#1a2b4a", fontWeight: 500 }}>
+                ✓ {t("v2.tools.porchet.feat1")}<br />
+                ✓ {t("v2.tools.porchet.feat2")}<br />
+                ✓ {t("v2.tools.porchet.feat3")}
+              </p>
+              <div className="v2-tool-price">{t("v2.tools.porchet.price")}</div>
+              <a href="/subscribe-porchet" className="v2-btn v2-btn-blue" style={{background:"#0F766E"}}>
+                {t("v2.tools.porchet.cta")}
+              </a>
+            </article>
+
+            {/* Carte Eaux Pluviales DLE/GEP v2.1 */}
+            <article className="v2-tool-card">
+              <span className="v2-badge" style={{background:"#1A6FB5",color:"#fff"}}>NOUVEAU</span>
+              <div className="v2-tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <path d="M10 6c1.5 3 3 4 3 6.5a3 3 0 01-6 0C7 10 8.5 9 10 6z" fill="#1A6FB5" opacity="0.7"/>
+                  <path d="M20 3c2 4 4 5.5 4 8.5a4 4 0 01-8 0C16 8.5 18 7 20 3z" fill="#1A6FB5"/>
+                  <path d="M4 26c2-3 4-3 6 0s4 3 6 0 4-3 6 0 4-3 6 0" stroke="#1A6FB5" strokeWidth="1.6" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <h3>{t("v2.tools.gep.title")}</h3>
+              <p>{t("v2.tools.gep.desc")}</p>
+              <p style={{ marginTop: "0.5rem", fontSize: "0.92rem", color: "#1a2b4a", fontWeight: 500 }}>
+                ✓ {t("v2.tools.gep.feat1")}<br />
+                ✓ {t("v2.tools.gep.feat2")}<br />
+                ✓ {t("v2.tools.gep.feat3")}
+              </p>
+              <div className="v2-tool-price">{t("v2.tools.gep.price")}</div>
+              <a href="/subscribe-eaux-pluviales" className="v2-btn v2-btn-blue" style={{background:"#1A6FB5"}}>
+                {t("v2.tools.gep.cta")}
+              </a>
             </article>
           </div>
         </div>

@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MSP — Modélisation Sources de Pollution des Sols | GMEP</title>
+<meta name="description" content="Logiciel SaaS de diagnostic des sources de pollution des sols. Conforme Arrêté du 12/12/2014 et Décret n°2023-1408 (réutilisation des terres excavées). Génère un rapport technique de diagnostic.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/outils/msp.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/outils/msp.html">
+<meta property="og:title" content="MSP — Modélisation Sources de Pollution des Sols | GMEP">
+<meta property="og:description" content="Diagnostic des sources de pollution des sols. Conforme Arrêté du 12/12/2014 et Décret n°2023-1408 (réutilisation des terres excavées).">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — MSP, Modélisation Sources de Pollution des Sols">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MSP — Modélisation Sources de Pollution des Sols | GMEP">
+<meta name="twitter:description" content="Diagnostic des sources de pollution des sols et rapport technique conforme Arrêté du 12/12/2014 et Décret n°2023-1408.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+</head>
+<body>
+<div style="background:#1a365d;color:#fff;text-align:center;padding:10px 16px;font-size:0.85rem;">
+  Version d'information présentée aux services de l'État (DREAL · DRIEAT · ARS · DDT/DDTM) — sans tarif public. Essai fonctionnel réel de 15 jours sur code d'accès. Pour un devis, contactez l'éditeur : <a href="mailto:gmep.france@gmail.com" style="color:#7fd6ff;">gmep.france@gmail.com</a>
+</div>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Accueil GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Bureau d'études environnement &amp; hydrogéologie</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navigation principale">
+      <a href="../index.html">Accueil</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Outils
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <p class="nav-mi-head" role="presentation">Sites et Sols Pollués (SSP)</p>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Intrusion de vapeurs — EPA 2004</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V9 + ECOTOX V9<span class="nav-mi-desc">HHRA + écotoxicologie — 104 substances · NOUVEAU</span></a>
+          <a href="../outils/eqrs-v8-ecotox-humain.html" role="menuitem">EQRS V9 + ECOTOX + HUMAIN<span class="nav-mi-desc">Voie alimentaire humaine — 47 substances Tier 3 · NOUVEAU</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transfert Sol-Nappe<span class="nav-mi-desc">Domenico 1987 + API Hub'eau · NOUVEAU</span></a>
+          <a href="../outils/domenico.html" role="menuitem">Transfert Sol → Nappe → Captage<span class="nav-mi-desc">Modèle Domenico 1987</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Schéma Conceptuel<span class="nav-mi-desc">IEM + Plan de Gestion · NOUVEAU</span></a>
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modélisation 3D sols / nappe / ouvrages · NOUVEAU</span></a>
+          <a href="../outils/msp.html" role="menuitem">MSP — Sources de Pollution des Sols<span class="nav-mi-desc">Diagnostic des sources · NOUVEAU</span></a>
+          <p class="nav-mi-head" role="presentation">Hydrogéologie</p>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modélisation Essai de Porchet<span class="nav-mi-desc">Calcul K terrain + comparaison GEP · NOUVEAU</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modélisation GEP — DLE &amp; Loi sur l'Eau<span class="nav-mi-desc">Dimensionnement EP + dossiers DLE/GEP · NOUVEAU</span></a>
+          <a href="../outils/rabattement/index.html" role="menuitem">Rabattement de nappe<span class="nav-mi-desc">Theis + IOTA</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Rabattement V15.87<span class="nav-mi-desc">Multicouche + assistant IA · NOUVEAU</span></a>
+          <a href="../outils/piezometres.html" role="menuitem">Piézomètres de Surveillance<span class="nav-mi-desc">Réseaux de suivi de nappe v2.9c · NOUVEAU</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">Dimensionnement ANC<span class="nav-mi-desc">Assainissement individuel &amp; collectif · NOUVEAU</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Tarifs</a>
+      <a href="../expertise.html">Expertise</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Choix de langue">
+        <button class="lang-btn active" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Connexion</a>
+      <a href="/essai-administration.html" rel="noopener" class="btn-header-cta">Inscription</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge" style="background:#1a5276;color:#fff;">Sites et Sols Pollués · Diagnostic</span>
+        <h1>MSP — <span style="color:#1a5276;">Modélisation Sources de Pollution des Sols</span></h1>
+        <p class="lead">Diagnostic de sources de pollution des sols. Conforme Arrêté du 12/12/2014 et Décret n°2023-1408 (réutilisation des terres excavées). Génère un rapport technique de diagnostic.</p>
+        <div class="hero-cta">
+          <a href="https://app.gmep-france.eu/subscribe-msp" rel="noopener" class="btn btn-primary" style="background:#1a5276;border-color:#1a5276;">Demander un devis</a>
+          <a href="https://app.gmep-france.eu/subscribe-msp" rel="noopener" class="btn btn-outline">Essai gratuit 14 jours</a>
+        </div>
+      </div>
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">msp · sources de pollution</span>
+        </div>
+        <div class="hero-mock-row"><span class="l">Sondages saisis</span><span class="v">24</span></div>
+        <div class="hero-mock-row"><span class="l">Substance pilote</span><span class="v">Hydrocarbures C10-C40</span></div>
+        <div class="hero-mock-row"><span class="l">Emprise de la source</span><span class="v">1 240 m²</span></div>
+        <div class="hero-mock-row"><span class="l">Volume impacté estimé</span><span class="v">1 860 m³</span></div>
+        <div class="hero-mock-row"><span class="l">Filière terres excavées</span><span class="v">Décret 2023-1408</span></div>
+        <div class="hero-mock-result"><strong>RAPPORT DE DIAGNOSTIC</strong><span>Généré — Arrêté du 12/12/2014</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Fonctionnalités</span>
+      <h2>Du sondage au rapport technique de diagnostic</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 20V4M12 4l-4 4M12 4l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Saisie des sondages et analyses</h3>
+        <p>Repère, coordonnées, profondeurs des prélèvements, lithologie et résultats analytiques par substance. Saisie illimitée, organisée par site d'étude.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 15l3-4 3 3 4-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Délimitation des sources</h3>
+        <p>Identification et délimitation des sources de pollution des sols : emprise, profondeurs impactées, estimation des volumes de terres concernés.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 16v6M2 12h6M16 12h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Comparaison aux valeurs de référence</h3>
+        <p>Confrontation des concentrations mesurées aux fonds pédogéochimiques et aux seuils d'acceptabilité en filière, substance par substance.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 12v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Conformité réglementaire</h3>
+        <p>Conforme à l'Arrêté du 12 décembre 2014 relatif aux conditions d'admission des déchets inertes et au Décret n°2023-1408 encadrant la réutilisation des terres excavées.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M8 12l2.5 2.5L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Synthèse multi-sources</h3>
+        <p>Tableau récapitulatif de l'ensemble des sources identifiées sur un même site, avec volumes, substances et orientation de filière.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="currentColor" stroke-width="2"/><path d="M15 3v5h5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Rapport technique &amp; export</h3>
+        <p>Génération du rapport technique de diagnostic en PDF. Export / import JSON pour archivage, partage entre postes ou transfert vers 3D_SSP.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION — MÉTHODE ET CADRE RÉGLEMENTAIRE -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Méthode</span>
+      <h2>Cadre réglementaire du diagnostic</h2>
+    </div>
+    <div class="compliance-list">
+      <p>MSP structure le diagnostic des sources de pollution des sols : saisie des sondages et des résultats analytiques, délimitation des emprises impactées, estimation des volumes et orientation des terres excavées vers la filière adaptée.</p>
+      <h3>Arrêté du 12 décembre 2014</h3>
+      <p>Conditions d'admission des déchets inertes en installation de stockage. Les concentrations mesurées sont confrontées aux seuils d'acceptabilité de cet arrêté pour chaque substance renseignée.</p>
+      <h3>Décret n°2023-1408</h3>
+      <p>Encadrement de la <strong>réutilisation des terres excavées</strong> : l'outil documente les éléments nécessaires à la justification de la sortie du statut de déchet et à la traçabilité des volumes.</p>
+      <h3>Livrable</h3>
+      <p>Un <strong>rapport technique de diagnostic</strong> reprenant les sondages, les sources délimitées, les volumes estimés et les conclusions réglementaires.</p>
+      <p style="background:#fff8e1;border-left:4px solid #f5b94d;padding:14px 18px;border-radius:6px;margin-top:18px;">
+        <strong>Le logiciel ne se substitue pas à l'expertise de l'ingénieur</strong>, ni aux demandes éventuelles de la DREAL, de l'inspection des installations classées, du maître d'ouvrage ou du bureau de contrôle.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION — LIVRABLES -->
+<!-- ==================================================================== -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Livrables</span>
+      <h2>Des données de sondage au dossier exploitable</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Rapport technique de diagnostic</h3>
+        <p>Sondages, analyses, sources délimitées, volumes estimés, comparaison aux seuils réglementaires et conclusions.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Export / import JSON</h3>
+        <p>Toutes les données d'un site — pour archivage, partage entre postes ou transfert direct vers le module 3D_SSP.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Synthèse des volumes</h3>
+        <p>Tableau récapitulatif des volumes de terres impactées par source et par substance, base du Plan de Gestion.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- TARIF -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Tarification</span>
+      <h2>Devis sur demande auprès de l'éditeur</h2>
+    </div>
+    <div style="max-width:640px;margin:0 auto;text-align:center;">
+      <p style="font-size:1.05rem;line-height:1.6;">Cette version d'information, présentée aux services de l'État (DREAL, DRIEAT, ARS, DDT/DDTM), ne diffuse pas de tarif public. Pour toute demande de devis ou d'abonnement, adressez-vous directement à l'éditeur du logiciel :</p>
+      <p style="margin:20px 0;"><a href="mailto:gmep.france@gmail.com" class="btn btn-primary">gmep.france@gmail.com</a></p>
+      <p style="font-size:0.95rem;color:#64748b;">Un essai fonctionnel réel de 15 jours est disponible sur présentation d'un code d'accès unique transmis à votre organisme.</p>
+      <div class="text-center mt-6">
+        <a href="/essai-administration.html" class="btn btn-ghost">J'ai reçu un code d'essai — Activer mon accès</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tél. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nos outils</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/msp.html">MSP — Sources de Pollution des Sols</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modélisation GEP — DLE &amp; Loi sur l'Eau</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modélisation Essai de Porchet</a></li>
+          <li><a href="../outils/piezometres.html">Piézomètres de Surveillance</a></li>
+          <li><a href="../outils/anc-assainissement.html">Dimensionnement ANC</a></li>
+          <li><a href="../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../outils/domenico.html">Transfert Sol → Nappe → Captage</a></li>
+          <li><a href="../outils/rabattement/index.html">Rabattement de nappe IOTA</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Société</h6>
+        <ul>
+          <li><a href="../tarifs.html">Tarifs</a></li>
+          <li><a href="../guide-11-outils/index.html">Guide 13 outils (PDF)</a></li>
+          <li><a href="../expertise.html">Expertise</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../mentions-legales.html">Mentions légales</a></li>
+          <li><a href="../cgv.html">CGV</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Tous droits réservés.</p>
+        <p>Tous nos logiciels sont la propriété exclusive de la SARL G.M.E.P. Toute reproduction, diffusion ou utilisation, même partielle, sans autorisation écrite préalable est interdite.</p>
+        <p class="credit">Conception et développement : Eric Azulay — Gérant SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/nav.js"></script>
+<script src="../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Exclure les pages d'authentification de l'indexation
+Disallow: /auth/
+
+# Sitemap
+Sitemap: https://www.gmep-france.eu/sitemap.xml

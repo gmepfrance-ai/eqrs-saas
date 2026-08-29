@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Analyse des Risques Sanitaires — EQRS Johnson & Ettinger (Intrusion de Vapeurs) | GMEP</title>
+<meta name="description" content="Logiciel d'analyse des risques sanitaires (EQRS) pour l'intrusion de vapeurs dans les bâtiments. Modèle Johnson & Ettinger, 74 substances, conforme EPA 2004 et ANSES 2018. Essai gratuit 14 jours.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/outils/eqrs-je.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/outils/eqrs-je.html">
+<meta property="og:title" content="Analyse des Risques Sanitaires — EQRS Johnson & Ettinger (Intrusion de Vapeurs) | GMEP">
+<meta property="og:description" content="Logiciel d'analyse des risques sanitaires (EQRS) pour l'intrusion de vapeurs dans les bâtiments. Modèle Johnson & Ettinger, 74 substances, conforme EPA 2004 et ANSES 2018. Essai gratuit 14 jours.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Logiciels de modélisation environnementale">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Analyse des Risques Sanitaires — EQRS Johnson & Ettinger (Intrusion de Vapeurs) | GMEP">
+<meta name="twitter:description" content="Logiciel d'analyse des risques sanitaires (EQRS) pour l'intrusion de vapeurs dans les bâtiments. Modèle Johnson & Ettinger, 74 substances, conforme EPA 2004 et ANSES 2018. Essai gratuit 14 jours.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+
+<!-- Schema.org : FAQPage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Qu'est-ce que l'analyse des risques sanitaires par modèle Johnson & Ettinger ?", "acceptedAnswer": { "@type": "Answer", "text": "L'analyse des risques sanitaires par modèle Johnson & Ettinger (EQRS J&E) quantifie l'intrusion de vapeurs de composés organiques volatils depuis les sols ou les eaux souterraines vers l'air intérieur des bâtiments. Elle calcule un facteur d'atténuation (alpha) et compare les concentrations en air intérieur à des valeurs toxicologiques de référence pour établir le Quotient de Danger (QD) et l'Excès de Risque Individuel (ERI)." } },
+    { "@type": "Question", "name": "Le logiciel est-il conforme aux méthodologies françaises et américaines ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui. Les calculs sont conformes au guide EPA 2004 (modèle Johnson & Ettinger) et à la doctrine ANSES 2018, ainsi qu'à la méthodologie nationale de gestion des sites et sols pollués (MEEM/MTES 2017)." } },
+    { "@type": "Question", "name": "Combien de substances sont prises en charge ?", "acceptedAnswer": { "@type": "Answer", "text": "74 substances (composés organiques volatils, solvants chlorés, hydrocarbures aromatiques polycycliques, métaux) avec valeurs toxicologiques de référence ANSES tenues à jour." } },
+    { "@type": "Question", "name": "Proposez-vous un essai gratuit ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui, un essai gratuit de 14 jours est disponible sans carte bancaire, directement dans le navigateur." } }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Accueil GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Bureau d'études environnement &amp; hydrogéologie</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navigation principale">
+      <a href="../index.html">Accueil</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Outils
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modélisation 3D sols / nappe / ouvrages · NOUVEAU</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau<span class="nav-mi-desc">Dimensionnement EP + dossiers DLE/GEP · NOUVEAU</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modélisation Essai de Porchet<span class="nav-mi-desc">Calcul K terrain + comparaison GEP · NOUVEAU</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX V8<span class="nav-mi-desc">HHRA + écotoxicologie — 104 substances · NOUVEAU</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Rabattement V15.87<span class="nav-mi-desc">Multicouche + assistant IA · NOUVEAU</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">Dimensionnement ANC<span class="nav-mi-desc">Assainissement individuel &amp; collectif · NOUVEAU</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transfert Sol-Nappe<span class="nav-mi-desc">Domenico 1987 + API Hub'eau · NOUVEAU</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Schéma Conceptuel<span class="nav-mi-desc">IEM + Plan de Gestion · NOUVEAU</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Intrusion de vapeurs — EPA 2004</span></a>
+          <a href="../outils/domenico.html" role="menuitem">Transfert Sol → Nappe → Captage<span class="nav-mi-desc">Modèle Domenico 1987</span></a>
+          <a href="../outils/rabattement/index.html" role="menuitem">Rabattement de nappe<span class="nav-mi-desc">Theis + IOTA</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Tarifs</a>
+      <a href="../expertise.html">Expertise</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Choix de langue">
+        <button class="lang-btn active" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Connexion</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Inscription</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge">Conforme EPA 2004 / ANSES 2018</span>
+        <h1>EQRS Johnson &amp; Ettinger</h1>
+        <p class="lead">L'analyse des risques sanitaires (également appelée Évaluation Quantitative des Risques Sanitaires, EQRS) modélise l'intrusion de vapeurs depuis les sols ou les nappes vers l'intérieur des bâtiments. 74 substances, calculs QD/ERI et étude paramétrique, conformément à la méthodologie nationale de gestion des sites et sols pollués.</p>
+        <div class="hero-cta">
+          <a href="../tarifs.html#je_annual" class="btn btn-primary">S'abonner</a>
+          <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-outline">Essai gratuit 14 jours</a>
+        </div>
+      </div>
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">eqrs · je</span>
+        </div>
+        <div class="hero-mock-row"><span class="l">Substance</span><span class="v">Tétrachloroéthylène</span></div>
+        <div class="hero-mock-row"><span class="l">Source</span><span class="v">Sol (Cs) 12 mg/kg</span></div>
+        <div class="hero-mock-row"><span class="l">α (J&amp;E)</span><span class="v">2,4 × 10⁻⁴</span></div>
+        <div class="hero-mock-row"><span class="l">Ci air intérieur</span><span class="v">3,2 µg/m³</span></div>
+        <div class="hero-mock-result"><strong>QD (adulte)</strong><span>0,08 — acceptable</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="max-width:900px;margin:0 auto;">
+    <div style="background:#eef4fb;border:1px solid #c6dcf0;border-radius:12px;padding:1.3rem 1.5rem;">
+      <p style="margin:0;"><strong style="color:#1a2b4a;">Disponibilité internationale —</strong> ce logiciel s&#39;appuie sur des valeurs toxicologiques et physico-chimiques de référence reconnues internationalement (US EPA, ANSES, EFSA, INERIS, ECHA) : il est utilisable pour des études réalisées dans n&#39;importe quel pays.</p>
+    </div>
+  </div>
+</section>
+
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Fonctionnalités</span>
+      <h2>Tout ce qu'exige une IEM sites pollués</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="18" r="3" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="6" r="3" stroke="currentColor" stroke-width="2"/><path d="M9 9l-3 6M15 9l3 6" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>74 substances</h3>
+        <p>COV, solvants chlorés, HAP, métaux — base ANSES tenue à jour avec VTR cancer/non-cancer.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 7h4v4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>QD &amp; ERI</h3>
+        <p>Quotient de danger et excès de risque individuel pour adulte, enfant (ADAF=3) et salarié, conforme guide ANSES.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 9h18M9 3v18" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Étude paramétrique 8 variables</h3>
+        <p>Hauteur sous dalle, surface, perméabilité, profondeur source, épaisseur capillaire, ventilation, etc.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 12c0 5-4 9-9 9s-9-4-9-9 4-9 9-9c2.5 0 4.7 1 6.3 2.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M21 4v5h-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Facteur d'atténuation α</h3>
+        <p>Calcul automatique selon EPA 2004 (sol/nappe) avec ajustement profondeur, paramètres bâti, propriétés gaz du sol.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="currentColor" stroke-width="2"/><path d="M15 3v5h5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Génération PDF</h3>
+        <p>Rapport complet : données d'entrée, hypothèses, résultats, comparaison VLEP/VTR, conclusion.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Démo gratuite 14 jours</h3>
+        <p>5 substances disponibles en mode démo. Activez votre compte sans carte bancaire.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Substances couvertes</span>
+      <h2>74 substances paramétrées</h2>
+      <p>Toutes les VTR (Valeurs Toxicologiques de Référence) sont issues du référentiel ANSES 2018 et tenues à jour.</p>
+    </div>
+    <table class="substances-table">
+      <thead><tr><th>Famille</th><th>Exemples</th><th>Nb substances</th></tr></thead>
+      <tbody>
+        <tr><td>Solvants chlorés (COHV)</td><td>Trichloroéthylène, Tétrachloroéthylène, Chlorure de vinyle, 1,2-DCE…</td><td>14</td></tr>
+        <tr><td>BTEX &amp; aromatiques</td><td>Benzène, Toluène, Éthylbenzène, Xylènes, Styrène…</td><td>11</td></tr>
+        <tr><td>HAP</td><td>Benzo(a)pyrène, Naphtalène, Anthracène, Pyrène…</td><td>16</td></tr>
+        <tr><td>Hydrocarbures pétroliers</td><td>Hexane, Heptane, Octane, fractions C5-C8 / C9-C16…</td><td>12</td></tr>
+        <tr><td>Métaux et métalloïdes (formes volatiles)</td><td>Mercure élémentaire, Arsenic, Plomb tétraéthyle…</td><td>9</td></tr>
+        <tr><td>Autres COV</td><td>Chloroforme, Tétrachlorure de carbone, Acétone, MTBE…</td><td>12</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- NOUVEAU v2 : Σ QD et Σ ERI par organe cible (conformité INERIS/US-EPA) -->
+<!-- ==================================================================== -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Nouveauté v2 — conformité INERIS / US-EPA</span>
+      <h2>Σ QD et Σ ERI par organe cible</h2>
+      <p>Les effets cumulés ne sont additionnés qu'entre substances agissant sur le même organe — méthodologie INERIS DRC-09-103096-09387C et US-EPA RAGS Part A §8.2 / §8.3.</p>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2C8 7 6 11 6 14a6 6 0 1012 0c0-3-2-7-6-12z" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>13 organes cibles — effets seuil</h3>
+        <p>Sang, système nerveux, foie, reins, système respiratoire, thyroïde, système cardiovasculaire, immunité, peau, développement… chacun avec son Σ QD adulte / enfant.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M8 12l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>8 cancers cibles — effets sans seuil</h3>
+        <p>Leucémies, carcinome hépatocellulaire, cancer bronchique, peau, rein, voies digestives, voies aérodigestives sup., thyroïde — Σ ERI par type de cancer.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Synthèse exécutive automatique</h3>
+        <p>Pire Σ QD et Σ ERI adulte/enfant en tête de rapport, niveau d'impact coloré (acceptable / vigilance / inacceptable), descriptifs sanitaires intégrés.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><path d="M7 8h10M7 12h10M7 16h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Schéma conceptuel dynamique</h3>
+        <p>Style BRGM/INERIS — coupe géologique, flèches a-h colorées selon le pire Σ par organe sur chaque voie d'exposition (8 voies).</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="currentColor" stroke-width="2"/><path d="M15 3v5h5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Rapport PDF complet 1-clic — 14 pages</h3>
+        <p>Couverture, synthèse exécutive, schéma conceptuel, tableaux Σ par organe, <strong>notes de calcul (DJE / QD / ERI)</strong>, <strong>tableaux VTR à seuil et sans seuil complets</strong> (~100 substances), <strong>détail QD/ERI par voie et par cible</strong>, conclusion adaptative — prêt à transmettre DDT / ARS.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Cohérence biologique</h3>
+        <p>Plus jamais d'addition aberrante (benzène+PCE…) : seuls les effets sanitaires de même nature sont cumulés.</p>
+      </div>
+    </div>
+
+    <details style="margin-top:32px;padding:18px 22px;border:1px solid #d1dce8;border-radius:8px;background:#f8fafc;">
+      <summary style="font-weight:600;cursor:pointer;color:#1a2b4a;">Voir le détail des 13 organes cibles et 8 cancers (méthodologie INERIS / US-EPA)</summary>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:16px;">
+        <div>
+          <h4 style="margin:0 0 8px;font-size:14px;color:#1a2b4a;">Effets seuil — Σ QD par organe</h4>
+          <ul style="font-size:13px;line-height:1.7;color:#444;padding-left:18px;margin:0;">
+            <li><strong>Sang / hématopoïèse</strong> — anémie, leucopénie (benzène, zinc)</li>
+            <li><strong>Système nerveux central</strong> — troubles cognitifs (toluène, plomb, Hg)</li>
+            <li><strong>Foie</strong> — hépatite chronique, fibrose (PCE, TCE, HAP)</li>
+            <li><strong>Reins</strong> — néphropathie (cadmium, mercure)</li>
+            <li><strong>Système respiratoire</strong> — fibrose, irritation (naphtalène, nickel)</li>
+            <li><strong>Système immunitaire</strong> — immunodépression (PCB)</li>
+            <li><strong>Système thyroïdien</strong> — hypothyroïdie (cyanures)</li>
+            <li><strong>Cardiovasculaire</strong> — hypertension (atrazine)</li>
+            <li><strong>Tractus gastro-intestinal</strong> — lésions muqueuses (Cr VI, cuivre)</li>
+            <li><strong>Peau</strong> — hyperkératose (arsenic)</li>
+            <li><strong>Endocrinien / métabolique</strong> — sélénose (antimoine, sélénium)</li>
+            <li><strong>Développement / reproduction</strong> — effets tératogènes</li>
+            <li><strong>Effets systémiques multiples</strong> — dioxines, PCB-TEQ</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="margin:0 0 8px;font-size:14px;color:#1a2b4a;">Effets sans seuil — Σ ERI par cancer</h4>
+          <ul style="font-size:13px;line-height:1.7;color:#444;padding-left:18px;margin:0;">
+            <li><strong>Sang — leucémie</strong> (benzène)</li>
+            <li><strong>Foie</strong> — carcinome hépatocellulaire, angiosarcome (PCE, chloroforme, CV)</li>
+            <li><strong>Poumon</strong> — carcinome bronchique (naphtalène, cadmium, nickel)</li>
+            <li><strong>Peau</strong> — carcinome cutané, mélanome (B(a)P, arsenic)</li>
+            <li><strong>Rein</strong> — carcinome rénal (plomb, TCE)</li>
+            <li><strong>Voies digestives / multi-organes</strong> — Cr VI, HAP cancérigènes</li>
+            <li><strong>Voies aérodigestives supérieures</strong> — cancer nasopharyngé (formaldéhyde)</li>
+            <li><strong>Thyroïde</strong> — acrylamide</li>
+          </ul>
+          <p style="font-size:12px;color:#666;margin-top:12px;"><strong>Seuils :</strong> QD &lt; 0,2 acceptable • 0,2 ≤ QD &lt; 1 vigilance • QD ≥ 1 inacceptable — ERI &lt; 10⁻⁶ négligeable • 10⁻⁶ ≤ ERI &lt; 10⁻⁵ acceptable • ERI ≥ 10⁻⁵ inacceptable.</p>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section>
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Conformité réglementaire</span>
+      <h2>Cadre normatif</h2>
+    </div>
+    <div class="compliance-list">
+      <h3>Références appliquées</h3>
+      <ul>
+        <li><strong>INERIS DRC-09-103096-09387C</strong> — cumul des QD par organe cible et des ERI par effet cancérigène (méthodologie nationale).</li>
+        <li><strong>US-EPA RAGS Part A §8.2 / §8.3</strong> — Risk Assessment Guidance for Superfund : sommation par organe / par type de cancer.</li>
+        <li><strong>EPA 2004</strong> — User's Guide for Evaluating Subsurface Vapor Intrusion Into Buildings (US EPA, 2004).</li>
+        <li><strong>ANSES 2018</strong> — Valeurs toxicologiques de référence (VTR) et méthodologie IEM (Interprétation de l'État des Milieux).</li>
+        <li><strong>Méthodologie nationale sites pollués</strong> — MEEM/MTES 2017 (gestion des sites pollués, plan de gestion).</li>
+        <li><strong>Modèle Johnson &amp; Ettinger</strong> — équation analytique pour l'intrusion de vapeurs (sol et nappe).</li>
+        <li><strong>VLEP / VLCT</strong> — valeurs limites d'exposition professionnelle pour usage en milieu de travail.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Tarif</span>
+      <h2>Choisissez votre plan</h2>
+    </div>
+    <div class="pricing-grid" style="max-width:860px;margin:0 auto;">
+      <div class="price-card">
+        <h3>Mensuel</h3>
+        <p class="sub">Flexible — résiliable à tout moment</p>
+        <div class="price-amount"><span class="currency">€</span>294</div>
+        <div class="price-period">TTC / mois</div>
+        <ul class="price-features">
+          <li>74 substances</li>
+          <li>Étude paramétrique 8 variables</li>
+          <li>Génération PDF illimitée</li>
+          <li>Support email</li>
+        </ul>
+        <a href="../tarifs.html#je_monthly" class="btn btn-blue btn-block">Voir l'offre mensuelle</a>
+      </div>
+      <div class="price-card featured">
+        <span class="badge">Économisez 15 %</span>
+        <h3>Annuel</h3>
+        <p class="sub">Meilleure valeur — économie 441 €</p>
+        <div class="price-amount"><span class="currency">€</span>2 998</div>
+        <div class="price-period">TTC / an (~250 € TTC/mois)</div>
+        <ul class="price-features">
+          <li>Toutes les fonctions du plan mensuel</li>
+          <li>Support prioritaire</li>
+          <li>Mises à jour réglementaires incluses</li>
+        </ul>
+        <a href="../tarifs.html#je_annual" class="btn btn-primary btn-block">Voir l'offre annuelle</a>
+      </div>
+    </div>
+    <div class="text-center mt-6">
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-ghost">Essai gratuit 14 jours — sans carte bancaire</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="demo-placeholder">
+      <h3>Démo en ligne — disponible prochainement</h3>
+      <p>La démo interactive complète (saisie des 8 variables, calcul α en temps réel, comparaison aux VTR, export PDF) sera réintégrée dans une prochaine version. En attendant, créez votre compte d'essai pour bénéficier d'un accès complet 14 jours.</p>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-primary">Activer l'essai gratuit</a>
+    </div>
+  </div>
+</section>
+
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tél. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nos outils</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modélisation Essai de Porchet</a></li>
+          <li><a href="../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../outils/domenico.html">Transfert Sol → Nappe → Captage</a></li>
+          <li><a href="../outils/rabattement/index.html">Rabattement de nappe IOTA</a></li>
+          <li><a href="../outils/anc-assainissement.html">Dimensionnement ANC</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Société</h6>
+        <ul>
+          <li><a href="../tarifs.html">Tarifs</a></li>
+          <li><a href="../guide-11-outils/index.html">Guide 13 outils (PDF)</a></li>
+          <li><a href="../expertise.html">Expertise</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../mentions-legales.html">Mentions légales</a></li>
+          <li><a href="../cgv.html">CGV</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Tous droits réservés.</p>
+        <p>Tous nos logiciels sont la propriété exclusive de la SARL G.M.E.P. Toute reproduction, diffusion ou utilisation, même partielle, sans autorisation écrite préalable est interdite.</p>
+        <p class="credit">Conception et développement : Eric Azulay — Gérant SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/nav.js"></script>
+<script src="../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Piézomètres de Surveillance — GMEP v2.9c | GMEP</title>
+<meta name="description" content="Logiciel SaaS de suivi et de gestion de réseaux de piézomètres de surveillance : relevés de niveaux de nappe, historique, export et alertes. 1 100 € HT/an.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/outils/piezometres.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/outils/piezometres.html">
+<meta property="og:title" content="Piézomètres de Surveillance — GMEP v2.9c | GMEP">
+<meta property="og:description" content="Suivi et gestion de réseaux de piézomètres de surveillance : relevés de niveaux de nappe, historique, export, alertes.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Piézomètres de Surveillance v2.9c">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Piézomètres de Surveillance — GMEP v2.9c | GMEP">
+<meta name="twitter:description" content="Gestion de réseaux piézométriques : relevés de niveaux de nappe, historique, export et alertes.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Accueil GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Bureau d'études environnement &amp; hydrogéologie</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navigation principale">
+      <a href="../index.html">Accueil</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Outils
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <p class="nav-mi-head" role="presentation">Sites et Sols Pollués (SSP)</p>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Intrusion de vapeurs — EPA 2004</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V9 + ECOTOX V9<span class="nav-mi-desc">HHRA + écotoxicologie — 104 substances · NOUVEAU</span></a>
+          <a href="../outils/eqrs-v8-ecotox-humain.html" role="menuitem">EQRS V9 + ECOTOX + HUMAIN<span class="nav-mi-desc">Voie alimentaire humaine — 47 substances Tier 3 · NOUVEAU</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transfert Sol-Nappe<span class="nav-mi-desc">Domenico 1987 + API Hub'eau · NOUVEAU</span></a>
+          <a href="../outils/domenico.html" role="menuitem">Transfert Sol → Nappe → Captage<span class="nav-mi-desc">Modèle Domenico 1987</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Schéma Conceptuel<span class="nav-mi-desc">IEM + Plan de Gestion · NOUVEAU</span></a>
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modélisation 3D sols / nappe / ouvrages · NOUVEAU</span></a>
+          <a href="../outils/msp.html" role="menuitem">MSP — Sources de Pollution des Sols<span class="nav-mi-desc">Diagnostic des sources · NOUVEAU</span></a>
+          <p class="nav-mi-head" role="presentation">Hydrogéologie</p>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modélisation Essai de Porchet<span class="nav-mi-desc">Calcul K terrain + comparaison GEP · NOUVEAU</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modélisation GEP — DLE &amp; Loi sur l'Eau<span class="nav-mi-desc">Dimensionnement EP + dossiers DLE/GEP · NOUVEAU</span></a>
+          <a href="../outils/rabattement/index.html" role="menuitem">Rabattement de nappe<span class="nav-mi-desc">Theis + IOTA</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Rabattement V15.87<span class="nav-mi-desc">Multicouche + assistant IA · NOUVEAU</span></a>
+          <a href="../outils/piezometres.html" role="menuitem">Piézomètres de Surveillance<span class="nav-mi-desc">Réseaux de suivi de nappe v2.9c · NOUVEAU</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">Dimensionnement ANC<span class="nav-mi-desc">Assainissement individuel &amp; collectif · NOUVEAU</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Tarifs</a>
+      <a href="../expertise.html">Expertise</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Choix de langue">
+        <button class="lang-btn active" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Connexion</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Inscription</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge" style="background:#1B474D;color:#fff;">Hydrogéologie · Surveillance</span>
+        <h1>Piézomètres de <span style="color:#1B474D;">Surveillance — v2.9c</span></h1>
+        <p class="lead">Suivi et gestion de réseaux de piézomètres de surveillance : relevés de niveaux de nappe, historique, export et alertes. Un seul poste de pilotage pour l'ensemble des ouvrages d'un site.</p>
+        <div class="hero-cta">
+          <a href="https://app.gmep-france.eu/subscribe-piezometres" rel="noopener" class="btn btn-primary" style="background:#1B474D;border-color:#1B474D;">S'abonner — 1 100 € HT/an</a>
+          <a href="https://app.gmep-france.eu/subscribe-piezometres" rel="noopener" class="btn btn-outline">Essai gratuit 14 jours</a>
+        </div>
+      </div>
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">piézomètres · réseau de surveillance</span>
+        </div>
+        <div class="hero-mock-row"><span class="l">Ouvrages suivis</span><span class="v">12 piézomètres</span></div>
+        <div class="hero-mock-row"><span class="l">Dernière campagne</span><span class="v">14 relevés</span></div>
+        <div class="hero-mock-row"><span class="l">Pz-04 — niveau nappe</span><span class="v">4,82 m / TN</span></div>
+        <div class="hero-mock-row"><span class="l">Variation vs N-1</span><span class="v">− 0,37 m</span></div>
+        <div class="hero-mock-row"><span class="l">Sens d'écoulement</span><span class="v">Nord-Ouest</span></div>
+        <div class="hero-mock-result"><strong>ALERTE SEUIL</strong><span>Pz-07 — niveau sous le seuil bas</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Fonctionnalités</span>
+      <h2>Du relevé terrain au suivi de réseau</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 20V4M12 4l-4 4M12 4l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Inventaire des ouvrages</h3>
+        <p>Fiche par piézomètre : repère, coordonnées, cote du repère de mesure, profondeur, crépine, nappe captée et état de l'ouvrage.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 15l3-4 3 3 4-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Relevés de niveaux de nappe</h3>
+        <p>Saisie des campagnes de mesure : profondeur d'eau, cote piézométrique calculée automatiquement à partir de la cote du repère, opérateur et conditions de mesure.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Historique &amp; chroniques</h3>
+        <p>Chronique piézométrique par ouvrage sur toute la durée du suivi, comparaison inter-ouvrages et lecture des battements saisonniers de la nappe.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3l9 16H3L12 3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 9v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Alertes de seuil</h3>
+        <p>Définition de seuils haut et bas par piézomètre. Signalement automatique des dépassements dès la saisie d'un relevé.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 16v6M2 12h6M16 12h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Synthèse de campagne</h3>
+        <p>Tableau récapitulatif de l'ensemble du réseau pour une campagne donnée : cotes piézométriques, écarts par rapport à la campagne précédente, ouvrages en alerte.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="currentColor" stroke-width="2"/><path d="M15 3v5h5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Export &amp; archivage</h3>
+        <p>Export des relevés et des chroniques pour intégration au rapport de surveillance. Export / import JSON du réseau complet pour archivage ou transfert entre postes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION — MÉTHODE -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Méthode</span>
+      <h2>Principe du suivi piézométrique</h2>
+    </div>
+    <div class="compliance-list">
+      <p>La surveillance d'un site repose sur un réseau de piézomètres relevés à intervalles réguliers. L'outil centralise l'inventaire des ouvrages, les campagnes de mesure et l'historique associé.</p>
+      <h3>Cote piézométrique</h3>
+      <p><strong>Cote piézométrique = cote du repère de mesure − profondeur d'eau mesurée</strong>. La cote du repère est saisie une seule fois dans la fiche de l'ouvrage ; chaque relevé de profondeur est converti automatiquement, ce qui supprime les erreurs de conversion en campagne.</p>
+      <h3>Chronique et battement</h3>
+      <p>L'historique complet de chaque ouvrage permet de lire le battement saisonnier de la nappe et de distinguer une variation naturelle d'une dérive à surveiller.</p>
+      <h3>Seuils et alertes</h3>
+      <p>Des seuils haut et bas peuvent être définis ouvrage par ouvrage. Tout relevé hors plage est signalé dès la saisie et repris dans la synthèse de campagne.</p>
+      <p style="background:#fff8e1;border-left:4px solid #f5b94d;padding:14px 18px;border-radius:6px;margin-top:18px;">
+        <strong>Le logiciel ne se substitue pas à l'expertise de l'hydrogéologue</strong>, ni aux demandes éventuelles de la DREAL, de la DDT(M), du maître d'ouvrage ou du bureau de contrôle.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION — LIVRABLES -->
+<!-- ==================================================================== -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Livrables</span>
+      <h2>Des relevés terrain au rapport de surveillance</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Tableaux de campagne</h3>
+        <p>Récapitulatif complet du réseau pour chaque campagne : cotes piézométriques, écarts et ouvrages en alerte.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Chroniques piézométriques</h3>
+        <p>Historique par ouvrage sur toute la durée du suivi, prêt à être intégré au rapport de surveillance annuel.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Export / import JSON</h3>
+        <p>Le réseau complet et ses relevés — pour archivage, partage entre postes ou reprise du suivi par un autre intervenant.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- TARIF -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Tarif</span>
+      <h2>Licence annuelle</h2>
+    </div>
+    <div class="pricing-grid" style="max-width:560px;margin:0 auto;">
+      <div class="price-card featured" id="piezometres_annual" style="border-color:#1B474D;">
+        <span class="badge" style="background:#1B474D;color:#fff;">NOUVEAU</span>
+        <h3>Piézomètres de Surveillance v2.9c</h3>
+        <p class="sub">Abonnement annuel — 1 poste</p>
+        <div class="price-amount" style="color:#1a2b4a;"><span class="currency">€</span>1 100</div>
+        <div class="price-period">HT / an (1 320 € TTC)</div>
+        <div class="country-select">
+          <label for="country-piezometres-a">Pays de facturation</label>
+          <select id="country-piezometres-a">
+            <option value="FR">France métropolitaine (TVA 20 %)</option>
+            <option value="FR-DOM">DROM (Guadeloupe, Martinique, Réunion, Mayotte, Guyane)</option>
+            <option value="EU">Union européenne (hors France)</option>
+            <option value="INTL">Hors Union européenne</option>
+          </select>
+        </div>
+        <div class="price-breakdown">
+          <div class="pb-row"><span>Montant HT</span><span data-ht="1100">1 100,00 €</span></div>
+          <div class="pb-row"><span data-tva-label>TVA 20 %</span><span data-tva-val>220,00 €</span></div>
+          <div class="pb-row pb-total"><span>Total TTC</span><span data-ttc-val>1 320,00 €</span></div>
+        </div>
+        <p style="font-size:12px;color:var(--text-mute);margin-bottom:var(--sp-4)" data-vat-note>TVA française au taux normal de 20 % (art. 278 du CGI).</p>
+        <ul class="price-features">
+          <li>Inventaire illimité de piézomètres, organisé par site</li>
+          <li>Saisie des campagnes et calcul automatique des cotes piézométriques</li>
+          <li>Historique et chronique par ouvrage</li>
+          <li>Seuils haut / bas et alertes de dépassement</li>
+          <li>Synthèse de campagne et comparaison inter-ouvrages</li>
+          <li>Export des relevés + export / import JSON du réseau</li>
+          <li>Mises à jour fonctionnelles incluses</li>
+          <li>Essai gratuit 14 jours inclus</li>
+        </ul>
+        <a href="https://app.gmep-france.eu/subscribe-piezometres" rel="noopener" class="btn btn-primary btn-block" style="margin-bottom:8px;background:#1B474D;border-color:#1B474D;">Souscrire — Licence annuelle</a>
+        <p style="text-align:center;font-size:0.74rem;color:var(--text-mute);margin-top:6px;">
+          <svg width="11" height="13" viewBox="0 0 12 14" fill="none" style="vertical-align:middle;margin-right:3px;" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="6" width="10" height="8" rx="2" stroke="#6B7280" stroke-width="1.5"/><path d="M3.5 6V4a2.5 2.5 0 0 1 5 0v2" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Paiement sécurisé par <strong style="color:#635BFF;">Stripe</strong> — résiliable à tout moment
+        </p>
+      </div>
+    </div>
+    <div class="text-center mt-6">
+      <a href="https://app.gmep-france.eu/subscribe-piezometres" rel="noopener" class="btn btn-ghost">Essai gratuit 14 jours — sans carte bancaire</a>
+    </div>
+    <p style="text-align:center;font-size:13px;color:var(--text-mute,#6b7280);margin-top:16px;">Complémentaire de <a href="rabattement/index.html">Rabattement de nappe</a> pour le suivi des ouvrages pendant et après travaux. Formation ou accompagnement réglementaire personnalisé : sur devis — <a href="../contact.html">contactez GMEP</a>.</p>
+  </div>
+</section>
+
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tél. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nos outils</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/msp.html">MSP — Sources de Pollution des Sols</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modélisation GEP — DLE &amp; Loi sur l'Eau</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modélisation Essai de Porchet</a></li>
+          <li><a href="../outils/piezometres.html">Piézomètres de Surveillance</a></li>
+          <li><a href="../outils/anc-assainissement.html">Dimensionnement ANC</a></li>
+          <li><a href="../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../outils/domenico.html">Transfert Sol → Nappe → Captage</a></li>
+          <li><a href="../outils/rabattement/index.html">Rabattement de nappe IOTA</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Société</h6>
+        <ul>
+          <li><a href="../tarifs.html">Tarifs</a></li>
+          <li><a href="../guide-11-outils/index.html">Guide 13 outils (PDF)</a></li>
+          <li><a href="../expertise.html">Expertise</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../mentions-legales.html">Mentions légales</a></li>
+          <li><a href="../cgv.html">CGV</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Tous droits réservés.</p>
+        <p>Tous nos logiciels sont la propriété exclusive de la SARL G.M.E.P. Toute reproduction, diffusion ou utilisation, même partielle, sans autorisation écrite préalable est interdite.</p>
+        <p class="credit">Conception et développement : Eric Azulay — Gérant SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/nav.js"></script>
+<script src="../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

@@ -15,8 +15,10 @@ import DashboardPage from "@/pages/dashboard";
 import ToolPage from "@/pages/tool";
 import TsnPage from "@/pages/tsn";
 import SubscribeTsnPage from "@/pages/subscribe-tsn";
+import SubscribeDomenicoPage from "@/pages/subscribe-domenico";
 import RabattementPage from "@/pages/rabattement";
 import SubscribeRabattementPage from "@/pages/subscribe-rabattement";
+import SubscribeRabattementV15Page from "@/pages/subscribe-rabattement-v15";
 import TarifsPage from "@/pages/tarifs";
 import ContactPage from "@/pages/contact";
 import MentionsLegalesPage from "@/pages/mentions-legales";
@@ -31,6 +33,8 @@ import SubscribeSchemaConceptuelPage from "@/pages/subscribe-schema-conceptuel";
 import SubscribePiezometresPage from "@/pages/subscribe-piezometres";
 import SubscribeMspPage from "@/pages/subscribe-msp";
 import SubscribeEauxPluvialesPage from "@/pages/subscribe-eaux-pluviales";
+import SubscribePorchetPage from "@/pages/subscribe-porchet";
+import SubscribeAncPage from "@/pages/subscribe-anc";
 import SubscribeEqrsV8HumainPage from "@/pages/subscribe-eqrs-v8-humain";
 import SubscribeSsp3dPage from "@/pages/subscribe-ssp3d";
 import NotFound from "@/pages/not-found";
@@ -74,8 +78,10 @@ function AppRouter() {
       <Route path="/app" component={ToolPage} />
       <Route path="/tsn" component={TsnPage} />
       <Route path="/subscribe-tsn" component={SubscribeTsnPage} />
+      <Route path="/subscribe-domenico" component={SubscribeDomenicoPage} />
       <Route path="/rabattement" component={RabattementPage} />
       <Route path="/subscribe-rabattement" component={SubscribeRabattementPage} />
+      <Route path="/subscribe-rabattement-v15" component={SubscribeRabattementV15Page} />
       <Route path="/stats" component={StatsPage} />
       <Route path="/tarifs" component={TarifsPage} />
       <Route path="/contact" component={ContactPage} />
@@ -92,6 +98,8 @@ function AppRouter() {
       <Route path="/subscribe-piezometres" component={SubscribePiezometresPage} />
       <Route path="/subscribe-msp" component={SubscribeMspPage} />
       <Route path="/subscribe-eaux-pluviales" component={SubscribeEauxPluvialesPage} />
+      <Route path="/subscribe-porchet" component={SubscribePorchetPage} />
+      <Route path="/subscribe-anc" component={SubscribeAncPage} />
       <Route path="/subscribe-eqrs-v8-humain" component={SubscribeEqrsV8HumainPage} />
       <Route path="/subscribe-ssp3d" component={SubscribeSsp3dPage} />
       <Route component={NotFound} />

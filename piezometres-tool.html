@@ -2,1155 +2,1768 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>GMEP Piézomètres v2.9c — Dimensionnement et implantation</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G.M.E.P — Piézomètres de Surveillance</title>
 <style>
-:root{
-  --primary:#1a5276;
-  --header:#0e2f44;
-  --accent:#39e07a;
-  --yellow:#fff2cc;
-  --text:#1a1a1a;
-  --muted:#5b6770;
-  --panel:#f2f4f6;
-  --border:#d6dce0;
-  --bg:#ffffff;
-  --ok:#1a7a4a;
-  --warn:#b8860b;
-  --ko:#b23a48;
-  --orange:#e67e22;
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;background:#f0f3f6;color:var(--text);line-height:1.5}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: #f5f7fa;
+    color: #222;
+    font-size: 13px;
+    min-height: 100vh;
+  }
 
-/* HEADER */
-header.gmep-header{background:var(--header);color:#fff;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-.gmep-logo{font-size:26px;font-weight:700;letter-spacing:2px}
-.gmep-logo .e{color:var(--accent)}
-.gmep-logo-sub{font-size:10px;color:#a8c8d8;letter-spacing:1px;margin-top:2px}
-.gmep-title-block h1{margin:0;font-size:16px;font-weight:700;color:#fff}
-.gmep-title-block .version{font-size:11px;color:#a8c8d8;margin-top:3px}
+  /* ── HEADER ── */
+  #main-header {
+    position: sticky; top: 0; z-index: 100;
+    background: #1B474D;
+    color: #fff;
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 24px;
+    height: 52px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+  #main-header svg { flex-shrink: 0; }
+  #main-header h1 { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
+  #main-header span.sub { font-size: 11px; opacity: .75; margin-left: 6px; }
 
-/* TABS */
-.tab-bar{background:var(--primary);display:flex;flex-wrap:wrap;gap:2px;padding:0 16px}
-.tab-btn{background:transparent;border:none;color:#a8c8d8;padding:10px 16px;cursor:pointer;font-size:13px;font-weight:600;border-bottom:3px solid transparent;transition:all .2s}
-.tab-btn.active{color:#fff;border-bottom-color:var(--accent)}
-.tab-btn:hover{color:#fff}
+  /* ── TABS ── */
+  #tab-bar {
+    background: #e8eff0;
+    border-bottom: 2px solid #1B474D;
+    display: flex; align-items: flex-end;
+    padding: 0 24px;
+    gap: 4px;
+  }
+  .tab-btn {
+    background: #d0dfe0; border: 1px solid #b0c8cc; border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    padding: 8px 20px; cursor: pointer;
+    font-size: 12px; font-weight: 600; color: #1B474D;
+    transition: background .15s;
+    margin-bottom: -2px;
+  }
+  .tab-btn:hover { background: #c0d6d8; }
+  .tab-btn.active {
+    background: #fff; border-color: #1B474D; color: #1B474D;
+    border-bottom: 2px solid #fff;
+  }
 
-/* MAIN */
-.app-body{max-width:1600px;margin:0 auto;padding:18px}
+  /* ── CONTENT ── */
+  .tab-panel { display: none; max-width: 1200px; margin: 0 auto; padding: 20px 24px 40px; }
+  .tab-panel.active { display: block; }
 
-.tab-panel{display:none}
-.tab-panel.active{display:block}
+  /* ── SECTION CARDS ── */
+  .section-card {
+    background: #fff; border: 1px solid #d0dfe0;
+    border-radius: 6px; margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .section-title {
+    background: #1B474D; color: #fff;
+    padding: 8px 14px; font-size: 12px; font-weight: 700;
+    letter-spacing: .3px;
+  }
+  .section-body { padding: 14px 16px; }
 
-/* CARDS */
-.card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:16px;box-shadow:0 2px 5px rgba(0,0,0,.04)}
-.card h2{margin:0 0 14px;font-size:15px;color:var(--primary);border-bottom:2px solid var(--primary);padding-bottom:8px}
-.card h3{margin:12px 0 8px;font-size:13px;color:var(--primary);font-weight:700}
+  /* ── FORM GRID ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 4px; }
+  .form-group label { font-size: 11px; font-weight: 600; color: #555; }
+  input.inp-yellow, select.inp-yellow {
+    background: #FFFACD; border: 1px solid #c8b832;
+    border-radius: 3px; padding: 5px 8px; font-size: 12px; width: 100%;
+    color: #222;
+  }
+  input.inp-yellow:focus, select.inp-yellow:focus { outline: 2px solid #E8730A; }
+  input.inp-green {
+    background: #E8F5E9; border: 1px solid #88c888;
+    border-radius: 3px; padding: 5px 8px; font-size: 12px; width: 100%;
+    color: #1A3A20; font-weight: 600;
+  }
+  input[readonly] { cursor: default; }
+  .inp-label {
+    background: #E8F0F1; border: 1px solid #c0cdd0;
+    border-radius: 3px; padding: 5px 8px; font-size: 12px; width: 100%;
+    color: #555;
+  }
 
-/* GRID FORMS */
-.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.form-group{display:flex;flex-direction:column;gap:4px}
-.form-group label{font-size:12px;font-weight:600;color:var(--muted)}
-.form-group input,.form-group select,.form-group textarea{font:inherit;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:#fff}
-.form-group input:focus,.form-group select:focus{outline:2px solid var(--primary);outline-offset:1px}
-.form-group .unit{font-size:11px;color:var(--muted);margin-top:2px}
+  /* ── PZ TABLE ── */
+  .pz-table-wrap { overflow-x: auto; }
+  .pz-table {
+    border-collapse: collapse; width: 100%; min-width: 680px;
+    font-size: 12px;
+  }
+  .pz-table th, .pz-table td {
+    border: 1px solid #c0cdd0; padding: 5px 8px; white-space: nowrap;
+  }
+  .pz-table thead th { font-weight: 700; text-align: center; color: #fff; font-size: 12px; }
+  .pz-table .th-label { background: #E8F0F1; color: #333; font-weight: 600; }
+  .pz-table .th-pz1 { background: #1B474D; }
+  .pz-table .th-pz2 { background: #1A2E4A; }
+  .pz-table .th-pz3 { background: #1A3A20; }
+  .pz-table .th-pz4 { background: #5C1A2A; }
+  .pz-table td input, .pz-table td select {
+    width: 100%; border: none; background: transparent;
+    font-size: 12px; padding: 2px 4px;
+  }
+  .pz-table td.pz-yellow { background: #FFFACD; }
+  .pz-table td.pz-yellow input, .pz-table td.pz-yellow select { background: #FFFACD; }
+  .pz-table td.pz-label { background: #E8F0F1; }
+  .col-disabled { opacity: .35; pointer-events: none; }
 
-/* INFOBOX */
-.infobox{background:var(--yellow);border-left:4px solid #d4ac0d;border-radius:6px;padding:10px 14px;font-size:12px;margin-bottom:14px}
-.infobox strong{color:#7d6608}
-.infobox.green{background:#d5f5e3;border-left-color:var(--ok)}
-.infobox.red{background:#fadbd8;border-left-color:var(--ko)}
-.infobox.blue{background:#d6eaf8;border-left-color:var(--primary)}
+  /* ── RECAP TABLE ── */
+  .recap-table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  .recap-table th { background: #1B474D; color: #fff; padding: 7px 10px; font-size: 11px; font-weight: 600; border: 1px solid #0e3035; }
+  .recap-table td { background: #E8F5E9; border: 1px solid #c0d8c0; padding: 5px 10px; }
+  .recap-table tr:nth-child(even) td { background: #d4ecda; }
+  .code-minier-yes { color: #c00; font-weight: 700; }
+  .code-minier-no  { color: #1A3A20; font-weight: 700; }
 
-/* BUTTONS */
-.btn{display:inline-block;padding:8px 18px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;transition:filter .15s}
-.btn-primary{background:var(--primary);color:#fff}
-.btn-accent{background:var(--accent);color:#0e2f44}
-.btn-secondary{background:var(--panel);color:var(--primary);border:1px solid var(--border)}
-.btn-danger{background:#fadbd8;color:var(--ko);border:1px solid #f1948a}
-.btn:hover{filter:brightness(1.08)}
+  /* ── GEO TABLE ── */
+  .geo-table-wrap { overflow-x: auto; }
+  .geo-table { border-collapse: collapse; width: 100%; font-size: 11px; min-width: 900px; }
+  .geo-table th { background: #1B474D; color: #fff; padding: 6px 8px; border: 1px solid #0e3035; white-space: nowrap; font-size: 11px; }
+  .geo-table td { border: 1px solid #c8d4d6; padding: 4px 8px; white-space: nowrap; }
+  .geo-table tr:nth-child(even) td { background: #f0f7f8; }
+  .geo-table tr:hover td { background: #e0eff1; }
 
-/* TABLES */
-.data-table{width:100%;border-collapse:collapse;font-size:12.5px}
-.data-table th{background:var(--primary);color:#fff;padding:8px 10px;text-align:left;font-size:12px;font-weight:600}
-.data-table td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
-.data-table tr:nth-child(even) td{background:#fafbfc}
-.data-table tr:hover td{background:#eaf2fb}
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700}
-.badge-ok{background:#d5f5e3;color:var(--ok)}
-.badge-warn{background:#fef9e7;color:var(--warn)}
-.badge-ko{background:#fadbd8;color:var(--ko)}
-.badge-blue{background:#d6eaf8;color:var(--primary)}
+  /* ── SOMMAIRE ── */
+  .sommaire-list { list-style: none; padding: 0; }
+  .sommaire-list li {
+    padding: 6px 12px; border-bottom: 1px solid #e8eef0;
+    font-size: 13px; color: #1B474D;
+  }
+  .sommaire-list li:last-child { border-bottom: none; }
+  .sommaire-list li.level1 { font-weight: 700; background: #f0f7f8; }
+  .sommaire-list li.level2 { padding-left: 28px; color: #333; }
+  .sommaire-list li.level25 { padding-left: 40px; color: #555; font-size: 12px; }
 
-/* RESULTS */
-.result-block{background:var(--panel);border-radius:8px;padding:14px;margin-bottom:12px}
-.result-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed #d6dce0}
-.result-row:last-child{border-bottom:none}
-.result-label{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
-.result-value{font-size:14px;font-weight:700;color:var(--primary)}
-.result-value.ok{color:var(--ok)}
-.result-value.warn{color:var(--warn)}
-.result-value.ko{color:var(--ko)}
+  /* ── BUTTONS ── */
+  .btn-orange {
+    background: #E8730A; color: #fff;
+    border: none; border-radius: 5px; padding: 10px 28px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    letter-spacing: .3px; transition: background .15s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-orange:hover { background: #c95e00; }
+  .btn-center { text-align: center; margin: 24px 0; }
 
-/* MAP */
-#map{height:480px;border-radius:8px;border:1px solid var(--border)}
+  .note-blue {
+    background: #e8f0fa; border-left: 3px solid #1A2E4A;
+    padding: 7px 12px; border-radius: 0 4px 4px 0;
+    font-size: 11px; color: #1A2E4A; margin-bottom: 10px;
+  }
 
-/* CONFORMITE */
-.iota-box{border:2px solid;border-radius:8px;padding:14px;margin-bottom:10px}
-.iota-box.declaration{border-color:#d4ac0d;background:#fef9e7}
-.iota-box.autorisation{border-color:var(--ko);background:#fadbd8}
-.iota-box.nc{border-color:var(--ok);background:#d5f5e3}
-.iota-title{font-size:13px;font-weight:700;margin-bottom:6px}
+  /* ── PZ COUNT ── */
+  .pz-count-bar {
+    background: #fff; border: 1px solid #d0dfe0; border-radius: 6px;
+    padding: 10px 16px; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .pz-count-bar label { font-weight: 700; color: #1B474D; font-size: 13px; }
+  .pz-count-bar input[type=number] {
+    width: 64px; padding: 5px 8px; border: 2px solid #1B474D;
+    border-radius: 4px; font-size: 14px; font-weight: 700;
+    text-align: center; color: #1B474D;
+    background: #f0f7f8;
+  }
+  .pz-count-bar .hint { font-size: 11px; color: #666; }
 
-/* PIEZOMETRES TABLE */
-.piez-controls{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
-.piez-idx{font-size:11px;font-weight:700;color:#fff;background:var(--primary);border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center}
+  /* ── TWO-COL ENTITY ── */
+  .entity-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
-/* POLLUTANTS */
-.pol-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;max-height:300px;overflow-y:auto;padding:4px}
-.pol-item{display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--panel);border-radius:6px;border:1px solid var(--border);cursor:pointer;transition:background .15s}
-.pol-item:hover{background:#d6eaf8}
-.pol-item.selected{background:#d5f5e3;border-color:var(--ok)}
-.pol-item input[type=checkbox]{accent-color:var(--primary)}
-.pol-family{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase}
-
-/* PRINT */
-@media print{
-  .tab-bar,.btn,.piez-controls,.no-print{display:none!important}
-  .tab-panel{display:block!important}
-  header.gmep-header{background:#0e2f44!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .card{break-inside:avoid;box-shadow:none;border:1px solid #ccc}
-  body{background:#fff}
-  .app-body{padding:0}
-  #map{display:none}
-}
-
-/* TOOLTIP */
-.tooltip-wrap{position:relative;display:inline-block}
-.help-icon{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--primary);color:#fff;font-size:10px;font-weight:700;cursor:help;vertical-align:middle;margin-left:4px}
-.tooltip-text{visibility:hidden;position:absolute;z-index:100;background:#0e2f44;color:#fff;font-size:11px;padding:6px 10px;border-radius:6px;white-space:nowrap;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);line-height:1.4;min-width:200px;white-space:normal}
-.tooltip-wrap:hover .tooltip-text{visibility:visible}
-
-/* RESPONSIVE */
-@media (max-width:800px){
-  .form-grid{grid-template-columns:1fr}
-  .tab-btn{padding:8px 10px;font-size:12px}
-}
-
-/* FOOTER */
-footer.gmep-footer{background:var(--header);color:#a8c8d8;font-size:11px;padding:14px 24px;text-align:center;margin-top:20px;line-height:1.8}
-footer.gmep-footer a{color:var(--accent)}
-
-/* CALC HIGHLIGHT */
-.formula-box{background:#f8f9fa;border:1px solid var(--border);border-radius:6px;padding:10px 14px;font-family:monospace;font-size:12px;color:var(--primary);margin:8px 0}
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: #f0f5f5; }
+  ::-webkit-scrollbar-thumb { background: #9bbfc3; border-radius: 4px; }
 </style>
 </head>
 <body>
 
-<header class="gmep-header">
-  <div>
-    <div class="gmep-logo">G.M.<span class="e">E</span>.P</div>
-    <div class="gmep-logo-sub">GLOBAL MANAGEMENT OF ENVIRONMENTAL PROJECT</div>
-  </div>
-  <div class="gmep-title-block">
-    <h1>GMEP Piézomètres v2.9c — Dimensionnement et implantation piézomètres de surveillance</h1>
-    <div class="version">Sites et Sols Pollués (SSP) · Loi sur l'Eau IOTA R.214-1 · ANSES IEM 2018 · INERIS DRC-09-103096-09387C</div>
-  </div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap" class="no-print">
-    <button class="btn btn-accent" onclick="window.print()">⎙ Rapport PDF</button>
-    <button class="btn btn-secondary" onclick="exportCSV()">↓ Export CSV</button>
-  </div>
+<!-- ════════════ HEADER ════════════ -->
+<header id="main-header">
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 4 C16 4 6 14 6 21 C6 26.5 10.5 30 16 30 C21.5 30 26 26.5 26 21 C26 14 16 4 16 4Z" fill="#E8730A" opacity=".85"/>
+    <path d="M16 10 C16 10 9 18 9 22 C9 25.3 12.1 28 16 28 C19.9 28 23 25.3 23 22 C23 18 16 10 16 10Z" fill="white" opacity=".35"/>
+    <circle cx="13" cy="20" r="2" fill="white" opacity=".6"/>
+  </svg>
+  <h1>G.M.E.P — Piézomètres de Surveillance</h1>
+  <span class="sub">Dossier Loi sur l'Eau (DLE)</span>
 </header>
 
-<div class="tab-bar no-print">
-  <button class="tab-btn active" onclick="showTab('site')">① Paramètres site</button>
-  <button class="tab-btn" onclick="showTab('polluants')">② Polluants</button>
-  <button class="tab-btn" onclick="showTab('hydrogeo')">③ Hydrogéologie</button>
-  <button class="tab-btn" onclick="showTab('piezos')">④ Piézomètres</button>
-  <button class="tab-btn" onclick="showTab('calcul')">⑤ Calcul implantation</button>
-  <button class="tab-btn" onclick="showTab('conformite')">⑥ Conformité IOTA</button>
-  <button class="tab-btn" onclick="showTab('carte')">⑦ Carte interactive</button>
+<!-- ════════════ TAB BAR ════════════ -->
+<div id="tab-bar">
+  <button class="tab-btn active" onclick="showTab('sommaire',this)">📋 Sommaire</button>
+  <button class="tab-btn" onclick="showTab('donnees',this)">📝 Données d'Entrée</button>
+  <button class="tab-btn" onclick="showTab('recap',this)">📊 Récapitulatif</button>
+  <button class="tab-btn" onclick="showTab('geologie',this)">🪨 Base Géologique</button>
 </div>
 
-<div class="app-body">
+<!-- ════════════════════════════════════
+     ONGLET 1 : SOMMAIRE
+════════════════════════════════════ -->
+<div id="tab-sommaire" class="tab-panel active">
 
-<!-- ========== TAB 1 : PARAMÈTRES SITE ========== -->
-<div id="tab-site" class="tab-panel active">
-  <div class="card">
-    <h2>Identification du site</h2>
-    <div class="form-grid">
-      <div class="form-group" style="grid-column:span 2">
-        <label>Nom du site / Dossier</label>
-        <input type="text" id="siteName" value="Site à compléter" oninput="syncAll()">
-      </div>
-      <div class="form-group" style="grid-column:span 2">
-        <label>Adresse / Commune</label>
-        <input type="text" id="siteAdresse" placeholder="ex. ZI les Pivolles, 69400 Arnas">
-      </div>
-      <div class="form-group">
-        <label>Référence dossier</label>
-        <input type="text" id="siteRef" value="PIEZ-2026/001">
-      </div>
-      <div class="form-group">
-        <label>Date de l'étude</label>
-        <input type="date" id="siteDate">
-      </div>
-      <div class="form-group">
-        <label>Bureau d'études / Rédacteur</label>
-        <input type="text" id="siteRedacteur" value="G.M.E.P — Eric Azulay">
-      </div>
-      <div class="form-group">
-        <label>Maître d'ouvrage</label>
-        <input type="text" id="siteMO" placeholder="Nom du client">
-      </div>
+  <div class="section-card" style="margin-top:16px;">
+    <div class="section-title">TABLE DES MATIÈRES — DOSSIER DLE PIÉZOMÈTRES</div>
+    <div class="section-body">
+      <ol class="sommaire-list">
+        <li class="level1">1. Objet de l'étude</li>
+        <li class="level1">2. Données du projet et paramètres hydrogéologiques</li>
+        <li class="level2">2.1 Caractéristiques des ouvrages</li>
+        <li class="level2">2.2 Paramètres hydrogéologiques</li>
+        <li class="level2">2.3 Paramètres intermédiaires de calcul</li>
+        <li class="level2">2.4 Analyse de sensibilité — Transmissivité / Conductivité</li>
+        <li class="level2">2.5 Topographie et formations lenticulaires (IPL)</li>
+        <li class="level1">3. Schémas techniques — Coupes des piézomètres</li>
+        <li class="level1">4. Vérification réglementaire — Nomenclature IOTA</li>
+        <li class="level2">4.1 Rubrique 1.1.1.0 — Déclaration</li>
+        <li class="level2">4.2 Rubrique 1.1.2.0 — Non applicable (ouvrages passifs)</li>
+        <li class="level2">4.3 Rubrique 1.3.1.0 — Zone de Répartition des Eaux</li>
+        <li class="level2">4.4 Rubriques 2.x.x.0 — Rejet eaux de purge</li>
+        <li class="level2">4.5 Masse d'eau souterraine — Code SANDRE</li>
+        <li class="level2">4.6 Code Minier L.411-1 — BSS (si profondeur &gt; 10 m)</li>
+        <li class="level2">4.7 Régime cumulé et délais d'instruction</li>
+        <li class="level1">5. Sensibilité environnementale</li>
+        <li class="level2">5.1 ZNIEFF Type I (rayon 500 m)</li>
+        <li class="level2">5.2 ZNIEFF Type II (rayon 1 000 m)</li>
+        <li class="level2">5.3 Zone Natura 2000 ZPS/ZSC (rayon 5 km)</li>
+        <li class="level2">5.4 Évaluation des incidences</li>
+        <li class="level1">6. Préconisations techniques</li>
+        <li class="level1">7. Conclusion — Synthèse réglementaire</li>
+      </ol>
     </div>
   </div>
 
-  <div class="card">
-    <h2>Localisation Lambert 93 (EPSG:2154)</h2>
-    <div class="infobox blue">
-      <strong>Système de projection :</strong> Lambert 93 (EPSG:2154) — Système officiel français pour les projets SSP et dossiers réglementaires. La conversion WGS84 est automatique pour la carte Leaflet.
-    </div>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>X Lambert 93 (m) <span class="tooltip-wrap"><span class="help-icon">?</span><span class="tooltip-text">Coordonnée Est en Lambert 93. Ex : 700 000 m pour la région Centre</span></span></label>
-        <input type="number" id="siteX" value="648500" oninput="syncAll()">
-        <span class="unit">m — Easting EPSG:2154</span>
-      </div>
-      <div class="form-group">
-        <label>Y Lambert 93 (m) <span class="tooltip-wrap"><span class="help-icon">?</span><span class="tooltip-text">Coordonnée Nord en Lambert 93. Ex : 6 860 000 m pour la Bretagne</span></span></label>
-        <input type="number" id="siteY" value="6860200" oninput="syncAll()">
-        <span class="unit">m — Northing EPSG:2154</span>
-      </div>
-      <div class="form-group">
-        <label>Surface du site (m²)</label>
-        <input type="number" id="siteSurface" value="2500" min="1" oninput="syncAll()">
-        <span class="unit">m² — détermine le nombre minimal de piézomètres</span>
-      </div>
-      <div class="form-group">
-        <label>Azimut d'écoulement (°N)</label>
-        <input type="number" id="siteAzimut" value="180" min="0" max="360" oninput="syncAll()">
-        <span class="unit">° depuis le Nord (180° = vers le Sud)</span>
-      </div>
-    </div>
-    <div style="margin-top:10px">
-      <div class="result-block">
-        <div class="result-row">
-          <span class="result-label">WGS84 Latitude (calculée)</span>
-          <span class="result-value" id="wgs84Lat">—</span>
+  <div class="btn-center">
+    <button class="btn-orange" onclick="exportJSON()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v13M7 11l5 5 5-5M3 21h18"/></svg>
+      ▶ Générer le PDF DLE
+    </button>
+    <p style="margin-top:10px;font-size:11px;color:#555;">
+      Exporte le fichier JSON → lancez ensuite <code style="background:#eee;padding:1px 4px;border-radius:2px;">_CLIQUEZ_ICI_GENERER_PDF.bat</code> pour obtenir le PDF.
+    </p>
+  </div>
+
+</div><!-- /sommaire -->
+
+<!-- ════════════════════════════════════
+     ONGLET 2 : DONNÉES D'ENTRÉE
+════════════════════════════════════ -->
+<div id="tab-donnees" class="tab-panel">
+
+  <!-- Nombre de PZ actifs -->
+  <div class="pz-count-bar" style="margin-top:16px;">
+    <label for="pz-count">Nombre de piézomètres actifs :</label>
+    <input type="number" id="pz-count" min="1" max="4" value="2" onchange="updatePZColumns()">
+    <span class="hint">Saisir entre 1 et 4 — les colonnes PZ inutilisées sont désactivées</span>
+  </div>
+
+  <!-- ── MAÎTRE D'OUVRAGE + ENTREPRISE DE TRAVAUX ── -->
+  <div class="section-card">
+    <div class="section-title">MAÎTRE D'OUVRAGE / ENTREPRISE DE TRAVAUX</div>
+    <div class="section-body">
+      <div class="entity-two-col">
+        <div>
+          <div style="font-weight:700;color:#1B474D;margin-bottom:8px;font-size:12px;">MAÎTRE D'OUVRAGE</div>
+          <div class="form-grid" style="grid-template-columns:1fr;">
+            <div class="form-group"><label>Nom / Raison sociale</label><input type="text" id="mo_nom" class="inp-yellow" oninput="updateRecap()"></div>
+            <div class="form-group"><label>Adresse</label><input type="text" id="mo_adresse" class="inp-yellow" oninput="updateRecap()"></div>
+            <div class="form-group"><label>Code postal / Ville</label><input type="text" id="mo_cp_ville" class="inp-yellow" oninput="updateRecap()"></div>
+            <div class="form-group"><label>Téléphone</label><input type="text" id="mo_tel" class="inp-yellow"></div>
+            <div class="form-group"><label>Email</label><input type="email" id="mo_email" class="inp-yellow"></div>
+            <div class="form-group"><label>SIRET</label><input type="text" id="mo_siret" class="inp-yellow"></div>
+          </div>
         </div>
-        <div class="result-row">
-          <span class="result-label">WGS84 Longitude (calculée)</span>
-          <span class="result-value" id="wgs84Lng">—</span>
+        <div>
+          <div style="font-weight:700;color:#1B474D;margin-bottom:8px;font-size:12px;">ENTREPRISE DE TRAVAUX</div>
+          <div class="form-grid" style="grid-template-columns:1fr;">
+            <div class="form-group"><label>Nom / Raison sociale</label><input type="text" id="et_nom" class="inp-yellow" oninput="updateRecap()"></div>
+            <div class="form-group"><label>Adresse</label><input type="text" id="et_adresse" class="inp-yellow"></div>
+            <div class="form-group"><label>Code postal / Ville</label><input type="text" id="et_cp_ville" class="inp-yellow"></div>
+            <div class="form-group"><label>Téléphone</label><input type="text" id="et_tel" class="inp-yellow"></div>
+            <div class="form-group"><label>Email</label><input type="email" id="et_email" class="inp-yellow"></div>
+            <div class="form-group"><label>SIRET</label><input type="text" id="et_siret" class="inp-yellow"></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="card">
-    <h2>Nature des sols et usage du site</h2>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Type d'usage du site</label>
-        <select id="siteUsage" oninput="syncAll()">
-          <option value="icpe_ind">ICPE — Industriel (actif)</option>
-          <option value="icpe_ancienne">ICPE — Ancienne / cessation d'activité</option>
-          <option value="ssp_res" selected>SSP — Résidentiel</option>
-          <option value="ssp_tert">SSP — Tertiaire / bureau</option>
-          <option value="aep">Captage AEP / périmètre de protection</option>
-          <option value="autre">Autre</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Nature lithologique principale</label>
-        <select id="siteLitho">
-          <option value="sables">Sables / Graviers</option>
-          <option value="argiles_sableuses" selected>Argiles sableuses / Limons</option>
-          <option value="argiles">Argiles compactes</option>
-          <option value="craie">Craie</option>
-          <option value="calcaire">Calcaire fissuré / karstique</option>
-          <option value="granite">Granite / Socle cristallin</option>
-          <option value="remblais">Remblais hétérogènes</option>
-          <option value="alluvions">Alluvions fluviatiles</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Profondeur nappe (m/sol)</label>
-        <input type="number" id="profNappe" value="4" step="0.5" min="0" oninput="syncAll()">
-      </div>
-      <div class="form-group">
-        <label>Présence d'ICPE (oui/non)</label>
-        <select id="siteICPE">
-          <option value="oui">Oui</option>
-          <option value="non" selected>Non</option>
-        </select>
-      </div>
-      <div class="form-group" style="grid-column:span 2">
-        <label>Contexte hydrogéologique</label>
-        <textarea id="siteHydroContext" rows="2" style="resize:vertical" placeholder="ex. Nappe alluviale de la Marne, épaisseur saturée ~8m, niveau piézométrique ~4m/sol..."></textarea>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== TAB 2 : POLLUANTS ========== -->
-<div id="tab-polluants" class="tab-panel">
-  <div class="card">
-    <h2>Sélection des substances à surveiller</h2>
-    <div class="infobox">
-      <strong>Base de données :</strong> 55 substances pré-paramétrées avec seuils réglementaires (µg/L). Sélectionnez les polluants présents sur le site — ils seront intégrés au dossier IOTA et au rapport PDF.
-    </div>
-    <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap" class="no-print">
-      <button class="btn btn-secondary" onclick="selectFamily('BTEX')">BTEX</button>
-      <button class="btn btn-secondary" onclick="selectFamily('HAP')">HAP</button>
-      <button class="btn btn-secondary" onclick="selectFamily('Métaux')">Métaux</button>
-      <button class="btn btn-secondary" onclick="selectFamily('COHV')">COHV</button>
-      <button class="btn btn-secondary" onclick="selectFamily('PFAS')">PFAS</button>
-      <button class="btn btn-secondary" onclick="selectFamily('PCB')">PCB</button>
-      <button class="btn btn-secondary" onclick="selectFamily('Pesticides')">Pesticides</button>
-      <button class="btn btn-accent" onclick="selectAllPol()">Tout sélectionner</button>
-      <button class="btn btn-danger" onclick="deselectAllPol()">Tout désélectionner</button>
-    </div>
-    <div class="pol-grid" id="polGrid"></div>
-  </div>
-
-  <div class="card">
-    <h2>Substances sélectionnées — Seuils de surveillance</h2>
-    <div id="polSelectedTable">
-      <div style="color:var(--muted);font-style:italic;padding:20px;text-align:center">Sélectionnez des substances ci-dessus pour les afficher ici.</div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== TAB 3 : HYDROGÉOLOGIE ========== -->
-<div id="tab-hydrogeo" class="tab-panel">
-  <div class="card">
-    <h2>Paramètres hydrogéologiques</h2>
-    <div class="infobox blue">
-      <strong>Références :</strong> Perméabilité K et gradient hydraulique i selon BRGM / BSS. Porosité efficace ne selon lithologie (INERIS DRC-09-103096-09387C).
-    </div>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Perméabilité K (m/s) <span class="tooltip-wrap"><span class="help-icon">?</span><span class="tooltip-text">Conductivité hydraulique saturée. Sables grossiers : 10⁻³ ; Sables fins : 10⁻⁴ ; Limons : 10⁻⁶ ; Argiles : &lt;10⁻⁸</span></span></label>
-        <input type="number" id="K_ms" value="0.0001" step="0.00001" min="0" oninput="computeHydro()">
-        <span class="unit">m/s — conductivité hydraulique saturée</span>
-      </div>
-      <div class="form-group">
-        <label>K en m/jour (calculé)</label>
-        <input type="text" id="K_mjour" readonly style="background:#f8f9fa">
-        <span class="unit">m/jour (=K×86400)</span>
-      </div>
-      <div class="form-group">
-        <label>Gradient hydraulique i <span class="tooltip-wrap"><span class="help-icon">?</span><span class="tooltip-text">i = ΔH/L. Valeurs typiques : plaine alluviale 0.001-0.005 ; versant 0.01-0.05</span></span></label>
-        <input type="number" id="gradI" value="0.005" step="0.001" min="0" oninput="computeHydro()">
-        <span class="unit">sans unité (adimensionnel)</span>
-      </div>
-      <div class="form-group">
-        <label>Porosité efficace ne <span class="tooltip-wrap"><span class="help-icon">?</span><span class="tooltip-text">Sables grossiers : 0.25-0.35 ; Sables fins : 0.15-0.25 ; Limons : 0.10-0.20 ; Craie : 0.02-0.10</span></span></label>
-        <input type="number" id="ne" value="0.20" step="0.01" min="0.001" max="0.60" oninput="computeHydro()">
-        <span class="unit">sans unité (entre 0.01 et 0.50)</span>
-      </div>
-      <div class="form-group">
-        <label>Épaisseur aquifère saturée e (m)</label>
-        <input type="number" id="eAquifere" value="8" step="0.5" min="0" oninput="computeHydro()">
-        <span class="unit">m — épaisseur de la zone saturée</span>
-      </div>
-      <div class="form-group">
-        <label>Rabattement estimé s (m) <span class="tooltip-wrap"><span class="help-icon">?</span><span class="tooltip-text">Utilisé pour le calcul du rayon de Sichardt. Rabattement induit par les piézomètres ou pompage.</span></span></label>
-        <input type="number" id="rabattement" value="1.5" step="0.1" min="0" oninput="computeHydro()">
-        <span class="unit">m — pour calcul rayon Sichardt</span>
+  <!-- ── BUREAU D'ÉTUDES / SOCIÉTÉ DE FORAGE ── -->
+  <div class="section-card">
+    <div class="section-title">BUREAU D'ÉTUDES / SOCIÉTÉ DE FORAGE</div>
+    <div class="section-body">
+      <div class="entity-two-col">
+        <div>
+          <div style="font-weight:700;color:#1B474D;margin-bottom:8px;font-size:12px;">BUREAU D'ÉTUDES</div>
+          <div class="form-grid" style="grid-template-columns:1fr;">
+            <div class="form-group"><label>Nom / Raison sociale</label><input type="text" id="be_nom" class="inp-yellow" value="G.M.E.P"></div>
+            <div class="form-group"><label>Adresse</label><input type="text" id="be_adresse" class="inp-yellow" value="9 rue de la Marne"></div>
+            <div class="form-group"><label>Code postal / Ville</label><input type="text" id="be_cp_ville" class="inp-yellow" value="79400 Saint-Maixent-l'&#201;cole"></div>
+            <div class="form-group"><label>Téléphone</label><input type="text" id="be_tel" class="inp-yellow" value="06.97.73.72.33"></div>
+            <div class="form-group"><label>Email</label><input type="email" id="be_email" class="inp-yellow" value="gmep.france@gmail.com"></div>
+            <div class="form-group"><label>SIRET</label><input type="text" id="be_siret" class="inp-yellow" value="75309762500010"></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-weight:700;color:#1B474D;margin-bottom:8px;font-size:12px;">SOCIÉTÉ DE FORAGE</div>
+          <div class="form-grid" style="grid-template-columns:1fr;">
+            <div class="form-group"><label>Nom / Raison sociale</label><input type="text" id="sf_nom" class="inp-yellow"></div>
+            <div class="form-group"><label>Adresse</label><input type="text" id="sf_adresse" class="inp-yellow"></div>
+            <div class="form-group"><label>Code postal / Ville</label><input type="text" id="sf_cp_ville" class="inp-yellow"></div>
+            <div class="form-group"><label>Téléphone</label><input type="text" id="sf_tel" class="inp-yellow"></div>
+            <div class="form-group"><label>Email</label><input type="email" id="sf_email" class="inp-yellow"></div>
+            <div class="form-group"><label>SIRET</label><input type="text" id="sf_siret" class="inp-yellow"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="card">
-    <h2>Résultats hydrogéologiques calculés</h2>
-    <div class="result-block">
-      <div class="result-row">
-        <span class="result-label">
-          Vitesse de Darcy v = K × i
-          <span class="tooltip-wrap"><span class="help-icon">?</span><span class="tooltip-text">Vitesse apparente de l'eau dans l'aquifère (flux volumique / section)</span></span>
-        </span>
-        <span class="result-value" id="res_darcy">—</span>
+  <!-- ── CARACTÉRISTIQUES DES PIÉZOMÈTRES ── -->
+  <div class="section-card">
+    <div class="section-title">CARACTÉRISTIQUES DES PIÉZOMÈTRES</div>
+    <div class="section-body">
+      <div class="pz-table-wrap">
+        <table class="pz-table" id="pz-chars-table">
+          <thead>
+            <tr>
+              <th class="th-label" style="min-width:220px;">Paramètre</th>
+              <th class="th-pz1" id="th-pz1" style="min-width:130px;">PZ-1</th>
+              <th class="th-pz2" id="th-pz2" style="min-width:130px;">PZ-2</th>
+              <th class="th-pz3" id="th-pz3" style="min-width:130px;">PZ-3</th>
+              <th class="th-pz4" id="th-pz4" style="min-width:130px;">PZ-4</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Profondeur totale -->
+            <tr>
+              <td class="pz-label">Profondeur totale (m/TN)</td>
+              <td class="pz-yellow pz-col pz-col-1"><input type="number" step="0.01" id="pz1_profondeur" value="8" oninput="updateRecap()" name="pz1_profondeur"></td>
+              <td class="pz-yellow pz-col pz-col-2"><input type="number" step="0.01" id="pz2_profondeur" value="15" oninput="updateRecap()" name="pz2_profondeur"></td>
+              <td class="pz-yellow pz-col pz-col-3"><input type="number" step="0.01" id="pz3_profondeur" oninput="updateRecap()" name="pz3_profondeur"></td>
+              <td class="pz-yellow pz-col pz-col-4"><input type="number" step="0.01" id="pz4_profondeur" oninput="updateRecap()" name="pz4_profondeur"></td>
+            </tr>
+            <!-- Altimétrie tête -->
+            <tr>
+              <td class="pz-label">Altimétrie tête (m NGF)</td>
+              <td class="pz-yellow pz-col pz-col-1"><input type="number" step="0.01" id="pz1_altimetrie_tete" value="124.63" oninput="updateRecap()"></td>
+              <td class="pz-yellow pz-col pz-col-2"><input type="number" step="0.01" id="pz2_altimetrie_tete" value="124" oninput="updateRecap()"></td>
+              <td class="pz-yellow pz-col pz-col-3"><input type="number" step="0.01" id="pz3_altimetrie_tete" oninput="updateRecap()"></td>
+              <td class="pz-yellow pz-col pz-col-4"><input type="number" step="0.01" id="pz4_altimetrie_tete" oninput="updateRecap()"></td>
+            </tr>
+            <!-- Tubage plein -->
+            <tr>
+              <td class="pz-label">Hauteur tubage plein (m)</td>
+              <td class="pz-yellow pz-col pz-col-1"><input type="number" step="0.01" id="pz1_tubage_plein" value="3" oninput="updateRecap()"></td>
+              <td class="pz-yellow pz-col pz-col-2"><input type="number" step="0.01" id="pz2_tubage_plein" value="5" oninput="updateRecap()"></td>
+              <td class="pz-yellow pz-col pz-col-3"><input type="number" step="0.01" id="pz3_tubage_plein" oninput="updateRecap()"></td>
+              <td class="pz-yellow pz-col pz-col-4"><input type="number" step="0.01" id="pz4_tubage_plein" oninput="updateRecap()"></td>
+            </tr>
+            <!-- Tubage crépiné -->
+            <tr>
+              <td class="pz-label">Hauteur tubage crépiné (m)</td>
+              <td class="pz-yellow pz-col pz-col-1"><input type="number" step="0.01" id="pz1_tubage_crepine" value="5" oninput="updateRecap()"></td>
+              <td class="pz-yellow pz-col pz-col-2"><input type="number" step="0.01" id="pz2_tubage_crepine" value="10" oninput="updateRecap()"></td>
+              <td class="pz-yellow pz-col pz-col-3"><input type="number" step="0.01" id="pz3_tubage_crepine" oninput="updateRecap()"></td>
+              <td class="pz-yellow pz-col pz-col-4"><input type="number" step="0.01" id="pz4_tubage_crepine" oninput="updateRecap()"></td>
+            </tr>
+            <!-- Di -->
+            <tr>
+              <td class="pz-label">Diamètre intérieur Di (m)</td>
+              <td class="pz-yellow pz-col pz-col-1"><input type="number" step="0.001" id="pz1_di" value="0.063" oninput="updateRecap()"></td>
+              <td class="pz-yellow pz-col pz-col-2"><input type="number" step="0.001" id="pz2_di" value="0.063" oninput="updateRecap()"></td>
+              <td class="pz-yellow pz-col pz-col-3"><input type="number" step="0.001" id="pz3_di" oninput="updateRecap()"></td>
+              <td class="pz-yellow pz-col pz-col-4"><input type="number" step="0.001" id="pz4_di" oninput="updateRecap()"></td>
+            </tr>
+            <!-- De -->
+            <tr>
+              <td class="pz-label">Diamètre extérieur De (m)</td>
+              <td class="pz-yellow pz-col pz-col-1"><input type="number" step="0.001" id="pz1_de" value="0.08"></td>
+              <td class="pz-yellow pz-col pz-col-2"><input type="number" step="0.001" id="pz2_de" value="0.08"></td>
+              <td class="pz-yellow pz-col pz-col-3"><input type="number" step="0.001" id="pz3_de"></td>
+              <td class="pz-yellow pz-col pz-col-4"><input type="number" step="0.001" id="pz4_de"></td>
+            </tr>
+            <!-- Massif filtrant hauteur -->
+            <tr>
+              <td class="pz-label">Hauteur massif filtrant (m)</td>
+              <td class="pz-yellow pz-col pz-col-1"><input type="number" step="0.01" id="pz1_massif_filtrant" value="4.5"></td>
+              <td class="pz-yellow pz-col pz-col-2"><input type="number" step="0.01" id="pz2_massif_filtrant" value="9"></td>
+              <td class="pz-yellow pz-col pz-col-3"><input type="number" step="0.01" id="pz3_massif_filtrant"></td>
+              <td class="pz-yellow pz-col pz-col-4"><input type="number" step="0.01" id="pz4_massif_filtrant"></td>
+            </tr>
+            <!-- Bentonite -->
+            <tr>
+              <td class="pz-label">Hauteur étanchéité bentonite (m)</td>
+              <td class="pz-yellow pz-col pz-col-1"><input type="number" step="0.01" id="pz1_bentonite" value="2.5"></td>
+              <td class="pz-yellow pz-col pz-col-2"><input type="number" step="0.01" id="pz2_bentonite" value="3"></td>
+              <td class="pz-yellow pz-col pz-col-3"><input type="number" step="0.01" id="pz3_bentonite"></td>
+              <td class="pz-yellow pz-col pz-col-4"><input type="number" step="0.01" id="pz4_bentonite"></td>
+            </tr>
+            <!-- NS -->
+            <tr>
+              <td class="pz-label">Niveau statique NS (m/TN)</td>
+              <td class="pz-yellow pz-col pz-col-1"><input type="number" step="0.01" id="pz1_ns" value="2.5" oninput="updateRecap()"></td>
+              <td class="pz-yellow pz-col pz-col-2"><input type="number" step="0.01" id="pz2_ns" value="3" oninput="updateRecap()"></td>
+              <td class="pz-yellow pz-col pz-col-3"><input type="number" step="0.01" id="pz3_ns" oninput="updateRecap()"></td>
+              <td class="pz-yellow pz-col pz-col-4"><input type="number" step="0.01" id="pz4_ns" oninput="updateRecap()"></td>
+            </tr>
+            <!-- Mat tubage -->
+            <tr>
+              <td class="pz-label">Matériau tubage</td>
+              <td class="pz-yellow pz-col pz-col-1">
+                <select id="pz1_mat_tubage">
+                  <option value="PVC" selected>PVC</option>
+                  <option value="Acier inox 316L">Acier inox 316L</option>
+                  <option value="PEHD">PEHD</option>
+                  <option value="Acier galvanisé">Acier galvanisé</option>
+                </select>
+              </td>
+              <td class="pz-yellow pz-col pz-col-2">
+                <select id="pz2_mat_tubage">
+                  <option value="PVC" selected>PVC</option>
+                  <option value="Acier inox 316L">Acier inox 316L</option>
+                  <option value="PEHD">PEHD</option>
+                  <option value="Acier galvanisé">Acier galvanisé</option>
+                </select>
+              </td>
+              <td class="pz-yellow pz-col pz-col-3">
+                <select id="pz3_mat_tubage">
+                  <option value="PVC">PVC</option>
+                  <option value="Acier inox 316L">Acier inox 316L</option>
+                  <option value="PEHD">PEHD</option>
+                  <option value="Acier galvanisé">Acier galvanisé</option>
+                </select>
+              </td>
+              <td class="pz-yellow pz-col pz-col-4">
+                <select id="pz4_mat_tubage">
+                  <option value="PVC">PVC</option>
+                  <option value="Acier inox 316L">Acier inox 316L</option>
+                  <option value="PEHD">PEHD</option>
+                  <option value="Acier galvanisé">Acier galvanisé</option>
+                </select>
+              </td>
+            </tr>
+            <!-- Mat crépine -->
+            <tr>
+              <td class="pz-label">Matériau crépine</td>
+              <td class="pz-yellow pz-col pz-col-1">
+                <select id="pz1_mat_crepine">
+                  <option value="PVC fendu" selected>PVC fendu</option>
+                  <option value="Acier inox 316L">Acier inox 316L</option>
+                  <option value="Inox 316L bridé">Inox 316L bridé</option>
+                  <option value="PVC fentes calibrées">PVC fentes calibrées</option>
+                </select>
+              </td>
+              <td class="pz-yellow pz-col pz-col-2">
+                <select id="pz2_mat_crepine">
+                  <option value="PVC fendu">PVC fendu</option>
+                  <option value="Acier inox 316L">Acier inox 316L</option>
+                  <option value="Inox 316L bridé">Inox 316L bridé</option>
+                  <option value="PVC fentes calibrées">PVC fentes calibrées</option>
+                </select>
+              </td>
+              <td class="pz-yellow pz-col pz-col-3">
+                <select id="pz3_mat_crepine">
+                  <option value="PVC fendu">PVC fendu</option>
+                  <option value="Acier inox 316L">Acier inox 316L</option>
+                  <option value="Inox 316L bridé">Inox 316L bridé</option>
+                  <option value="PVC fentes calibrées">PVC fentes calibrées</option>
+                </select>
+              </td>
+              <td class="pz-yellow pz-col pz-col-4">
+                <select id="pz4_mat_crepine">
+                  <option value="PVC fendu">PVC fendu</option>
+                  <option value="Acier inox 316L">Acier inox 316L</option>
+                  <option value="Inox 316L bridé">Inox 316L bridé</option>
+                  <option value="PVC fentes calibrées">PVC fentes calibrées</option>
+                </select>
+              </td>
+            </tr>
+            <!-- Mat massif -->
+            <tr>
+              <td class="pz-label">Massif filtrant</td>
+              <td class="pz-yellow pz-col pz-col-1">
+                <select id="pz1_mat_massif">
+                  <option value="Silice 2-4 mm" selected>Silice 2-4 mm</option>
+                  <option value="Silice 1-2 mm">Silice 1-2 mm</option>
+                  <option value="Gravier calibré 3-8 mm">Gravier calibré 3-8 mm</option>
+                  <option value="Gravier calcaire">Gravier calcaire</option>
+                </select>
+              </td>
+              <td class="pz-yellow pz-col pz-col-2">
+                <select id="pz2_mat_massif">
+                  <option value="Silice 2-4 mm" selected>Silice 2-4 mm</option>
+                  <option value="Silice 1-2 mm">Silice 1-2 mm</option>
+                  <option value="Gravier calibré 3-8 mm">Gravier calibré 3-8 mm</option>
+                  <option value="Gravier calcaire">Gravier calcaire</option>
+                </select>
+              </td>
+              <td class="pz-yellow pz-col pz-col-3">
+                <select id="pz3_mat_massif">
+                  <option value="Silice 2-4 mm">Silice 2-4 mm</option>
+                  <option value="Silice 1-2 mm">Silice 1-2 mm</option>
+                  <option value="Gravier calibré 3-8 mm">Gravier calibré 3-8 mm</option>
+                  <option value="Gravier calcaire">Gravier calcaire</option>
+                </select>
+              </td>
+              <td class="pz-yellow pz-col pz-col-4">
+                <select id="pz4_mat_massif">
+                  <option value="Silice 2-4 mm">Silice 2-4 mm</option>
+                  <option value="Silice 1-2 mm">Silice 1-2 mm</option>
+                  <option value="Gravier calibré 3-8 mm">Gravier calibré 3-8 mm</option>
+                  <option value="Gravier calcaire">Gravier calcaire</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="result-row">
-        <span class="result-label">
-          Vitesse effective v_eff = K × i / ne
-          <span class="tooltip-wrap"><span class="help-icon">?</span><span class="tooltip-text">Vitesse réelle de transport des contaminants dissous (ANSES IEM 2018)</span></span>
-        </span>
-        <span class="result-value" id="res_veff">—</span>
-      </div>
-      <div class="result-row">
-        <span class="result-label">Rayon d'influence Sichardt R = 3000 × s × √K(m/s)</span>
-        <span class="result-value" id="res_sichardt">—</span>
-      </div>
-      <div class="result-row">
-        <span class="result-label">Distance de surveillance 30 jours (d = v_eff × 30)</span>
-        <span class="result-value" id="res_d30">—</span>
-      </div>
-      <div class="result-row">
-        <span class="result-label">Distance de surveillance 90 jours (d = v_eff × 90)</span>
-        <span class="result-value" id="res_d90">—</span>
-      </div>
-      <div class="result-row">
-        <span class="result-label">Débit de Darcy Q = K × i × e (par mètre linéaire de front)</span>
-        <span class="result-value" id="res_debit">—</span>
-      </div>
-    </div>
-    <div class="formula-box">
-      v (m/j) = K(m/s) × 86400 × i &nbsp;|&nbsp; v_eff (m/j) = v / ne &nbsp;|&nbsp; R(m) = 3000 × s × √K &nbsp;|&nbsp; Q(m²/j) = K×86400 × i × e
-    </div>
-    <div class="infobox">
-      <strong>Référence :</strong> Sichardt (1928) — formule empirique utilisée pour estimer le rayon d'influence d'un ouvrage de forage. K en m/s dans la formule.
     </div>
   </div>
-</div>
 
-<!-- ========== TAB 4 : PIÉZOMÈTRES ========== -->
-<div id="tab-piezos" class="tab-panel">
-  <div class="card">
-    <h2>Règles dimensionnelles ANSES IEM 2018</h2>
-    <div id="ansesReco" class="infobox"></div>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Temps de surveillance souhaité (jours)</label>
-        <input type="number" id="tSurveillance" value="90" min="1" oninput="computeAll()">
-        <span class="unit">jours — détermine la distance aval minimale</span>
+  <!-- ── COORDONNÉES GÉOGRAPHIQUES ── -->
+  <div class="section-card">
+    <div class="section-title">COORDONNÉES GÉOGRAPHIQUES — Lambert 93</div>
+    <div class="section-body">
+      <div class="note-blue">Coordonnées Lambert 93 (EPSG:2154) — X et Y en mètres — La résolution géologique et réglementaire est automatique.</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Coordonnée X — Lambert 93 (m)</label><input type="number" step="1" id="coord_x" class="inp-yellow" value="572272" oninput="updateRecap(); scheduleGeoResolve()"></div>
+        <div class="form-group"><label>Coordonnée Y — Lambert 93 (m)</label><input type="number" step="1" id="coord_y" class="inp-yellow" value="6748512" oninput="updateRecap(); scheduleGeoResolve()"></div>
+        <div class="form-group"><label>Altimétrie site (m NGF)</label><input type="number" step="0.01" id="coord_alti" class="inp-yellow" value="124.63" oninput="updateRecap()"></div>
+        <div class="form-group"><label>Commune / Site</label><input type="text" id="coord_commune" class="inp-yellow" placeholder="Rempli automatiquement" oninput="updateRecap()"></div>
+        <div class="form-group"><label>Département</label><input type="text" id="coord_departement" class="inp-yellow" placeholder="Rempli automatiquement" oninput="updateRecap()"></div>
+        <div class="form-group"><label>Échelle cartes</label><input type="number" step="1" id="coord_echelle" class="inp-yellow" value="25000"></div>
+      </div>
+      <div style="margin-top:12px;">
+        <button onclick="resolveGeo()" style="background:#1B474D;color:#fff;border:none;padding:10px 22px;border-radius:6px;font-weight:bold;cursor:pointer;font-size:13px;">🌍 Résoudre géologie &amp; réglementation depuis X/Y</button>
+        <span id="geo_status" style="margin-left:14px;font-size:12px;color:#555;"></span>
+      </div>
+      <!-- Panneau résultats géo-résolution -->
+      <div id="geo_results" style="display:none;margin-top:16px;background:#f0f7f4;border:1px solid #1B474D;border-radius:8px;padding:14px;">
+        <div style="font-weight:bold;color:#1B474D;margin-bottom:10px;">📍 Résultats géo-résolution automatique</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;">
+          <div><b>Commune :</b> <span id="gr_commune">—</span></div>
+          <div><b>Département :</b> <span id="gr_dept">—</span></div>
+          <div><b>Bassin DCE :</b> <span id="gr_bassin">—</span></div>
+          <div><b>Masse d'eau SANDRE :</b> <span id="gr_meso">—</span></div>
+          <div><b>Agence de l'Eau :</b> <span id="gr_agence">—</span></div>
+          <div><b>SDAGE :</b> <span id="gr_sdage">—</span></div>
+          <div><b>ZRE :</b> <span id="gr_zre" style="font-weight:bold;">—</span></div>
+          <div><b>Nappe ZRE :</b> <span id="gr_nappe">—</span></div>
+        </div>
+        <div style="margin-top:10px;border-top:1px solid #c5dcd8;padding-top:10px;font-size:12px;">
+          <div style="font-weight:bold;color:#1B474D;margin-bottom:6px;">🪨 Géologie BRGM (carte 1/1 000 000)</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div><b>Formation BRGM :</b> <span id="gr_brgm">—</span></div>
+            <div><b>Substrat retenu :</b> <span id="gr_substrat_match" style="color:#1B474D;font-weight:bold;">—</span></div>
+            <div><b>Code formation :</b> <span id="gr_code_form">—</span></div>
+            <div><b>Forage BSS proche :</b> <span id="gr_bss">—</span></div>
+          </div>
+        </div>
+        <div style="margin-top:10px;">
+          <button onclick="applyGeoResults()" style="background:#E8730A;color:#fff;border:none;padding:8px 18px;border-radius:5px;font-weight:bold;cursor:pointer;font-size:12px;">✅ Appliquer ces données au formulaire</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="card">
-    <h2>Liste des piézomètres</h2>
-    <div class="piez-controls no-print">
-      <button class="btn btn-primary" onclick="addPiezo()">+ Ajouter un piézomètre</button>
-      <button class="btn btn-secondary" onclick="autoGenPiezos()">⚙ Générer auto (ANSES)</button>
+  <!-- ── SUBSTRAT GÉOLOGIQUE ── -->
+  <div class="section-card">
+    <div class="section-title">SUBSTRAT GÉOLOGIQUE</div>
+    <div class="section-body">
+      <div class="form-grid" style="grid-template-columns:1fr 1fr;">
+        <div class="form-group">
+          <label>Nature du substrat</label>
+          <select id="substrat" class="inp-yellow" onchange="updateHydrogeo()">
+          <option value="">— Sélectionner —</option>
+          <optgroup label="Génériques">
+            <option value="Argile compacte">Argile compacte</option>
+            <option value="Argile sableuse">Argile sableuse</option>
+            <option value="Marne argileuse">Marne argileuse</option>
+            <option value="Limon éolien (lœss)">Limon éolien (lœss)</option>
+            <option value="Limon alluvial">Limon alluvial</option>
+            <option value="Sable fin argileux">Sable fin argileux</option>
+            <option value="Sable fin quaternaire">Sable fin quaternaire</option>
+            <option value="Sable fin à moyen">Sable fin à moyen</option>
+            <option value="Sable moyen propre">Sable moyen propre</option>
+            <option value="Sable grossier propre">Sable grossier propre</option>
+            <option value="Sable grossier argileux">Sable grossier argileux</option>
+            <option value="Gravier sableux">Gravier sableux</option>
+            <option value="Gravier propre">Gravier propre</option>
+            <option value="Alluvions grossières">Alluvions grossières</option>
+            <option value="Gravier argileux">Gravier argileux</option>
+            <option value="Calcaire compact fissuré">Calcaire compact fissuré</option>
+            <option value="Calcaire karstifié">Calcaire karstifié</option>
+            <option value="Craie">Craie</option>
+            <option value="Tuffeau (Val de Loire)">Tuffeau (Val de Loire)</option>
+            <option value="Calcaire gréseux">Calcaire gréseux</option>
+            <option value="Grès fin consolidé">Grès fin consolidé</option>
+            <option value="Grès poreux peu consolidé">Grès poreux peu consolidé</option>
+            <option value="Grès argileux">Grès argileux</option>
+            <option value="Arène granitique">Arène granitique</option>
+            <option value="Altérite de schiste">Altérite de schiste</option>
+            <option value="Granite fissuré">Granite fissuré</option>
+            <option value="Basalte fissuré">Basalte fissuré</option>
+            <option value="Remblai hétérogène">Remblai hétérogène</option>
+            <option value="Grave de route / concassé">Grave de route / concassé</option>
+            <option value="Marne calcaire">Marne calcaire</option>
+            <option value="Marno-calcaire fissuré">Marno-calcaire fissuré</option>
+            <option value="Marnes à meulières">Marnes à meulières</option>
+            <option value="Calcaire de Beauce">Calcaire de Beauce</option>
+            <option value="Calcaire de Saint-Ouen">Calcaire de Saint-Ouen</option>
+            <option value="Calcaire grossier du Lutétien">Calcaire grossier du Lutétien</option>
+            <option value="Sables de Fontainebleau">Sables de Fontainebleau</option>
+            <option value="Sables du Sparnacien">Sables du Sparnacien</option>
+            <option value="Argile à silex">Argile à silex</option>
+            <option value="Schistes altérés">Schistes altérés</option>
+            <option value="Conglomérat (poudingue)">Conglomérat (poudingue)</option>
+            <option value="Molasse miocène">Molasse miocène</option>
+            <option value="Calcaire urgonien">Calcaire urgonien</option>
+          </optgroup>
+          <optgroup label="Rhône-Alpes / AURA">
+            <option value="Moraine glaciaire">Moraine glaciaire</option>
+            <option value="Moraine argilo-sableuse">Moraine argilo-sableuse</option>
+            <option value="Dépôt fluvio-glaciaire">Dépôt fluvio-glaciaire</option>
+            <option value="Alluvions de vallée alpine">Alluvions de vallée alpine</option>
+            <option value="Alluvions du Rhône">Alluvions du Rhône</option>
+            <option value="Alluvions de l'Isère">Alluvions de l'Isère</option>
+            <option value="Alluvions de l'Arc">Alluvions de l'Arc</option>
+            <option value="Alluvions de la Romanche">Alluvions de la Romanche</option>
+            <option value="Alluvions de l'Arve">Alluvions de l'Arve</option>
+            <option value="Alluvions de la Drôme">Alluvions de la Drôme</option>
+            <option value="Alluvions de la Durance">Alluvions de la Durance</option>
+            <option value="Éboulis calcaire alpin">Éboulis calcaire alpin</option>
+            <option value="Calcaire subalpin fissuré">Calcaire subalpin fissuré</option>
+            <option value="Calcaire subalpin karstifié">Calcaire subalpin karstifié</option>
+            <option value="Flysch gréseux alpin">Flysch gréseux alpin</option>
+            <option value="Flysch argileux alpin">Flysch argileux alpin</option>
+            <option value="Schistes cristallins">Schistes cristallins</option>
+            <option value="Gneiss fissuré">Gneiss fissuré</option>
+            <option value="Quartzite fissuré">Quartzite fissuré</option>
+          </optgroup>
+          <optgroup label="Auvergne / Massif Central">
+            <option value="Granite du Massif Central">Granite du Massif Central</option>
+            <option value="Basalte de plateau">Basalte de plateau</option>
+            <option value="Basalte fissuré vésiculaire">Basalte fissuré vésiculaire</option>
+            <option value="Tuf volcanique">Tuf volcanique</option>
+            <option value="Ignimbrite">Ignimbrite</option>
+            <option value="Arène granitique Massif Central">Arène granitique Massif Central</option>
+            <option value="Alluvions de l'Allier">Alluvions de l'Allier</option>
+            <option value="Alluvions de la Loire">Alluvions de la Loire</option>
+            <option value="Limons de plaine volcanique">Limons de plaine volcanique</option>
+            <option value="Sable volcanique">Sable volcanique</option>
+            <option value="Marnes du Puy-en-Velay">Marnes du Puy-en-Velay</option>
+          </optgroup>
+          <optgroup label="Occitanie">
+            <option value="Calcaire caussenard">Calcaire caussenard</option>
+            <option value="Dolomie caussenarde">Dolomie caussenarde</option>
+            <option value="Calcaire du Languedoc">Calcaire du Languedoc</option>
+            <option value="Flysch pyrénéen">Flysch pyrénéen</option>
+            <option value="Alluvions de la Garonne">Alluvions de la Garonne</option>
+            <option value="Alluvions de l'Hérault">Alluvions de l'Hérault</option>
+            <option value="Alluvions de l'Aude">Alluvions de l'Aude</option>
+            <option value="Alluvions du Tarn">Alluvions du Tarn</option>
+            <option value="Molasse du Bassin de l'Adour">Molasse du Bassin de l'Adour</option>
+            <option value="Molasse du Bassin de la Garonne">Molasse du Bassin de la Garonne</option>
+            <option value="Sable de l'Astien">Sable de l'Astien</option>
+            <option value="Calcaire lacustre miocène">Calcaire lacustre miocène</option>
+            <option value="Schistes primaires (Montagne Noire)">Schistes primaires (Montagne Noire)</option>
+            <option value="Granite des Pyrénées">Granite des Pyrénées</option>
+            <option value="Dépôt lacustre quaternaire">Dépôt lacustre quaternaire</option>
+          </optgroup>
+          <optgroup label="Provence-Alpes-Côte d'Azur">
+            <option value="Calcaire provençal fissuré">Calcaire provençal fissuré</option>
+            <option value="Calcaire provençal karstifié">Calcaire provençal karstifié</option>
+            <option value="Calcaire de la Sainte-Baume">Calcaire de la Sainte-Baume</option>
+            <option value="Calcaire du Luberon">Calcaire du Luberon</option>
+            <option value="Calcaire du Ventoux">Calcaire du Ventoux</option>
+            <option value="Calcaire urgonien subalpin">Calcaire urgonien subalpin</option>
+            <option value="Dolomie de Provence">Dolomie de Provence</option>
+            <option value="Flysch à Helminthoïdes">Flysch à Helminthoïdes</option>
+            <option value="Marne bleue aptienne">Marne bleue aptienne</option>
+            <option value="Marne noire (Terres Noires)">Marne noire (Terres Noires)</option>
+            <option value="Marnes de Digne">Marnes de Digne</option>
+            <option value="Alluvions de la Durance (PACA)">Alluvions de la Durance (PACA)</option>
+            <option value="Alluvions du Var">Alluvions du Var</option>
+            <option value="Alluvions de l'Argens">Alluvions de l'Argens</option>
+            <option value="Alluvions de l'Arc (PACA)">Alluvions de l'Arc (PACA)</option>
+            <option value="Alluvions de la Touloubre">Alluvions de la Touloubre</option>
+            <option value="Alluvions de la Bléone">Alluvions de la Bléone</option>
+            <option value="Alluvions de la plaine de Crau">Alluvions de la plaine de Crau</option>
+            <option value="Sable littoral méditerranéen">Sable littoral méditerranéen</option>
+            <option value="Sable de la Crau">Sable de la Crau</option>
+            <option value="Granite des Maures">Granite des Maures</option>
+            <option value="Granite de l'Esterel">Granite de l'Esterel</option>
+            <option value="Rhyolite de l'Esterel">Rhyolite de l'Esterel</option>
+            <option value="Gneiss du Mercantour">Gneiss du Mercantour</option>
+            <option value="Arène granitique (Maures)">Arène granitique (Maures)</option>
+            <option value="Grès du Trias provençal">Grès du Trias provençal</option>
+            <option value="Conglomérat de Valensole">Conglomérat de Valensole</option>
+            <option value="Argile de Berre">Argile de Berre</option>
+            <option value="Dépôt lagunaire méditerranéen">Dépôt lagunaire méditerranéen</option>
+          </optgroup>
+          </select>
+        </div>
+      </div>
     </div>
-    <div style="overflow-x:auto">
-      <table class="data-table" id="piezTable">
+  </div>
+
+  <!-- ── PARAMÈTRES HYDROGÉOLOGIQUES ── -->
+  <div class="section-card">
+    <div class="section-title">PARAMÈTRES HYDROGÉOLOGIQUES — Calculés automatiquement</div>
+    <div class="section-body">
+      <div class="form-grid">
+        <div class="form-group"><label>Famille géologique</label><input type="text" id="hg_famille" class="inp-green" readonly></div>
+        <div class="form-group"><label>Type de nappe</label><input type="text" id="hg_type" class="inp-green" readonly></div>
+        <div class="form-group"><label>Perméabilité K (m/s)</label><input type="text" id="hg_K" class="inp-green" readonly></div>
+        <div class="form-group"><label>Transmissivité T réf. (m²/s)</label><input type="text" id="hg_T" class="inp-green" readonly></div>
+        <div class="form-group"><label>Coeff. emmagasinement captif Sc</label><input type="text" id="hg_Sc" class="inp-green" readonly></div>
+        <div class="form-group"><label>Coeff. emmagasinement libre Sl</label><input type="text" id="hg_Sl" class="inp-green" readonly></div>
+        <div class="form-group"><label>Porosité efficace (%)</label><input type="text" id="hg_por" class="inp-green" readonly></div>
+        <div class="form-group"><label>Épaisseur typique (m)</label><input type="text" id="hg_ep" class="inp-green" readonly></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── INFORMATIONS DOSSIER ── -->
+  <div class="section-card">
+    <div class="section-title">INFORMATIONS DOSSIER</div>
+    <div class="section-body">
+      <div class="form-grid">
+        <div class="form-group"><label>Référence dossier</label><input type="text" id="dos_reference" class="inp-yellow"></div>
+        <div class="form-group"><label>Date début travaux</label><input type="date" id="dos_date_debut" class="inp-yellow"></div>
+        <div class="form-group"><label>Date fin travaux</label><input type="date" id="dos_date_fin" class="inp-yellow"></div>
+        <div class="form-group"><label>N° BSS (BRGM)</label><input type="text" id="dos_bss" class="inp-yellow"></div>
+        <div class="form-group"><label>Référence DDT/DREAL</label><input type="text" id="dos_ref_ddt" class="inp-yellow"></div>
+        <div class="form-group"><label>Version</label><input type="text" id="dos_version" class="inp-yellow" value="1.0"></div>
+        <div class="form-group"><label>Statut document</label><input type="text" id="dos_statut" class="inp-yellow" value="Pour validation"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-center" style="margin-top:8px;">
+    <button class="btn-orange" onclick="exportJSON()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v13M7 11l5 5 5-5M3 21h18"/></svg>
+      Générer le PDF DLE
+    </button>
+  </div>
+
+</div><!-- /donnees -->
+
+<!-- ════════════════════════════════════
+     ONGLET 3 : RÉCAPITULATIF
+════════════════════════════════════ -->
+<div id="tab-recap" class="tab-panel">
+  <div class="section-card" style="margin-top:16px;">
+    <div class="section-title">RÉCAPITULATIF DES PIÉZOMÈTRES — Lecture seule</div>
+    <div class="section-body" style="overflow-x:auto;">
+      <table class="recap-table" id="recap-table">
         <thead>
           <tr>
-            <th>#</th>
-            <th>Nom</th>
-            <th>Rôle</th>
-            <th>X Lambert 93 (m)</th>
-            <th>Y Lambert 93 (m)</th>
-            <th>Prof. forage (m)</th>
-            <th>Ø forage (mm)</th>
-            <th>Long. crépine (m)</th>
-            <th>Haut. tubage (m)</th>
-            <th class="no-print">Actions</th>
+            <th>ID</th>
+            <th>X L93 (m)</th>
+            <th>Y L93 (m)</th>
+            <th>Altitude NGF</th>
+            <th>Profondeur (m)</th>
+            <th>Tubage plein (m)</th>
+            <th>Crépine (m)</th>
+            <th>Di (m)</th>
+            <th>NS (m/TN)</th>
+            <th style="background:#E8730A;color:#fff;">NS (m NGF)</th>
+            <th style="background:#E8730A;color:#fff;">Fond (m NGF)</th>
+            <th style="background:#1A6B35;color:#fff;">Crépine OK ?</th>
+            <th>Code Minier L.411-1</th>
           </tr>
         </thead>
-        <tbody id="piezTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Caractéristiques générales des forages</h2>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Diamètre forage standard (mm)</label>
-        <select id="diametreForage">
-          <option value="100">100 mm (piézomètre petit diamètre)</option>
-          <option value="114" selected>114 mm (standard ∅63 tube)</option>
-          <option value="152">152 mm (∅100 tube)</option>
-          <option value="200">200 mm (grand diamètre)</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Type de tube</label>
-        <select id="typeTube">
-          <option value="pvc_63" selected>PVC ∅63 mm (standard SSP)</option>
-          <option value="pvc_100">PVC ∅100 mm</option>
-          <option value="inox_63">Inox ∅63 mm (COV)</option>
-          <option value="inox_100">Inox ∅100 mm</option>
-          <option value="pehd">PEHD (PFAS)</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Longueur crépine standard (m)</label>
-        <input type="number" id="longCrepine" value="3" step="0.5" min="0.5">
-        <span class="unit">m — partie filtrante dans la zone saturée</span>
-      </div>
-      <div class="form-group">
-        <label>Matériau massif filtrant</label>
-        <select id="massiFilter">
-          <option value="silice">Sable siliceux calibré 0,8-1,2mm</option>
-          <option value="graviers" selected>Graviers siliceux 1-4mm</option>
-          <option value="gravillons">Gravillons 4-8mm</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Tête de piézomètre</label>
-        <select id="tetePiez">
-          <option value="fonte" selected>Couvercle fonte verrouillable (voirie)</option>
-          <option value="cadenas">Capot plastique + cadenas (espace vert)</option>
-          <option value="beton">Plot béton + repère topographique</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Fréquence de surveillance</label>
-        <select id="freqSurveillance">
-          <option value="mensuelle">Mensuelle</option>
-          <option value="trimestrielle" selected>Trimestrielle</option>
-          <option value="semestrielle">Semestrielle</option>
-          <option value="annuelle">Annuelle</option>
-        </select>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== TAB 5 : CALCUL IMPLANTATION ========== -->
-<div id="tab-calcul" class="tab-panel">
-  <div class="card">
-    <h2>Calcul d'implantation — Synthèse</h2>
-    <div id="calculSynthese"></div>
-  </div>
-  <div class="card">
-    <h2>Détail des calculs réglementaires</h2>
-    <div class="infobox blue">
-      <strong>Méthodologie :</strong> Méthodologie nationale SSP MEEM/MTES 2017, ANSES IEM 2018, INERIS DRC-09-103096-09387C. Les calculs sont automatiquement mis à jour lors de la modification des paramètres.
-    </div>
-    <div id="calculDetail"></div>
-  </div>
-  <div class="card">
-    <h2>Recommandations d'implantation</h2>
-    <div id="calculReco"></div>
-  </div>
-</div>
-
-<!-- ========== TAB 6 : CONFORMITÉ IOTA ========== -->
-<div id="tab-conformite" class="tab-panel">
-  <div class="card">
-    <h2>Test IOTA R.214-1 — Code de l'Environnement</h2>
-    <div class="infobox">
-      <strong>Loi sur l'Eau :</strong> Les sondages, forages, créations de puits ou d'ouvrages souterrains sont soumis à la nomenclature des Installations, Ouvrages, Travaux et Activités (IOTA) selon l'article R.214-1 du Code de l'Environnement.
-    </div>
-    <div id="iotaResult"></div>
-  </div>
-
-  <div class="card">
-    <h2>Rubriques applicables R.214-1</h2>
-    <div class="iota-box declaration">
-      <div class="iota-title">📋 Rubrique 1.1.1.0 — Sondages, forages, créations de puits ou d'ouvrages souterrains</div>
-      <table class="data-table" style="margin-top:8px">
-        <thead><tr><th>Régime</th><th>Condition</th><th>Seuil</th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge badge-warn">Déclaration</span></td><td>Sondages et forages à des fins de reconnaissance ou de surveillance</td><td>Profondeur &lt; 10 m → Déclaration CERFA</td></tr>
-          <tr><td><span class="badge badge-ko">Autorisation</span></td><td>Forages de reconnaissance ou d'exploitation de nappe souterraine</td><td>Profondeur ≥ 10 m → Autorisation préfectorale</td></tr>
+        <tbody id="recap-tbody">
         </tbody>
       </table>
-      <div id="rubrique1110" style="margin-top:8px"></div>
-    </div>
-
-    <div class="iota-box declaration" style="margin-top:12px">
-      <div class="iota-title">📋 Rubrique 1.1.2.0 — Prélèvements dans les eaux souterraines</div>
-      <table class="data-table" style="margin-top:8px">
-        <thead><tr><th>Régime</th><th>Volume prélevé</th></tr></thead>
-        <tbody>
-          <tr><td><span class="badge badge-warn">Déclaration</span></td><td>Entre 10 000 et 200 000 m³/an</td></tr>
-          <tr><td><span class="badge badge-ko">Autorisation</span></td><td>Supérieur à 200 000 m³/an</td></tr>
-        </tbody>
-      </table>
-      <div id="rubrique1120" style="margin-top:8px"></div>
-    </div>
-
-    <div class="iota-box declaration" style="margin-top:12px">
-      <div class="iota-title">📋 Code Minier L.411-1 — Ouvrages profonds</div>
-      <p style="font-size:12px;margin:6px 0">Les forages de profondeur ≥ 10 m sont également soumis à déclaration auprès du BSS (Banque du Sous-Sol, BRGM) selon l'article L.411-1 du Code Minier. L'enregistrement BSS est obligatoire dans un délai de 2 mois après réalisation.</p>
-      <div id="codeMinierId" style="margin-top:8px"></div>
     </div>
   </div>
 
-  <div class="card">
-    <h2>Tableau récapitulatif — Obligations réglementaires</h2>
-    <div id="tableObligations"></div>
-  </div>
-</div>
-
-<!-- ========== TAB 7 : CARTE ========== -->
-<div id="tab-carte" class="tab-panel">
-  <div class="card">
-    <h2>Carte interactive — Implantation des piézomètres</h2>
-    <div class="infobox blue">
-      <strong>Fonds disponibles :</strong> IGN Plan v2, BD ORTHO, OpenStreetMap. Les coordonnées Lambert 93 sont converties en WGS84 via proj4js pour l'affichage Leaflet. Cliquez sur un piézomètre pour voir ses caractéristiques.
-    </div>
-    <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap" class="no-print">
-      <button class="btn btn-primary" onclick="initMap()">🔄 Recharger la carte</button>
-      <button class="btn btn-secondary" onclick="switchLayer('osm')">OSM</button>
-      <button class="btn btn-secondary" onclick="switchLayer('ign')">IGN Plan</button>
-      <button class="btn btn-secondary" onclick="switchLayer('ortho')">BD ORTHO</button>
-    </div>
-    <div id="map"></div>
-    <div id="mapLegende" style="margin-top:10px;display:flex;gap:16px;flex-wrap:wrap;font-size:12px">
-      <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;background:#1a5276;border-radius:50%;display:inline-block"></span>Amont</span>
-      <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;background:#e74c3c;border-radius:50%;display:inline-block"></span>Aval</span>
-      <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;background:#f39c12;border-radius:50%;display:inline-block"></span>Site</span>
+  <!-- Panneau altimétrie BSS -->
+  <div id="bss_altimetrie_panel" class="section-card" style="display:none;border-left:4px solid #1B474D;">
+    <div class="section-title" style="background:#1B474D;">📊 ALTIMÉTRIE NAPPE — RÉFÉRENCE BSS BRGM (Hub'Eau)</div>
+    <div class="section-body">
+      <p style="font-size:12px;color:#555;margin-bottom:6px;">
+        Niveaux piézométriques mesurés sur les forages BSS dans un rayon de 10 km — données Hub'Eau API niveaux_nappes.
+        Ces valeurs servent à vérifier que la crépine de chaque piézomètre sera positionnée dans la <b>zone saturée</b> de l'aquifère.
+      </p>
+      <div id="bss_panel_content"></div>
     </div>
   </div>
-</div>
 
-</div><!-- end app-body -->
+  <div class="section-card">
+    <div class="section-title">NOTE RÉGLEMENTAIRE</div>
+    <div class="section-body">
+      <p style="font-size:12px;line-height:1.7;color:#333;">
+        Le <strong>Code Minier L.411-1</strong> (BSS — Banque du Sous-Sol) s'applique à tout ouvrage de reconnaissance
+        ou d'exploitation du sous-sol dépassant <strong>10 mètres de profondeur</strong>. Une déclaration obligatoire
+        doit être effectuée auprès de la <strong>DREAL</strong> et le forage doit être enregistré dans la
+        <strong>Base de Données du Sous-Sol (h2geo.brgm.fr)</strong>.
+      </p>
+    </div>
+  </div>
+</div><!-- /recap -->
 
-<footer class="gmep-footer">
-  <strong>G.M.E.P — Global Management of Environmental Project</strong><br>
-  9 rue de la Marne · 79400 Saint-Maixent-l'École · 06 07 73 72 33 · gmep.france@gmail.com · <a href="https://www.gmep-france.eu" target="_blank">www.gmep-france.eu</a><br>
-  Références : INERIS DRC-09-103096-09387C · ANSES IEM 2018 · Méthodologie nationale SSP MEEM/MTES 2017 · Loi sur l'Eau art. R.214-1 · Lambert 93 EPSG:2154 ↔ WGS84 EPSG:4326
-</footer>
+<!-- ════════════════════════════════════
+     ONGLET 4 : BASE GÉOLOGIQUE
+════════════════════════════════════ -->
+<div id="tab-geologie" class="tab-panel">
+  <div class="section-card" style="margin-top:16px;">
+    <div class="section-title">BASE DE DONNÉES GÉOLOGIQUE — 116 Formations (5 régions)</div>
+    <div class="section-body">
+      <div class="geo-table-wrap">
+        <table class="geo-table" id="geo-table">
+          <thead>
+            <tr>
+              <th>Nature du substrat</th>
+              <th>Famille</th>
+              <th>Type de nappe</th>
+              <th>K (m/s)</th>
+              <th>T réf. (m²/s)</th>
+              <th>S captif</th>
+              <th>S libre</th>
+              <th>Porosité (%)</th>
+              <th>Ép. (m)</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody id="geo-tbody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div><!-- /geologie -->
 
+<!-- ════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════ -->
 <script>
-/* ===========================================================
-   PROJ4 : Lambert 93 (EPSG:2154) ↔ WGS84
-   =========================================================== */
-proj4.defs("EPSG:2154","+proj=lcc +lat_0=46.5 +lon_0=3 +lat_1=49 +lat_2=44 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs");
+// ═══════════════════════════════════════
+// BASE DE DONNÉES GÉOLOGIQUE
+// ═══════════════════════════════════════
+const GEO_DB = {
+  "Argile compacte":{"famille":"Argile","type":"Captif","K":1e-10,"T":1e-10,"Sc":1e-06,"Sl":0.02,"por":0.02,"ep":5,"desc":"Argile — captif"},
+  "Argile sableuse":{"famille":"Argile","type":"Captif","K":5e-09,"T":2e-08,"Sc":5e-06,"Sl":0.03,"por":0.05,"ep":4,"desc":"Argile — captif"},
+  "Marne argileuse":{"famille":"Argile","type":"Captif","K":1e-09,"T":8e-09,"Sc":2e-06,"Sl":0.02,"por":0.03,"ep":8,"desc":"Argile — captif"},
+  "Limon éolien (lœss)":{"famille":"Limon","type":"Libre","K":1e-07,"T":1e-06,"Sc":1e-05,"Sl":0.05,"por":0.1,"ep":10,"desc":"Limon — libre"},
+  "Limon alluvial":{"famille":"Limon","type":"Libre","K":5e-07,"T":2.5e-06,"Sc":5e-05,"Sl":0.06,"por":0.08,"ep":5,"desc":"Limon — libre"},
+  "Sable fin argileux":{"famille":"Sable fin","type":"Libre","K":1e-06,"T":1e-05,"Sc":0.0001,"Sl":0.05,"por":0.15,"ep":10,"desc":"Sable fin — libre"},
+  "Sable fin quaternaire":{"famille":"Sable fin","type":"Libre","K":5e-06,"T":7.5e-05,"Sc":0.0005,"Sl":0.08,"por":0.2,"ep":15,"desc":"Sable fin — libre"},
+  "Sable fin à moyen":{"famille":"Sable fin","type":"Libre","K":1e-05,"T":0.00015,"Sc":0.0001,"Sl":0.1,"por":0.22,"ep":15,"desc":"Sable fin — libre"},
+  "Sable moyen propre":{"famille":"Sable moyen","type":"Libre","K":5e-05,"T":0.001,"Sc":0.0005,"Sl":0.12,"por":0.25,"ep":20,"desc":"Sable moyen — libre"},
+  "Sable grossier propre":{"famille":"Sable grossier","type":"Libre","K":0.0001,"T":0.002,"Sc":0.001,"Sl":0.15,"por":0.28,"ep":20,"desc":"Sable grossier — libre"},
+  "Sable grossier argileux":{"famille":"Sable grossier","type":"Libre","K":5e-05,"T":0.0009,"Sc":0.0005,"Sl":0.1,"por":0.22,"ep":18,"desc":"Sable grossier — libre"},
+  "Gravier sableux":{"famille":"Gravier","type":"Libre","K":0.001,"T":0.015,"Sc":0.001,"Sl":0.18,"por":0.28,"ep":15,"desc":"Gravier — libre"},
+  "Gravier propre":{"famille":"Gravier","type":"Libre","K":0.01,"T":0.12,"Sc":0.002,"Sl":0.2,"por":0.3,"ep":12,"desc":"Gravier — libre"},
+  "Alluvions grossières":{"famille":"Gravier","type":"Libre","K":0.005,"T":0.1,"Sc":0.002,"Sl":0.22,"por":0.3,"ep":20,"desc":"Gravier — libre"},
+  "Gravier argileux":{"famille":"Gravier","type":"Libre","K":0.0001,"T":0.001,"Sc":0.0005,"Sl":0.12,"por":0.22,"ep":10,"desc":"Gravier — libre"},
+  "Calcaire compact fissuré":{"famille":"Calcaire","type":"Captif","K":1e-06,"T":3e-05,"Sc":1e-05,"Sl":0.02,"por":0.05,"ep":30,"desc":"Calcaire — captif"},
+  "Calcaire karstifié":{"famille":"Calcaire","type":"Libre","K":0.001,"T":0.05,"Sc":0.0001,"Sl":0.05,"por":0.08,"ep":50,"desc":"Calcaire — libre"},
+  "Craie":{"famille":"Craie","type":"Libre","K":1e-06,"T":5e-05,"Sc":5e-05,"Sl":0.03,"por":0.15,"ep":50,"desc":"Craie — libre"},
+  "Tuffeau (Val de Loire)":{"famille":"Calcaire","type":"Libre","K":5e-06,"T":0.00015,"Sc":2e-05,"Sl":0.04,"por":0.3,"ep":30,"desc":"Calcaire — libre"},
+  "Calcaire gréseux":{"famille":"Calcaire","type":"Captif","K":1e-05,"T":0.00025,"Sc":1e-05,"Sl":0.03,"por":0.08,"ep":25,"desc":"Calcaire — captif"},
+  "Grès fin consolidé":{"famille":"Grès","type":"Captif","K":1e-07,"T":3e-06,"Sc":1e-05,"Sl":0.04,"por":0.12,"ep":30,"desc":"Grès — captif"},
+  "Grès poreux peu consolidé":{"famille":"Grès","type":"Libre","K":1e-05,"T":0.00025,"Sc":5e-05,"Sl":0.1,"por":0.2,"ep":25,"desc":"Grès — libre"},
+  "Grès argileux":{"famille":"Grès","type":"Captif","K":1e-08,"T":2e-07,"Sc":1e-06,"Sl":0.03,"por":0.08,"ep":20,"desc":"Grès — captif"},
+  "Arène granitique":{"famille":"Altérite","type":"Libre","K":1e-05,"T":0.00015,"Sc":0.0005,"Sl":0.1,"por":0.15,"ep":15,"desc":"Altérite — libre"},
+  "Altérite de schiste":{"famille":"Altérite","type":"Libre","K":5e-07,"T":5e-06,"Sc":0.0001,"Sl":0.05,"por":0.1,"ep":10,"desc":"Altérite — libre"},
+  "Granite fissuré":{"famille":"Socle","type":"Captif","K":1e-07,"T":2e-06,"Sc":5e-06,"Sl":0.01,"por":0.02,"ep":20,"desc":"Socle — captif"},
+  "Basalte fissuré":{"famille":"Socle","type":"Captif","K":1e-06,"T":1.5e-05,"Sc":5e-06,"Sl":0.02,"por":0.05,"ep":15,"desc":"Socle — captif"},
+  "Remblai hétérogène":{"famille":"Remblai","type":"Libre","K":1e-05,"T":3e-05,"Sc":0.001,"Sl":0.15,"por":0.2,"ep":3,"desc":"Remblai — libre"},
+  "Grave de route / concassé":{"famille":"Remblai","type":"Libre","K":0.001,"T":0.002,"Sc":0.002,"Sl":0.2,"por":0.3,"ep":2,"desc":"Remblai — libre"},
+  "Marne calcaire":{"famille":"Marne","type":"Captif","K":5e-08,"T":3e-07,"Sc":8e-06,"Sl":0.03,"por":0.08,"ep":15,"desc":"Marne — captif"},
+  "Marno-calcaire fissuré":{"famille":"Marne","type":"Libre","K":1e-06,"T":3e-05,"Sc":2e-05,"Sl":0.04,"por":0.1,"ep":20,"desc":"Marne — libre"},
+  "Marnes à meulières":{"famille":"Marne","type":"Captif","K":5e-07,"T":1e-05,"Sc":1e-05,"Sl":0.02,"por":0.12,"ep":20,"desc":"Marne — captif"},
+  "Calcaire de Beauce":{"famille":"Calcaire","type":"Libre","K":0.0005,"T":0.015,"Sc":0.0001,"Sl":0.04,"por":0.1,"ep":50,"desc":"Calcaire — libre"},
+  "Calcaire de Saint-Ouen":{"famille":"Calcaire","type":"Captif","K":1e-05,"T":0.0003,"Sc":5e-05,"Sl":0.03,"por":0.08,"ep":20,"desc":"Calcaire — captif"},
+  "Calcaire grossier du Lutétien":{"famille":"Calcaire","type":"Captif","K":5e-05,"T":0.0015,"Sc":5e-05,"Sl":0.04,"por":0.1,"ep":30,"desc":"Calcaire — captif"},
+  "Sables de Fontainebleau":{"famille":"Sable moyen","type":"Libre","K":0.0005,"T":0.015,"Sc":0.0001,"Sl":0.15,"por":0.28,"ep":40,"desc":"Sable moyen — libre"},
+  "Sables du Sparnacien":{"famille":"Sable fin","type":"Captif","K":1e-05,"T":0.0002,"Sc":5e-05,"Sl":0.1,"por":0.22,"ep":15,"desc":"Sable fin — captif"},
+  "Argile à silex":{"famille":"Argile","type":"Libre","K":1e-08,"T":3e-07,"Sc":1e-05,"Sl":0.01,"por":0.05,"ep":15,"desc":"Argile — libre"},
+  "Schistes altérés":{"famille":"Altérite","type":"Libre","K":1e-06,"T":2e-05,"Sc":5e-05,"Sl":0.01,"por":0.08,"ep":20,"desc":"Altérite — libre"},
+  "Conglomérat (poudingue)":{"famille":"Grès","type":"Captif","K":5e-06,"T":0.0001,"Sc":5e-05,"Sl":0.03,"por":0.1,"ep":25,"desc":"Grès — captif"},
+  "Molasse miocène":{"famille":"Grès","type":"Captif","K":5e-05,"T":0.0015,"Sc":5e-05,"Sl":0.05,"por":0.15,"ep":40,"desc":"Grès — captif"},
+  "Calcaire urgonien":{"famille":"Calcaire","type":"Libre","K":0.005,"T":0.15,"Sc":0.0001,"Sl":0.06,"por":0.1,"ep":100,"desc":"Calcaire — libre"},
+  "Moraine glaciaire":{"famille":"Moraine","type":"Libre","K":1e-05,"T":0.0002,"Sc":0.0005,"Sl":0.12,"por":0.18,"ep":20,"desc":"Dépôt glaciaire hétérogène — nappe de versant"},
+  "Moraine argilo-sableuse":{"famille":"Moraine","type":"Captif","K":5e-07,"T":5e-06,"Sc":5e-06,"Sl":0.05,"por":0.08,"ep":15,"desc":"Moraine fine — faible perméabilité"},
+  "Dépôt fluvio-glaciaire":{"famille":"Gravier","type":"Libre","K":0.005,"T":0.08,"Sc":0.002,"Sl":0.25,"por":0.3,"ep":30,"desc":"Épandage proglaciaire — bon aquifère"},
+  "Alluvions de vallée alpine":{"famille":"Gravier","type":"Libre","K":0.001,"T":0.05,"Sc":0.002,"Sl":0.22,"por":0.28,"ep":25,"desc":"Vallée alpine — aquifère alluvial"},
+  "Alluvions du Rhône":{"famille":"Gravier","type":"Libre","K":0.002,"T":0.06,"Sc":0.002,"Sl":0.25,"por":0.3,"ep":30,"desc":"Nappe alluviale du Rhône — très productive"},
+  "Alluvions de l'Isère":{"famille":"Gravier","type":"Libre","K":0.001,"T":0.04,"Sc":0.001,"Sl":0.22,"por":0.28,"ep":25,"desc":"Nappe alluviale de l'Isère"},
+  "Alluvions de l'Arc":{"famille":"Gravier","type":"Libre","K":0.0005,"T":0.015,"Sc":0.001,"Sl":0.2,"por":0.25,"ep":15,"desc":"Alluvions de l'Arc (Savoie)"},
+  "Alluvions de la Romanche":{"famille":"Gravier","type":"Libre","K":0.0005,"T":0.01,"Sc":0.001,"Sl":0.2,"por":0.25,"ep":12,"desc":"Alluvions de la Romanche (Isère)"},
+  "Alluvions de l'Arve":{"famille":"Gravier","type":"Libre","K":0.001,"T":0.04,"Sc":0.002,"Sl":0.22,"por":0.28,"ep":20,"desc":"Nappe alluviale de l'Arve — Chamonix-Sallanches"},
+  "Alluvions de la Drôme":{"famille":"Gravier","type":"Libre","K":0.0005,"T":0.015,"Sc":0.001,"Sl":0.2,"por":0.25,"ep":15,"desc":"Nappe alluviale de la Drôme"},
+  "Alluvions de la Durance":{"famille":"Gravier","type":"Libre","K":0.002,"T":0.06,"Sc":0.002,"Sl":0.25,"por":0.3,"ep":25,"desc":"Nappe alluviale de la Durance"},
+  "Éboulis calcaire alpin":{"famille":"Calcaire","type":"Libre","K":0.001,"T":0.02,"Sc":0.0005,"Sl":0.1,"por":0.12,"ep":20,"desc":"Éboulis karstiques de versant alpin"},
+  "Calcaire subalpin fissuré":{"famille":"Calcaire","type":"Libre","K":0.0005,"T":0.025,"Sc":0.0002,"Sl":0.06,"por":0.08,"ep":80,"desc":"Calcaires subalpins — aquifère fissuré"},
+  "Calcaire subalpin karstifié":{"famille":"Calcaire","type":"Libre","K":0.005,"T":0.2,"Sc":0.0001,"Sl":0.06,"por":0.1,"ep":150,"desc":"Calcaires subalpins karstifiés — très productif"},
+  "Flysch gréseux alpin":{"famille":"Flysch","type":"Captif","K":1e-07,"T":5e-06,"Sc":1e-05,"Sl":0.03,"por":0.08,"ep":50,"desc":"Flysch de Taveyanne — faible perméabilité"},
+  "Flysch argileux alpin":{"famille":"Flysch","type":"Captif","K":1e-09,"T":5e-08,"Sc":1e-07,"Sl":0.01,"por":0.03,"ep":40,"desc":"Flysch argileux alpin — imperméable"},
+  "Schistes cristallins":{"famille":"Socle","type":"Captif","K":1e-08,"T":5e-07,"Sc":5e-07,"Sl":0.01,"por":0.02,"ep":30,"desc":"Schistes cristallins alpins — fissuré"},
+  "Gneiss fissuré":{"famille":"Socle","type":"Captif","K":5e-08,"T":1e-06,"Sc":5e-07,"Sl":0.01,"por":0.02,"ep":25,"desc":"Gneiss à fissures — socle cristallin"},
+  "Quartzite fissuré":{"famille":"Socle","type":"Captif","K":1e-07,"T":3e-06,"Sc":5e-06,"Sl":0.01,"por":0.02,"ep":20,"desc":"Quartzite — fissures ouvertes"},
+  "Granite du Massif Central":{"famille":"Socle","type":"Captif","K":5e-08,"T":1e-06,"Sc":5e-06,"Sl":0.01,"por":0.02,"ep":20,"desc":"Granite hercynien — aquifère de fissures"},
+  "Basalte de plateau":{"famille":"Volcanique","type":"Libre","K":0.0001,"T":0.005,"Sc":0.001,"Sl":0.05,"por":0.1,"ep":20,"desc":"Basalte vésiculaire — aquifère de fissures"},
+  "Basalte fissuré vésiculaire":{"famille":"Volcanique","type":"Libre","K":0.0005,"T":0.01,"Sc":0.002,"Sl":0.08,"por":0.15,"ep":15,"desc":"Basalte vésiculaire très perméable"},
+  "Tuf volcanique":{"famille":"Volcanique","type":"Libre","K":1e-05,"T":0.0002,"Sc":0.0005,"Sl":0.1,"por":0.2,"ep":10,"desc":"Tuf volcanique — aquifère poreux"},
+  "Ignimbrite":{"famille":"Volcanique","type":"Captif","K":5e-06,"T":0.0001,"Sc":5e-05,"Sl":0.05,"por":0.12,"ep":15,"desc":"Roche pyroclastique — aquifère captif"},
+  "Arène granitique Massif Central":{"famille":"Altérite","type":"Libre","K":2e-05,"T":0.0002,"Sc":0.0005,"Sl":0.12,"por":0.18,"ep":15,"desc":"Arène granitique — nappe de surface"},
+  "Alluvions de l'Allier":{"famille":"Gravier","type":"Libre","K":0.001,"T":0.03,"Sc":0.001,"Sl":0.2,"por":0.25,"ep":15,"desc":"Nappe alluviale de l'Allier"},
+  "Alluvions de la Loire":{"famille":"Gravier","type":"Libre","K":0.0005,"T":0.015,"Sc":0.001,"Sl":0.18,"por":0.25,"ep":12,"desc":"Nappe alluviale de la Loire"},
+  "Limons de plaine volcanique":{"famille":"Limon","type":"Libre","K":1e-07,"T":2e-06,"Sc":1e-05,"Sl":0.06,"por":0.12,"ep":5,"desc":"Limons de plaine volcanique Auvergne"},
+  "Sable volcanique":{"famille":"Sable fin","type":"Libre","K":1e-05,"T":0.0001,"Sc":0.0002,"Sl":0.12,"por":0.22,"ep":10,"desc":"Sable volcanique — aquifère poreux"},
+  "Marnes du Puy-en-Velay":{"famille":"Marne","type":"Captif","K":5e-09,"T":5e-08,"Sc":5e-06,"Sl":0.02,"por":0.05,"ep":20,"desc":"Marnes lacustres du Puy — aquiclude"},
+  "Calcaire caussenard":{"famille":"Calcaire","type":"Libre","K":0.001,"T":0.05,"Sc":0.0001,"Sl":0.05,"por":0.08,"ep":100,"desc":"Grands Causses — aquifère karstique majeur"},
+  "Dolomie caussenarde":{"famille":"Calcaire","type":"Libre","K":0.0005,"T":0.025,"Sc":5e-05,"Sl":0.04,"por":0.07,"ep":80,"desc":"Dolomie des Causses — karstique"},
+  "Calcaire du Languedoc":{"famille":"Calcaire","type":"Libre","K":0.0002,"T":0.01,"Sc":5e-05,"Sl":0.04,"por":0.08,"ep":60,"desc":"Calcaire karst languedocien"},
+  "Flysch pyrénéen":{"famille":"Flysch","type":"Captif","K":5e-08,"T":5e-07,"Sc":5e-06,"Sl":0.01,"por":0.04,"ep":50,"desc":"Flysch pyrénéen — imperméable"},
+  "Alluvions de la Garonne":{"famille":"Gravier","type":"Libre","K":0.002,"T":0.06,"Sc":0.002,"Sl":0.25,"por":0.3,"ep":20,"desc":"Nappe alluviale de la Garonne"},
+  "Alluvions de l'Hérault":{"famille":"Gravier","type":"Libre","K":0.0005,"T":0.01,"Sc":0.001,"Sl":0.18,"por":0.25,"ep":10,"desc":"Alluvions de l'Hérault"},
+  "Alluvions de l'Aude":{"famille":"Gravier","type":"Libre","K":0.0005,"T":0.01,"Sc":0.001,"Sl":0.18,"por":0.25,"ep":10,"desc":"Alluvions de l'Aude"},
+  "Alluvions du Tarn":{"famille":"Gravier","type":"Libre","K":0.001,"T":0.03,"Sc":0.001,"Sl":0.2,"por":0.25,"ep":12,"desc":"Alluvions du Tarn"},
+  "Molasse du Bassin de l'Adour":{"famille":"Molasse","type":"Captif","K":1e-05,"T":0.0003,"Sc":5e-05,"Sl":0.08,"por":0.18,"ep":50,"desc":"Molasse oligocène — aquifère captif"},
+  "Molasse du Bassin de la Garonne":{"famille":"Molasse","type":"Captif","K":5e-05,"T":0.001,"Sc":5e-05,"Sl":0.1,"por":0.2,"ep":60,"desc":"Molasse miocène — aquifère productif"},
+  "Sable de l'Astien":{"famille":"Sable moyen","type":"Libre","K":0.0002,"T":0.005,"Sc":0.0005,"Sl":0.15,"por":0.25,"ep":20,"desc":"Sable pliocène — aquifère côtier"},
+  "Calcaire lacustre miocène":{"famille":"Calcaire","type":"Libre","K":5e-05,"T":0.001,"Sc":5e-05,"Sl":0.04,"por":0.08,"ep":30,"desc":"Calcaire lacustre — aquifère de fissures"},
+  "Schistes primaires (Montagne Noire)":{"famille":"Socle","type":"Captif","K":1e-08,"T":5e-07,"Sc":5e-07,"Sl":0.01,"por":0.02,"ep":25,"desc":"Socle primaire — quasi imperméable"},
+  "Granite des Pyrénées":{"famille":"Socle","type":"Captif","K":5e-08,"T":5e-07,"Sc":5e-07,"Sl":0.01,"por":0.02,"ep":20,"desc":"Granite pyrénéen — fissures"},
+  "Dépôt lacustre quaternaire":{"famille":"Argile","type":"Captif","K":5e-08,"T":5e-07,"Sc":1e-06,"Sl":0.03,"por":0.06,"ep":10,"desc":"Argile lacustre — aquiclude"},
+  "Calcaire provençal fissuré":{"famille":"Calcaire","type":"Libre","K":5e-05,"T":0.005,"Sc":5e-05,"Sl":0.04,"por":0.07,"ep":60,"desc":"Calcaire provençal fissuré"},
+  "Calcaire provençal karstifié":{"famille":"Calcaire","type":"Libre","K":0.005,"T":0.25,"Sc":0.0001,"Sl":0.06,"por":0.1,"ep":120,"desc":"Karst provençal — très productif"},
+  "Calcaire de la Sainte-Baume":{"famille":"Calcaire","type":"Libre","K":0.002,"T":0.1,"Sc":0.0001,"Sl":0.05,"por":0.08,"ep":200,"desc":"Massif de la Sainte-Baume — karst actif"},
+  "Calcaire du Luberon":{"famille":"Calcaire","type":"Libre","K":0.001,"T":0.05,"Sc":0.0001,"Sl":0.05,"por":0.09,"ep":150,"desc":"Luberon — aquifère karstique"},
+  "Calcaire du Ventoux":{"famille":"Calcaire","type":"Libre","K":0.005,"T":0.3,"Sc":0.0001,"Sl":0.06,"por":0.1,"ep":300,"desc":"Mont Ventoux — karst majeur"},
+  "Calcaire urgonien subalpin":{"famille":"Calcaire","type":"Libre","K":0.01,"T":0.5,"Sc":0.0001,"Sl":0.07,"por":0.1,"ep":250,"desc":"Urgonien PACA — karst très productif"},
+  "Dolomie de Provence":{"famille":"Calcaire","type":"Libre","K":0.0002,"T":0.012,"Sc":5e-05,"Sl":0.04,"por":0.07,"ep":80,"desc":"Dolomie provençale — karst modéré"},
+  "Flysch à Helminthoïdes":{"famille":"Flysch","type":"Captif","K":5e-08,"T":5e-07,"Sc":5e-06,"Sl":0.01,"por":0.04,"ep":60,"desc":"Flysch PACA — quasi imperméable"},
+  "Marne bleue aptienne":{"famille":"Marne","type":"Captif","K":1e-09,"T":1e-08,"Sc":5e-07,"Sl":0.01,"por":0.03,"ep":30,"desc":"Marnes aptiennes — imperméable"},
+  "Marne noire (Terres Noires)":{"famille":"Marne","type":"Captif","K":5e-10,"T":5e-09,"Sc":1e-07,"Sl":0.01,"por":0.02,"ep":40,"desc":"Terres Noires jurassiques — imperméable"},
+  "Marnes de Digne":{"famille":"Marne","type":"Captif","K":1e-09,"T":2e-08,"Sc":5e-07,"Sl":0.01,"por":0.03,"ep":50,"desc":"Marnes de Digne — imperméable"},
+  "Alluvions de la Durance (PACA)":{"famille":"Gravier","type":"Libre","K":0.003,"T":0.09,"Sc":0.002,"Sl":0.25,"por":0.3,"ep":25,"desc":"Nappe de la Durance — très productive"},
+  "Alluvions du Var":{"famille":"Gravier","type":"Libre","K":0.005,"T":0.15,"Sc":0.003,"Sl":0.28,"por":0.32,"ep":20,"desc":"Nappe alluviale du Var — très productive"},
+  "Alluvions de l'Argens":{"famille":"Gravier","type":"Libre","K":0.001,"T":0.03,"Sc":0.001,"Sl":0.22,"por":0.28,"ep":12,"desc":"Nappe de l'Argens — Var"},
+  "Alluvions de l'Arc (PACA)":{"famille":"Gravier","type":"Libre","K":0.0005,"T":0.015,"Sc":0.001,"Sl":0.2,"por":0.25,"ep":10,"desc":"Alluvions de l'Arc — Bouches-du-Rhône"},
+  "Alluvions de la Touloubre":{"famille":"Gravier","type":"Libre","K":0.0005,"T":0.01,"Sc":0.0008,"Sl":0.18,"por":0.24,"ep":8,"desc":"Alluvions de la Touloubre"},
+  "Alluvions de la Bléone":{"famille":"Gravier","type":"Libre","K":0.0005,"T":0.012,"Sc":0.001,"Sl":0.2,"por":0.25,"ep":10,"desc":"Alluvions de la Bléone"},
+  "Alluvions de la plaine de Crau":{"famille":"Gravier","type":"Libre","K":0.005,"T":0.15,"Sc":0.003,"Sl":0.28,"por":0.32,"ep":30,"desc":"Nappe de la Crau — très productive"},
+  "Sable littoral méditerranéen":{"famille":"Sable moyen","type":"Libre","K":0.0002,"T":0.004,"Sc":0.0005,"Sl":0.2,"por":0.3,"ep":10,"desc":"Sable côtier méditerranéen"},
+  "Sable de la Crau":{"famille":"Gravier","type":"Libre","K":0.005,"T":0.12,"Sc":0.003,"Sl":0.25,"por":0.3,"ep":20,"desc":"Sable/cailloutis de Crau — très perméable"},
+  "Granite des Maures":{"famille":"Socle","type":"Captif","K":5e-08,"T":8e-07,"Sc":5e-07,"Sl":0.01,"por":0.02,"ep":20,"desc":"Massif des Maures — aquifère de fissures"},
+  "Granite de l'Esterel":{"famille":"Volcanique","type":"Captif","K":1e-06,"T":1e-05,"Sc":5e-06,"Sl":0.02,"por":0.04,"ep":15,"desc":"Esterel — rhyolite volcanique"},
+  "Rhyolite de l'Esterel":{"famille":"Volcanique","type":"Captif","K":5e-07,"T":5e-06,"Sc":5e-06,"Sl":0.02,"por":0.03,"ep":15,"desc":"Rhyolite Esterel — aquifère de fissures"},
+  "Gneiss du Mercantour":{"famille":"Socle","type":"Captif","K":5e-08,"T":1e-06,"Sc":5e-07,"Sl":0.01,"por":0.02,"ep":25,"desc":"Mercantour — socle cristallin"},
+  "Arène granitique (Maures)":{"famille":"Altérite","type":"Libre","K":5e-05,"T":0.0005,"Sc":0.0005,"Sl":0.12,"por":0.16,"ep":10,"desc":"Arène des Maures — nappe de surface"},
+  "Grès du Trias provençal":{"famille":"Grès","type":"Captif","K":5e-07,"T":1e-05,"Sc":5e-06,"Sl":0.04,"por":0.1,"ep":30,"desc":"Grès triasiques — aquifère captif"},
+  "Conglomérat de Valensole":{"famille":"Gravier","type":"Libre","K":0.0001,"T":0.003,"Sc":0.0005,"Sl":0.15,"por":0.22,"ep":80,"desc":"Conglomérat de Valensole — aquifère productif"},
+  "Argile de Berre":{"famille":"Argile","type":"Captif","K":1e-10,"T":5e-10,"Sc":5e-07,"Sl":0.01,"por":0.02,"ep":20,"desc":"Argile de l'Étang de Berre — imperméable"},
+  "Dépôt lagunaire méditerranéen":{"famille":"Argile","type":"Captif","K":5e-09,"T":5e-08,"Sc":5e-07,"Sl":0.02,"por":0.04,"ep":15,"desc":"Dépôt lagunaire — imperméable"},
+};
 
-function l93toWGS84(x, y){
-  try { return proj4("EPSG:2154","WGS84",[x,y]); } catch(e){ return null; }
+// ═══════════════════════════════════════
+// UTILITAIRES
+// ═══════════════════════════════════════
+function toSci(val) {
+  if (val === null || val === undefined || isNaN(val)) return '—';
+  if (val === 0) return '0';
+  const exp = Math.floor(Math.log10(Math.abs(val)));
+  const mant = val / Math.pow(10, exp);
+  const mantStr = mant.toFixed(2);
+  // Use unicode superscript
+  const supMap = {'-':'\u207B','0':'\u2070','1':'\u00B9','2':'\u00B2','3':'\u00B3','4':'\u2074','5':'\u2075','6':'\u2076','7':'\u2077','8':'\u2078','9':'\u2079'};
+  const expStr = String(exp).split('').map(c => supMap[c] || c).join('');
+  return mantStr + '\u00D7' + '10' + expStr + ' m/s';
 }
 
-/* ===========================================================
-   BASE DE DONNÉES POLLUANTS (55 substances)
-   Seuils en µg/L (eau souterraine) — Réf. ICPE/MEEM/ANSES/INERIS
-   =========================================================== */
-const POLLUANTS_DB = [
-  // BTEX
-  {id:"benzene",   nom:"Benzène",          famille:"BTEX",     cas:"71-43-2",  seuil_eau:1,     seuil_sol:0.5,   unite:"µg/L", ref:"Directive 2000/60/CE"},
-  {id:"toluene",   nom:"Toluène",          famille:"BTEX",     cas:"108-88-3", seuil_eau:700,   seuil_sol:30,    unite:"µg/L", ref:"INERIS"},
-  {id:"ethylbenz", nom:"Éthylbenzène",     famille:"BTEX",     cas:"100-41-4", seuil_eau:300,   seuil_sol:10,    unite:"µg/L", ref:"INERIS"},
-  {id:"xylenes",   nom:"Xylènes (total)",  famille:"BTEX",     cas:"1330-20-7",seuil_eau:500,   seuil_sol:20,    unite:"µg/L", ref:"OMS 2017"},
-  // HAP
-  {id:"naphta",    nom:"Naphtalène",       famille:"HAP",      cas:"91-20-3",  seuil_eau:2,     seuil_sol:10,    unite:"µg/L", ref:"INERIS"},
-  {id:"acenaph",   nom:"Acénaphtylène",    famille:"HAP",      cas:"208-96-8", seuil_eau:0.1,   seuil_sol:1,     unite:"µg/L", ref:"INERIS"},
-  {id:"fluorene",  nom:"Fluorène",         famille:"HAP",      cas:"86-73-7",  seuil_eau:0.5,   seuil_sol:5,     unite:"µg/L", ref:"INERIS"},
-  {id:"phenanth",  nom:"Phénanthrène",     famille:"HAP",      cas:"85-01-8",  seuil_eau:0.1,   seuil_sol:5,     unite:"µg/L", ref:"INERIS"},
-  {id:"anthrac",   nom:"Anthracène",       famille:"HAP",      cas:"120-12-7", seuil_eau:0.1,   seuil_sol:5,     unite:"µg/L", ref:"Directive 2000/60/CE"},
-  {id:"fluoranth", nom:"Fluoranthène",     famille:"HAP",      cas:"206-44-0", seuil_eau:0.1,   seuil_sol:5,     unite:"µg/L", ref:"Directive 2000/60/CE"},
-  {id:"bap",       nom:"Benzo(a)pyrène",   famille:"HAP",      cas:"50-32-8",  seuil_eau:0.01,  seuil_sol:1,     unite:"µg/L", ref:"Directive 98/83/CE"},
-  {id:"chrysene",  nom:"Chrysène",         famille:"HAP",      cas:"218-01-9", seuil_eau:0.05,  seuil_sol:5,     unite:"µg/L", ref:"INERIS"},
-  {id:"bghiperyl", nom:"Benzo(g,h,i)pérylène",famille:"HAP",  cas:"191-24-2", seuil_eau:0.002, seuil_sol:1,     unite:"µg/L", ref:"Directive 2000/60/CE"},
-  // Métaux lourds
-  {id:"as",        nom:"Arsenic (As)",     famille:"Métaux",   cas:"7440-38-2",seuil_eau:10,    seuil_sol:50,    unite:"µg/L", ref:"OMS / Directive 98/83/CE"},
-  {id:"pb",        nom:"Plomb (Pb)",       famille:"Métaux",   cas:"7439-92-1",seuil_eau:10,    seuil_sol:300,   unite:"µg/L", ref:"Directive 98/83/CE"},
-  {id:"cd",        nom:"Cadmium (Cd)",     famille:"Métaux",   cas:"7440-43-9",seuil_eau:5,     seuil_sol:20,    unite:"µg/L", ref:"Directive 2000/60/CE"},
-  {id:"hg",        nom:"Mercure (Hg)",     famille:"Métaux",   cas:"7439-97-6",seuil_eau:1,     seuil_sol:10,    unite:"µg/L", ref:"Directive 2000/60/CE"},
-  {id:"cr",        nom:"Chrome total (Cr)",famille:"Métaux",   cas:"7440-47-3",seuil_eau:50,    seuil_sol:150,   unite:"µg/L", ref:"OMS"},
-  {id:"cr6",       nom:"Chrome VI (CrVI)", famille:"Métaux",   cas:"18540-29-9",seuil_eau:25,   seuil_sol:50,    unite:"µg/L", ref:"INERIS"},
-  {id:"ni",        nom:"Nickel (Ni)",      famille:"Métaux",   cas:"7440-02-0",seuil_eau:20,    seuil_sol:100,   unite:"µg/L", ref:"Directive 2000/60/CE"},
-  {id:"cu",        nom:"Cuivre (Cu)",      famille:"Métaux",   cas:"7440-50-8",seuil_eau:2000,  seuil_sol:200,   unite:"µg/L", ref:"OMS"},
-  {id:"zn",        nom:"Zinc (Zn)",        famille:"Métaux",   cas:"7440-66-6",seuil_eau:5000,  seuil_sol:500,   unite:"µg/L", ref:"INERIS"},
-  {id:"mn",        nom:"Manganèse (Mn)",   famille:"Métaux",   cas:"7439-96-5",seuil_eau:50,    seuil_sol:1000,  unite:"µg/L", ref:"OMS"},
-  // COHV (Composés Organohalogénés Volatils)
-  {id:"pce",       nom:"Tétrachloroéthylène (PCE)",famille:"COHV",cas:"127-18-4",seuil_eau:10,  seuil_sol:0.5,   unite:"µg/L", ref:"Directive 98/83/CE"},
-  {id:"tce",       nom:"Trichloroéthylène (TCE)", famille:"COHV", cas:"79-01-6",  seuil_eau:10,  seuil_sol:0.5,   unite:"µg/L", ref:"Directive 98/83/CE"},
-  {id:"dcm",       nom:"Dichlorométhane",  famille:"COHV",     cas:"75-09-2",  seuil_eau:20,    seuil_sol:1,     unite:"µg/L", ref:"OMS"},
-  {id:"chl_vinyl", nom:"Chlorure de vinyle",famille:"COHV",    cas:"75-01-4",  seuil_eau:0.5,   seuil_sol:0.1,   unite:"µg/L", ref:"INERIS"},
-  {id:"dcethyl",   nom:"1,2-Dichloroéthane",famille:"COHV",   cas:"107-06-2", seuil_eau:3,     seuil_sol:1,     unite:"µg/L", ref:"Directive 98/83/CE"},
-  {id:"chloro",    nom:"Chloroforme",      famille:"COHV",     cas:"67-66-3",  seuil_eau:25,    seuil_sol:2,     unite:"µg/L", ref:"OMS"},
-  {id:"ccl4",      nom:"Tétrachlorure de carbone",famille:"COHV",cas:"56-23-5",seuil_eau:2,    seuil_sol:0.5,   unite:"µg/L", ref:"Directive 98/83/CE"},
-  {id:"11dce",     nom:"1,1-Dichloroéthylène",famille:"COHV", cas:"75-35-4",  seuil_eau:3,     seuil_sol:0.5,   unite:"µg/L", ref:"INERIS"},
-  {id:"12dce",     nom:"1,2-Dichloroéthylène",famille:"COHV", cas:"156-59-2", seuil_eau:50,    seuil_sol:1,     unite:"µg/L", ref:"INERIS"},
-  // PFAS
-  {id:"pfos",      nom:"PFOS",            famille:"PFAS",     cas:"1763-23-1",seuil_eau:0.065, seuil_sol:0.01,  unite:"µg/L", ref:"Directive 2020/2184/CE"},
-  {id:"pfoa",      nom:"PFOA",            famille:"PFAS",     cas:"335-67-1", seuil_eau:0.1,   seuil_sol:0.01,  unite:"µg/L", ref:"Directive 2020/2184/CE"},
-  {id:"pfhxs",     nom:"PFHxS",           famille:"PFAS",     cas:"355-46-4", seuil_eau:0.1,   seuil_sol:0.01,  unite:"µg/L", ref:"ANSES 2021"},
-  {id:"pfna",      nom:"PFNA",            famille:"PFAS",     cas:"375-95-1", seuil_eau:0.1,   seuil_sol:0.01,  unite:"µg/L", ref:"ANSES 2021"},
-  {id:"pfhpa",     nom:"PFHpA",           famille:"PFAS",     cas:"375-85-9", seuil_eau:0.1,   seuil_sol:0.01,  unite:"µg/L", ref:"ANSES 2021"},
-  {id:"pfas_sum20",nom:"Σ PFAS (20 subst.)",famille:"PFAS",  cas:"—",        seuil_eau:0.1,   seuil_sol:0.01,  unite:"µg/L", ref:"Directive UE 2020 (seuil somme)"},
-  // PCB
-  {id:"pcb7",      nom:"PCB totaux (7 congénères)",famille:"PCB",cas:"1336-36-3",seuil_eau:0.5, seuil_sol:10,  unite:"µg/L", ref:"Directive 2000/60/CE"},
-  {id:"pcb101",    nom:"PCB 101",         famille:"PCB",      cas:"37680-73-2",seuil_eau:0.1,  seuil_sol:5,     unite:"µg/L", ref:"INERIS"},
-  {id:"pcb118",    nom:"PCB 118",         famille:"PCB",      cas:"31508-00-6",seuil_eau:0.1,  seuil_sol:5,     unite:"µg/L", ref:"INERIS"},
-  {id:"pcb153",    nom:"PCB 153",         famille:"PCB",      cas:"35065-27-1",seuil_eau:0.1,  seuil_sol:5,     unite:"µg/L", ref:"INERIS"},
-  // Pesticides
-  {id:"atrazine",  nom:"Atrazine",        famille:"Pesticides",cas:"1912-24-9",seuil_eau:0.1,  seuil_sol:1,     unite:"µg/L", ref:"Directive 98/83/CE"},
-  {id:"lindane",   nom:"Lindane (γ-HCH)", famille:"Pesticides",cas:"58-89-9", seuil_eau:0.1,   seuil_sol:2,     unite:"µg/L", ref:"Directive 98/83/CE"},
-  {id:"ddt",       nom:"DDT total",       famille:"Pesticides",cas:"50-29-3", seuil_eau:0.1,   seuil_sol:10,    unite:"µg/L", ref:"INERIS"},
-  {id:"chlordane", nom:"Chlordane",       famille:"Pesticides",cas:"57-74-9", seuil_eau:0.1,   seuil_sol:5,     unite:"µg/L", ref:"INERIS"},
-  {id:"glypho",    nom:"Glyphosate",      famille:"Pesticides",cas:"1071-83-6",seuil_eau:0.1,  seuil_sol:1,     unite:"µg/L", ref:"Directive 98/83/CE"},
-  // COV autres
-  {id:"styrene",   nom:"Styrène",         famille:"COV",      cas:"100-42-5", seuil_eau:20,    seuil_sol:5,     unite:"µg/L", ref:"OMS"},
-  {id:"mtbe",      nom:"MTBE",            famille:"COV",      cas:"1634-04-4",seuil_eau:15,    seuil_sol:5,     unite:"µg/L", ref:"ANSES"},
-  {id:"hct",       nom:"Hydrocarbures totaux (HCT)",famille:"COV",cas:"—",   seuil_eau:100,   seuil_sol:500,   unite:"µg/L", ref:"INERIS / TPHCWG"},
-  {id:"phenol",    nom:"Phénol",          famille:"COV",      cas:"108-95-2", seuil_eau:800,   seuil_sol:30,    unite:"µg/L", ref:"OMS"},
-  {id:"cresol",    nom:"Crésols (total)", famille:"COV",      cas:"1319-77-3",seuil_eau:200,   seuil_sol:10,    unite:"µg/L", ref:"INERIS"},
-  {id:"cyanures",  nom:"Cyanures totaux", famille:"COV",      cas:"57-12-5",  seuil_eau:50,    seuil_sol:5,     unite:"µg/L", ref:"OMS"},
-];
-
-/* ===========================================================
-   ÉTAT GLOBAL
-   =========================================================== */
-let selectedPol = new Set();
-let piezos = [];
-let map = null;
-let layers = {};
-let currentLayer = 'ign';
-
-/* ===========================================================
-   ONGLETS
-   =========================================================== */
-function showTab(name){
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  event.target.classList.add('active');
-  if(name==='carte') setTimeout(()=>{initMap();},100);
-  if(name==='calcul') computeAll();
-  if(name==='conformite') computeIOTA();
+function toSciT(val) {
+  if (val === null || val === undefined || isNaN(val)) return '—';
+  if (val === 0) return '0';
+  const exp = Math.floor(Math.log10(Math.abs(val)));
+  const mant = val / Math.pow(10, exp);
+  const mantStr = mant.toFixed(2);
+  const supMap = {'-':'\u207B','0':'\u2070','1':'\u00B9','2':'\u00B2','3':'\u00B3','4':'\u2074','5':'\u2075','6':'\u2076','7':'\u2077','8':'\u2078','9':'\u2079'};
+  const expStr = String(exp).split('').map(c => supMap[c] || c).join('');
+  return mantStr + '\u00D7' + '10' + expStr + ' m²/s';
 }
 
-/* ===========================================================
-   POLLUANTS
-   =========================================================== */
-function renderPolGrid(){
-  const g = document.getElementById('polGrid');
-  g.innerHTML = '';
-  POLLUANTS_DB.forEach(p=>{
-    const d = document.createElement('div');
-    d.className = 'pol-item' + (selectedPol.has(p.id)?' selected':'');
-    d.innerHTML = `<input type="checkbox" id="pol_${p.id}" ${selectedPol.has(p.id)?'checked':''} onchange="togglePol('${p.id}')">
-      <div><div style="font-size:12.5px;font-weight:600">${p.nom}</div><div class="pol-family">${p.famille} · ${p.seuil_eau} µg/L</div></div>`;
-    d.onclick = (e)=>{ if(e.target.tagName!=='INPUT'){ togglePol(p.id); }};
-    g.appendChild(d);
-  });
+function toSciRaw(val) {
+  if (val === null || val === undefined || isNaN(val)) return '—';
+  if (val === 0) return '0';
+  const exp = Math.floor(Math.log10(Math.abs(val)));
+  const mant = val / Math.pow(10, exp);
+  const supMap = {'-':'\u207B','0':'\u2070','1':'\u00B9','2':'\u00B2','3':'\u00B3','4':'\u2074','5':'\u2075','6':'\u2076','7':'\u2077','8':'\u2078','9':'\u2079'};
+  const expStr = String(exp).split('').map(c => supMap[c] || c).join('');
+  return mant.toFixed(2) + '\u00D7' + '10' + expStr;
 }
 
-function togglePol(id){
-  if(selectedPol.has(id)) selectedPol.delete(id); else selectedPol.add(id);
-  renderPolGrid();
-  renderSelectedTable();
+function v(id) {
+  const el = document.getElementById(id);
+  if (!el) return '';
+  return el.value;
 }
 
-function selectFamily(fam){
-  POLLUANTS_DB.filter(p=>p.famille===fam).forEach(p=>selectedPol.add(p.id));
-  renderPolGrid(); renderSelectedTable();
+function n(id) {
+  const val = parseFloat(v(id));
+  return isNaN(val) ? null : val;
 }
 
-function selectAllPol(){
-  POLLUANTS_DB.forEach(p=>selectedPol.add(p.id));
-  renderPolGrid(); renderSelectedTable();
-}
-function deselectAllPol(){
-  selectedPol.clear();
-  renderPolGrid(); renderSelectedTable();
-}
-
-function renderSelectedTable(){
-  const host = document.getElementById('polSelectedTable');
-  const sel = POLLUANTS_DB.filter(p=>selectedPol.has(p.id));
-  if(sel.length===0){ host.innerHTML='<div style="color:var(--muted);font-style:italic;padding:20px;text-align:center">Aucune substance sélectionnée.</div>'; return; }
-  let html = `<table class="data-table"><thead><tr><th>Substance</th><th>Famille</th><th>N° CAS</th><th>Seuil eau (µg/L)</th><th>Seuil sol (mg/kg)</th><th>Référence</th></tr></thead><tbody>`;
-  sel.forEach(p=>{
-    html += `<tr><td><strong>${p.nom}</strong></td><td><span class="badge badge-blue">${p.famille}</span></td><td style="font-family:monospace">${p.cas}</td><td><strong>${p.seuil_eau}</strong></td><td>${p.seuil_sol}</td><td style="font-size:11px;color:var(--muted)">${p.ref}</td></tr>`;
-  });
-  html += '</tbody></table>';
-  host.innerHTML = html;
+// ═══════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════
+function showTab(name, btn) {
+  // Hide all panels
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  // Show target
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  // Refresh recap when switching to it
+  if (name === 'recap') updateRecap();
 }
 
-/* ===========================================================
-   HYDROGÉOLOGIE
-   =========================================================== */
-function computeHydro(){
-  const K_ms = parseFloat(document.getElementById('K_ms').value)||0;
-  const i    = parseFloat(document.getElementById('gradI').value)||0;
-  const ne   = parseFloat(document.getElementById('ne').value)||0.20;
-  const e    = parseFloat(document.getElementById('eAquifere').value)||0;
-  const s    = parseFloat(document.getElementById('rabattement').value)||0;
-
-  const K_jour = K_ms * 86400;
-  const v_darcy = K_jour * i; // m/j
-  const v_eff   = v_darcy / ne; // m/j
-  const R_sich  = (K_ms > 0) ? 3000 * s * Math.sqrt(K_ms) : 0;
-  const d30     = v_eff * 30;
-  const d90     = v_eff * 90;
-  const Q       = K_jour * i * e;
-
-  document.getElementById('K_mjour').value    = K_jour.toExponential(3)+' m/j';
-  document.getElementById('res_darcy').textContent  = fmtN(v_darcy)+' m/j';
-  document.getElementById('res_veff').textContent   = fmtN(v_eff)+' m/j';
-  document.getElementById('res_sichardt').textContent = R_sich > 0 ? fmtN(R_sich)+' m' : '—';
-  document.getElementById('res_d30').textContent    = fmtN(d30)+' m';
-  document.getElementById('res_d90').textContent    = fmtN(d90)+' m';
-  document.getElementById('res_debit').textContent  = fmtN(Q)+' m²/j';
-  syncAll();
+// ═══════════════════════════════════════
+// PZ COLUMNS ACTIVATION
+// ═══════════════════════════════════════
+function updatePZColumns() {
+  const count = parseInt(v('pz-count')) || 2;
+  for (let i = 1; i <= 4; i++) {
+    const th = document.getElementById('th-pz' + i);
+    const cells = document.querySelectorAll('.pz-col-' + i);
+    if (i <= count) {
+      if (th) th.style.opacity = '1';
+      cells.forEach(c => c.classList.remove('col-disabled'));
+    } else {
+      if (th) th.style.opacity = '.35';
+      cells.forEach(c => c.classList.add('col-disabled'));
+    }
+  }
+  updateRecap();
 }
 
-/* ===========================================================
-   PIÉZOMÈTRES
-   =========================================================== */
-function renderPiezoTable(){
-  const tbody = document.getElementById('piezTableBody');
+// ═══════════════════════════════════════
+// HYDROGÉO AUTO-CALC
+// ═══════════════════════════════════════
+function updateHydrogeo() {
+  const substrat = v('substrat');
+  if (!substrat || !GEO_DB[substrat]) {
+    ['hg_famille','hg_type','hg_K','hg_T','hg_Sc','hg_Sl','hg_por','hg_ep'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    return;
+  }
+  const d = GEO_DB[substrat];
+  document.getElementById('hg_famille').value = d.famille;
+  document.getElementById('hg_type').value = d.type;
+  document.getElementById('hg_K').value = toSci(d.K);
+  document.getElementById('hg_T').value = toSciT(d.T);
+  document.getElementById('hg_Sc').value = toSciRaw(d.Sc);
+  document.getElementById('hg_Sl').value = d.Sl;
+  document.getElementById('hg_por').value = (d.por * 100).toFixed(1) + ' %';
+  document.getElementById('hg_ep').value = d.ep + ' m';
+}
+
+// ═══════════════════════════════════════
+// RÉCAPITULATIF TEMPS RÉEL
+// ═══════════════════════════════════════
+// Niveau BSS de référence (mis à jour par resolveGeo)
+let _bssNgfRef = null;
+let _bssStations = [];
+let _bssChroniques = {};
+
+function updateRecap() {
+  const count = parseInt(v('pz-count')) || 2;
+  const x = v('coord_x') || '—';
+  const y = v('coord_y') || '—';
+
+  const tbody = document.getElementById('recap-tbody');
   tbody.innerHTML = '';
-  piezos.forEach((pz, i)=>{
+
+  for (let i = 1; i <= 4; i++) {
+    if (i > count) continue;
+    const profondeur = n('pz' + i + '_profondeur');
+    const altTeteRaw = n('pz' + i + '_altimetrie_tete');
+    const altTete = altTeteRaw !== null ? altTeteRaw : (n('coord_alti') || null);
+    const altTeteStr = altTete !== null ? altTete.toFixed(2) : '—';
+    const tubPlein = v('pz' + i + '_tubage_plein') || '—';
+    const crepineH = n('pz' + i + '_tubage_crepine');
+    const crepineStr = crepineH !== null ? crepineH : '—';
+    const di = v('pz' + i + '_di') || '—';
+    const nsRaw = n('pz' + i + '_ns');
+    const nsStr = nsRaw !== null ? nsRaw : '—';
+    const codeMiniier = profondeur !== null && profondeur > 10;
+
+    // ── Calculs altimétrique ──
+    let nsNgf = null, fondNgf = null, crepineOk = null, crepineOkLabel = '—';
+    if (altTete !== null && nsRaw !== null) {
+      nsNgf = +(altTete - nsRaw).toFixed(2);
+    }
+    if (altTete !== null && profondeur !== null) {
+      fondNgf = +(altTete - profondeur).toFixed(2);
+    }
+
+    // Vérification crépine vs BSS de référence
+    if (fondNgf !== null && _bssNgfRef !== null) {
+      if (fondNgf < _bssNgfRef - 0.5) {
+        crepineOk = true;
+        crepineOkLabel = '<span style="color:#1A6B35;font-weight:bold;">✔ OK</span>';
+      } else {
+        crepineOk = false;
+        const nsCalc = altTete ? +(altTete - _bssNgfRef).toFixed(1) : null;
+        const profMin = nsCalc !== null ? (nsCalc + 5).toFixed(1) : '?';
+        crepineOkLabel = '<span style="color:#C0392B;font-weight:bold;">⚠ INSUFFISANT<br><small>Prof. min : ' + profMin + ' m/TN</small></span>';
+      }
+    } else if (fondNgf !== null) {
+      crepineOkLabel = '<span style="color:#888;font-size:11px;">Résoudre X/Y<br>pour vérifier</span>';
+    }
+
+    const cmCell = codeMiniier
+      ? '<td><span class="code-minier-yes">Oui (&gt; 10 m)</span></td>'
+      : '<td><span class="code-minier-no">Non</span></td>';
+
+    const ngfStyle = 'style="background:#FFF8E1;font-weight:bold;text-align:center;"';
+    const crStyle = crepineOk === false ? 'style="background:#FDEDEC;text-align:center;"'
+                  : crepineOk === true  ? 'style="background:#D5F5E3;text-align:center;"'
+                  : 'style="background:#F5F5F5;text-align:center;"';
+
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><span class="piez-idx">${i+1}</span></td>
-      <td><input type="text" value="${pz.nom}" style="width:90px;font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:4px" onchange="piezos[${i}].nom=this.value;updateMap()"></td>
-      <td>
-        <select style="font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:4px" onchange="piezos[${i}].role=this.value;updateMap()">
-          <option value="amont" ${pz.role==='amont'?'selected':''}>Amont</option>
-          <option value="aval" ${pz.role==='aval'?'selected':''}>Aval</option>
-          <option value="lateral" ${pz.role==='lateral'?'selected':''}>Latéral</option>
-        </select>
-      </td>
-      <td><input type="number" value="${pz.x}" style="width:100px;font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:4px" onchange="piezos[${i}].x=parseFloat(this.value)||0;updateMap()"></td>
-      <td><input type="number" value="${pz.y}" style="width:100px;font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:4px" onchange="piezos[${i}].y=parseFloat(this.value)||0;updateMap()"></td>
-      <td><input type="number" value="${pz.profondeur}" min="0" step="0.5" style="width:70px;font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:4px" onchange="piezos[${i}].profondeur=parseFloat(this.value)||0;computeIOTA()"></td>
-      <td><input type="number" value="${pz.diametre}" min="50" style="width:70px;font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:4px" onchange="piezos[${i}].diametre=parseFloat(this.value)||114"></td>
-      <td><input type="number" value="${pz.crepine}" min="0.5" step="0.5" style="width:70px;font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:4px" onchange="piezos[${i}].crepine=parseFloat(this.value)||3"></td>
-      <td><input type="number" value="${pz.tubage}" min="0" step="0.5" style="width:70px;font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:4px" onchange="piezos[${i}].tubage=parseFloat(this.value)||1"></td>
-      <td class="no-print"><button class="btn btn-danger" style="padding:4px 10px;font-size:11px" onclick="removePiezo(${i})">✕</button></td>`;
+      <td style="font-weight:700;color:#1B474D;">PZ-${i}</td>
+      <td>${x}</td>
+      <td>${y}</td>
+      <td>${altTeteStr}</td>
+      <td>${profondeur !== null ? profondeur : '—'}</td>
+      <td>${tubPlein}</td>
+      <td>${crepineStr}</td>
+      <td>${di}</td>
+      <td>${nsStr}</td>
+      <td ${ngfStyle}>${nsNgf !== null ? nsNgf + ' m' : '—'}</td>
+      <td ${ngfStyle}>${fondNgf !== null ? fondNgf + ' m' : '—'}</td>
+      <td ${crStyle}>${crepineOkLabel}</td>
+      ${cmCell}
+    `;
     tbody.appendChild(tr);
-  });
-  computeAll();
-  computeIOTA();
-}
-
-function addPiezo(){
-  const sX = parseFloat(document.getElementById('siteX').value)||648500;
-  const sY = parseFloat(document.getElementById('siteY').value)||6860200;
-  const n = piezos.length+1;
-  piezos.push({nom:'Pz'+n, role:'aval', x:sX+50*n, y:sY, profondeur:8, diametre:114, crepine:3, tubage:1});
-  renderPiezoTable();
-}
-
-function removePiezo(i){
-  piezos.splice(i,1);
-  renderPiezoTable();
-}
-
-function autoGenPiezos(){
-  const surface = parseFloat(document.getElementById('siteSurface').value)||2500;
-  const sX = parseFloat(document.getElementById('siteX').value)||648500;
-  const sY = parseFloat(document.getElementById('siteY').value)||6860200;
-  const az  = (parseFloat(document.getElementById('siteAzimut').value)||180) * Math.PI/180;
-  const K_ms = parseFloat(document.getElementById('K_ms').value)||1e-4;
-  const i    = parseFloat(document.getElementById('gradI').value)||0.005;
-  const ne   = parseFloat(document.getElementById('ne').value)||0.20;
-  const t    = parseFloat(document.getElementById('tSurveillance').value)||90;
-  const veff = (K_ms*86400*i)/ne;
-  const dAval = Math.max(veff*t, 20);
-  const dAmont = Math.max(Math.sqrt(surface/4), 20);
-  piezos = [];
-  // Règles ANSES
-  let nAmont=1, nAval=2;
-  if(surface>=1000 && surface<5000){ nAmont=1; nAval=3; }
-  if(surface>=5000){ nAmont=2; nAval=4; }
-  // Amont
-  for(let a=0;a<nAmont;a++){
-    const ang = (a-(nAmont-1)/2)*0.3;
-    const rx = -Math.sin(az+ang); const ry = Math.cos(az+ang);
-    piezos.push({nom:'Pz-Am'+(a+1),role:'amont',x:Math.round(sX+rx*dAmont),y:Math.round(sY+ry*dAmont),profondeur:8,diametre:114,crepine:3,tubage:1});
   }
-  // Aval
-  for(let a=0;a<nAval;a++){
-    const ang = (a-(nAval-1)/2)*0.4;
-    const rx = Math.sin(az+ang); const ry = -Math.cos(az+ang);
-    piezos.push({nom:'Pz-Av'+(a+1),role:'aval',x:Math.round(sX+rx*dAval),y:Math.round(sY+ry*dAval),profondeur:8,diametre:114,crepine:3,tubage:1});
-  }
-  renderPiezoTable();
-  if(map) updateMap();
+
+  // Mettre à jour le panneau BSS s'il est visible
+  updateBssPanel();
 }
 
-/* ===========================================================
-   CALCUL IMPLANTATION
-   =========================================================== */
-function computeAll(){
-  computeHydro();
-  const surface = parseFloat(document.getElementById('siteSurface').value)||2500;
-  const K_ms = parseFloat(document.getElementById('K_ms').value)||1e-4;
-  const i    = parseFloat(document.getElementById('gradI').value)||0.005;
-  const ne   = parseFloat(document.getElementById('ne').value)||0.20;
-  const s    = parseFloat(document.getElementById('rabattement').value)||1.5;
-  const e    = parseFloat(document.getElementById('eAquifere').value)||8;
-  const t    = parseFloat(document.getElementById('tSurveillance').value)||90;
+function updateBssPanel() {
+  const panel = document.getElementById('bss_altimetrie_panel');
+  if (!panel) return;
+  if (_bssStations.length === 0) { panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
 
-  const K_jour = K_ms * 86400;
-  const v_eff = (K_jour * i) / ne;
-  const R_sich = 3000 * s * Math.sqrt(K_ms);
-  const dAval = Math.max(v_eff * t, 20);
-  const dAmont = Math.max(Math.sqrt(surface/4), 20);
+  // Tableau stations BSS
+  let rows = _bssStations.map(s => {
+    const c = _bssChroniques[s.code_bss] || {};
+    const minNgf = c.niveau_min_ngf !== undefined ? c.niveau_min_ngf + ' m' : '—';
+    const moyNgf = c.niveau_moy_ngf !== undefined ? c.niveau_moy_ngf + ' m' : '—';
+    const maxNgf = c.niveau_max_ngf !== undefined ? c.niveau_max_ngf + ' m' : '—';
+    const dernDate = (c.derniere_date || '—').toString().slice(0,10);
+    const dernVal = c.derniere_ngf !== undefined ? c.derniere_ngf + ' m NGF' : '—';
+    return `<tr>
+      <td style="font-weight:bold;color:#1B474D;">${s.code_bss || '—'}</td>
+      <td>${s.commune || '—'}</td>
+      <td style="text-align:center;">${s.altitude_sol_ngf !== undefined ? s.altitude_sol_ngf + ' m' : '—'}</td>
+      <td style="text-align:center;color:#1A6B35;">${minNgf}</td>
+      <td style="text-align:center;font-weight:bold;">${moyNgf}</td>
+      <td style="text-align:center;color:#C0392B;">${maxNgf}</td>
+      <td style="text-align:center;">${c.nb_mesures || '—'}</td>
+      <td style="text-align:center;">${dernDate}</td>
+      <td style="text-align:center;font-weight:bold;">${dernVal}</td>
+    </tr>`;
+  }).join('');
 
-  let nAmont=1, nAval=2;
-  if(surface>=1000 && surface<5000){ nAmont=1; nAval=3; }
-  if(surface>=5000){ nAmont=2; nAval=4; }
-
-  // ANSES reco
-  const ansesDiv = document.getElementById('ansesReco');
-  ansesDiv.innerHTML = `<strong>Surface site : ${surface} m²</strong> →
-    <strong style="color:var(--primary)">${nAmont} piézomètre(s) amont + ${nAval} piézomètre(s) aval</strong> selon ANSES IEM 2018.<br>
-    <span style="font-size:11px">Règle : &lt;1000m² → 1am+2av · 1000-5000m² → 1am+3av · &gt;5000m² → 2am+4-6av</span>`;
-
-  // Synthèse
-  const syn = document.getElementById('calculSynthese');
-  syn.innerHTML = `
-    <div class="result-block">
-      <div class="result-row"><span class="result-label">Surface du site</span><span class="result-value">${surface.toLocaleString()} m²</span></div>
-      <div class="result-row"><span class="result-label">Vitesse effective des contaminants (v_eff)</span><span class="result-value">${fmtN(v_eff)} m/jour</span></div>
-      <div class="result-row"><span class="result-label">Distance aval minimale (t=${t}j)</span><span class="result-value ok">${fmtN(dAval)} m</span></div>
-      <div class="result-row"><span class="result-label">Distance amont minimale (√(S/4))</span><span class="result-value ok">${fmtN(dAmont)} m</span></div>
-      <div class="result-row"><span class="result-label">Rayon d'influence Sichardt</span><span class="result-value">${fmtN(R_sich)} m</span></div>
-      <div class="result-row"><span class="result-label">Espacement aval recommandé (√(S/4), min 20m)</span><span class="result-value">${fmtN(Math.max(Math.sqrt(surface/4),20))} m</span></div>
-      <div class="result-row"><span class="result-label">Nombre minimal piézomètres (ANSES IEM 2018)</span><span class="result-value">${nAmont+nAval} (${nAmont} amont + ${nAval} aval)</span></div>
-      <div class="result-row"><span class="result-label">Piézomètres définis actuellement</span><span class="result-value ${piezos.length>= nAmont+nAval?'ok':'ko'}">${piezos.length} (${piezos.filter(p=>p.role==='amont').length} am. + ${piezos.filter(p=>p.role==='aval').length} av.)</span></div>
-    </div>`;
-
-  // Détail
-  const det = document.getElementById('calculDetail');
-  det.innerHTML = `
-    <h3>1. Vitesse de Darcy (flux volumique)</h3>
-    <div class="formula-box">v_Darcy = K × i = ${K_jour.toExponential(3)} × ${i} = <strong>${fmtN(K_jour*i)} m/jour</strong></div>
-
-    <h3>2. Vitesse effective de transport des contaminants</h3>
-    <div class="formula-box">v_eff = v_Darcy / ne = ${fmtN(K_jour*i)} / ${ne} = <strong>${fmtN(v_eff)} m/jour</strong></div>
-    <p style="font-size:12px;color:var(--muted)">La vitesse effective représente la vitesse réelle de déplacement des polluants dissous dans l'aquifère (ANSES IEM 2018, INERIS DRC-09-103096-09387C).</p>
-
-    <h3>3. Distance de surveillance aval</h3>
-    <div class="formula-box">d_aval = v_eff × t = ${fmtN(v_eff)} × ${t} = <strong>${fmtN(v_eff*t)} m</strong> (min. imposé : 20 m) → <strong>${fmtN(dAval)} m</strong></div>
-
-    <h3>4. Distance de surveillance amont</h3>
-    <div class="formula-box">d_amont = √(Surface / 4) = √(${surface} / 4) = <strong>${fmtN(dAmont)} m</strong> (min. 20 m)</div>
-
-    <h3>5. Rayon d'influence — Formule de Sichardt</h3>
-    <div class="formula-box">R = 3000 × s × √K(m/s) = 3000 × ${s} × √${K_ms} = <strong>${fmtN(R_sich)} m</strong></div>
-    <p style="font-size:12px;color:var(--muted)">Réf. : Sichardt (1928), utilisé dans GMEP Rabattement v15.85 et les dossiers Loi sur l'Eau IOTA.</p>
-
-    <h3>6. Espacement inter-piézomètres aval</h3>
-    <div class="formula-box">D_aval = √(Surface / 4) = <strong>${fmtN(Math.max(Math.sqrt(surface/4),20))} m</strong> (min 20 m imposé par ANSES IEM 2018)</div>`;
-
-  // Reco
-  const reco = document.getElementById('calculReco');
-  const pzAmont = piezos.filter(p=>p.role==='amont');
-  const pzAval  = piezos.filter(p=>p.role==='aval');
-  let rHtml = `<div class="infobox ${piezos.length>=nAmont+nAval?'green':'red'}">
-    <strong>Configuration piézomètres :</strong> ${piezos.length} piézomètre(s) défini(s) pour un site de ${surface} m².
-    ${piezos.length>=nAmont+nAval
-      ? `✅ Conforme à l'ANSES IEM 2018 (min. ${nAmont+nAval} piézomètres requis).`
-      : `⚠ Non conforme : minimum ${nAmont+nAval} piézomètres requis (${nAmont} amont + ${nAval} aval). Utilisez le bouton "Générer auto (ANSES)" dans l'onglet ④.`}
-  </div>`;
-
-  rHtml += `<table class="data-table"><thead><tr><th>#</th><th>Nom</th><th>Rôle</th><th>X L93</th><th>Y L93</th><th>Prof. (m)</th><th>Distance au site (m)</th><th>Statut</th></tr></thead><tbody>`;
-  const sX = parseFloat(document.getElementById('siteX').value)||648500;
-  const sY = parseFloat(document.getElementById('siteY').value)||6860200;
-  piezos.forEach((pz,i)=>{
-    const dist = Math.sqrt(Math.pow(pz.x-sX,2)+Math.pow(pz.y-sY,2));
-    const minDist = pz.role==='amont'?dAmont:dAval;
-    const ok = dist>=minDist;
-    rHtml += `<tr><td>${i+1}</td><td><strong>${pz.nom}</strong></td><td><span class="badge ${pz.role==='amont'?'badge-blue':'badge-ok'}">${pz.role.charAt(0).toUpperCase()+pz.role.slice(1)}</span></td><td>${pz.x}</td><td>${pz.y}</td><td>${pz.profondeur}</td><td>${fmtN(dist)} m</td><td><span class="badge ${ok?'badge-ok':'badge-ko'}">${ok?'✓ OK':'⚠ Trop proche'}</span></td></tr>`;
-  });
-  rHtml += '</tbody></table>';
-  reco.innerHTML = rHtml;
-
-  updateWGS84();
-  computeIOTA();
+  const bssRef = _bssNgfRef !== null ? _bssNgfRef.toFixed(2) + ' m NGF' : '—';
+  document.getElementById('bss_panel_content').innerHTML = `
+    <p style="font-size:12px;color:#555;margin-bottom:8px;">
+      <b>Niveau de référence BSS retenu :</b>
+      <span style="font-size:14px;font-weight:bold;color:#1B474D;">${bssRef}</span>
+      <span style="font-size:11px;color:#888;">(moyenne des dernières mesures des stations voisines)</span>
+    </p>
+    <table style="width:100%;border-collapse:collapse;font-size:11px;">
+      <thead><tr style="background:#1B474D;color:#fff;">
+        <th style="padding:4px 6px;">Code BSS</th>
+        <th style="padding:4px 6px;">Commune</th>
+        <th style="padding:4px 6px;">Alt. sol</th>
+        <th style="padding:4px 6px;">NS min NGF</th>
+        <th style="padding:4px 6px;">NS moy NGF</th>
+        <th style="padding:4px 6px;">NS max NGF</th>
+        <th style="padding:4px 6px;">N mesures</th>
+        <th style="padding:4px 6px;">Dernière date</th>
+        <th style="padding:4px 6px;">Dernière val.</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
 }
 
-/* ===========================================================
-   CONFORMITÉ IOTA
-   =========================================================== */
-function computeIOTA(){
-  const maxProf = piezos.length > 0 ? Math.max(...piezos.map(p=>p.profondeur)) : 0;
-  const nPiez   = piezos.length;
-  const surface = parseFloat(document.getElementById('siteSurface').value)||2500;
-  const siteRef = document.getElementById('siteRef').value;
-  const siteName= document.getElementById('siteName').value;
+// ═══════════════════════════════════════
+// EXPORT JSON + LANCEMENT PDF
+// ═══════════════════════════════════════
 
-  // Rubrique 1.1.1.0
-  let rub1_regime = 'NC', rub1_color = 'badge-ok', rub1_label = 'Non concerné';
-  if(maxProf > 0 && maxProf < 10){ rub1_regime='Déclaration'; rub1_color='badge-warn'; rub1_label='Déclaration — CERFA N°15031*01';}
-  else if(maxProf >= 10){ rub1_regime='Autorisation'; rub1_color='badge-ko'; rub1_label='Autorisation + Code Minier L.411-1';}
-
-  // Rubrique 1.1.2.0 (prélèvements)
-  const K_ms = parseFloat(document.getElementById('K_ms').value)||1e-4;
-  const i    = parseFloat(document.getElementById('gradI').value)||0.005;
-  const e    = parseFloat(document.getElementById('eAquifere').value)||8;
-  const qAn  = K_ms * 3600 * 24 * 365 * i * e * 1; // m³/an pour 1m de large — indicatif
-  let rub2_regime='NC', rub2_color='badge-ok';
-  if(qAn>200000){ rub2_regime='Autorisation'; rub2_color='badge-ko'; }
-  else if(qAn>10000){ rub2_regime='Déclaration'; rub2_color='badge-warn'; }
-
-  const resultDiv = document.getElementById('iotaResult');
-  resultDiv.innerHTML = `
-    <div class="result-block">
-      <div class="result-row"><span class="result-label">Profondeur max. des piézomètres</span><span class="result-value">${maxProf > 0 ? maxProf+' m':' — non défini'}</span></div>
-      <div class="result-row"><span class="result-label">Rubrique 1.1.1.0 (sondages/forages)</span><span class="result-value"><span class="badge ${rub1_color}">${rub1_regime}</span></span></div>
-      <div class="result-row"><span class="result-label">Rubrique 1.1.2.0 (prélèvements)</span><span class="result-value"><span class="badge ${rub2_color}">${rub2_regime}</span></span></div>
-      <div class="result-row"><span class="result-label">Code Minier L.411-1 (déclaration BSS)</span><span class="result-value"><span class="badge ${maxProf>=10?'badge-ko':'badge-warn'}">${maxProf>=10?'Obligatoire (≥10m)':'À vérifier'}</span></span></div>
-    </div>
-    ${maxProf>=10 ? `<div class="infobox red"><strong>⚠ Profondeur ≥ 10 m :</strong> Les forages de profondeur ≥ 10 m sont soumis à autorisation préfectorale (R.214-1 rubrique 1.1.1.0) ET à déclaration BSS (Code Minier L.411-1) dans les 2 mois suivant la réalisation.</div>`
-    : maxProf>0 ? `<div class="infobox"><strong>📋 Profondeur &lt; 10 m :</strong> Déclaration CERFA N°15031*01 à déposer auprès de la DDT(M) avant réalisation des travaux. Délai : 1 mois minimum avant début des travaux.</div>` : ''}`;
-
-  // Rubriques détail
-  document.getElementById('rubrique1110').innerHTML = `<span class="badge ${rub1_color}">${rub1_label}</span> — Profondeur max. : ${maxProf} m — ${nPiez} ouvrage(s)`;
-  document.getElementById('rubrique1120').innerHTML = `<span class="badge ${rub2_color}">${rub2_regime||'Non concerné (piézomètres surveillance, pas pompage)'}</span>`;
-  document.getElementById('codeMinierId').innerHTML = maxProf>=10
-    ? `<span class="badge badge-ko">Déclaration BSS obligatoire</span> — Enregistrement BRGM BSS dans les 2 mois après réalisation.`
-    : `<span class="badge badge-warn">À vérifier</span> — Profondeur &lt; 10 m · Enregistrement BSS recommandé mais non obligatoire.`;
-
-  // Tableau obligations
-  document.getElementById('tableObligations').innerHTML = `
-    <table class="data-table">
-      <thead><tr><th>Obligation</th><th>Régime</th><th>Autorité</th><th>Délai</th><th>Formulaire</th></tr></thead>
-      <tbody>
-        <tr><td>Rubrique 1.1.1.0 R.214-1</td><td><span class="badge ${rub1_color}">${rub1_regime}</span></td><td>DDT(M) / Préfecture</td><td>1 mois avant travaux</td><td>CERFA N°15031*01</td></tr>
-        <tr><td>Code Minier L.411-1</td><td><span class="badge ${maxProf>=10?'badge-ko':'badge-warn'}">${maxProf>=10?'Obligatoire':'Recommandé'}</span></td><td>BRGM — BSS</td><td>2 mois après réalisation</td><td>Fiche BRGM BSS</td></tr>
-        <tr><td>Information DREAL/Inspection ICPE</td><td><span class="badge ${document.getElementById('siteICPE').value==='oui'?'badge-ko':'badge-ok'}">${document.getElementById('siteICPE').value==='oui'?'Requis':'Non requis'}</span></td><td>DREAL / Inspection ICPE</td><td>Avant mise en oeuvre</td><td>Courrier + plan</td></tr>
-        <tr><td>Notification ARS (si usage AEP)</td><td><span class="badge ${document.getElementById('siteUsage').value==='aep'?'badge-ko':'badge-ok'}">${document.getElementById('siteUsage').value==='aep'?'Requis':'Non requis'}</span></td><td>ARS</td><td>Avant réalisation</td><td>Courrier ARS</td></tr>
-      </tbody>
-    </table>`;
-}
-
-/* ===========================================================
-   CARTE LEAFLET
-   =========================================================== */
-function initMap(){
-  const sX = parseFloat(document.getElementById('siteX').value)||648500;
-  const sY = parseFloat(document.getElementById('siteY').value)||6860200;
-  const wgs = l93toWGS84(sX, sY);
-  if(!wgs){ document.getElementById('map').innerHTML='<div style="padding:40px;text-align:center;color:var(--ko)">Coordonnées Lambert 93 invalides</div>'; return; }
-  const [lng, lat] = wgs;
-
-  if(!map){
-    map = L.map('map').setView([lat, lng], 15);
-    layers.osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19});
-    layers.ign = L.tileLayer('https://wxs.ign.fr/essentiels/geoportail/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',{attribution:'© IGN France',maxZoom:18});
-    layers.ortho = L.tileLayer('https://wxs.ign.fr/essentiels/geoportail/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',{attribution:'© IGN France BD ORTHO',maxZoom:20});
-    layers.osm.addTo(map);
-  } else {
-    map.setView([lat, lng], 15);
-  }
-  updateMap();
-}
-
-function updateMap(){
-  if(!map) return;
-  // Nettoyer markers
-  map.eachLayer(l=>{ if(l instanceof L.Marker || l instanceof L.Circle) map.removeLayer(l); });
-
-  const sX = parseFloat(document.getElementById('siteX').value)||648500;
-  const sY = parseFloat(document.getElementById('siteY').value)||6860200;
-  const wgs = l93toWGS84(sX, sY);
-  if(!wgs) return;
-  const [lng,lat] = wgs;
-  const surface = parseFloat(document.getElementById('siteSurface').value)||2500;
-  const r = Math.sqrt(surface/Math.PI);
-
-  // Marqueur site
-  const siteIcon = L.divIcon({className:'',html:`<div style="width:18px;height:18px;background:#f39c12;border:2px solid #fff;border-radius:3px;box-shadow:0 2px 4px rgba(0,0,0,.4)"></div>`,iconAnchor:[9,9]});
-  L.marker([lat,lng],{icon:siteIcon}).addTo(map).bindPopup(`<b>${document.getElementById('siteName').value}</b><br>X=${sX} Y=${sY}<br>Surface : ${surface} m²`);
-  L.circle([lat,lng],{radius:r,color:'#f39c12',weight:2,fillOpacity:0.1}).addTo(map);
-
-  // Piézomètres
-  piezos.forEach((pz,i)=>{
-    const w = l93toWGS84(pz.x, pz.y);
-    if(!w) return;
-    const [plng,plat] = w;
-    const col = pz.role==='amont'?'#1a5276':(pz.role==='aval'?'#e74c3c':'#8e44ad');
-    const icon = L.divIcon({className:'',html:`<div style="width:16px;height:16px;background:${col};border:2px solid #fff;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700">${i+1}</div>`,iconAnchor:[8,8]});
-    L.marker([plat,plng],{icon}).addTo(map).bindPopup(`<b>${pz.nom}</b><br>Rôle : ${pz.role}<br>X=${pz.x} · Y=${pz.y}<br>Prof. : ${pz.profondeur} m · Ø ${pz.diametre} mm`);
-    // Ligne vers site
-    L.polyline([[lat,lng],[plat,plng]],{color:col,weight:1.5,dashArray:'5,4',opacity:0.6}).addTo(map);
-  });
-}
-
-function switchLayer(name){
-  if(!map) return;
-  Object.values(layers).forEach(l=>{ if(map.hasLayer(l)) map.removeLayer(l); });
-  layers[name].addTo(map);
-  currentLayer = name;
-}
-
-/* ===========================================================
-   CONVERSION WGS84 (affichage)
-   =========================================================== */
-function updateWGS84(){
-  const sX = parseFloat(document.getElementById('siteX').value)||648500;
-  const sY = parseFloat(document.getElementById('siteY').value)||6860200;
-  const wgs = l93toWGS84(sX, sY);
-  if(wgs){
-    document.getElementById('wgs84Lat').textContent = wgs[1].toFixed(6)+'°N';
-    document.getElementById('wgs84Lng').textContent = wgs[0].toFixed(6)+'°E';
+// Force l'encodage UTF-8 correct d'une chaîne (corrige les corruptions Windows ANSI)
+function utf8fix(s) {
+  if (!s) return s;
+  try {
+    // Si la chaîne contient des séquences Ã© (UTF-8 mal interprété en latin-1), la corriger
+    return decodeURIComponent(escape(s));
+  } catch(e) {
+    return s;  // déjà correcte
   }
 }
+// Version sécurisée de v() qui force UTF-8
+function vu(id) { return utf8fix(v(id)); }
 
-/* ===========================================================
-   EXPORT CSV
-   =========================================================== */
-function exportCSV(){
-  const siteName = document.getElementById('siteName').value;
-  const siteRef  = document.getElementById('siteRef').value;
-  const K_ms = parseFloat(document.getElementById('K_ms').value)||1e-4;
-  const i    = parseFloat(document.getElementById('gradI').value)||0.005;
-  const ne   = parseFloat(document.getElementById('ne').value)||0.20;
-  const K_jour = K_ms*86400;
-  const v_eff = (K_jour*i)/ne;
-  const t = parseFloat(document.getElementById('tSurveillance').value)||90;
-  const dAval = Math.max(v_eff*t,20);
+function exportJSON() {
+  const count = parseInt(v('pz-count')) || 2;
+  const substrat = v('substrat');
+  const geo = substrat && GEO_DB[substrat] ? GEO_DB[substrat] : {};
 
-  let csv = '\uFEFF'; // BOM UTF-8
-  csv += `GMEP Piézomètres v2.9c — Export CSV\n`;
-  csv += `Site;${siteName}\nRéférence;${siteRef}\nDate;${new Date().toLocaleDateString('fr-FR')}\n\n`;
-  csv += `PARAMÈTRES HYDROGÉOLOGIQUES\n`;
-  csv += `K (m/s);${K_ms}\nK (m/j);${(K_ms*86400).toFixed(6)}\nGradient i;${i}\nPorosité ne;${ne}\nVitesse eff. (m/j);${v_eff.toFixed(4)}\nDistance aval (m);${dAval.toFixed(1)}\n\n`;
-  csv += `PIÉZOMÈTRES\nN°;Nom;Rôle;X Lambert93;Y Lambert93;Profondeur (m);Ø forage (mm);Long. crépine (m);Haut. tubage (m)\n`;
-  piezos.forEach((pz,i)=>{ csv += `${i+1};${pz.nom};${pz.role};${pz.x};${pz.y};${pz.profondeur};${pz.diametre};${pz.crepine};${pz.tubage}\n`; });
-  csv += `\nSUBSTANCES SURVEILLÉES\nNom;Famille;N° CAS;Seuil eau (µg/L);Seuil sol (mg/kg)\n`;
-  POLLUANTS_DB.filter(p=>selectedPol.has(p.id)).forEach(p=>{ csv += `${p.nom};${p.famille};${p.cas};${p.seuil_eau};${p.seuil_sol}\n`; });
+  const x_l93  = n('coord_x');
+  const y_l93  = n('coord_y');
+  const commune = v('coord_commune') || v('gr_commune') || '';
+  const dept    = v('coord_departement') || v('gr_dept') || '';
 
-  const blob = new Blob([csv],{type:'text/csv;charset=utf-8'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `GMEP_Piezometres_${siteRef.replace(/[/\\]/g,'-')}_${new Date().toISOString().slice(0,10)}.csv`;
+  // Conversion Lambert 93 → WGS84 (formule approchée)
+  function l93ToWgs84(x, y) {
+    const n_=0.7256077650, c_=11754255.426, Xs=700000, Ys=12655612.050;
+    const e_=0.0818191910428, lon0=Math.PI/60;
+    const R=Math.hypot(x-Xs, y-Ys), g=Math.atan((x-Xs)/(Ys-y));
+    const lonR=lon0+g/n_;
+    let lat_iso=-Math.log(R/c_)/n_;
+    let lat=2*Math.atan(Math.exp(lat_iso))-Math.PI/2;
+    for(let j=0;j<8;j++){
+      lat=2*Math.atan(Math.pow((1+e_*Math.sin(lat))/(1-e_*Math.sin(lat)),e_/2)*Math.exp(lat_iso))-Math.PI/2;
+    }
+    return {lon: lonR*180/Math.PI, lat: lat*180/Math.PI};
+  }
+  let lon_wgs84 = null, lat_wgs84 = null;
+  if (x_l93 && y_l93) {
+    const wgs = l93ToWgs84(x_l93, y_l93);
+    lon_wgs84 = +wgs.lon.toFixed(6);
+    lat_wgs84 = +wgs.lat.toFixed(6);
+  }
+
+  // Construction des piézomètres avec les BONNES clés (compatibles generate_rapport_piezometre.py)
+  const piezometres = [];
+  for (let i = 1; i <= count; i++) {
+    const prof  = n('pz' + i + '_profondeur');
+    const alti  = n('pz' + i + '_altimetrie_tete');
+    const ns    = n('pz' + i + '_ns');
+    // Di/De saisis en mètres dans le formulaire → convertir en mm pour le générateur PDF
+    const di_m  = n('pz' + i + '_di');
+    const de_m  = n('pz' + i + '_de');
+    const di_mm = di_m != null ? +(di_m * 1000).toFixed(1) : null;  // 0.063 m → 63.0 mm
+    const de_mm = de_m != null ? +(de_m * 1000).toFixed(1) : null;  // 0.080 m → 80.0 mm
+    // Calculs dérivés
+    const ns_ngf   = (alti != null && ns != null)   ? +(alti - ns).toFixed(3)   : null;
+    const fond_ngf = (alti != null && prof != null) ? +(alti - prof).toFixed(3) : null;
+    const tub_p    = n('pz' + i + '_tubage_plein');
+    const tub_c    = n('pz' + i + '_tubage_crepine');
+    const debut_cr = (alti != null && tub_p != null) ? +(alti - tub_p).toFixed(3) : null;
+    piezometres.push({
+      id:                   'PZ-' + i,
+      profondeur:            prof,
+      altimetrie_tete:       alti,
+      NS:                    ns,
+      ns_ngf:                ns_ngf,
+      fond_ngf:              fond_ngf,
+      hauteur_tubage_plein:  tub_p,
+      hauteur_tubage_crepine:tub_c,
+      debut_crepine_ngf:     debut_cr,
+      diam_interieur:        di_mm,     // mm
+      diam_exterieur:        de_mm,     // mm
+      hauteur_massif_filtrant: n('pz' + i + '_massif_filtrant'),
+      hauteur_etanche_bentonite: n('pz' + i + '_bentonite'),
+      mat_tubage:            v('pz' + i + '_mat_tubage'),
+      mat_crepine:           v('pz' + i + '_mat_crepine'),
+      massif_filtrant:       v('pz' + i + '_mat_massif'),
+      lambert_x:             x_l93,
+      lambert_y:             y_l93,
+      altimetrie_site:       n('coord_alti'),
+      commune:               commune,
+      departement:           dept,
+      lon_wgs84:             lon_wgs84,
+      lat_wgs84:             lat_wgs84,
+      code_minier:           prof != null && prof > 10,
+      any_code_minier:       prof != null && prof > 10
+    });
+  }
+
+  const anyCodeMinier = piezometres.some(p => p.code_minier);
+
+  // Structure JSON compatible avec generate_rapport_piezometre.py
+  const data = {
+    // -- Identités (clés plates attendues par le générateur PDF) --
+    mo_nom:     v('mo_nom'),
+    mo_adresse: v('mo_adresse'),
+    mo_cp_ville:v('mo_cp_ville'),
+    mo_tel:     v('mo_tel'),
+    mo_email:   v('mo_email'),
+    mo_siret:   v('mo_siret'),
+    be_nom:     v('be_nom'),
+    be_adresse: v('be_adresse'),
+    be_cp_ville:v('be_cp_ville'),
+    be_tel:     v('be_tel'),
+    be_email:   v('be_email'),
+    be_siret:   v('be_siret'),
+    forage_nom:    v('sf_nom'),
+    forage_adresse:v('sf_adresse'),
+    forage_cp_ville:v('sf_cp_ville'),
+    forage_tel:    v('sf_tel'),
+    forage_email:  v('sf_email') || '',
+    forage_siret:  v('sf_siret'),
+    et_nom:     v('et_nom'),
+    et_adresse: v('et_adresse'),
+    et_cp_ville:v('et_cp_ville'),
+    et_tel:     v('et_tel'),
+    et_email:   v('et_email'),
+    et_siret:   v('et_siret'),
+    // -- Coordonnées projet --
+    lambert_x:     x_l93,
+    lambert_y:     y_l93,
+    alti_ngf:      n('coord_alti'),
+    lon_wgs84:     lon_wgs84,
+    lat_wgs84:     lat_wgs84,
+    commune:       commune,
+    departement:   dept,
+    // -- Dossier --
+    ref_dossier:   v('dos_reference'),
+    date_debut:    v('dos_date_debut'),
+    date_fin:      v('dos_date_fin'),
+    num_bss:       v('dos_bss'),
+    ref_dreal:     v('dos_ref_ddt'),
+    version:       v('dos_version'),
+    statut_doc:    v('dos_statut'),
+    // -- Géologie --
+    substrat:      substrat,
+    substrat_brgm: substrat,
+    geo_famille:   geo.famille || '',
+    geo_type_nappe:geo.type || '',
+    geo_porosite:  geo.por || null,
+    geo_ep_type:   geo.ep || null,
+    // -- Piézomètres --
+    piezometres:   piezometres,
+    any_code_minier: anyCodeMinier,
+    zre_actif:     false,
+    zre_statut:    'NON ZRE',
+    // -- Résultats géo-résolution (si disponibles) --
+    bassin_dce:    v('gr_bassin')  || '',
+    agence_eau:    v('gr_agence')  || '',
+    sdage:         v('gr_sdage')   || '',
+    meso_libelle:  v('gr_nappe')   || '',
+    meso_code:     v('gr_meso')    || '',
+    description_brgm: v('gr_brgm') || substrat,
+    // -- Source --
+    _source:       'piezometre-tableur.html v1.7',
+    _generated:    new Date().toISOString()
+  };
+
+  const json = JSON.stringify(data, null, 2);
+
+  // ── Tentative via serveur local (flux direct → PDF s'ouvre automatiquement) ──
+  const GMEP_PORT = 8342;
+  _genererViaSeveur(json, GMEP_PORT, count, commune);
+}
+
+async function _genererViaSeveur(json, port, count, commune) {
+  const btn = document.querySelector('button.btn-orange');
+  const originalText = btn ? btn.innerHTML : '';
+
+  // Indicateur de chargement
+  const overlay = document.createElement('div');
+  overlay.id = 'gmep-overlay';
+  overlay.style.cssText = [
+    'position:fixed','top:0','left:0','right:0','bottom:0','z-index:9998',
+    'background:rgba(27,71,77,0.85)','display:flex','flex-direction:column',
+    'align-items:center','justify-content:center','color:#fff'
+  ].join(';');
+  overlay.innerHTML = `
+    <div style="font-size:22px;margin-bottom:12px;">&#9881;&#65039;</div>
+    <div style="font-size:16px;font-weight:700;margin-bottom:8px;">Génération du PDF en cours...</div>
+    <div style="font-size:12px;opacity:.8;">Le PDF s'ouvrira automatiquement dans quelques secondes.</div>
+    <div id="gmep-progress" style="margin-top:16px;font-size:11px;opacity:.7;">Connexion au serveur...</div>
+  `;
+  document.body.appendChild(overlay);
+
+  function setProgress(msg) {
+    const el = document.getElementById('gmep-progress');
+    if (el) el.textContent = msg;
+  }
+
+  try {
+    // 1. Vérifier que le serveur local est actif
+    setProgress('Connexion au serveur local GMEP...');
+    let serverOk = false;
+    try {
+      const ping = await fetch(`http://127.0.0.1:${port}/ping`, { signal: AbortSignal.timeout(2000) });
+      serverOk = ping.ok;
+    } catch(e) { serverOk = false; }
+
+    if (!serverOk) {
+      // Serveur pas encore démarré — basculer sur téléchargement JSON + instructions
+      overlay.remove();
+      _fallbackDownload(json, count, commune);
+      return;
+    }
+
+    // 2. Envoyer le JSON au serveur pour génération PDF
+    setProgress('Envoi des données... génération PDF...');
+    const resp = await fetch(`http://127.0.0.1:${port}/generer-pdf`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json;charset=utf-8' },
+      body: json
+    });
+
+    if (!resp.ok) throw new Error(`Erreur serveur : ${resp.status}`);
+
+    // 3. Attendre la génération (le PDF s'ouvre automatiquement coté serveur)
+    setProgress('PDF en cours de génération... (10–30 secondes)');
+    await new Promise(r => setTimeout(r, 2000));
+
+    // Mise à jour du overlay avec succès
+    overlay.innerHTML = `
+      <div style="font-size:28px;margin-bottom:12px;">&#10004;</div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:8px;">PDF généré !</div>
+      <div style="font-size:12px;opacity:.85;">Le fichier PDF s'est ouvert automatiquement.</div>
+      <div style="font-size:11px;opacity:.7;margin-top:6px;">
+        S'il ne s'est pas ouvert : cherchez <code style="background:#fff2;padding:1px 5px;border-radius:3px;">
+        Dossier_Declaration_Loi_Eau_Piezometres_GMEP.pdf</code> dans le dossier logiciel.
+      </div>
+      <button onclick="document.getElementById('gmep-overlay').remove()"
+        style="margin-top:18px;background:#E8730A;border:none;color:#fff;font-weight:700;
+               padding:10px 24px;border-radius:6px;cursor:pointer;font-size:13px;">
+        Fermer
+      </button>
+    `;
+
+  } catch(err) {
+    overlay.remove();
+    _fallbackDownload(json, count, commune);
+  }
+}
+
+function _fallbackDownload(json, count, commune) {
+  // Serveur non disponible — téléchargement JSON + instructions manuelles
+  const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'piezometre_data.json';
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  _showPdfInstructions(count, commune);
 }
 
-/* ===========================================================
-   SYNC GLOBALE
-   =========================================================== */
-function syncAll(){
-  updateWGS84();
-  computeHydro();
+function _showPdfInstructions(nbPz, commune) {
+  // Supprimer panneau existant
+  const existing = document.getElementById('pdf-instr-panel');
+  if (existing) existing.remove();
+
+  const panel = document.createElement('div');
+  panel.id = 'pdf-instr-panel';
+  panel.style.cssText = [
+    'position:fixed','bottom:0','left:0','right:0','z-index:9999',
+    'background:#1B474D','color:#fff',
+    'padding:14px 24px','display:flex','align-items:center','gap:16px',
+    'box-shadow:0 -3px 12px rgba(0,0,0,0.35)','flex-wrap:wrap'
+  ].join(';');
+  panel.innerHTML = `
+    <div style="flex:1;min-width:260px;">
+      <div style="font-weight:700;font-size:13px;margin-bottom:4px;">
+        ✅ JSON exporté (${nbPz} piézomètre${nbPz>1?'s':''} — ${commune||'projet'})
+      </div>
+      <div style="font-size:11px;opacity:.85;">
+        1. Le fichier <code style="background:#fff2;padding:1px 5px;border-radius:3px;">piezometre_data.json</code>
+           vient d'être téléchargé dans votre dossier Téléchargements.
+        &nbsp;&nbsp;2. Copiez-le dans le dossier logiciel.
+        &nbsp;&nbsp;3. Double-cliquez <code style="background:#fff2;padding:1px 5px;border-radius:3px;">_CLIQUEZ_ICI_GENERER_PDF.bat</code>
+           → le PDF s'ouvre automatiquement.
+      </div>
+    </div>
+    <button onclick="document.getElementById('pdf-instr-panel').remove()"
+      style="background:#E8730A;border:none;color:#fff;font-weight:700;padding:8px 18px;
+             border-radius:5px;cursor:pointer;font-size:12px;white-space:nowrap;">
+      Fermer
+    </button>
+  `;
+  document.body.appendChild(panel);
+
+  // Disparition automatique après 30 secondes
+  setTimeout(() => { if (panel.parentNode) panel.remove(); }, 30000);
 }
 
-/* ===========================================================
-   UTILS
-   =========================================================== */
-function fmtN(x){
-  if(!isFinite(x)||x===null||x===undefined) return '—';
-  if(x===0) return '0';
-  const a=Math.abs(x);
-  if(a<0.001||a>=100000) return x.toExponential(3);
-  if(a<10) return x.toFixed(3);
-  if(a<1000) return x.toFixed(1);
-  return Math.round(x).toLocaleString('fr-FR');
+// ═══════════════════════════════════════
+// BASE GÉOLOGIQUE TABLE
+// ═══════════════════════════════════════
+function buildGeoTable() {
+  const tbody = document.getElementById('geo-tbody');
+  for (const [name, d] of Object.entries(GEO_DB)) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${name}</strong></td>
+      <td>${d.famille}</td>
+      <td>${d.type}</td>
+      <td>${toSciRaw(d.K)}</td>
+      <td>${toSciRaw(d.T)}</td>
+      <td>${toSciRaw(d.Sc)}</td>
+      <td>${d.Sl}</td>
+      <td>${(d.por * 100).toFixed(1)}</td>
+      <td>${d.ep}</td>
+      <td style="white-space:normal;min-width:220px;">${d.desc}</td>
+    `;
+    tbody.appendChild(tr);
+  }
 }
 
-/* ===========================================================
-   INITIALISATION
-   =========================================================== */
-(function init(){
-  // Date par défaut
-  document.getElementById('siteDate').value = new Date().toISOString().slice(0,10);
-  // Polluants BTEX par défaut
-  ['benzene','toluene','ethylbenz','xylenes','naphta','pce','tce'].forEach(id=>selectedPol.add(id));
-  renderPolGrid();
-  renderSelectedTable();
-  // Piézomètres par défaut
-  piezos = [
-    {nom:'Pz-Am1',role:'amont',x:648430,y:6860300,profondeur:8,diametre:114,crepine:3,tubage:1},
-    {nom:'Pz-Av1',role:'aval', x:648500,y:6860100,profondeur:8,diametre:114,crepine:3,tubage:1},
-    {nom:'Pz-Av2',role:'aval', x:648590,y:6860095,profondeur:8,diametre:114,crepine:3,tubage:1},
-  ];
-  renderPiezoTable();
-  computeAll();
-  updateWGS84();
-})();
+// ═══════════════════════════════════════
+// ═══════════════════════════════════════
+// GÉO-RÉSOLUTION AUTOMATIQUE
+// ═══════════════════════════════════════
+let _geoTimer = null;
+let _lastGeoResult = null;
+
+// Lambert 93 → WGS84 (formule IGN analytique)
+function l93ToWgs84(x, y) {
+  const n=0.7256077650, c=11754255.426, Xs=700000, Ys=12655612.050;
+  const e=0.0818191910428, lon0=Math.PI/60;
+  const R=Math.hypot(x-Xs, y-Ys);
+  const g=Math.atan((x-Xs)/(Ys-y));
+  const lonRad=lon0+g/n;
+  let lat_iso=-Math.log(R/c)/n;
+  let lat=2*Math.atan(Math.exp(lat_iso))-Math.PI/2;
+  for(let i=0;i<8;i++){
+    lat=2*Math.atan(Math.pow((1+e*Math.sin(lat))/(1-e*Math.sin(lat)),e/2)*Math.exp(lat_iso))-Math.PI/2;
+  }
+  return {lon: lonRad*180/Math.PI, lat: lat*180/Math.PI};
+}
+
+// Mapping BRGM libéllé → substrat GEO_DB
+function matchSubstratBrgm(libelle) {
+  if(!libelle) return null;
+  const s=libelle.toLowerCase();
+  if(s.includes('remblai')) return 'Remblai hétérogène';
+  if(s.includes('basalte')) return 'Basalte fissuré';
+  if(s.includes('loëss')||s.includes('loess')||s.includes('limon')) return 'Limon alluvial';
+  if(s.includes('schiste')) return 'Schistes altérés';
+  if(s.includes('arène')) return 'Arène granitique';
+  if(s.includes('granite')||s.includes('granit')) return 'Granite fissuré';
+  if(s.includes('grès')) return 'Grès poreux peu consolidé';
+  if(s.includes('craie')) return 'Craie';
+  if(s.includes('tuffeau')) return 'Tuffeau (Val de Loire)';
+  if(s.includes('beauce')) return 'Calcaire de Beauce';
+  if(s.includes('calcaire')&&(s.includes('karst')||s.includes('karst'))) return 'Calcaire karstifié';
+  if(s.includes('calcaire')) return 'Calcaire compact fissuré';
+  if(s.includes('marne')&&s.includes('calcaire')) return 'Marno-calcaire fissuré';
+  if(s.includes('marne')) return 'Marne argileuse';
+  if(s.includes('argile')&&s.includes('silex')) return 'Argile à silex';
+  if(s.includes('argile')) return 'Argile compacte';
+  if(s.includes('sable')&&(s.includes('gross'))) return 'Sable grossier propre';
+  if(s.includes('sable')) return 'Sable fin a moyen';
+  if(s.includes('gravier')||s.includes('alluvion')) return 'Alluvions grossières';
+  return null;
+}
+
+async function resolveGeo() {
+  const x=parseFloat(v('coord_x')), y=parseFloat(v('coord_y'));
+  if(!x||!y||x<0||y<0) { 
+    document.getElementById('geo_status').textContent='Saisir X et Y d\'abord.';
+    return;
+  }
+  const st=document.getElementById('geo_status');
+  st.textContent='⏳ Résolution en cours...';
+  st.style.color='#888';
+  document.getElementById('geo_results').style.display='none';
+
+  const {lon,lat}=l93ToWgs84(x,y);
+  const res={commune:'—',dept:'—',bassin:'—',meso:'—',agence:'—',sdage:'—',
+             zre:'—',nappe:'—',brgm:'—',substrat_match:null,code_form:'—',bss:'—'};
+
+  // 1. Commune (geo.api.gouv.fr)
+  try{
+    const r=await fetch(`https://geo.api.gouv.fr/communes?lat=${lat}&lon=${lon}&fields=nom,code,codeDepartement&format=json`);
+    const d=await r.json();
+    if(d&&d[0]){
+      res.commune=d[0].nom;
+      res.dept=d[0].codeDepartement;
+      document.getElementById('coord_commune').value=d[0].nom;
+      document.getElementById('coord_departement').value=d[0].codeDepartement;
+      updateRecap();
+    }
+  }catch(e){}
+
+  // 2. Masse d'eau souterraine (Hub'Eau)
+  try{
+    const delta=0.05;
+    const r=await fetch(`https://hubeau.eaufrance.fr/api/v1/qualite_nappes/stations?bbox=${lon-delta},${lat-delta},${lon+delta},${lat+delta}&size=5&format=json`);
+    const d=await r.json();
+    if(d&&d.data&&d.data[0]){
+      const s=d.data[0];
+      const codes=(s.codes_masse_eau_rap||s.codes_masse_eau_edl||[]);
+      const noms=(s.noms_masse_eau_rap||s.noms_masse_eau_edl||[]);
+      if(codes[0]) res.meso=codes[0]+(noms[0]?' — '+noms[0]:'');
+      if(s.bassin_dce) res.bassin=s.bassin_dce;
+      // SDAGE depuis bassin
+      const bl=res.bassin.toLowerCase();
+      if(bl.includes('loire')) res.sdage='SDAGE Loire-Bretagne 2022-2027', res.agence='Agence de l\'Eau Loire-Bretagne (AELB)';
+      else if(bl.includes('seine')) res.sdage='SDAGE Seine-Normandie 2022-2027', res.agence='Agence de l\'Eau Seine-Normandie (AESN)';
+      else if(bl.includes('rhône')||bl.includes('méditerranée')) res.sdage='SDAGE Rhône-Méditerranée 2022-2027', res.agence='Agence de l\'Eau RMC (AERMC)';
+      else if(bl.includes('adour')||bl.includes('garonne')) res.sdage='SDAGE Adour-Garonne 2022-2027', res.agence='Agence de l\'Eau Adour-Garonne (AEAG)';
+      else if(bl.includes('artois')||bl.includes('picardie')) res.sdage='SDAGE Artois-Picardie 2022-2027', res.agence='Agence de l\'Eau Artois-Picardie (AEAP)';
+      else if(bl.includes('rhin')||bl.includes('meuse')) res.sdage='SDAGE Rhin-Meuse 2022-2027', res.agence='Agence de l\'Eau Rhin-Meuse (AERM)';
+    }
+  }catch(e){}
+
+  // 3. ZRE — registre embarqué (via commune + département)
+  const ZRE_DEPTS={'41':'Nappe de Beauce (arrêté DREAL CVL n°23.001)','28':'Nappe de Beauce','45':'Nappe de Beauce','91':'Albien-Néocomien','67':'Plaine d\'Alsace','68':'Plaine d\'Alsace','13':'Nappe de la Crau','34':'Nappe de l\'Astien'};
+  if(res.dept&&ZRE_DEPTS[res.dept]){
+    res.zre='PRÉSOMPTION ZRE — '+res.dept;
+    res.nappe=ZRE_DEPTS[res.dept];
+  } else {
+    res.zre='Non ZRE détecté';
+  }
+
+  // 4. Géologie BRGM (WFS)
+  try{
+    const wfsUrl=`https://geoservices.brgm.fr/geologie?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0`
+      +`&TYPENAMES=ms:LITHO_1M_SIMPLIFIEE&OUTPUTFORMAT=application/json`
+      +`&CQL_FILTER=INTERSECTS(msGeometry,POINT(${lon}+${lat}))&SRSNAME=EPSG:4326&count=1`;
+    const r=await fetch(wfsUrl);
+    if(r.ok){
+      const d=await r.json();
+      if(d.features&&d.features[0]){
+        const p=d.features[0].properties;
+        res.brgm=p.DESCR||p.libelle||p.LITHOLOGIE||'—';
+        res.code_form=p.CODE||p.code||'—';
+        res.substrat_match=matchSubstratBrgm(res.brgm);
+      }
+    }
+  }catch(e){}
+
+  // 5. BSS voisins + chroniques piézométriques (Hub'Eau niveaux_nappes)
+  try{
+    const delta=0.09; // ~10 km
+    const r=await fetch(`https://hubeau.eaufrance.fr/api/v1/niveaux_nappes/stations?bbox=${lon-delta},${lat-delta},${lon+delta},${lat+delta}&size=5&format=json`);
+    const d=await r.json();
+    if(d&&d.data&&d.data.length>0){
+      // Prendre le premier BSS comme référence proche
+      const s0=d.data[0];
+      res.bss=(s0.code_bss||'—');
+      // Stocker toutes les stations
+      _bssStations=d.data.map(s=>({
+        code_bss:s.code_bss,
+        commune:s.nom_commune,
+        altitude_sol_ngf:s.altitude_station,
+        profondeur_investigation:s.profondeur_investigation,
+        lon:s.longitude,
+        lat:s.latitude
+      }));
+      // Récupérer les chroniques pour chaque station
+      _bssChroniques={};
+      const derniereNgfList=[];
+      for(const st of d.data){
+        const code=st.code_bss;
+        if(!code) continue;
+        try{
+          const rc=await fetch(`https://hubeau.eaufrance.fr/api/v1/niveaux_nappes/chroniques?code_bss=${encodeURIComponent(code)}&size=500&fields=date_mesure,niveau_nappe_eau,profondeur_nappe&sort=desc&format=json`);
+          const dc=await rc.json();
+          const mesures=(dc.data||[]);
+          if(mesures.length>0){
+            const ngfs=mesures.map(m=>m.niveau_nappe_eau).filter(v=>v!=null);
+            const profs=mesures.map(m=>m.profondeur_nappe).filter(v=>v!=null);
+            const avg=arr=>arr.length?+(arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(2):null;
+            const mm=arr=>arr.length?+Math.min(...arr).toFixed(2):null;
+            const mx=arr=>arr.length?+Math.max(...arr).toFixed(2):null;
+            _bssChroniques[code]={
+              nb_mesures:mesures.length,
+              niveau_min_ngf:mm(ngfs),
+              niveau_moy_ngf:avg(ngfs),
+              niveau_max_ngf:mx(ngfs),
+              prof_min_tn:mm(profs),
+              prof_moy_tn:avg(profs),
+              prof_max_tn:mx(profs),
+              derniere_date:(mesures[0].date_mesure||'').slice(0,10),
+              derniere_ngf:mesures[0].niveau_nappe_eau,
+              derniere_prof:mesures[0].profondeur_nappe
+            };
+            if(mesures[0].niveau_nappe_eau!=null) derniereNgfList.push(mesures[0].niveau_nappe_eau);
+          }
+        }catch(e2){}
+      }
+      // Calculer NS_NGF de référence = moyenne des dernières mesures NGF
+      if(derniereNgfList.length>0){
+        _bssNgfRef=+(derniereNgfList.reduce((a,b)=>a+b,0)/derniereNgfList.length).toFixed(2);
+      }
+    }
+  }catch(e){console.warn('BSS chroniques:',e);}
+
+  _lastGeoResult=res;
+  // Afficher résultats
+  document.getElementById('gr_commune').textContent=res.commune;
+  document.getElementById('gr_dept').textContent=res.dept;
+  document.getElementById('gr_bassin').textContent=res.bassin;
+  document.getElementById('gr_meso').textContent=res.meso;
+  document.getElementById('gr_agence').textContent=res.agence;
+  document.getElementById('gr_sdage').textContent=res.sdage;
+  const zreEl=document.getElementById('gr_zre');
+  zreEl.textContent=res.zre;
+  zreEl.style.color=res.zre.includes('PRÉSOMPTION')||res.zre.includes('CONFIRM')? '#C0392B' : '#1A6B35';
+  document.getElementById('gr_nappe').textContent=res.nappe;
+  document.getElementById('gr_brgm').textContent=res.brgm;
+  document.getElementById('gr_substrat_match').textContent=res.substrat_match||'Non identifié';
+  document.getElementById('gr_code_form').textContent=res.code_form;
+  document.getElementById('gr_bss').textContent=res.bss;
+  document.getElementById('geo_results').style.display='block';
+  st.textContent='✅ Résolution terminée';
+  st.style.color='#1A6B35';
+}
+
+function scheduleGeoResolve() {
+  // Déclenchement automatique 2s après le dernier changement de X/Y
+  if(_geoTimer) clearTimeout(_geoTimer);
+  _geoTimer=setTimeout(resolveGeo, 2000);
+  document.getElementById('geo_status').textContent='⏳ Résolution dans 2s...';
+}
+
+function applyGeoResults() {
+  if(!_lastGeoResult) return;
+  const r=_lastGeoResult;
+  // Appliquer commune et département
+  if(r.commune&&r.commune!=='—') document.getElementById('coord_commune').value=r.commune;
+  if(r.dept&&r.dept!=='—') document.getElementById('coord_departement').value=r.dept;
+  // Appliquer substrat si détecté
+  if(r.substrat_match){
+    const sel=document.getElementById('substrat');
+    for(let o of sel.options){
+      if(o.value===r.substrat_match){sel.value=r.substrat_match;break;}
+    }
+    updateHydrogeo();
+  }
+  updateRecap();
+  document.getElementById('geo_status').textContent='✅ Données appliquées au formulaire';
+}
+
+// INIT
+// ═══════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+  buildGeoTable();
+  updateHydrogeo();
+  updatePZColumns();
+  updateRecap();
+});
 </script>
 </body>
 </html>

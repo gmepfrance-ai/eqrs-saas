@@ -54,14 +54,14 @@ export default function SubscribeRabattementPage() {
 
   async function handleSubscribe() {
     if (!user || !token) {
-      localStorage.setItem("pending_plan", "rabattement_annual");
+      localStorage.setItem("pending_plan", "rabattement_simple_annual");
       navigateTo("/register");
       return;
     }
     setLoading(true);
     setError("");
     try {
-      const res = await apiRequest("POST", `/api/stripe/create-checkout?token=${token}`, { plan: "rabattement_annual" });
+      const res = await apiRequest("POST", `/api/stripe/create-checkout?token=${token}`, { plan: "rabattement_simple_annual" });
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;
@@ -151,7 +151,7 @@ export default function SubscribeRabattementPage() {
             onClick={handleTrial}
           >
             {trialLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-            {user ? "Essai gratuit 8 jours" : "S'inscrire + Essai gratuit 8 jours"}
+            {user ? "Essai gratuit 14 jours" : "S'inscrire + Essai gratuit 14 jours"}
           </Button>
 
           {!user && (
@@ -159,7 +159,7 @@ export default function SubscribeRabattementPage() {
               Déjà un compte ?{" "}
               <button
                 className="text-primary hover:underline font-medium"
-                onClick={() => { localStorage.setItem("pending_plan", "rabattement_annual"); navigateTo("/login"); }}
+                onClick={() => { localStorage.setItem("pending_plan", "rabattement_simple_annual"); navigateTo("/login"); }}
               >
                 Se connecter
               </button>
@@ -168,7 +168,7 @@ export default function SubscribeRabattementPage() {
         </div>
 
         <div className="mt-4 bg-blue-50 border border-blue-100 rounded-lg p-4 text-xs text-blue-800">
-          <strong>Note :</strong> L'outil Rabattement de nappe est disponible uniquement en licence annuelle. Aucun abonnement mensuel pour ce module.
+          <strong>Note :</strong> L'outil Rabattement de nappe est disponible uniquement en licence annuelle. Aucun abonnement mensuel pour ce module. Pour la version multicouche avec assistant IA, voir <a href="#/rabattement-v15" className="underline">Rabattement V15.87 (1 500 € HT/an)</a>.
         </div>
       </div>
       <V2Footer />

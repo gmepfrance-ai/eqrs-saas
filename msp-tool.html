@@ -1259,6 +1259,7 @@ td input:focus,td select:focus{border-color:var(--g);outline:none}
     <div class="kpi hl"><div class="k-lbl">Surface emprise purge</div><div class="k-val" id="kpiPurgeSurface">—</div></div>
     <div class="kpi hl"><div class="k-lbl">Volume à excaver</div><div class="k-val" id="kpiPurgeVolume">—</div></div>
     <div class="kpi hl"><div class="k-lbl">Masse terres (t)</div><div class="k-val" id="kpiPurgeMass">—</div></div>
+    <div class="kpi hl"><div class="k-lbl">Coût indicatif</div><div class="k-val" id="kpiPurgeCost">—</div></div>
   </div>
 
   <div style="display:grid;grid-template-columns:280px 1fr;gap:1rem">
@@ -1271,7 +1272,7 @@ td input:focus,td select:focus{border-color:var(--g);outline:none}
           <div><label>Pas de maillage XY (m)</label><input id="stepXY" type="number" value="1" step="0.5"></div>
           <div><label>Pas de maillage Z (m)</label><input id="stepZ" type="number" value="0.5" step="0.1"></div>
           <div><label>Rayon d'influence (m)</label><input id="influence" type="number" value="0" step="1"></div>
-          <div style="display:none"><label>Densité apparente (t/m³)</label><input id="bulkDensity" type="number" value="1.8" step="0.1"></div>
+          <div><label>Densité apparente (t/m³)</label><input id="bulkDensity" type="number" value="1.8" step="0.1"></div>
         </div>
         <div class="row" style="margin-top:.75rem">
           <button class="btn btn-primary" id="runModel">Calculer IDW</button>
@@ -1293,7 +1294,7 @@ td input:focus,td select:focus{border-color:var(--g);outline:none}
           <div><label>Marge latérale (m)</label><input id="margeLat" type="number" value="0.5" step="0.1"></div>
           <div><label>Marge en profondeur (m)</label><input id="margeProf" type="number" value="0.3" step="0.1"></div>
           <div><label>Seuil hotspot (× seuil)</label><input id="hotspotRatio" type="number" value="10" step="1"></div>
-          <div style="display:none"><label>Coût excavation (€/t)</label><input id="coutExcavation" type="number" value="80" step="5"></div>
+          <div><label>Coût excavation (€/t)</label><input id="coutExcavation" type="number" value="80" step="5"></div>
         </div>
         <div class="row" style="margin-top:.75rem">
           <button class="btn btn-secondary" id="runPurge">Calculer emprise</button>
@@ -3809,17 +3810,17 @@ function imprimerRapport(){
             +'<div class="kcard"><div class="kv red">'+Fn(pur.surface,0)+'</div><div class="kl">Surface de purge (m²)</div></div>'
             +'<div class="kcard"><div class="kv red">'+Fn(pur.volumeExcave,0)+'</div><div class="kl">Volume excavé (m³)</div></div>'
             +'<div class="kcard"><div class="kv red">'+Fn(pur.masseTerre,0)+'</div><div class="kl">Masse terres (t)</div></div>'
-            
+            +'<div class="kcard"><div class="kv amb">'+Fn(pur.coutTotal,0)+'</div><div class="kl">Coût estimatif (€ HT)</div></div>'
           +'</div>'
           +(pur.zones&&pur.zones.length>0
-            ? '<table style="font-size:7.5pt"><thead><tr><th>Zone</th><th style="text-align:right">Surface (m²)</th><th style="text-align:right">Épaisseur (m)</th><th style="text-align:right">Volume (m³)</th><th style="text-align:right">Masse (t)</th></tr></thead><tbody>'
-              +'<tr style="font-weight:700"><td>EMPRISE GLOBALE</td><td style="text-align:right">'+Fn(pur.surface,1)+'</td><td style="text-align:right">'+Fn(pur.epaisseur,2)+'</td><td style="text-align:right">'+Fn(pur.volumeExcave,1)+'</td><td style="text-align:right">'+Fn(pur.masseTerre,1)+'</td></tr>'
+            ? '<table style="font-size:7.5pt"><thead><tr><th>Zone</th><th style="text-align:right">Surface (m²)</th><th style="text-align:right">Épaisseur (m)</th><th style="text-align:right">Volume (m³)</th><th style="text-align:right">Masse (t)</th><th style="text-align:right">Coût estimé (€ HT)</th></tr></thead><tbody>'
+              +'<tr style="font-weight:700"><td>EMPRISE GLOBALE</td><td style="text-align:right">'+Fn(pur.surface,1)+'</td><td style="text-align:right">'+Fn(pur.epaisseur,2)+'</td><td style="text-align:right">'+Fn(pur.volumeExcave,1)+'</td><td style="text-align:right">'+Fn(pur.masseTerre,1)+'</td><td style="text-align:right">'+Fn(pur.coutTotal,0)+'</td></tr>'
               +pur.zones.map(function(z){
-                return '<tr><td>'+E(z.id)+'</td><td style="text-align:right">'+Fn(z.surface,1)+'</td><td style="text-align:right">'+Fn(z.epaisseur,2)+'</td><td style="text-align:right">'+Fn(z.volume,1)+'</td><td style="text-align:right">'+Fn(z.masse,1)+'</td></tr>';
+                return '<tr><td>'+E(z.id)+'</td><td style="text-align:right">'+Fn(z.surface,1)+'</td><td style="text-align:right">'+Fn(z.epaisseur,2)+'</td><td style="text-align:right">'+Fn(z.volume,1)+'</td><td style="text-align:right">'+Fn(z.masse,1)+'</td><td style="text-align:right">'+Fn(z.cout,0)+'</td></tr>';
               }).join('')
               +'</tbody></table>'
             : '')
-          : '<div class="info-box"><b>ℹ Dimensionnement non calculé :</b> Lancez le calcul IDW depuis l\'onglet Vue 3D puis calculez la purge pour obtenir les volumes estimatifs.</div>')
+          : '<div class="info-box"><b>ℹ Dimensionnement non calculé :</b> Lancez le calcul IDW depuis l\'onglet Vue 3D puis calculez la purge pour obtenir les volumes et coûts estimatifs.</div>')
       +'</div>'
       +'<div class="ftr"><span>GMEP &nbsp;·&nbsp; www.gmep-france.eu &nbsp;·&nbsp; Arrêté 12/12/2014 &nbsp;·&nbsp; Décret 2023-1408</span><span>'+E(titre)+'</span><span>contact@gmep-france.eu</span></div>'
     +'</div>';
@@ -3871,8 +3872,8 @@ function imprimerRapport(){
               +'<div class="kcard"><div class="kv red">'+Fn(pur.masseTerre,0)+'</div><div class="kl">Masse terres (t)</div></div>'
             +'</div>'
             +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.25cm">'
-              
-              
+              +'<div class="kcard"><div class="kv amb">'+Fn(pur.coutTotal,0)+'</div><div class="kl">Coût total estimé (€ HT)</div></div>'
+              +'<div class="kcard"><div class="kv" style="font-size:11pt">'+(pur.density||'—')+'</div><div class="kl">Densité sols (t/m³)</div></div>'
               +'<div class="kcard"><div class="kv" style="font-size:11pt">'+Fn(pur.margeLat,1)+'</div><div class="kl">Marge latérale (m)</div></div>'
               +'<div class="kcard"><div class="kv" style="font-size:11pt">'+Fn(pur.margeProf,2)+'</div><div class="kl">Marge profondeur (m)</div></div>'
             +'</div>'
@@ -4672,6 +4673,7 @@ function compareISDI(){
   qs('isdi-vol').value = ST.purgeResult ? fmtN(ST.purgeResult.volume) : '';
   qs('isdi-masse').value = ST.purgeResult ? fmtN(masse) : '';
   if (masse > 0) {
+    qs('isdi-cout-total').innerHTML = `Coût indicatif ISDI : <b>${fmtI(masse * cout)} €</b> (${fmtN(masse)} t × ${cout} €/t). Hors transport. Ce coût est fourni à titre d'ordre de grandeur — les tarifs ISDI varient selon les centres et les territoires.`;
   }
 }
 
@@ -5062,7 +5064,7 @@ function exportDecretHTML(){
     +' conforme au guide méthodologique BRGM 2024. La compatibilité avec un usage d\'aménagement ne peut être établie'
     +' sans l\'avis d\'un expert habilité et l\'accord du maître d\'ouvrage.<br><br>'
     +'Références : Décret n°2023-1408 du 29/12/2023 · Arrêté du 4 juin 2021 · Guide BRGM valorisation hors site (éd. 2024).'
-    +'</div><!-- ══ MODAL TARIFICATION GMEP ══════════════════════════════════════════════ --><div id="modal-tarif" style="display:none;position:fixed;inset:0;z-index:2000;  background:rgba(13,27,46,.82);backdrop-filter:blur(4px);  align-items:center;justify-content:center">  <div style="background:#fff;border-radius:1rem;width:min(780px,96vw);    max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(13,27,46,.4)">    <!-- Header modal -->    <div style="background:var(--navy);border-radius:1rem 1rem 0 0;padding:1.4rem 1.8rem;      display:flex;align-items:center;justify-content:space-between">      <div>        <div style="font-size:1.15rem;font-weight:800;color:#3ddc84;letter-spacing:.02em">MSP GMEP</div>        <div style="font-size:.8rem;color:rgba(255,255,255,.6);margin-top:.15rem">          Modélisation des Sources de Pollution · Dimensionnement Plan de Gestion SSP        </div>      </div>      <button onclick="document.getElementById(\'modal-tarif\').style.display=\'none\'"        style="background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.7);          font-size:1.3rem;cursor:pointer;border-radius:.4rem;width:2rem;height:2rem;          display:flex;align-items:center;justify-content:center">×</button>    </div>    <!-- Badge essai -->    <div style="background:linear-gradient(135deg,#0d9e76,#3ddc84);      padding:.75rem 1.8rem;text-align:center">      <span style="font-size:.9rem;font-weight:700;color:#fff;letter-spacing:.03em">        ✦ Essai gratuit 8 jours — Accès complet sans carte bancaire      </span>    </div>    <!-- Cartes offres -->    <div style="padding:1.6rem 1.8rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem">      <!-- Essai -->      <div style="border:1.5px solid #e5e7eb;border-radius:.75rem;padding:1.2rem;text-align:center">        <div style="font-size:.7rem;font-weight:700;color:#6b7280;text-transform:uppercase;          letter-spacing:.06em;margin-bottom:.5rem">Essai gratuit</div>        <div style="font-size:2.2rem;font-weight:800;color:#0d1b2e;line-height:1">0 €</div>        <div style="font-size:.75rem;color:#6b7280;margin:.35rem 0 1rem">8 jours · Accès complet</div>        <hr style="border:none;border-top:1px solid #e5e7eb;margin-bottom:1rem">        <ul style="text-align:left;font-size:.78rem;color:#374151;line-height:1.8;list-style:none;padding:0">          <li>✓ Toutes les fonctionnalités</li>          <li>✓ Vue 3D IDW</li>          <li>✓ Rapport PDF</li>          <li>✓ Catalogue 60+ substances</li>          <li style="color:#9ca3af">✗ Max 5 sondages</li>        </ul>        <a href="https://www.gmep-france.eu" target="_blank"          style="display:block;margin-top:1rem;padding:.6rem;border-radius:.5rem;            background:#f3f4f6;color:#374151;font-weight:600;font-size:.8rem;            text-decoration:none;text-align:center">          Démarrer l\'essai →        </a>      </div>      <!-- Mensuel -->      <div style="border:1.5px solid #e5e7eb;border-radius:.75rem;padding:1.2rem;text-align:center">        <div style="font-size:.7rem;font-weight:700;color:#6b7280;text-transform:uppercase;          letter-spacing:.06em;margin-bottom:.5rem">Mensuel</div>        <div style="font-size:2.2rem;font-weight:800;color:#0d1b2e;line-height:1">250 €</div>        <div style="font-size:.75rem;color:#6b7280;margin:.35rem 0 1rem">HT · par mois · Sans engagement</div>        <hr style="border:none;border-top:1px solid #e5e7eb;margin-bottom:1rem">        <ul style="text-align:left;font-size:.78rem;color:#374151;line-height:1.8;list-style:none;padding:0">          <li>✓ Projets illimités</li>          <li>✓ Vue 3D IDW</li>          <li>✓ Rapport PDF</li>          <li>✓ Catalogue 60+ substances</li>          <li>✓ Support email prioritaire</li>        </ul>        <a href="https://www.gmep-france.eu" target="_blank"          style="display:block;margin-top:1rem;padding:.6rem;border-radius:.5rem;            background:#2d4a7a;color:#fff;font-weight:700;font-size:.8rem;            text-decoration:none;text-align:center">          S\'abonner →        </a>      </div>      <!-- Annuel — mis en avant -->      <div style="border:2px solid #3ddc84;border-radius:.75rem;padding:1.2rem;text-align:center;        background:linear-gradient(160deg,#f0fdf4,#fff);position:relative">        <div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);          background:#3ddc84;color:#0d1b2e;font-size:.65rem;font-weight:800;          padding:.2rem .7rem;border-radius:9rem;letter-spacing:.04em;white-space:nowrap">          MEILLEURE OFFRE        </div>        <div style="font-size:.7rem;font-weight:700;color:#0a7d5e;text-transform:uppercase;          letter-spacing:.06em;margin-bottom:.5rem">Annuel</div>        <div style="font-size:2.2rem;font-weight:800;color:#0d1b2e;line-height:1">2 760 €</div>        <div style="font-size:.75rem;color:#6b7280;margin:.35rem 0 .15rem">HT · par an</div>        <div style="font-size:.72rem;font-weight:700;color:#0a7d5e;margin-bottom:1rem">          ≈ 230 €/mois · Économie 10%        </div>        <hr style="border:none;border-top:1px solid #d1fae5;margin-bottom:1rem">        <ul style="text-align:left;font-size:.78rem;color:#374151;line-height:1.8;list-style:none;padding:0">          <li>✓ Projets illimités</li>          <li>✓ Vue 3D IDW</li>          <li>✓ Rapport PDF</li>          <li>✓ Catalogue 60+ substances</li>          <li>✓ Support email prioritaire</li>          <li>✓ Mises à jour réglementaires</li>        </ul>        <a href="https://www.gmep-france.eu" target="_blank"          style="display:block;margin-top:1rem;padding:.65rem;border-radius:.5rem;            background:#3ddc84;color:#0d1b2e;font-weight:800;font-size:.8rem;            text-decoration:none;text-align:center">          S\'abonner à l\'année →        </a>      </div>    </div>    <!-- Note TVA + footer modal -->    <div style="padding:.75rem 1.8rem 1.2rem;text-align:center;      font-size:.72rem;color:#9ca3af;border-top:1px solid #f3f4f6">      Tous les prix sont en euros HT. TVA 20% applicable. Paiement sécurisé Stripe.<br>      Licence monoposte · <a href="https://www.gmep-france.eu/cgv" target="_blank"        style="color:#2d4a7a;text-decoration:none">CGV</a> ·      <a href="https://www.gmep-france.eu" target="_blank"        style="color:#2d4a7a;text-decoration:none">www.gmep-france.eu</a>    </div>  </div></div></body></html>';
+    +'</div><!-- ══ MODAL TARIFICATION GMEP ══════════════════════════════════════════════ --><div id="modal-tarif" style="display:none;position:fixed;inset:0;z-index:2000;  background:rgba(13,27,46,.82);backdrop-filter:blur(4px);  align-items:center;justify-content:center">  <div style="background:#fff;border-radius:1rem;width:min(780px,96vw);    max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(13,27,46,.4)">    <!-- Header modal -->    <div style="background:var(--navy);border-radius:1rem 1rem 0 0;padding:1.4rem 1.8rem;      display:flex;align-items:center;justify-content:space-between">      <div>        <div style="font-size:1.15rem;font-weight:800;color:#3ddc84;letter-spacing:.02em">MSP GMEP</div>        <div style="font-size:.8rem;color:rgba(255,255,255,.6);margin-top:.15rem">          Modélisation des Sources de Pollution · Dimensionnement Plan de Gestion SSP        </div>      </div>      <button onclick="document.getElementById(\'modal-tarif\').style.display=\'none\'"        style="background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.7);          font-size:1.3rem;cursor:pointer;border-radius:.4rem;width:2rem;height:2rem;          display:flex;align-items:center;justify-content:center">×</button>    </div>    <!-- Badge essai -->    <div style="background:linear-gradient(135deg,#0d9e76,#3ddc84);      padding:.75rem 1.8rem;text-align:center">      <span style="font-size:.9rem;font-weight:700;color:#fff;letter-spacing:.03em">        ✦ Essai gratuit 14 jours — Accès complet sans carte bancaire      </span>    </div>    <!-- Cartes offres -->    <div style="padding:1.6rem 1.8rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem">      <!-- Essai -->      <div style="border:1.5px solid #e5e7eb;border-radius:.75rem;padding:1.2rem;text-align:center">        <div style="font-size:.7rem;font-weight:700;color:#6b7280;text-transform:uppercase;          letter-spacing:.06em;margin-bottom:.5rem">Essai gratuit</div>        <div style="font-size:2.2rem;font-weight:800;color:#0d1b2e;line-height:1">0 €</div>        <div style="font-size:.75rem;color:#6b7280;margin:.35rem 0 1rem">14 jours · Accès complet</div>        <hr style="border:none;border-top:1px solid #e5e7eb;margin-bottom:1rem">        <ul style="text-align:left;font-size:.78rem;color:#374151;line-height:1.8;list-style:none;padding:0">          <li>✓ Toutes les fonctionnalités</li>          <li>✓ Vue 3D IDW</li>          <li>✓ Rapport PDF</li>          <li>✓ Catalogue 60+ substances</li>          <li style="color:#9ca3af">✗ Max 5 sondages</li>        </ul>        <a href="https://www.gmep-france.eu" target="_blank"          style="display:block;margin-top:1rem;padding:.6rem;border-radius:.5rem;            background:#f3f4f6;color:#374151;font-weight:600;font-size:.8rem;            text-decoration:none;text-align:center">          Démarrer l\'essai →        </a>      </div>      <!-- Mensuel -->      <div style="border:1.5px solid #e5e7eb;border-radius:.75rem;padding:1.2rem;text-align:center">        <div style="font-size:.7rem;font-weight:700;color:#6b7280;text-transform:uppercase;          letter-spacing:.06em;margin-bottom:.5rem">Mensuel</div>        <div style="font-size:2.2rem;font-weight:800;color:#0d1b2e;line-height:1">250 €</div>        <div style="font-size:.75rem;color:#6b7280;margin:.35rem 0 1rem">HT · par mois · Sans engagement</div>        <hr style="border:none;border-top:1px solid #e5e7eb;margin-bottom:1rem">        <ul style="text-align:left;font-size:.78rem;color:#374151;line-height:1.8;list-style:none;padding:0">          <li>✓ Projets illimités</li>          <li>✓ Vue 3D IDW</li>          <li>✓ Rapport PDF</li>          <li>✓ Catalogue 60+ substances</li>          <li>✓ Support email prioritaire</li>        </ul>        <a href="https://www.gmep-france.eu" target="_blank"          style="display:block;margin-top:1rem;padding:.6rem;border-radius:.5rem;            background:#2d4a7a;color:#fff;font-weight:700;font-size:.8rem;            text-decoration:none;text-align:center">          S\'abonner →        </a>      </div>      <!-- Annuel — mis en avant -->      <div style="border:2px solid #3ddc84;border-radius:.75rem;padding:1.2rem;text-align:center;        background:linear-gradient(160deg,#f0fdf4,#fff);position:relative">        <div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);          background:#3ddc84;color:#0d1b2e;font-size:.65rem;font-weight:800;          padding:.2rem .7rem;border-radius:9rem;letter-spacing:.04em;white-space:nowrap">          MEILLEURE OFFRE        </div>        <div style="font-size:.7rem;font-weight:700;color:#0a7d5e;text-transform:uppercase;          letter-spacing:.06em;margin-bottom:.5rem">Annuel</div>        <div style="font-size:2.2rem;font-weight:800;color:#0d1b2e;line-height:1">2 760 €</div>        <div style="font-size:.75rem;color:#6b7280;margin:.35rem 0 .15rem">HT · par an</div>        <div style="font-size:.72rem;font-weight:700;color:#0a7d5e;margin-bottom:1rem">          ≈ 230 €/mois · Économie 10%        </div>        <hr style="border:none;border-top:1px solid #d1fae5;margin-bottom:1rem">        <ul style="text-align:left;font-size:.78rem;color:#374151;line-height:1.8;list-style:none;padding:0">          <li>✓ Projets illimités</li>          <li>✓ Vue 3D IDW</li>          <li>✓ Rapport PDF</li>          <li>✓ Catalogue 60+ substances</li>          <li>✓ Support email prioritaire</li>          <li>✓ Mises à jour réglementaires</li>        </ul>        <a href="https://www.gmep-france.eu" target="_blank"          style="display:block;margin-top:1rem;padding:.65rem;border-radius:.5rem;            background:#3ddc84;color:#0d1b2e;font-weight:800;font-size:.8rem;            text-decoration:none;text-align:center">          S\'abonner à l\'année →        </a>      </div>    </div>    <!-- Note TVA + footer modal -->    <div style="padding:.75rem 1.8rem 1.2rem;text-align:center;      font-size:.72rem;color:#9ca3af;border-top:1px solid #f3f4f6">      Tous les prix sont en euros HT. TVA 20% applicable. Paiement sécurisé Stripe.<br>      Licence monoposte · <a href="https://www.gmep-france.eu/cgv" target="_blank"        style="color:#2d4a7a;text-decoration:none">CGV</a> ·      <a href="https://www.gmep-france.eu" target="_blank"        style="color:#2d4a7a;text-decoration:none">www.gmep-france.eu</a>    </div>  </div></div></body></html>';
 
   var blob = new Blob([docHtml], {type:'text/html;charset=utf-8'});
   var a = document.createElement('a');
@@ -5558,6 +5560,7 @@ function runPurgeCalc(){
   qs('kpiPurgeSurface').textContent=`${fmtI(surface)} m²`;
   qs('kpiPurgeVolume').textContent=`${fmtN(volumeExcave)} m³`;
   qs('kpiPurgeMass').textContent=`${fmtN(masseTerre)} t`;
+  qs('kpiPurgeCost').textContent=`${fmtI(coutTotal)} €`;
   drawPurgeMap();
 }
 
@@ -7477,7 +7480,7 @@ function _build3DTraces(pts, th){
 
 function exportPurgeCsv(){
   if(!S.purge)return;
-  const rows=[{zone:'EMPRISE GLOBALE',surface:S.purge.surface.toFixed(1),epaisseur:S.purge.epaisseur.toFixed(2),volume:S.purge.volumeExcave.toFixed(1),masse:S.purge.masseTerre.toFixed(1)},...S.purge.zones.map(z=>({zone:z.id,surface:z.surface.toFixed(1),epaisseur:z.epaisseur.toFixed(2),volume:z.volume.toFixed(1),masse:z.masse.toFixed(1)}))];
+  const rows=[{zone:'EMPRISE GLOBALE',surface:S.purge.surface.toFixed(1),epaisseur:S.purge.epaisseur.toFixed(2),volume:S.purge.volumeExcave.toFixed(1),masse:S.purge.masseTerre.toFixed(1),cout:S.purge.coutTotal.toFixed(0)},...S.purge.zones.map(z=>({zone:z.id,surface:z.surface.toFixed(1),epaisseur:z.epaisseur.toFixed(2),volume:z.volume.toFixed(1),masse:z.masse.toFixed(1),cout:z.cout.toFixed(0)}))];
   dlBlob(new Blob([Papa.unparse(rows)],{type:'text/csv;charset=utf-8;'}),'emprise-purge.csv');
 }
 
@@ -7842,6 +7845,7 @@ function _buildEPPurge() {
     { label: "Volume à excaver", val: fmtN(p.volumeExcave, 1) + " m³" },
     { label: "Masse terres", val: fmtN(p.masseTerre, 1) + " t" },
     { label: "Surface emprise", val: fmtI(p.surface) + " m²" },
+    { label: "Coût indicatif", val: fmtI(p.coutTotal) + " €" },
     { label: "Zones hotspot", val: (p.zones || []).length },
   ]);
   // Détail zones hotspot
@@ -7853,7 +7857,7 @@ function _buildEPPurge() {
       { label: "Surface (m²)",     key: "surface" },
       { label: "Volume (m³)",      key: "volume" },
       { label: "Masse (t)",        key: "masse" },
-      
+      { label: "Coût indicatif (€)", key: "cout" },
     ];
     html += `<h4 style="margin:.75rem 0 .4rem;font-size:.88rem">Zones hotspot détaillées</h4>`;
     html += _epTable(headers, p.zones.map(z => ({
@@ -7862,7 +7866,7 @@ function _buildEPPurge() {
       volume:  fmtN(z.volume, 1),
       masse:   fmtN(z.masse, 1),
       maxConc: fmtI(z.maxConc),
-      
+      cout:    fmtI(z.cout),
     })));
   }
   el.innerHTML = html;
@@ -8001,17 +8005,8 @@ function wgs84ToL93(lat, lon){
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',function(){
-  // Réinitialiser tous les champs pour éviter l'autocomplétion du navigateur
-  document.querySelectorAll('input[type=text],input[type=number],input[type=date],textarea,select').forEach(function(el){
-    if(el.id==='threshold'||el.id==='stepXY'||el.id==='stepZ'||el.id==='influence'||
-       el.id==='bulkDensity'||el.id==='margeLat'||el.id==='margeProf'||
-       el.id==='hotspotRatio'||el.id==='coutExcavation'||
-       el.id==='passe-nb-input'||el.id==='passe-ep-input') return; // garder valeurs par défaut des paramètres
-    if(el.tagName==='SELECT') el.selectedIndex=0;
-    else el.value='';
-  });
   var today=new Date().toISOString().substring(0,10);
-  if(qs('p-date')) qs('p-date').value=today;
+  if(qs('p-date')&&!qs('p-date').value) qs('p-date').value=today;
 
   // Init catalogue
   setTimeout(initCatalogue, 100);
@@ -8037,7 +8032,7 @@ document.addEventListener('DOMContentLoaded',function(){
   var clearAllBtn = document.getElementById('clearAll');
   if(clearAllBtn) clearAllBtn.addEventListener('click', function(){
     S.voxels=[]; S.model=null; S.purge=null;
-    ['kpiVolume','kpiMass','kpiConfidence','kpiPurgeSurface','kpiPurgeVolume','kpiPurgeMass'].forEach(function(id){
+    ['kpiVolume','kpiMass','kpiConfidence','kpiPurgeSurface','kpiPurgeVolume','kpiPurgeMass','kpiPurgeCost'].forEach(function(id){
       var el=qs(id); if(el) el.textContent='—';
     });
     var el=qs('kpiPoints'); if(el) el.textContent='0';

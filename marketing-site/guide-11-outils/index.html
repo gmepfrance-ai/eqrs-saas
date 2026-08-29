@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guide de présentation — 13 logiciels GMEP</title>
+  <meta name="description" content="Guide de présentation complet des 13 logiciels GMEP : EQRS, ECOTOX, TSN, Domenico, Schéma Conceptuel, Module HUMAIN, MSP, 3D_SSP, Porchet, GEP-DLE, Rabattement de nappe, Rabattement V15.87 et Piézomètres. Dossier scientifique et Note Technique à télécharger." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1a2e45;
+      --teal: #1e6a8a;
+      --teal-light: #2a8ab0;
+      --accent: #e8f4f9;
+      --text: #1a2e45;
+      --muted: #6b7c93;
+      --border: #d0dde8;
+      --white: #ffffff;
+      --radius: 8px;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f0f5f9;
+      color: var(--text);
+    }
+
+    /* Header */
+    header { background: var(--navy); }
+    .header-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .logo-block { display: flex; align-items: center; gap: 16px; }
+    .brand-text h1 { font-size: 22px; font-weight: 700; color: var(--white); letter-spacing: 0.04em; }
+    .brand-text p { font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 3px; }
+    .header-contact { text-align: right; }
+    .header-contact a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 13px; display: block; line-height: 1.7; }
+    .header-contact a:hover { color: var(--white); }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+      padding: 64px 32px 56px;
+      text-align: center;
+      color: var(--white);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.9);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .hero h2 {
+      font-size: clamp(24px, 4vw, 38px);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero p {
+      font-size: 16px;
+      color: rgba(255,255,255,0.75);
+      max-width: 620px;
+      margin: 0 auto 36px;
+      line-height: 1.65;
+    }
+    .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--white);
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 15px;
+      padding: 14px 28px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+    .btn-download:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+    .btn-download.outline {
+      background: transparent;
+      color: var(--white);
+      border: 1.5px solid rgba(255,255,255,0.55);
+      box-shadow: none;
+    }
+    .btn-download.outline:hover { background: rgba(255,255,255,0.1); }
+
+    /* Stats */
+    .stats { background: var(--white); border-bottom: 1px solid var(--border); }
+    .stats-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 32px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .stat { text-align: center; padding: 0 16px; border-right: 1px solid var(--border); }
+    .stat:last-child { border-right: none; }
+    .stat-value { font-size: 28px; font-weight: 800; color: var(--teal); line-height: 1; margin-bottom: 6px; }
+    .stat-label { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+    /* Services */
+    .section { max-width: 1080px; margin: 0 auto; padding: 56px 32px; }
+    .section-title { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
+    .section-heading { font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: var(--navy); margin-bottom: 40px; line-height: 1.25; }
+
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .service-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 22px;
+      transition: box-shadow 0.2s, transform 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .service-card:hover { box-shadow: 0 6px 24px rgba(30,106,138,0.12); transform: translateY(-2px); }
+    .service-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px;
+      background: var(--accent); color: var(--teal);
+      border-radius: 50%;
+      font-size: 12px; font-weight: 800;
+      margin-bottom: 14px;
+    }
+    .service-card h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .service-kicker { font-size: 11px; font-weight: 600; color: var(--teal-light); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; }
+    .service-card p { font-size: 13px; color: var(--muted); line-height: 1.6; flex-grow: 1; }
+    .service-link { margin-top: 14px; font-size: 12.5px; font-weight: 700; color: var(--teal); text-decoration: none; }
+    .service-link:hover { text-decoration: underline; }
+
+    /* PDF Viewer */
+    .pdf-section { background: var(--navy); padding: 56px 32px; }
+    .pdf-inner { max-width: 1080px; margin: 0 auto; }
+    .pdf-section .section-title { color: rgba(255,255,255,0.6); }
+    .pdf-section .section-heading { color: var(--white); margin-bottom: 24px; }
+    .pdf-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+    .pdf-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: var(--radius);
+      padding: 22px;
+    }
+    .pdf-card h4 { color: var(--white); font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .pdf-card p { color: rgba(255,255,255,0.65); font-size: 13px; line-height: 1.6; margin-bottom: 16px; }
+    .pdf-frame {
+      width: 100%; height: 480px;
+      border: none; border-radius: 6px;
+      background: #fff;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+      margin-bottom: 16px;
+    }
+    .pdf-card .btn-download { padding: 10px 20px; font-size: 13.5px; }
+
+    /* Contact */
+    .contact-section { background: var(--accent); padding: 48px 32px; }
+    .contact-inner {
+      max-width: 1080px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 32px; flex-wrap: wrap;
+    }
+    .contact-text h3 { font-size: 20px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .contact-text p { font-size: 14px; color: var(--muted); }
+    .contact-links { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 2px solid var(--teal); color: var(--teal);
+      font-weight: 600; font-size: 14px;
+      padding: 10px 22px; border-radius: 6px; text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-outline:hover { background: var(--teal); color: var(--white); }
+    .btn-solid {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--teal); color: var(--white);
+      font-weight: 600; font-size: 14px;
+      padding: 10px 22px; border-radius: 6px; text-decoration: none;
+      transition: background 0.15s;
+    }
+    .btn-solid:hover { background: var(--navy); }
+
+    footer {
+      background: var(--navy); padding: 24px 32px;
+      text-align: center; font-size: 12px; color: rgba(255,255,255,0.45);
+    }
+    footer a { color: rgba(255,255,255,0.6); text-decoration: none; }
+
+    @media (max-width: 900px) {
+      .pdf-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 680px) {
+      .header-inner { flex-direction: column; align-items: flex-start; }
+      .header-contact { text-align: left; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+      .stat { border-right: none; }
+      .services-grid { grid-template-columns: 1fr; }
+      .pdf-frame { height: 380px; }
+      .contact-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/guide-11-outils/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/guide-11-outils/">
+<meta property="og:title" content="Guide de présentation — 13 logiciels GMEP">
+<meta property="og:description" content="Guide de présentation complet des 13 logiciels GMEP : EQRS, ECOTOX, TSN, Domenico, Schéma Conceptuel, Module HUMAIN, MSP, 3D_SSP, Porchet, GEP-DLE, Rabattement de nappe, Rabattement V15.87 et Piézomètres.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Logiciels de modélisation environnementale">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Guide de présentation — 13 logiciels GMEP">
+<meta name="twitter:description" content="Guide de présentation complet des 13 logiciels GMEP : EQRS, ECOTOX, TSN, Domenico, Schéma Conceptuel, Module HUMAIN, MSP, 3D_SSP, Porchet, GEP-DLE, Rabattement de nappe, Rabattement V15.87 et Piézomètres.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo-block">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-label="Logo G.M.E.P">
+          <rect width="48" height="48" rx="8" fill="#1e6a8a"/>
+          <path d="M10 24C10 16.268 16.268 10 24 10C28.418 10 32.37 12.01 35 15.2" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="24" cy="24" r="5" fill="white"/>
+          <path d="M24 19V10M24 29V38M19 24H10M29 24H38" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+          <path d="M34 14L38 10M14 34L10 38M34 34L38 38M14 14L10 10" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.25"/>
+        </svg>
+        <div class="brand-text">
+          <h1>G.M.E.P</h1>
+          <p>Gestion et Maîtrise de l'Environnement et de la Pollution</p>
+        </div>
+      </div>
+      <div class="header-contact">
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+        <a href="https://www.gmep-france.eu">www.gmep-france.eu</a>
+        <a>9 rue de la Marne, 79400 Saint-Maixent-l'École</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-badge">Guide de présentation · 13 logiciels</div>
+    <h2>La suite complète des 13 logiciels GMEP en un seul document</h2>
+    <p>Modélisation environnementale, hydrogéologie et évaluation des risques sanitaires : découvrez le détail scientifique et technique de chacun des 13 outils mis à disposition, leurs référentiels et leurs livrables.</p>
+    <div class="hero-actions">
+      <a class="btn-download" href="Dossier_11_outils_GMEP.pdf" download="Dossier_11_outils_GMEP.pdf">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Télécharger le Dossier (PDF)
+      </a>
+      <a class="btn-download outline" href="Note_Technique_GMEP_11_outils.pdf" download="Note_Technique_GMEP_11_outils.pdf">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Télécharger la Note Technique (PDF)
+      </a>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stats-inner">
+      <div class="stat"><div class="stat-value">13</div><div class="stat-label">Logiciels métier<br>disponibles en ligne</div></div>
+      <div class="stat"><div class="stat-value">2 500+</div><div class="stat-label">Substances chimiques<br>couvertes (EQRS)</div></div>
+      <div class="stat"><div class="stat-value">3D</div><div class="stat-label">Superposition sols · nappe<br>· ouvrages (3D_SSP)</div></div>
+      <div class="stat"><div class="stat-value">100%</div><div class="stat-label">Web, sans installation<br>ni maintenance locale</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Vue d'ensemble</div>
+    <div class="section-heading">Les 13 outils de la suite logicielle GMEP</div>
+    <div class="services-grid">
+
+      <div class="service-card">
+        <div class="service-num">1</div>
+        <div class="service-kicker">Sites et Sols Pollués — Évaluation des risques</div>
+        <h3>EQRS Johnson &amp; Ettinger (V7)</h3>
+        <p>Exposition humaine aux composés organiques volatils — intrusion vapeur, inhalation, ingestion. Jusqu'à 2 500 substances, simulation Monte-Carlo 10 000 itérations.</p>
+        <a class="service-link" href="../outils/eqrs-je.html">Découvrir l'outil →</a>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">2</div>
+        <div class="service-kicker">Sites et Sols Pollués — ERS + Écotoxicologie</div>
+        <h3>EQRS V9 + ECOTOX V9</h3>
+        <p>Quotient de Danger, Indice de Concentration et QD Écotoxicologique pour les compartiments aquatique et terrestre — méthodologie des chaînes trophiques (Barnthouse, 2003). 104 substances.</p>
+        <a class="service-link" href="../outils/eqrs-v31-05-ecotox.html">Découvrir l'outil →</a>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">3</div>
+        <div class="service-kicker">Sites et Sols Pollués — ERS + PFAS</div>
+        <h3>EQRS V9 + ECOTOX V9 + Module HUMAIN</h3>
+        <p>Exposition humaine cumulée aux PFAS selon l'EFSA (2020) — quatre voies d'exposition (végétale, élevage, aquatique) et calcul du Facteur de Bioaccumulation validé sur données de terrain. 47 substances Tier 3.</p>
+        <a class="service-link" href="../outils/eqrs-v8-ecotox-humain.html">Découvrir l'outil →</a>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">4</div>
+        <div class="service-kicker">Sites et Sols Pollués — Transport nappe</div>
+        <h3>TSN — Transfert Sol-Nappe</h3>
+        <p>Transport et atténuation naturelle sol → nappe → captage AEP, modèle Domenico &amp; Schwartz (1987) couplé à l'API Hub'eau. Concentration résiduelle Cc(x) et facteur d'atténuation-dilution (DAF).</p>
+        <a class="service-link" href="../outils/tsn-transfert-sol-nappe.html">Découvrir l'outil →</a>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">5</div>
+        <div class="service-kicker">Sites et Sols Pollués — Transport nappe</div>
+        <h3>Transfert Sol → Nappe → Captage</h3>
+        <p>Modèle Domenico &amp; Schwartz (1987) de transfert et d'atténuation naturelle des polluants dissous entre la source sol et un captage AEP.</p>
+        <a class="service-link" href="../outils/domenico.html">Découvrir l'outil →</a>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">6</div>
+        <div class="service-kicker">Sites et Sols Pollués — Documentation réglementaire</div>
+        <h3>Schéma Conceptuel</h3>
+        <p>Génération du Schéma Conceptuel de Site, support de l'Interprétation de l'État des Milieux et du Plan de Gestion, avec structuration automatique sources / vecteurs / cibles.</p>
+        <a class="service-link" href="../outils/schema-conceptuel.html">Découvrir l'outil →</a>
+      </div>
+
+      <div class="service-card" style="border-color:#5865F2;">
+        <div class="service-num" style="background:rgba(88,101,242,0.12);color:#5865F2;">7</div>
+        <div class="service-kicker" style="color:#5865F2;">Sites et Sols Pollués — Visualisation 3D · Nouveau</div>
+        <h3>3D_SSP</h3>
+        <p>Modélisation 3D intégrée : superposition source de pollution des sols, panache de nappe et ouvrages du site. Module Plan de Gestion des terres excavées, export PDF + JSON.</p>
+        <a class="service-link" href="../outils/3d-ssp.html">Découvrir l'outil →</a>
+      </div>
+
+      <div class="service-card" style="border-color:#5865F2;">
+        <div class="service-num" style="background:rgba(88,101,242,0.12);color:#5865F2;">8</div>
+        <div class="service-kicker" style="color:#5865F2;">Sites et Sols Pollués — Modélisation 3D · Nouveau</div>
+        <h3>MSP — Sources de Pollution des Sols</h3>
+        <p>Cartographie 3D de la source de pollution des sols par interpolation spatiale IDW (Shepard, 1968). Calcul automatique du volume et de la surface impactés par seuil.</p>
+        <a class="service-link" href="../outils/msp.html">Découvrir l'outil →</a>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">9</div>
+        <div class="service-kicker">Hydrogéologie</div>
+        <h3>Modélisation Essai de Porchet</h3>
+        <p>Calcul du coefficient de perméabilité K in situ (méthode Porchet) et comparaison automatique avec les résultats du dimensionnement d'ouvrages GEP.</p>
+        <a class="service-link" href="../outils/porchet-essai-permeabilite.html">Découvrir l'outil →</a>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">10</div>
+        <div class="service-kicker">Hydrogéologie</div>
+        <h3>Modélisation GEP — DLE &amp; Loi sur l'Eau</h3>
+        <p>Dimensionnement des ouvrages de gestion des eaux pluviales et génération automatique des dossiers DLE / Loi sur l'Eau (IOTA, rubriques R.214-1).</p>
+        <a class="service-link" href="../outils/eaux-pluviales-dle-gep.html">Découvrir l'outil →</a>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">11</div>
+        <div class="service-kicker">Hydrogéologie</div>
+        <h3>Rabattement de nappe</h3>
+        <p>Courbes de rabattement de nappe soumise à pompage — équation de Theis (1935) et extensions (Cooper &amp; Jacob, Hantush &amp; Jacob, Boulton). Classification IOTA automatique.</p>
+        <a class="service-link" href="../outils/rabattement/index.html">Découvrir l'outil →</a>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">12</div>
+        <div class="service-kicker">Hydrogéologie · Nouveau</div>
+        <h3>Rabattement V15.87</h3>
+        <p>Modélisation multicouche assistée par IA — 42 lithologies, 15 couches max, formule Forchheimer/Dupuit, génération automatique du Dossier Loi sur l'Eau.</p>
+        <a class="service-link" href="../outils/rabattement-v15-87.html">Découvrir l'outil →</a>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">13</div>
+        <div class="service-kicker">Hydrogéologie · Nouveau</div>
+        <h3>Piézomètres de Surveillance</h3>
+        <p>Suivi multi-campagnes des niveaux piézométriques (v2.9c), interprétation automatique des tendances et du sens d'écoulement par triangulation.</p>
+        <a class="service-link" href="../outils/piezometres.html">Découvrir l'outil →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="pdf-section">
+    <div class="pdf-inner">
+      <div class="section-title">Documents complets</div>
+      <div class="section-heading">Le Dossier scientifique et la Note Technique de la suite GMEP</div>
+      <div class="pdf-grid">
+        <div class="pdf-card">
+          <h4>Dossier des outils GMEP</h4>
+          <p>Présentation scientifique et technique complète : description détaillée, public cible, référentiels réglementaires et livrables de la suite GMEP.</p>
+          <iframe class="pdf-frame" src="Dossier_11_outils_GMEP.pdf" title="Dossier des outils GMEP"></iframe>
+          <a class="btn-download" href="Dossier_11_outils_GMEP.pdf" download="Dossier_11_outils_GMEP.pdf">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Télécharger le PDF
+          </a>
+        </div>
+        <div class="pdf-card">
+          <h4>Note Technique Différenciante GMEP</h4>
+          <p>Positionnement scientifique de la suite GMEP : méthodologies, conformité réglementaire et éléments différenciants de chaque outil vis-à-vis des pratiques du secteur.</p>
+          <iframe class="pdf-frame" src="Note_Technique_GMEP_11_outils.pdf" title="Note Technique GMEP"></iframe>
+          <a class="btn-download" href="Note_Technique_GMEP_11_outils.pdf" download="Note_Technique_GMEP_11_outils.pdf">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Télécharger le PDF
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-section">
+    <div class="contact-inner">
+      <div class="contact-text">
+        <h3>Une question sur nos outils ?</h3>
+        <p>Éric AZULAY — Ingénieur SSP · Gérant G.M.E.P · SIRET 753 097 625 00010</p>
+      </div>
+      <div class="contact-links">
+        <a class="btn-outline" href="mailto:gmep.france@gmail.com">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Envoyer un email
+        </a>
+        <a class="btn-solid" href="../tarifs.html">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          Voir les tarifs
+        </a>
+        <a class="btn-outline" href="../index.html">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Retour à l'accueil
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 G.M.E.P · 9 rue de la Marne, 79400 Saint-Maixent-l'École · SIRET 753 097 625 00010 · <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a></p>
+  </footer>
+
+</body>
+</html>

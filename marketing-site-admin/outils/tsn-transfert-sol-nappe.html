@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TSN — Transfert Sol-Nappe-Captage AEP | Logiciel SSP | GMEP</title>
+<meta name="description" content="TSN — Évaluation Tier 1 analytique de l'impact d'un site SSP sur les cibles AEP, puits et forages. Modèle Domenico 1987, API Hub'eau native, conformité IOTA R.214-1, cartographie isodistances 500-3000 m, conversion Lambert 93 ↔ WGS84. 30 minutes vs plusieurs semaines pour MODFLOW. Essai gratuit 14 jours.">
+<meta name="keywords" content="TSN, transfert sol nappe, Domenico 1987, API Hub'eau, eaufrance, captage AEP, puits forage, IOTA R.214-1, isodistances, Lambert 93 WGS84, screening Tier 1, MODFLOW alternative, MARTHE alternative, terres excavées, ICPE, eaux souterraines ESO, GMEP">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/outils/tsn-transfert-sol-nappe.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/outils/tsn-transfert-sol-nappe.html">
+<meta property="og:title" content="TSN — Transfert Sol-Nappe-Captage AEP | Logiciel SSP | GMEP">
+<meta property="og:description" content="TSN — Évaluation Tier 1 analytique de l'impact d'un site SSP sur les cibles AEP, puits et forages. Modèle Domenico 1987, API Hub'eau native, conformité IOTA R.214-1, cartographie isodistances 500-3000 m, conversion Lambert 93 ↔ WGS84. 30 minutes vs plusieurs semaines pour MODFLOW. Essai gratuit 14 jours.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Logiciels de modélisation environnementale">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TSN — Transfert Sol-Nappe-Captage AEP | Logiciel SSP | GMEP">
+<meta name="twitter:description" content="TSN — Évaluation Tier 1 analytique de l'impact d'un site SSP sur les cibles AEP, puits et forages. Modèle Domenico 1987, API Hub'eau native, conformité IOTA R.214-1, cartographie isodistances 500-3000 m, conversion Lambert 93 ↔ WGS84. 30 minutes vs plusieurs semaines pour MODFLOW. Essai gratuit 14 jours.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+</head>
+<body>
+<div style="background:#1a365d;color:#fff;text-align:center;padding:10px 16px;font-size:0.85rem;">
+  Version d'information présentée aux services de l'État (DREAL · DRIEAT · ARS · DDT/DDTM) — sans tarif public. Essai fonctionnel réel de 15 jours sur code d'accès. Pour un devis, contactez l'éditeur : <a href="mailto:gmep.france@gmail.com" style="color:#7fd6ff;">gmep.france@gmail.com</a>
+</div>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Accueil GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Bureau d'études environnement &amp; hydrogéologie</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navigation principale">
+      <a href="../index.html">Accueil</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Outils
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modélisation 3D sols / nappe / ouvrages · NOUVEAU</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau<span class="nav-mi-desc">Dimensionnement EP + dossiers DLE/GEP · NOUVEAU</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modélisation Essai de Porchet<span class="nav-mi-desc">Calcul K terrain + comparaison GEP · NOUVEAU</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX<span class="nav-mi-desc">104 substances HHRA + 12 écotox — NOUVEAU V8</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Rabattement V15.87<span class="nav-mi-desc">Multicouche IA — Loi sur l'Eau</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">Dimensionnement ANC<span class="nav-mi-desc">Assainissement individuel &amp; collectif · NOUVEAU</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transfert Sol → Nappe<span class="nav-mi-desc">Domenico 1987 — API Hub'eau</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Schéma Conceptuel<span class="nav-mi-desc">IEM + Plan de Gestion</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS V7 Johnson &amp; Ettinger<span class="nav-mi-desc">+ 5 modules avancés</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Tarifs</a>
+      <a href="../expertise.html">Expertise</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Choix de langue">
+        <button class="lang-btn active" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Connexion</a>
+      <a href="/essai-administration.html" rel="noopener" class="btn-header-cta">Inscription</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge" style="background:linear-gradient(135deg,#39e07a 0%,#1a5276 100%);color:#fff;">API HUB'EAU NATIVE</span>
+        <h1>TSN — Transfert Sol &lt; Nappe</h1>
+        <p class="lead">Évaluation <strong>Tier 1 analytique</strong> de l'impact d'un site sites &amp; sols pollués (SSP) sur les cibles AEP, puits et forages. Modèle <strong>Domenico 1987</strong>, <strong>API Hub'eau native</strong>, conformité <strong>IOTA R.214-1</strong>, cartographie isodistances 500 à 3000 m. <strong>30 minutes</strong> là où MODFLOW demande <strong>plusieurs semaines</strong>.</p>
+        <div class="hero-cta">
+          <a href="../tarifs.html" class="btn btn-primary">Demander un devis</a>
+          <a href="/essai-administration.html" rel="noopener" class="btn btn-outline">Essai gratuit 14 jours</a>
+          <a href="../contact.html" class="btn btn-outline">Démo sur demande</a>
+        </div>
+      </div>
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">tsn · sol &lt; nappe</span>
+        </div>
+        <div class="hero-mock-row"><span class="l">Modèle</span><span class="v">Domenico 1987</span></div>
+        <div class="hero-mock-row"><span class="l">Cible (Hub'eau)</span><span class="v">Captage AEP — 1 250 m</span></div>
+        <div class="hero-mock-row"><span class="l">Cc(x) aval</span><span class="v">4,1 µg/L</span></div>
+        <div class="hero-mock-row"><span class="l">Délai d'analyse</span><span class="v">~ 30 min</span></div>
+        <div class="hero-mock-result"><strong>Criticité cible</strong><span>🟠 moyenne</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 1. Présentation -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Présentation</span>
+      <h2>TSN — l'évaluation rapide de l'impact sur les cibles AEP</h2>
+      <p>Une solution analytique Domenico 1987 connectée aux API publiques Hub'eau pour identifier automatiquement les puits, forages et captages dans le rayon d'analyse.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 12c3-6 15-6 18 0-3 6-15 6-18 0z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Modèle Domenico 1987</h3>
+        <p>Solution analytique de la concentration aval Cc(x) d'un panache, sans maillage : une source ponctuelle, quelques paramètres physiques (K, n, dispersivité, gradient).</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="7" r="1.5" fill="currentColor"/><circle cx="14" cy="12" r="1.5" fill="currentColor"/><circle cx="10" cy="17" r="1.5" fill="currentColor"/></svg></div>
+        <h3>API Hub'eau native</h3>
+        <p>Récupération automatique des puits, forages et stations qualité (eaufrance.fr) situés dans le rayon d'analyse autour de la source.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Lambert 93 ↔ WGS84</h3>
+        <p>Coordonnées Lambert 93 (EPSG:2154) par cible avec conversion proj4 vers WGS84 pour la cartographie.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Cibles AEP</h3>
+        <p>Puits privés, forages d'alimentation en eau potable et captages prioritaires automatiquement positionnés et hiérarchisés par criticité.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Fonctionnalités -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Fonctionnalités</span>
+      <h2>Cartographie et rapport prêts pour le dossier réglementaire</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card" style="border-left:4px solid #1a5276;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/><circle cx="12" cy="12" r="10.5" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3"/></svg></div>
+        <h3>Cartographie isodistances</h3>
+        <p>Source au centre, cercles d'isodistances 500 / 1000 / 1500 / 2000 / 2500 / 3000 m, échelle adaptative et légende intégrée dans le rapport PDF.</p>
+      </div>
+      <div class="feature-card" style="border-left:4px solid #1a5276;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" fill="currentColor"/></svg></div>
+        <h3>Marqueurs de criticité</h3>
+        <p>Cibles colorées selon leur criticité (haute / moyenne / faible) en fonction de la concentration aval estimée et de la distance.</p>
+      </div>
+      <div class="feature-card" style="border-left:4px solid #1a5276;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <h3>Rose des vents &amp; azimut</h3>
+        <p>Flèche d'azimut d'écoulement et rose des vents pour visualiser le sens de transfert du panache vers les cibles.</p>
+      </div>
+      <div class="feature-card" style="border-left:4px solid #1a5276;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M21 12c0 5-4 9-9 9s-9-4-9-9 4-9 9-9 9 4 9 9z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Logique IOTA R.214-1</h3>
+        <p>Cadre IOTA strict (Code de l'environnement R.214-1) appliqué nativement pour produire un dossier conforme.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Comparatif -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Comparatif</span>
+      <h2>TSN vs MODFLOW vs MARTHE</h2>
+      <p>Un outil de screening « Tier 1 » : <strong>30 minutes</strong> contre <strong>plusieurs semaines</strong> pour une modélisation numérique complète.</p>
+    </div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;">
+        <thead>
+          <tr style="background:#1a5276;color:#fff;">
+            <th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Critère</th>
+            <th style="padding:10px;text-align:center;border:1px solid #0e2f44;width:22%;">MODFLOW (USGS)</th>
+            <th style="padding:10px;text-align:center;border:1px solid #0e2f44;width:22%;">MARTHE (BRGM)</th>
+            <th style="padding:10px;text-align:center;border:1px solid #0e2f44;width:22%;background:#39e07a;color:#0e2f44;">TSN (GMEP)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Méthode</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Différences finies 3D</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Volumes finis 3D</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">Analytique Domenico 1987</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;"><strong>Temps de mise en œuvre</strong></td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Plusieurs semaines</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Plusieurs semaines</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:700;">~ 30 minutes</td></tr>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Maillage</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Discrétisation lourde</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Maillage gigogne</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">Aucun maillage</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Expertise requise</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Modélisateur expérimenté</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Modélisateur expérimenté</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">BE SSP non spécialiste</td></tr>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Intégration API publiques</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ Hub'eau</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Conformité IOTA R.214-1</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗ (générique)</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗ (générique)</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ native</td></tr>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Cartographie cibles AEP</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Piézométrie détaillée</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Cartes panache</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ isodistances + cibles</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Cas d'usage idéal</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Grandes nappes régionales</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Hydrosystèmes complexes</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">Impact site SSP sur cible AEP</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:#666;margin-top:14px;line-height:1.6;"><strong>Sources :</strong> <a href="https://www.usgs.gov/mission-areas/water-resources/science/modflow-and-related-programs">USGS MODFLOW</a>, <a href="https://www.brgm.fr/fr/logiciel/marthe-logiciel-modelisation-ecoulements-souterrains">BRGM MARTHE</a>, <a href="https://hubeau.eaufrance.fr/">API Hub'eau</a>, Code de l'environnement R.214-1.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Applications -->
+<section>
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Applications</span>
+      <h2>Pour quels usages ?</h2>
+    </div>
+    <div class="compliance-list">
+      <h3>Cas d'usage type</h3>
+      <ul>
+        <li><strong>Impact d'un site SSP sur captage AEP</strong> — évaluation rapide d'un captage situé à 500-3000 m de la source.</li>
+        <li><strong>Réutilisation de terres excavées</strong> — évaluation du transfert vers la nappe avant réemploi.</li>
+        <li><strong>Étude d'impact ESO (Eaux Souterraines) ICPE</strong> — screening de risque pour projet d'installation classée.</li>
+        <li><strong>Dossier Loi sur l'Eau (IOTA R.214-1)</strong> — justification de l'impact sur les eaux souterraines.</li>
+        <li><strong>Outil « Tier 1 » complémentaire</strong> — aide à la décision avant une modélisation numérique lourde (MODFLOW / MARTHE).</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Tarif -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Tarification</span>
+      <h2>Devis sur demande auprès de l'éditeur</h2>
+    </div>
+    <div style="max-width:640px;margin:0 auto;text-align:center;">
+      <p style="font-size:1.05rem;line-height:1.6;">Cette version d'information, présentée aux services de l'État (DREAL, DRIEAT, ARS, DDT/DDTM), ne diffuse pas de tarif public. Pour toute demande de devis ou d'abonnement, adressez-vous directement à l'éditeur du logiciel :</p>
+      <p style="margin:20px 0;"><a href="mailto:gmep.france@gmail.com" class="btn btn-primary">gmep.france@gmail.com</a></p>
+      <p style="font-size:0.95rem;color:#64748b;">Un essai fonctionnel réel de 15 jours est disponible sur présentation d'un code d'accès unique transmis à votre organisme.</p>
+      <div class="text-center mt-6">
+        <a href="/essai-administration.html" class="btn btn-ghost">J'ai reçu un code d'essai — Activer mon accès</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Note technique PDF -->
+<section>
+  <div class="container">
+    <div class="demo-placeholder">
+      <h3>Note technique — TSN Transfert Sol-Nappe</h3>
+      <p>Téléchargez la note technique : équation de Domenico 1987, paramétrage du panache, intégration des API Hub'eau et méthode de hiérarchisation des cibles AEP.</p>
+      <a href="/notes-techniques/Note_Technique_TSN_Transfert_Sol_Nappe.pdf" class="btn btn-primary">Télécharger la note technique (PDF)</a>
+    </div>
+  </div>
+</section>
+
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tél. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a><br>
+        <a href="https://www.gmep-france.eu">www.gmep-france.eu</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nos outils</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modélisation Essai de Porchet</a></li>
+          <li><a href="../outils/eqrs-v31-05-ecotox.html">EQRS V31.05 + ECOTOX</a></li>
+          <li><a href="../outils/rabattement-v15-87.html">Rabattement V15.87</a></li>
+          <li><a href="../outils/anc-assainissement.html">Dimensionnement ANC</a></li>
+          <li><a href="../outils/tsn-transfert-sol-nappe.html">TSN — Transfert Sol → Nappe</a></li>
+          <li><a href="../outils/schema-conceptuel.html">Schéma Conceptuel</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Société</h6>
+        <ul>
+          <li><a href="../tarifs.html">Tarifs</a></li>
+          <li><a href="../guide-11-outils/index.html">Guide 13 outils (PDF)</a></li>
+          <li><a href="../expertise.html">Expertise</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../mentions-legales.html">Mentions légales</a></li>
+          <li><a href="../cgv.html">CGV</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Tous droits réservés.</p>
+        <p>Tous nos logiciels sont la propriété exclusive de la SARL G.M.E.P. Toute reproduction, diffusion ou utilisation, même partielle, sans autorisation écrite préalable est interdite.</p>
+        <p class="credit">Conception et développement : Eric Azulay — Gérant SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/nav.js"></script>
+<script src="../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

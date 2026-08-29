@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schéma Conceptuel — IEM + Plan de Gestion (PG) | GMEP</title>
+<meta name="description" content="Schéma Conceptuel GMEP — Outil de visualisation interactive du modèle conceptuel SSP Source › Vecteur › Cible pour la réalisation des Interprétations de l'État des Milieux (IEM) et des Plans de Gestion (PG) selon méthodologie nationale MEEM/MTES 2017. Connexion native EQRS V31.05 + EQRS ECOTOX V8. Export PNG/PDF. Essai gratuit 14 jours.">
+<meta name="keywords" content="schéma conceptuel, modèle conceptuel SSP, Source Vecteur Cible, IEM, Interprétation État des Milieux, Plan de Gestion, PG, méthodologie nationale SSP, MEEM MTES 2017, ANSES 2018, EQRS V31.05, EQRS ECOTOX V8, visualisation SVG, export PNG PDF, diagnostic pollution, GMEP">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/outils/schema-conceptuel.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/outils/schema-conceptuel.html">
+<meta property="og:title" content="Schéma Conceptuel — IEM + Plan de Gestion (PG) | GMEP">
+<meta property="og:description" content="Schéma Conceptuel GMEP — Outil de visualisation interactive du modèle conceptuel SSP Source › Vecteur › Cible pour la réalisation des Interprétations de l'État des Milieux (IEM) et des Plans de Gestion (PG) selon méthodologie nationale MEEM/MTES 2017. Connexion native EQRS V31.05 + EQRS ECOTOX V8. Export PNG/PDF. Essai gratuit 14 jours.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Logiciels de modélisation environnementale">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Schéma Conceptuel — IEM + Plan de Gestion (PG) | GMEP">
+<meta name="twitter:description" content="Schéma Conceptuel GMEP — Outil de visualisation interactive du modèle conceptuel SSP Source › Vecteur › Cible pour la réalisation des Interprétations de l'État des Milieux (IEM) et des Plans de Gestion (PG) selon méthodologie nationale MEEM/MTES 2017. Connexion native EQRS V31.05 + EQRS ECOTOX V8. Export PNG/PDF. Essai gratuit 14 jours.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<!-- Schema.org : FAQPage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Qu'est-ce qu'un schéma conceptuel de site pollué ?", "acceptedAnswer": { "@type": "Answer", "text": "Le schéma conceptuel de site (Conceptual Site Model) est la représentation structurée des sources de pollution, des voies de transfert (sol, air, eau) et des cibles exposées (populations, écosystèmes). Il constitue le socle méthodologique sur lequel s'appuie toute analyse des risques sanitaires menée dans le cadre d'une IEM ou d'un Plan de Gestion." } },
+    { "@type": "Question", "name": "Quel est le lien entre le schéma conceptuel et l'analyse des risques sanitaires ?", "acceptedAnswer": { "@type": "Answer", "text": "L'analyse des risques sanitaires (EQRS) reconstruit la chaîne source → vecteur → cible identifiée par le schéma conceptuel pour quantifier l'exposition des populations. Sans schéma conceptuel validé, aucune évaluation des risques sanitaires n'est recevable au sens de la méthodologie nationale de gestion des sites et sols pollués (MEEM/MTES 2017)." } },
+    { "@type": "Question", "name": "Le schéma conceptuel est-il obligatoire pour une IEM ou un Plan de Gestion ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui. Le schéma conceptuel constitue le socle méthodologique imposé par la démarche nationale de gestion des sites et sols pollués pour toute Interprétation de l'État des Milieux (IEM) ou tout Plan de Gestion (PG)." } },
+    { "@type": "Question", "name": "Le logiciel se connecte-t-il aux autres outils EQRS de GMEP ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui, le module Schéma Conceptuel se connecte nativement aux sorties d'EQRS V9 (voies humaines) et EQRS ECOTOX (voies écotoxicologiques), avec export PNG/PDF pour insertion directe dans les rapports." } }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Accueil GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Bureau d'études environnement &amp; hydrogéologie</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navigation principale">
+      <a href="../index.html">Accueil</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Outils
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modélisation 3D sols / nappe / ouvrages · NOUVEAU</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau<span class="nav-mi-desc">Dimensionnement EP + dossiers DLE/GEP · NOUVEAU</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modélisation Essai de Porchet<span class="nav-mi-desc">Calcul K terrain + comparaison GEP · NOUVEAU</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX<span class="nav-mi-desc">104 substances HHRA + 12 écotox — NOUVEAU V8</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Rabattement V15.87<span class="nav-mi-desc">Multicouche IA — Loi sur l'Eau</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">Dimensionnement ANC<span class="nav-mi-desc">Assainissement individuel &amp; collectif · NOUVEAU</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transfert Sol → Nappe<span class="nav-mi-desc">Domenico 1987 — API Hub'eau</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Schéma Conceptuel<span class="nav-mi-desc">IEM + Plan de Gestion</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS V7 Johnson &amp; Ettinger<span class="nav-mi-desc">+ 5 modules avancés</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Tarifs</a>
+      <a href="../expertise.html">Expertise</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Choix de langue">
+        <button class="lang-btn active" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Connexion</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Inscription</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge" style="background:linear-gradient(135deg,#39e07a 0%,#1a5276 100%);color:#fff;">OUTIL IEM + PG</span>
+        <h1>Schéma Conceptuel — Source › Vecteur › Cible</h1>
+        <p class="lead">Outil de visualisation interactive du modèle conceptuel SSP pour la réalisation des <strong>Interprétations de l'État des Milieux (IEM)</strong> et des <strong>Plans de Gestion (PG)</strong> selon la méthodologie nationale MEEM/MTES 2017. Connexion native <strong>EQRS V31.05</strong> + <strong>EQRS ECOTOX V8</strong>.</p>
+        <div class="hero-cta">
+          <a href="../tarifs.html#schema_conceptuel_annual" class="btn btn-primary">S'abonner — 850 € HT/an</a>
+          <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-outline">Essai gratuit 14 jours</a>
+          <a href="../contact.html" class="btn btn-outline">Démo sur demande</a>
+        </div>
+      </div>
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">schéma · conceptuel</span>
+        </div>
+        <svg viewBox="0 0 280 120" style="width:100%;height:auto;font-family:Inter,sans-serif;">
+          <rect x="8" y="20" width="74" height="80" rx="8" fill="rgba(192,57,43,0.18)" stroke="#c0392b" stroke-width="1.5"/>
+          <text x="45" y="16" font-size="9" fill="rgba(255,255,255,0.7)" text-anchor="middle">SOURCE</text>
+          <text x="45" y="55" font-size="8" fill="#fff" text-anchor="middle">Sols pollués</text>
+          <text x="45" y="70" font-size="8" fill="#fff" text-anchor="middle">Eaux sout.</text>
+          <rect x="103" y="20" width="74" height="80" rx="8" fill="rgba(245,185,77,0.18)" stroke="#f5b94d" stroke-width="1.5"/>
+          <text x="140" y="16" font-size="9" fill="rgba(255,255,255,0.7)" text-anchor="middle">VECTEUR</text>
+          <text x="140" y="55" font-size="8" fill="#fff" text-anchor="middle">Intrusion vap.</text>
+          <text x="140" y="70" font-size="8" fill="#fff" text-anchor="middle">Chaîne troph.</text>
+          <rect x="198" y="20" width="74" height="80" rx="8" fill="rgba(61,224,122,0.18)" stroke="#39e07a" stroke-width="1.5"/>
+          <text x="235" y="16" font-size="9" fill="rgba(255,255,255,0.7)" text-anchor="middle">CIBLE</text>
+          <text x="235" y="55" font-size="8" fill="#fff" text-anchor="middle">Adultes/enfants</text>
+          <text x="235" y="70" font-size="8" fill="#fff" text-anchor="middle">Faune / AEP</text>
+          <path d="M82 60h21" stroke="#39e07a" stroke-width="2" marker-end="url(#ah)"/>
+          <path d="M177 60h21" stroke="#39e07a" stroke-width="2" marker-end="url(#ah)"/>
+          <defs><marker id="ah" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0l6 3-6 3z" fill="#39e07a"/></marker></defs>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 1. Présentation -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Présentation</span>
+      <h2>Le modèle conceptuel SSP visualisé en un coup d'œil</h2>
+      <p>Un schéma SVG interactif structuré en trois sections — sources, vecteurs et cibles — alimenté directement par les résultats des modules EQRS.</p>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:32px;margin-bottom:32px;">
+      <svg viewBox="0 0 900 300" style="width:100%;height:auto;font-family:Inter,sans-serif;" role="img" aria-label="Schéma conceptuel Source Vecteur Cible">
+        <!-- SOURCE -->
+        <rect x="20" y="40" width="240" height="220" rx="14" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+        <text x="140" y="30" font-size="15" font-weight="700" fill="#c0392b" text-anchor="middle">SOURCES / MILIEUX</text>
+        <g font-size="13" fill="#1f2937">
+          <text x="44" y="80">• Sols pollués</text>
+          <text x="44" y="112">• Eaux souterraines</text>
+          <text x="44" y="144">• Eaux superficielles</text>
+          <text x="44" y="176">• Sols saturés</text>
+        </g>
+        <!-- VECTEUR -->
+        <rect x="330" y="40" width="240" height="220" rx="14" fill="#fff7e8" stroke="#d97706" stroke-width="2"/>
+        <text x="450" y="30" font-size="15" font-weight="700" fill="#d97706" text-anchor="middle">VECTEURS / VOIES</text>
+        <g font-size="12.5" fill="#1f2937">
+          <text x="352" y="76">• Intrusion de vapeurs</text>
+          <text x="352" y="104">• Ingestion de sol / d'eau</text>
+          <text x="352" y="132">• Inhalation de poussières</text>
+          <text x="352" y="160">• Contact cutané</text>
+          <text x="352" y="188">• Chaîne trophique</text>
+          <text x="352" y="216">• Transfert nappe → captage</text>
+        </g>
+        <!-- CIBLE -->
+        <rect x="640" y="40" width="240" height="220" rx="14" fill="#eafaf1" stroke="#1a5276" stroke-width="2"/>
+        <text x="760" y="30" font-size="15" font-weight="700" fill="#1a5276" text-anchor="middle">CIBLES</text>
+        <g font-size="13" fill="#1f2937">
+          <text x="664" y="80">• Adultes</text>
+          <text x="664" y="112">• Enfants</text>
+          <text x="664" y="144">• Salariés</text>
+          <text x="664" y="176">• Faune (V8 ECOTOX)</text>
+          <text x="664" y="208">• Captages AEP (TSN)</text>
+        </g>
+        <!-- Flèches -->
+        <path d="M260 150h70" stroke="#1a5276" stroke-width="3" marker-end="url(#arr)"/>
+        <path d="M570 150h70" stroke="#1a5276" stroke-width="3" marker-end="url(#arr)"/>
+        <defs><marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0 0l9 4-9 4z" fill="#1a5276"/></marker></defs>
+      </svg>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="6" height="16" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="15" y="4" width="6" height="16" rx="1.5" stroke="currentColor" stroke-width="2"/><path d="M9 12h6" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>3 sections structurées</h3>
+        <p>Sources / milieux, vecteurs / voies de transfert et cibles — la grille de lecture standard d'un diagnostic SSP.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 12h16M14 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>SVG interactif</h3>
+        <p>Représentation graphique dynamique des liaisons source → vecteur → cible, avec mise en évidence des voies retenues et écartées.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M8 12l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Intégration EQRS</h3>
+        <p>Connexion native à EQRS V31.05 (voies humaines) et EQRS ECOTOX V8 (voies écotox : sol → ver → oiseau, eau → poisson).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Application IEM + PG -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Application</span>
+      <h2>Au service de l'IEM et du Plan de Gestion</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card" style="border-left:4px solid #1a5276;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="currentColor" stroke-width="2"/><path d="M15 3v5h5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Interprétation de l'État des Milieux (IEM)</h3>
+        <p>Visualisation des voies et cibles à investiguer selon la méthodologie ANSES IEM 2018, pour justifier le périmètre d'étude avant les calculs EQRS.</p>
+      </div>
+      <div class="feature-card" style="border-left:4px solid #1a5276;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Plan de Gestion (PG)</h3>
+        <p>Représentation graphique du modèle conceptuel à intégrer au PG selon la méthodologie nationale SSP MEEM/MTES 2017.</p>
+      </div>
+      <div class="feature-card" style="border-left:4px solid #1a5276;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Justification scientifique</h3>
+        <p>Argumentation des hypothèses retenues (voies retenues vs écartées) et validation du périmètre d'étude avant les calculs EQRS lourds.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Encadré bleu — pourquoi obligatoire -->
+<section>
+  <div class="container container-narrow">
+    <div style="background:linear-gradient(135deg,#eef4fa 0%,#e3edf7 100%);border-left:6px solid #1a5276;border-radius:14px;padding:32px 36px;">
+      <h2 style="color:#1a5276;margin-top:0;">Pourquoi le schéma conceptuel est obligatoire</h2>
+      <p style="color:#1f2937;font-size:1.02rem;">Dans tout <strong>diagnostic SSP approfondi</strong>, le schéma conceptuel n'est pas une option : il constitue le socle méthodologique imposé par la démarche nationale de gestion des sites et sols pollués.</p>
+      <ul style="color:#1f2937;line-height:1.8;">
+        <li>Il <strong>conditionne la pertinence des calculs</strong> : sans liaison source-vecteur-cible identifiée, aucune évaluation des risques n'est recevable.</li>
+        <li>Il <strong>structure l'IEM et le Plan de Gestion</strong> en explicitant les voies d'exposition retenues et écartées.</li>
+        <li>Il <strong>sécurise la traçabilité</strong> des hypothèses et la cohérence de l'ensemble de l'étude.</li>
+        <li>Il offre un <strong>support de communication intuitif</strong>, lisible par des interlocuteurs non spécialistes.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Fonctionnalités spéciales -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Fonctionnalités spéciales</span>
+      <h2>Visualiser, synthétiser, exporter</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 15l5-5 4 4 3-3 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Visualisation SVG</h3>
+        <p>Schéma standardisé de type INERIS/BRGM, vectoriel et net à toutes les échelles, recevable par les acteurs concernés.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="20" cy="6" r="2" fill="currentColor"/></svg></div>
+        <h3>Synthèse cumulée par cible</h3>
+        <p>Somme des contributions (voies × polluants) par cible, avec aperçu des résultats EQRS associés (doses, QD, ERI).</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3v12M8 11l4 4 4-4M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Export PNG / PDF</h3>
+        <p>Export du schéma en PNG ou PDF pour intégration directe dans les rapports de bureau d'études.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Tarif -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Tarif</span>
+      <h2>Abonnez-vous au Schéma Conceptuel</h2>
+    </div>
+    <div class="pricing-grid" style="max-width:520px;margin:0 auto;">
+      <div class="price-card featured">
+        <span class="badge">IEM + PG</span>
+        <h3>Abonnement annuel</h3>
+        <p class="sub">Visualisation Source › Vecteur › Cible</p>
+        <div class="price-amount"><span class="currency">€</span>850</div>
+        <div class="price-period">HT / an</div>
+        <ul class="price-features">
+          <li>Schéma SVG interactif Source › Vecteur › Cible</li>
+          <li>Application IEM (ANSES 2018) + PG (MEEM/MTES 2017)</li>
+          <li>Connexion native EQRS V31.05 + ECOTOX V8</li>
+          <li>Synthèse cumulée par cible</li>
+          <li>Export PNG / PDF</li>
+        </ul>
+        <a href="../tarifs.html#schema_conceptuel_annual" class="btn btn-primary btn-block">S'abonner</a>
+      </div>
+    </div>
+    <div class="text-center mt-6" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-ghost">Essai gratuit 14 jours</a>
+      <a href="../contact.html" class="btn btn-ghost">Démo sur demande</a>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Note technique PDF -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="demo-placeholder">
+      <h3>Note technique — Schéma Conceptuel</h3>
+      <p>Téléchargez la note technique : structuration Source › Vecteur › Cible, articulation IEM / Plan de Gestion et connexion aux modules EQRS.</p>
+      <a href="/notes-techniques/Note_Technique_Schema_Conceptuel.pdf" class="btn btn-primary">Télécharger la note technique (PDF)</a>
+    </div>
+  </div>
+</section>
+
+<!-- 7. Cas d'usage -->
+<section>
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Cas d'usage</span>
+      <h2>Un support de communication efficace</h2>
+    </div>
+    <div class="compliance-list">
+      <h3>Pour qui ?</h3>
+      <ul>
+        <li><strong>Communication avec les autorités compétentes</strong> — un schéma intuitif et standardisé, facilement compréhensible lors de l'instruction d'un dossier.</li>
+        <li><strong>Échanges avec les acteurs locaux</strong> — un support clair pour expliquer le modèle conceptuel et les voies d'exposition.</li>
+        <li><strong>Travail interne du bureau d'études</strong> — validation du périmètre d'étude avant le lancement des calculs EQRS.</li>
+        <li><strong>Intégration au rapport</strong> — export PNG/PDF prêt à insérer dans l'IEM ou le Plan de Gestion.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="bg-soft">
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Questions fréquentes</span>
+      <h2>Schéma conceptuel et analyse des risques sanitaires</h2>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>Qu'est-ce qu'un schéma conceptuel de site pollué ?</summary>
+        <p>Le schéma conceptuel de site (Conceptual Site Model) est la représentation structurée des sources de pollution, des voies de transfert (sol, air, eau) et des cibles exposées (populations, écosystèmes). Il constitue le socle méthodologique sur lequel s'appuie toute analyse des risques sanitaires menée dans le cadre d'une IEM ou d'un Plan de Gestion.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Quel est le lien entre le schéma conceptuel et l'analyse des risques sanitaires ?</summary>
+        <p>L'analyse des risques sanitaires (EQRS) reconstruit la chaîne source → vecteur → cible identifiée par le schéma conceptuel pour quantifier l'exposition des populations. Sans schéma conceptuel validé, aucune évaluation des risques sanitaires n'est recevable au sens de la méthodologie nationale de gestion des sites et sols pollués (MEEM/MTES 2017).</p>
+      </details>
+      <details class="faq-item">
+        <summary>Le schéma conceptuel est-il obligatoire pour une IEM ou un Plan de Gestion ?</summary>
+        <p>Oui. Le schéma conceptuel constitue le socle méthodologique imposé par la démarche nationale de gestion des sites et sols pollués pour toute Interprétation de l'État des Milieux (IEM) ou tout Plan de Gestion (PG).</p>
+      </details>
+      <details class="faq-item">
+        <summary>Le logiciel se connecte-t-il aux autres outils EQRS de GMEP ?</summary>
+        <p>Oui, le module Schéma Conceptuel se connecte nativement aux sorties d'EQRS V9 (voies humaines) et EQRS ECOTOX (voies écotoxicologiques), avec export PNG/PDF pour insertion directe dans les rapports.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tél. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a><br>
+        <a href="https://www.gmep-france.eu">www.gmep-france.eu</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nos outils</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modélisation Essai de Porchet</a></li>
+          <li><a href="../outils/eqrs-v31-05-ecotox.html">EQRS V31.05 + ECOTOX</a></li>
+          <li><a href="../outils/rabattement-v15-87.html">Rabattement V15.87</a></li>
+          <li><a href="../outils/anc-assainissement.html">Dimensionnement ANC</a></li>
+          <li><a href="../outils/tsn-transfert-sol-nappe.html">TSN — Transfert Sol → Nappe</a></li>
+          <li><a href="../outils/schema-conceptuel.html">Schéma Conceptuel</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Société</h6>
+        <ul>
+          <li><a href="../tarifs.html">Tarifs</a></li>
+          <li><a href="../guide-11-outils/index.html">Guide 13 outils (PDF)</a></li>
+          <li><a href="../expertise.html">Expertise</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../mentions-legales.html">Mentions légales</a></li>
+          <li><a href="../cgv.html">CGV</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Tous droits réservés.</p>
+        <p>Tous nos logiciels sont la propriété exclusive de la SARL G.M.E.P. Toute reproduction, diffusion ou utilisation, même partielle, sans autorisation écrite préalable est interdite.</p>
+        <p class="credit">Conception et développement : Eric Azulay — Gérant SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/nav.js"></script>
+<script src="../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>
