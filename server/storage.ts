@@ -91,6 +91,8 @@ export interface IStorage {
   updateSubscription(id: number, data: Partial<Subscription>): Promise<Subscription | undefined>;
   activateSubscriptionForUser(userId: number, plan: string): Promise<Subscription>;
   activateSubscriptionForUserAndTool(userId: number, plan: string, tool: string): Promise<Subscription>;
+  getAllTrialingSubscriptionsWithUser(): Promise<Array<Subscription & { email: string; name: string }>>;
+  markReminderSent(id: number, field: "reminderJ3SentAt" | "reminderExpirySentAt"): Promise<void>;
 
   // Page Views
   addPageView(view: { country: string; countryCode: string; city: string; path: string; ip: string }): Promise<void>;
@@ -262,6 +264,21 @@ export class DatabaseStorage implements IStorage {
       tool,
       currentPeriodEnd: endDate.toISOString(),
     });
+  }
+
+  async getAllTrialingSubscriptionsWithUser(): Promise<Array<Subscription & { email: string; name: string }>> {
+    const trialing = db.subscriptions.filter((s) => s.status === "trialing");
+    return trialing.map((s) => {
+      const u = db.users.find((u) => u.id === s.userId);
+      return { ...s, email: u?.email || "", name: u?.name || "" };
+    });
+  }
+
+  async markReminderSent(id: number, field: "reminderJ3SentAt" | "reminderExpirySentAt"): Promise<void> {
+    const idx = db.subscriptions.findIndex((s) => s.id === id);
+    if (idx === -1) return;
+    (db.subscriptions[idx] as any)[field] = new Date().toISOString();
+    saveDB(db);
   }
 
   // Page Views

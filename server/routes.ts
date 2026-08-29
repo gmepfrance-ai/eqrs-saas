@@ -155,6 +155,9 @@ const STRIPE_PRICE_SSP3D_MONTHLY =
   process.env.STRIPE_PRICE_SSP3D_MONTHLY || "price_1TslXb3A2g3lkch9jVPitmfl";
 const STRIPE_PRICE_SSP3D_ANNUAL =
   process.env.STRIPE_PRICE_SSP3D_ANNUAL || "price_1TslXk3A2g3lkch9kk8hyq25";
+// Pack multi-outils (bundle) — à renseigner sur Railway une fois le prix créé dans Stripe
+const STRIPE_PRICE_BUNDLE_ANNUAL =
+  process.env.STRIPE_PRICE_BUNDLE_ANNUAL || "";
 const STRIPE_WEBHOOK_SECRET =
   process.env.STRIPE_WEBHOOK_SECRET || "whsec_placeholder";
 
@@ -239,7 +242,10 @@ async function requireSubscription(
     return res.status(401).json({ message: "Authentification requise" });
   }
 
-  const sub = await storage.getSubscriptionByUserId(req.user.id);
+  const allSubs = await storage.getSubscriptionsByUserId(req.user.id);
+  const sub = allSubs.find(
+    (s) => (s.tool === "bundle" || s.tool === "je" || !s.tool) && (s.status === "active" || s.status === "trialing")
+  ) || allSubs[0];
   if (!sub || (sub.status !== "active" && sub.status !== "trialing")) {
     return res
       .status(403)
@@ -321,7 +327,7 @@ async function requireMspSubscription(
   if (isAdminEmail((req.user as any).email)) return next();
   const subs = await storage.getSubscriptionsByUserId(req.user.id);
   const mspSub = subs.find(
-    (s) => s.tool === "msp" && (s.status === "active" || s.status === "trialing")
+    (s) => (s.tool === "msp" || s.tool === "bundle") && (s.status === "active" || s.status === "trialing")
   );
   if (!mspSub) {
     return res.status(403).json({ message: "Abonnement MSP requis pour accéder à cet outil" });
@@ -346,7 +352,7 @@ async function requireSsp3dSubscription(
   if (isAdminEmail((req.user as any).email)) return next();
   const subs = await storage.getSubscriptionsByUserId(req.user.id);
   const ssp3dSub = subs.find(
-    (s) => s.tool === "ssp3d" && (s.status === "active" || s.status === "trialing")
+    (s) => (s.tool === "ssp3d" || s.tool === "bundle") && (s.status === "active" || s.status === "trialing")
   );
   if (!ssp3dSub) {
     return res.status(403).json({ message: "Abonnement 3D_SSP requis pour accéder à cet outil" });
@@ -653,6 +659,75 @@ export async function registerRoutes(
     });
   });
 
+  // ── Demande de contact / rappel humain (appelé depuis www.gmep-france.eu) ──
+  const CONTACT_ALLOWED_ORIGINS = ["https://www.gmep-france.eu", "https://gmep-france.eu"];
+  function setContactCors(req: Request, res: Response) {
+    const origin = req.headers.origin as string | undefined;
+    if (origin && CONTACT_ALLOWED_ORIGINS.includes(origin)) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Vary", "Origin");
+    }
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  }
+  app.options("/api/contact-request", (req: Request, res: Response) => {
+    setContactCors(req, res);
+    res.status(204).end();
+  });
+  app.post("/api/contact-request", async (req: Request, res: Response) => {
+    setContactCors(req, res);
+    try {
+      const { name, email, phone, company, message, tool, source } = req.body || {};
+      if (!name || !email) {
+        return res.status(400).json({ message: "Nom et e-mail requis." });
+      }
+      const resendKey = process.env.RESEND_API_KEY;
+      if (!resendKey) {
+        console.warn("[CONTACT REQUEST] Resend non configuré, demande non envoyée :", { name, email, phone, company, tool });
+        return res.status(503).json({ message: "Service momentanément indisponible, merci de nous écrire directement à contact@gmep-france.eu." });
+      }
+      const { Resend } = require("resend");
+      const resend = new Resend(resendKey);
+      const safeStr = (v: any) => (typeof v === "string" ? v.slice(0, 2000) : "");
+      await resend.emails.send({
+        from: "GMEP Site <noreply@gmep-france.eu>",
+        to: ["gmep.france@gmail.com"],
+        replyTo: safeStr(email),
+        subject: `Demande de rappel — ${safeStr(name)}${tool ? " (" + safeStr(tool) + ")" : ""}`,
+        html: `
+          <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+            <h2 style="color:#1a365d;">Nouvelle demande de contact — www.gmep-france.eu</h2>
+            <table style="width:100%;border-collapse:collapse;font-size:14px;">
+              <tr><td style="padding:8px;font-weight:bold;">Nom</td><td style="padding:8px;">${safeStr(name)}</td></tr>
+              <tr><td style="padding:8px;font-weight:bold;">Email</td><td style="padding:8px;">${safeStr(email)}</td></tr>
+              <tr><td style="padding:8px;font-weight:bold;">Téléphone</td><td style="padding:8px;">${safeStr(phone) || "—"}</td></tr>
+              <tr><td style="padding:8px;font-weight:bold;">Société</td><td style="padding:8px;">${safeStr(company) || "—"}</td></tr>
+              <tr><td style="padding:8px;font-weight:bold;">Outil concerné</td><td style="padding:8px;">${safeStr(tool) || "—"}</td></tr>
+              <tr><td style="padding:8px;font-weight:bold;">Page source</td><td style="padding:8px;">${safeStr(source) || "—"}</td></tr>
+              <tr><td style="padding:8px;font-weight:bold;vertical-align:top;">Message</td><td style="padding:8px;white-space:pre-wrap;">${safeStr(message) || "(aucun message — demande de rappel simple)"}</td></tr>
+            </table>
+          </div>`,
+      });
+      // Accusé de réception automatique au demandeur
+      try {
+        await resend.emails.send({
+          from: "GMEP <noreply@gmep-france.eu>",
+          to: safeStr(email),
+          subject: "Votre demande a bien été reçue — GMEP",
+          html: `<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+            <p>Bonjour ${safeStr(name).split(" ")[0] || ""},</p>
+            <p>Nous avons bien reçu votre demande concernant <strong>${safeStr(tool) || "nos outils GMEP"}</strong>. Nous vous recontactons personnellement sous 24 à 48h ouvrées, par e-mail ou téléphone selon votre préférence.</p>
+            <p style="font-size:13px;color:#64748b;">GMEP — 06 07 73 72 33 — contact@gmep-france.eu</p>
+          </div>`,
+        });
+      } catch (ackErr) { /* non bloquant */ }
+      res.json({ ok: true });
+    } catch (err: any) {
+      console.error("[CONTACT REQUEST ERROR]", err);
+      res.status(500).json({ message: "Erreur serveur, merci de réessayer ou d'écrire à contact@gmep-france.eu." });
+    }
+  });
+
   // Health check
   app.get("/api/health", async (req: Request, res: Response) => {
     try {
@@ -889,6 +964,194 @@ export async function registerRoutes(
     } catch (err: any) {
       console.error("[ADMIN STATS JSON ERROR]", err);
       res.status(500).json({ message: "Erreur serveur", error: err.message });
+    }
+  });
+
+  // ── Relances d'essai (J+3 conseil d'usage / J-2 avant expiration) ──────
+  // Déclenché par une tâche planifiée quotidienne (protégé par secret URL, même secret que le digest admin)
+  const TRIAL_TOOL_INFO: Record<string, { label: string; url: string; duration: number; tip: string }> = {
+    je: {
+      label: "EQRS Johnson & Ettinger",
+      url: "https://www.gmep-france.eu/#/tarifs",
+      duration: 14,
+      tip: "Importez vos concentrations mesurées, choisissez le scénario d'exposition (résidentiel, tertiaire, extérieur) et générez en quelques minutes le rapport ERS complet (VTR, fond hydrogéologique, quotients de danger) au format PDF prêt à joindre à votre dossier.",
+    },
+    eqrs_v31: {
+      label: "EQRS V31.05 + Extension ECOTOX",
+      url: "https://www.gmep-france.eu/#/subscribe-eqrs-v31-ecotox",
+      duration: 14,
+      tip: "Le module ECOTOX ajoute automatiquement le volet écotoxicologique (compartiments sol/eau/faune) à votre évaluation des risques sanitaires — un seul dossier pour couvrir sanitaire et environnemental.",
+    },
+    tsn: {
+      label: "TSN — Transfert Sol → Nappe → Captage",
+      url: "https://www.gmep-france.eu/#/subscribe-tsn",
+      duration: 8,
+      tip: "Renseignez vos paramètres hydrogéologiques (perméabilité, gradient, distance au captage) pour modéliser le transfert et obtenir directement les concentrations attendues au point de conformité.",
+    },
+    rabattement: {
+      label: "Rabattement de nappe V15.89",
+      url: "https://www.gmep-france.eu/#/subscribe-rabattement",
+      duration: 8,
+      tip: "Simulez le rayon d'action et le débit de pompage nécessaires à votre rabattement de nappe — utile pour dimensionner un chantier ou motiver un dossier Loi sur l'Eau/IOTA.",
+    },
+    msp: {
+      label: "MSP — Modélisation Sources de Pollution des Sols",
+      url: "https://www.gmep-france.eu/#/subscribe-msp",
+      duration: 8,
+      tip: "Cartographiez rapidement l'extension des sources de pollution à partir de vos points de sondage, avec calcul automatique des volumes de terres impactées (utile pour vos dossiers ISDI/VSA-VSB).",
+    },
+    ssp3d: {
+      label: "3D_SSP — Superposition 3D pollution sols/nappe",
+      url: "https://www.gmep-france.eu/#/subscribe-ssp3d",
+      duration: 8,
+      tip: "Importez vos coordonnées Lambert 93 et vos résultats d'analyses pour visualiser en 3D l'interaction entre pollution des sols et nappe — un support visuel puissant pour vos réunions de restitution client.",
+    },
+    schema: {
+      label: "Schéma Conceptuel",
+      url: "https://www.gmep-france.eu/#/subscribe-schema-conceptuel",
+      duration: 14,
+      tip: "Générez automatiquement votre schéma conceptuel (sources, vecteurs, cibles) conforme à la méthodologie nationale de gestion des sites et sols pollués, prêt à intégrer dans votre rapport.",
+    },
+    piezometres: {
+      label: "GMEP Piézomètres v2.9c",
+      url: "https://www.gmep-france.eu/#/subscribe-piezometres",
+      duration: 8,
+      tip: "Centralisez vos données piézométriques multi-campagnes et générez automatiquement vos cartes d'isopièzes et graphiques de suivi temporel.",
+    },
+    eaux_pluviales: {
+      label: "Gestion des eaux pluviales — DLE/GEP v2.1",
+      url: "https://www.gmep-france.eu/#/subscribe-eaux-pluviales",
+      duration: 8,
+      tip: "Dimensionnez vos ouvrages de gestion des eaux pluviales et générez directement les pièces techniques attendues dans un dossier Loi sur l'Eau (DLE) ou un dossier IOTA.",
+    },
+    humain: {
+      label: "Module HUMAIN — EQRS V9 Tier 3 Voie alimentaire",
+      url: "https://www.gmep-france.eu/#/subscribe-eqrs-v8-humain",
+      duration: 8,
+      tip: "Ajoutez la voie d'exposition alimentaire (autoconsommation de légumes/œufs/viande) à votre ERS Tier 3 pour les dossiers où cette voie est pertinente (jardins potagers, élevages).",
+    },
+    bundle: {
+      label: "Pack multi-outils GMEP",
+      url: "https://www.gmep-france.eu/#/tarifs",
+      duration: 14,
+      tip: "Vous avez accès à l'ensemble des outils GMEP inclus dans votre pack — n'hésitez pas à tester plusieurs modules sur un même dossier pour évaluer le gain de temps global.",
+    },
+  };
+
+  function trialReminderEmailHtml(opts: { name: string; toolLabel: string; url: string; kind: "j3" | "expiry"; tip: string; daysLeft: number }): { subject: string; html: string } {
+    const firstName = (opts.name || "").split(" ")[0] || "Bonjour";
+    if (opts.kind === "j3") {
+      return {
+        subject: `Votre essai ${opts.toolLabel} — une astuce pour bien démarrer`,
+        html: `
+        <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+          <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+            <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+            <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">${opts.toolLabel}</p>
+          </div>
+          <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+            <p style="font-size:16px;">Bonjour ${firstName},</p>
+            <p>Votre essai gratuit <strong>${opts.toolLabel}</strong> est en cours. Voici une astuce pour en tirer le meilleur parti :</p>
+            <div style="background:#eef6ff;border-left:4px solid #01696F;padding:14px 16px;border-radius:0 6px 6px 0;margin:18px 0;font-size:14px;color:#1a365d;">${opts.tip}</div>
+            <p style="font-size:14px;color:#334155;">Une question technique, un cas particulier à valider avant de vous engager ? Répondez simplement à cet e-mail ou <a href="mailto:contact@gmep-france.eu?subject=Question%20essai%20${encodeURIComponent(opts.toolLabel)}">écrivez-nous</a> — nous répondons personnellement, sous 24h ouvrées.</p>
+            <div style="text-align:center;margin:28px 0;">
+              <a href="${opts.url}" style="background:#16a34a;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Reprendre mon essai →</a>
+            </div>
+            <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a> — Tél. 06 07 73 72 33</p>
+            <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+            <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+          </div>
+        </div>`,
+      };
+    }
+    return {
+      subject: `Votre essai ${opts.toolLabel} se termine dans ${opts.daysLeft <= 0 ? "quelques heures" : opts.daysLeft + " jour(s)"}`,
+      html: `
+      <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+        <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+          <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+          <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">${opts.toolLabel}</p>
+        </div>
+        <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+          <p style="font-size:16px;">Bonjour ${firstName},</p>
+          <p>Votre essai gratuit <strong>${opts.toolLabel}</strong> se termine ${opts.daysLeft <= 0 ? "aujourd'hui" : "dans " + opts.daysLeft + " jour(s)"}. Passé ce délai, l'accès sera suspendu.</p>
+          <p style="font-size:14px;color:#334155;">Si l'outil correspond à votre besoin, vous pouvez vous abonner en 2 minutes pour conserver l'accès sans interruption — vos données et paramètres saisis pendant l'essai sont conservés.</p>
+          <p style="font-size:14px;color:#334155;">Une hésitation, une question sur la tarification ou un besoin sur mesure (plusieurs outils, plusieurs licences) ? <a href="mailto:contact@gmep-france.eu?subject=Question%20avant%20souscription%20${encodeURIComponent(opts.toolLabel)}">Écrivez-nous</a> ou appelez le 06 07 73 72 33 — nous prenons le temps de vous répondre avant tout engagement.</p>
+          <div style="text-align:center;margin:28px 0;">
+            <a href="${opts.url}" style="background:#16a34a;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Voir les tarifs et m'abonner →</a>
+          </div>
+          <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a> — Tél. 06 07 73 72 33</p>
+          <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+          <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+        </div>
+      </div>`,
+    };
+  }
+
+  app.get("/api/admin/send-trial-reminders", async (req: Request, res: Response) => {
+    const secret = req.query.secret as string;
+    const expected = process.env.ADMIN_DIGEST_SECRET || "gmep-digest-2026-secret";
+    if (secret !== expected) {
+      return res.status(403).json({ message: "Secret invalide" });
+    }
+    const resendKey = process.env.RESEND_API_KEY;
+    if (!resendKey) {
+      return res.status(503).json({ message: "Resend non configuré" });
+    }
+    const results = { j3_sent: 0, expiry_sent: 0, skipped: 0, errors: [] as string[] };
+    try {
+      const anyStorage = storage as any;
+      if (typeof anyStorage.getAllTrialingSubscriptionsWithUser !== "function") {
+        return res.status(501).json({ message: "Relances disponibles uniquement avec PostgreSQL" });
+      }
+      const trialing = await anyStorage.getAllTrialingSubscriptionsWithUser();
+      const { Resend } = require("resend");
+      const resend = new Resend(resendKey);
+      const now = Date.now();
+
+      for (const sub of trialing) {
+        try {
+          const info = TRIAL_TOOL_INFO[sub.tool || "je"] || TRIAL_TOOL_INFO.je;
+          const createdAt = sub.createdAt ? new Date(sub.createdAt).getTime() : null;
+          const periodEnd = sub.currentPeriodEnd ? new Date(sub.currentPeriodEnd).getTime() : null;
+          if (!sub.email) { results.skipped++; continue; }
+
+          // Relance "J+3" — conseil d'usage, une seule fois par essai
+          if (createdAt && !sub.reminderJ3SentAt) {
+            const daysSince = (now - createdAt) / 86400000;
+            if (daysSince >= 2.5 && daysSince <= 5) {
+              const { subject, html } = trialReminderEmailHtml({
+                name: sub.name, toolLabel: info.label, url: info.url, kind: "j3", tip: info.tip, daysLeft: 0,
+              });
+              await resend.emails.send({ from: "GMEP <noreply@gmep-france.eu>", to: sub.email, subject, html });
+              await anyStorage.markReminderSent(sub.id, "reminderJ3SentAt");
+              results.j3_sent++;
+              continue;
+            }
+          }
+
+          // Relance "expiration proche" — dans les 2 derniers jours de l'essai, une seule fois
+          if (periodEnd && !sub.reminderExpirySentAt) {
+            const daysLeft = (periodEnd - now) / 86400000;
+            if (daysLeft >= -0.5 && daysLeft <= 2) {
+              const { subject, html } = trialReminderEmailHtml({
+                name: sub.name, toolLabel: info.label, url: info.url, kind: "expiry", tip: info.tip, daysLeft: Math.max(0, Math.round(daysLeft)),
+              });
+              await resend.emails.send({ from: "GMEP <noreply@gmep-france.eu>", to: sub.email, subject, html });
+              await anyStorage.markReminderSent(sub.id, "reminderExpirySentAt");
+              results.expiry_sent++;
+              continue;
+            }
+          }
+          results.skipped++;
+        } catch (innerErr: any) {
+          results.errors.push(`sub#${sub.id}: ${innerErr.message}`);
+        }
+      }
+      res.json({ generated_at: new Date().toISOString(), total_trialing: trialing.length, ...results });
+    } catch (err: any) {
+      console.error("[TRIAL REMINDERS ERROR]", err);
+      res.status(500).json({ message: "Erreur serveur", error: err.message, ...results });
     }
   });
 
@@ -1203,6 +1466,7 @@ export async function registerRoutes(
           plan === "eaux_pluviales_annual" ? STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL :
           plan === "ssp3d_monthly" ? STRIPE_PRICE_SSP3D_MONTHLY :
           plan === "ssp3d_annual" ? STRIPE_PRICE_SSP3D_ANNUAL :
+          plan === "bundle_annual" ? STRIPE_PRICE_BUNDLE_ANNUAL :
           STRIPE_PRICE_MONTHLY;
 
 
@@ -1220,6 +1484,7 @@ export async function registerRoutes(
           plan === "eaux_pluviales_annual" ? "eaux_pluviales" :
           plan === "ssp3d_monthly" ? "ssp3d" :
           plan === "ssp3d_annual" ? "ssp3d" :
+          plan === "bundle_annual" ? "bundle" :
           "je";
 
         // Chercher un abonnement existant pour ce tool (ou récupérer le customerId existant)
@@ -1748,7 +2013,7 @@ export async function registerRoutes(
       if (!eqrsV31EcotoxToolHtml) return res.status(500).json({ message: "Outil EQRS V31.05 + ECOTOX non disponible" });
       if (!isAdminEmail((req.user as any).email)) {
         const subs = await storage.getSubscriptionsByUserId(req.user!.id);
-        const toolSub = subs.find(s => s.tool === "eqrs_v31" && (s.status === "active" || s.status === "trialing"));
+        const toolSub = subs.find(s => (s.tool === "eqrs_v31" || s.tool === "bundle") && (s.status === "active" || s.status === "trialing"));
         if (!toolSub) {
           return res.status(403).json({ message: "Abonnement EQRS V31.05 + ECOTOX requis pour accéder à cet outil." });
         }
@@ -1814,7 +2079,7 @@ export async function registerRoutes(
       if (!schemaConceptuelToolHtml) return res.status(500).json({ message: "Outil Schéma Conceptuel non disponible" });
       if (!isAdminEmail((req.user as any).email)) {
         const subs = await storage.getSubscriptionsByUserId(req.user!.id);
-        const toolSub = subs.find(s => s.tool === "schema" && (s.status === "active" || s.status === "trialing"));
+        const toolSub = subs.find(s => (s.tool === "schema" || s.tool === "bundle") && (s.status === "active" || s.status === "trialing"));
         if (!toolSub) {
           return res.status(403).json({ message: "Abonnement Schéma Conceptuel requis pour accéder à cet outil." });
         }
@@ -1843,7 +2108,7 @@ export async function registerRoutes(
       if (!piezometresToolHtml) return res.status(500).json({ message: "Outil GMEP Piézomètres non disponible" });
       if (!isAdminEmail((req.user as any).email)) {
         const subs = await storage.getSubscriptionsByUserId(req.user!.id);
-        const toolSub = subs.find(s => s.tool === "piezometres" && (s.status === "active" || s.status === "trialing"));
+        const toolSub = subs.find(s => (s.tool === "piezometres" || s.tool === "bundle") && (s.status === "active" || s.status === "trialing"));
         if (!toolSub) {
           return res.status(403).json({ message: "Abonnement GMEP Piézomètres requis pour accéder à cet outil." });
         }
@@ -2202,7 +2467,7 @@ export async function registerRoutes(
       if (!eauxPluvialesToolHtml) return res.status(503).json({ message: "Outil Eaux Pluviales non disponible — fichier eaux-pluviales-tool.html manquant" });
       if (!isAdminEmail((req.user as any).email)) {
         const subs = await storage.getSubscriptionsByUserId(req.user!.id);
-        const epSub = subs.find(s => s.tool === "eaux_pluviales" && (s.status === "active" || s.status === "trialing"));
+        const epSub = subs.find(s => (s.tool === "eaux_pluviales" || s.tool === "bundle") && (s.status === "active" || s.status === "trialing"));
         if (!epSub) {
           return res.status(403).json({ message: "Abonnement Eaux Pluviales requis pour accéder à cet outil." });
         }
@@ -2315,7 +2580,7 @@ export async function registerRoutes(
       if (!eqrsV8HumainToolHtml) return res.status(503).json({ message: "Outil EQRS V9 Humain non disponible — fichier eqrs-v8-humain-tool.html manquant" });
       if (!isAdminEmail((req.user as any).email)) {
         const subs = await storage.getSubscriptionsByUserId(req.user!.id);
-        const humainSub = subs.find(s => s.tool === "humain" && (s.status === "active" || s.status === "trialing"));
+        const humainSub = subs.find(s => (s.tool === "humain" || s.tool === "bundle") && (s.status === "active" || s.status === "trialing"));
         if (!humainSub) {
           return res.status(403).json({ message: "Abonnement Module HUMAIN requis pour accéder à cet outil." });
         }

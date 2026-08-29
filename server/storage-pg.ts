@@ -59,6 +59,8 @@ function rowToSubscription(row: any): Subscription {
       : row.current_period_end,
     licenseKey: row.license_key,
     createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
+    reminderJ3SentAt: row.reminder_j3_sent_at instanceof Date ? row.reminder_j3_sent_at.toISOString() : (row.reminder_j3_sent_at || null),
+    reminderExpirySentAt: row.reminder_expiry_sent_at instanceof Date ? row.reminder_expiry_sent_at.toISOString() : (row.reminder_expiry_sent_at || null),
   };
 }
 
@@ -142,6 +144,11 @@ export class PgStorage implements IStorage {
       // Migration : ajouter colonne tool si elle n'existe pas (tables déjà créées en prod)
       await client.query(`
         ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS tool TEXT DEFAULT NULL;
+      `);
+      // Migration : colonnes de suivi des relances d'essai (J+3 / expiration proche)
+      await client.query(`
+        ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS reminder_j3_sent_at TIMESTAMPTZ DEFAULT NULL;
+        ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS reminder_expiry_sent_at TIMESTAMPTZ DEFAULT NULL;
       `);
       console.log("[PgStorage] Tables initialized successfully");
     } finally {
@@ -359,6 +366,26 @@ export class PgStorage implements IStorage {
       tool,
       currentPeriodEnd: endDate.toISOString(),
     });
+  }
+
+  async getAllTrialingSubscriptionsWithUser(): Promise<Array<Subscription & { email: string; name: string }>> {
+    const result = await this.pool.query(`
+      SELECT s.*, u.email AS user_email, u.name AS user_name
+      FROM subscriptions s
+      JOIN users u ON u.id = s.user_id
+      WHERE s.status = 'trialing'
+      ORDER BY s.id
+    `);
+    return result.rows.map((row: any) => ({
+      ...rowToSubscription(row),
+      email: row.user_email,
+      name: row.user_name,
+    }));
+  }
+
+  async markReminderSent(id: number, field: "reminderJ3SentAt" | "reminderExpirySentAt"): Promise<void> {
+    const col = field === "reminderJ3SentAt" ? "reminder_j3_sent_at" : "reminder_expiry_sent_at";
+    await this.pool.query(`UPDATE subscriptions SET ${col} = NOW() WHERE id = $1`, [id]);
   }
 
   // ── Page Views ─────────────────────────────────────────

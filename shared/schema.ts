@@ -28,6 +28,8 @@ export interface Subscription {
   currentPeriodEnd: string | null;
   licenseKey: string | null;
   createdAt: string;
+  reminderJ3SentAt?: string | null;
+  reminderExpirySentAt?: string | null;
 }
 
 // Validation schemas
