@@ -226,6 +226,18 @@
   var form = document.getElementById('gmep-contact-page-form');
   if (!form) return;
   var APP_BASE = (typeof window.GMEP_APP_BASE === 'string') ? window.GMEP_APP_BASE : 'https://app.gmep-france.eu';
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var sujet = params.get('sujet');
+    if (sujet) {
+      var msgField = document.getElementById('ct-msg');
+      if (msgField && !msgField.value) {
+        msgField.value = 'Demande de devis : ' + sujet + '\n\n';
+        msgField.focus();
+        msgField.setSelectionRange(msgField.value.length, msgField.value.length);
+      }
+    }
+  } catch (e) { /* URLSearchParams non supporté — ignorer silencieusement */ }
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var btn = document.getElementById('gmep-contact-page-submit');
