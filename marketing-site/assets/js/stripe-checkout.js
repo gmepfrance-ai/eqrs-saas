@@ -31,7 +31,12 @@
     anc_annual:            'anc_annual',
     ssp3d_monthly:         'ssp3d_monthly',
     ssp3d_annual:          'ssp3d_annual',
-    schema_conceptuel_annual: 'schema_conceptuel_annual'
+    schema_conceptuel_annual: 'schema_conceptuel_annual',
+    // Packs métiers — Poste 1 (libre-service) — septembre 2026
+    pack_ssp_essentiel_p1:  'pack_ssp_essentiel_p1',
+    pack_ssp_standard_p1:   'pack_ssp_standard_p1',
+    pack_ssp_premium_p1:    'pack_ssp_premium_p1',
+    pack_hydro_assain_p1:   'pack_hydro_assain_p1'
   };
 
   const PLAN_LABELS = {
@@ -54,7 +59,12 @@
     ssp3d_monthly:       '3D_SSP — Modélisation 3D intégrée — Abonnement mensuel (250 € HT/mois)',
     ssp3d_annual:        '3D_SSP — Modélisation 3D intégrée — Abonnement annuel (2 400 € HT/an)',
     // Schéma Conceptuel — août 2026
-    schema_conceptuel_annual: 'Schéma Conceptuel — Abonnement annuel (850 € HT/an)'
+    schema_conceptuel_annual: 'Schéma Conceptuel — Abonnement annuel (850 € HT/an)',
+    // Packs métiers — Poste 1 (2 ans, libre-service) — septembre 2026
+    pack_ssp_essentiel_p1: 'Pack SSP Essentiel — Poste 1 (9 800 € HT / 24 mois)',
+    pack_ssp_standard_p1:  'Pack SSP Standard — Poste 1 (11 500 € HT / 24 mois)',
+    pack_ssp_premium_p1:   'Pack SSP Premium — Poste 1 (12 800 € HT / 24 mois)',
+    pack_hydro_assain_p1:  'Pack Hydrogéologie & Assainissement — Poste 1 (9 800 € HT / 24 mois)'
   };
 
   // Calcul TVA selon pays (identique à demo.js du module Rabattement)
