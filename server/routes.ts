@@ -175,6 +175,73 @@ const STRIPE_PRICE_SSP3D_ANNUAL =
 // Pack multi-outils (bundle) — à renseigner sur Railway une fois le prix créé dans Stripe
 const STRIPE_PRICE_BUNDLE_ANNUAL =
   process.env.STRIPE_PRICE_BUNDLE_ANNUAL || "";
+
+// ── Packs métiers — Poste 1 (licence 2 ans, self-service) ──────────────────
+// Prix créés manuellement dans Stripe (Live) le 06/09/2026, vérifiés via l'API.
+const STRIPE_PRICE_PACK_SSP_ESSENTIEL_P1 =
+  process.env.STRIPE_PRICE_PACK_SSP_ESSENTIEL_P1 || "price_1UChYI3A2g3lkch9cjMZ7M6C";
+const STRIPE_PRICE_PACK_SSP_STANDARD_P1 =
+  process.env.STRIPE_PRICE_PACK_SSP_STANDARD_P1 || "price_1UChZl3A2g3lkch97BjknRaS";
+const STRIPE_PRICE_PACK_SSP_PREMIUM_P1 =
+  process.env.STRIPE_PRICE_PACK_SSP_PREMIUM_P1 || "price_1UChaY3A2g3lkch9vEtdBPgU";
+const STRIPE_PRICE_PACK_HYDRO_ASSAIN_P1 =
+  process.env.STRIPE_PRICE_PACK_HYDRO_ASSAIN_P1 || "price_1UChcL3A2g3lkch9SQug04uG";
+
+// Configuration des 4 packs métiers : bundle d'outils activés au paiement du
+// Poste 1, et produit Stripe utilisé pour générer les paiements négociés
+// "postes additionnels" (au-delà de 1 poste, sur devis — voir
+// /api/admin/create-pack-deal-checkout).
+interface PackConfig {
+  label: string;
+  priceP1: string;
+  productId: string; // product Stripe du pack, pour les paiements négociés multi-postes
+  tools: string[]; // codes "tool" existants, un accès est accordé pour chacun
+}
+const PACK_CONFIG: Record<string, PackConfig> = {
+  pack_ssp_essentiel: {
+    label: "Pack SSP Essentiel",
+    priceP1: STRIPE_PRICE_PACK_SSP_ESSENTIEL_P1,
+    productId: "prod_VD7nslRVnJMFUQ",
+    tools: ["je", "schema", "ssp3d", "msp", "tsn"],
+  },
+  pack_ssp_standard: {
+    label: "Pack SSP Standard",
+    priceP1: STRIPE_PRICE_PACK_SSP_STANDARD_P1,
+    productId: "prod_VD7pFlv7n3Xu5U",
+    tools: ["eqrs_v31", "schema", "ssp3d", "msp", "tsn"],
+  },
+  pack_ssp_premium: {
+    label: "Pack SSP Premium",
+    priceP1: STRIPE_PRICE_PACK_SSP_PREMIUM_P1,
+    productId: "prod_VD7qva42SQQZtz",
+    tools: ["eqrs_v31", "humain", "schema", "ssp3d", "msp", "tsn"],
+  },
+  pack_hydro_assain: {
+    label: "Pack Hydrogéologie & Assainissement",
+    priceP1: STRIPE_PRICE_PACK_HYDRO_ASSAIN_P1,
+    productId: "prod_VD7sJhn9OtnbaG",
+    tools: ["porchet", "eaux_pluviales", "rabattement", "piezometres", "anc"],
+  },
+};
+const TOOL_LABELS: Record<string, string> = {
+  je: "EQRS — Johnson & Ettinger",
+  eqrs_v31: "EQRS V9 + ECOTOX V9",
+  humain: "Module HUMAIN — EQRS V9 Tier 3",
+  schema: "Schéma Conceptuel",
+  ssp3d: "3D_SSP — Superposition 3D pollution sols/nappe",
+  msp: "MSP — Sources de Pollution des Sols",
+  tsn: "Transfert Sol → Nappe → Captage (TSN)",
+  porchet: "Modélisation Essai de Porchet",
+  eaux_pluviales: "Modélisation GEP — DLE & Loi sur l'Eau",
+  rabattement: "Rabattement de nappe",
+  piezometres: "Piézomètres de Surveillance",
+  anc: "Dimensionnement ANC",
+};
+function generatePackLicenseKey(): string {
+  const seg = () => Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `GMEP-${seg()}-${seg()}-${seg()}`;
+}
+
 const STRIPE_WEBHOOK_SECRET =
   process.env.STRIPE_WEBHOOK_SECRET || "whsec_placeholder";
 
@@ -772,6 +839,10 @@ export async function registerRoutes(
         hasPriceHumainAnnual: !!process.env.STRIPE_PRICE_HUMAIN_ANNUAL,
         humainAnnualPriceId: process.env.STRIPE_PRICE_HUMAIN_ANNUAL || null,
         hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET,
+        hasPricePackSspEssentielP1: !!STRIPE_PRICE_PACK_SSP_ESSENTIEL_P1,
+        hasPricePackSspStandardP1: !!STRIPE_PRICE_PACK_SSP_STANDARD_P1,
+        hasPricePackSspPremiumP1: !!STRIPE_PRICE_PACK_SSP_PREMIUM_P1,
+        hasPricePackHydroAssainP1: !!STRIPE_PRICE_PACK_HYDRO_ASSAIN_P1,
         hasDatabaseUrl: !!process.env.DATABASE_URL,
         dbBackend: process.env.DATABASE_URL ? 'postgresql' : 'json',
         hasResendKey: !!process.env.RESEND_API_KEY,
@@ -1771,7 +1842,9 @@ export async function registerRoutes(
           plan === "ssp3d_monthly" ? STRIPE_PRICE_SSP3D_MONTHLY :
           plan === "ssp3d_annual" ? STRIPE_PRICE_SSP3D_ANNUAL :
           plan === "bundle_annual" ? STRIPE_PRICE_BUNDLE_ANNUAL :
-          STRIPE_PRICE_MONTHLY;
+          plan.endsWith("_p1") && PACK_CONFIG[plan.replace(/_p1$/, "")]
+            ? PACK_CONFIG[plan.replace(/_p1$/, "")].priceP1
+            : STRIPE_PRICE_MONTHLY;
 
 
         // Déterminer le tool associé au plan
@@ -1793,7 +1866,9 @@ export async function registerRoutes(
           plan === "ssp3d_monthly" ? "ssp3d" :
           plan === "ssp3d_annual" ? "ssp3d" :
           plan === "bundle_annual" ? "bundle" :
-          "je";
+          plan.endsWith("_p1") && PACK_CONFIG[plan.replace(/_p1$/, "")]
+            ? plan.replace(/_p1$/, "") // marqueur pack (ex: "pack_ssp_essentiel"), l'accès réel aux outils est accordé par le webhook
+            : "je";
 
         // Chercher un abonnement existant pour ce tool (ou récupérer le customerId existant)
         const allSubs = await storage.getSubscriptionsByUserId(req.user!.id);
@@ -1905,6 +1980,151 @@ export async function registerRoutes(
         case "customer.subscription.updated": {
           const subscription = event.data.object as Stripe.Subscription;
           const customerId = subscription.customer as string;
+          const earlySubMeta = (subscription as any).metadata || {};
+
+          // ── Packs métiers : Poste 1 (bundle complet, activation automatique) ──
+          if (earlySubMeta.plan && String(earlySubMeta.plan).endsWith("_p1") && PACK_CONFIG[String(earlySubMeta.plan).replace(/_p1$/, "")]) {
+            const packKey = String(earlySubMeta.plan).replace(/_p1$/, "");
+            const pack = PACK_CONFIG[packKey];
+            const userId = parseInt(earlySubMeta.userId, 10);
+            if (userId && pack) {
+              const isNewActivation = event.type === "customer.subscription.created";
+              const periodEndIso = new Date((subscription as any).current_period_end * 1000).toISOString();
+              const licenseKey = generatePackLicenseKey();
+              const userSubs = await storage.getSubscriptionsByUserId(userId);
+              for (const toolCode of pack.tools) {
+                const existing = userSubs.find(s => s.tool === toolCode);
+                if (existing) {
+                  await storage.updateSubscription(existing.id, {
+                    stripeCustomerId: customerId,
+                    stripeSubscriptionId: subscription.id,
+                    status: subscription.status === "active" ? "active" : subscription.status,
+                    plan: earlySubMeta.plan,
+                    currentPeriodEnd: periodEndIso,
+                  });
+                } else {
+                  await storage.createSubscription(userId, {
+                    stripeCustomerId: customerId,
+                    stripeSubscriptionId: subscription.id,
+                    status: subscription.status === "active" ? "active" : subscription.status,
+                    tool: toolCode,
+                    plan: earlySubMeta.plan,
+                    licenseKey,
+                    currentPeriodEnd: periodEndIso,
+                  });
+                }
+              }
+              if (isNewActivation) {
+                try {
+                  const user = await storage.getUser(userId);
+                  const resendKey = process.env.RESEND_API_KEY;
+                  if (user && resendKey) {
+                    const { Resend } = require("resend");
+                    const resend = new Resend(resendKey);
+                    const periodEndFr = new Date((subscription as any).current_period_end * 1000)
+                      .toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+                    const toolsListHtml = pack.tools.map(t => `<li>${TOOL_LABELS[t] || t}</li>`).join("");
+                    await resend.emails.send({
+                      from: "GMEP <noreply@gmep-france.eu>",
+                      to: user.email,
+                      subject: `✅ Votre ${pack.label} est activé`,
+                      html: `
+                        <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+                          <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+                            <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+                            <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">${pack.label} — Poste 1</p>
+                          </div>
+                          <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+                            <p style="font-size:16px;">Bonjour ${user.name || ""},</p>
+                            <p>Votre <strong>${pack.label}</strong> est maintenant <strong style="color:#1a7a3c;">actif</strong>. Vous avez accès aux ${pack.tools.length} outils suivants :</p>
+                            <ul style="font-size:14px;">${toolsListHtml}</ul>
+                            <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
+                              <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Valide jusqu'au</td><td style="padding:10px;border:1px solid #e2e8f0;">${periodEndFr}</td></tr>
+                              <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #e2e8f0;">${user.email}</td></tr>
+                            </table>
+                            <div style="text-align:center;margin:28px 0;">
+                              <a href="https://www.gmep-france.eu/#/dashboard" style="background:#1a365d;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Accéder à mes logiciels</a>
+                            </div>
+                            <p style="font-size:13px;color:#64748b;">Connectez-vous avec votre adresse e-mail et votre mot de passe sur <a href="https://www.gmep-france.eu">www.gmep-france.eu</a>.</p>
+                            <p style="font-size:13px;color:#64748b;">Pour toute question : <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a> — Tél. 06 07 73 72 33</p>
+                            <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+                            <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+                          </div>
+                        </div>
+                      `,
+                    });
+                    console.log(`[PACK ACTIVATION EMAIL] Sent to ${user.email} for pack=${packKey}`);
+                  }
+                } catch (emailErr: any) {
+                  console.error("[PACK ACTIVATION EMAIL] Failed:", emailErr.message);
+                }
+              }
+            }
+            break;
+          }
+
+          // ── Postes additionnels négociés (paiement Stripe, activation manuelle) ──
+          if (earlySubMeta.dealType === "negotiated_postes") {
+            const packKey = earlySubMeta.pack;
+            const pack = PACK_CONFIG[packKey];
+            const postesCount = parseInt(earlySubMeta.postesCount, 10) || 1;
+            if (event.type === "customer.subscription.created") {
+              const keys = Array.from({ length: postesCount }, () => generatePackLicenseKey());
+              try {
+                const resendKey = process.env.RESEND_API_KEY;
+                const amountHT = ((subscription.items.data[0]?.price?.unit_amount || 0) / 100).toLocaleString("fr-FR");
+                if (resendKey) {
+                  const { Resend } = require("resend");
+                  const resend = new Resend(resendKey);
+                  const keysHtml = keys.map((k, i) => `<li>Poste ${i + 1} : <code>${k}</code></li>`).join("");
+                  // E-mail admin : à traiter manuellement (création des comptes + envoi des clés au client)
+                  await resend.emails.send({
+                    from: "GMEP <noreply@gmep-france.eu>",
+                    to: "gmep.france@gmail.com",
+                    subject: `💳 Paiement reçu — Postes additionnels ${pack?.label || packKey} (${postesCount} poste${postesCount > 1 ? "s" : ""})`,
+                    html: `
+                      <div style="font-family:Arial,sans-serif;max-width:600px;">
+                        <h3>Paiement négocié confirmé</h3>
+                        <table style="border-collapse:collapse;font-size:14px;">
+                          <tr><td style="padding:6px;font-weight:bold;">Pack</td><td style="padding:6px;">${pack?.label || packKey}</td></tr>
+                          <tr><td style="padding:6px;font-weight:bold;">Nombre de postes</td><td style="padding:6px;">${postesCount}</td></tr>
+                          <tr><td style="padding:6px;font-weight:bold;">Montant HT payé</td><td style="padding:6px;">${amountHT} € HT / 24 mois</td></tr>
+                          <tr><td style="padding:6px;font-weight:bold;">Client (e-mail)</td><td style="padding:6px;">${earlySubMeta.buyerEmail || "n.c."}</td></tr>
+                          <tr><td style="padding:6px;font-weight:bold;">Client (nom)</td><td style="padding:6px;">${earlySubMeta.buyerName || "n.c."}</td></tr>
+                          <tr><td style="padding:6px;font-weight:bold;">Abonnement Stripe</td><td style="padding:6px;">${subscription.id}</td></tr>
+                        </table>
+                        <p><strong>Clés d'activation générées (à transmettre après création manuelle des comptes) :</strong></p>
+                        <ul>${keysHtml}</ul>
+                        <p style="color:#64748b;font-size:13px;">Action requise : créer les comptes/postes correspondants dans l'application et transmettre les clés au client.</p>
+                      </div>
+                    `,
+                  });
+                  // E-mail client : confirmation de paiement, activation à venir
+                  if (earlySubMeta.buyerEmail) {
+                    await resend.emails.send({
+                      from: "GMEP <noreply@gmep-france.eu>",
+                      to: earlySubMeta.buyerEmail,
+                      subject: `✅ Paiement confirmé — ${pack?.label || packKey}`,
+                      html: `
+                        <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+                          <p>Bonjour${earlySubMeta.buyerName ? " " + earlySubMeta.buyerName : ""},</p>
+                          <p>Nous confirmons la bonne réception de votre paiement pour <strong>${pack?.label || packKey}</strong> (${postesCount} poste${postesCount > 1 ? "s" : ""}).</p>
+                          <p>Vos accès et clés d'activation vous seront transmis sous peu par notre équipe.</p>
+                          <p>Pour toute question : <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a> — Tél. 06 07 73 72 33</p>
+                          <p>Cordialement,<br/>L'équipe G.M.E.P</p>
+                        </div>
+                      `,
+                    });
+                  }
+                  console.log(`[NEGOTIATED DEAL] Payment confirmed for pack=${packKey} postesCount=${postesCount}`);
+                }
+              } catch (emailErr: any) {
+                console.error("[NEGOTIATED DEAL EMAIL] Failed:", emailErr.message);
+              }
+            }
+            break;
+          }
+
           const priceIdFromStripe = subscription.items.data[0]?.price?.id;
           let plan =
             priceIdFromStripe === STRIPE_PRICE_RABATTEMENT_ANNUAL ? "rabattement_annual" :
@@ -2066,7 +2286,13 @@ export async function registerRoutes(
             subscription.id
           );
           if (sub) {
-            await storage.updateSubscription(sub.id, { status: "canceled" });
+            // Un pack (Poste 1) crée plusieurs lignes (une par outil) partageant le
+            // même stripeSubscriptionId — il faut toutes les annuler, pas seulement la 1re trouvée.
+            const userSubs = await storage.getSubscriptionsByUserId(sub.userId);
+            const matching = userSubs.filter(s => s.stripeSubscriptionId === subscription.id);
+            for (const s of matching.length ? matching : [sub]) {
+              await storage.updateSubscription(s.id, { status: "canceled" });
+            }
           }
           break;
         }
@@ -2076,7 +2302,11 @@ export async function registerRoutes(
           const customerId = invoice.customer as string;
           const sub = await storage.getSubscriptionByStripeCustomerId(customerId);
           if (sub) {
-            await storage.updateSubscription(sub.id, { status: "past_due" });
+            const userSubs = await storage.getSubscriptionsByUserId(sub.userId);
+            const matching = userSubs.filter(s => s.stripeCustomerId === customerId);
+            for (const s of matching.length ? matching : [sub]) {
+              await storage.updateSubscription(s.id, { status: "past_due" });
+            }
           }
           break;
         }
@@ -2086,6 +2316,88 @@ export async function registerRoutes(
     }
 
     return res.status(200).json({ received: true });
+  });
+
+  // ── Postes additionnels négociés (packs métiers) ─────────────────────────
+  // Utilisé manuellement par l'admin, après négociation d'un tarif et d'un
+  // nombre de postes avec le client (au-delà du Poste 1 en libre-service).
+  // Crée un lien de paiement Stripe pour le montant HT convenu ; le paiement
+  // déclenche le webhook ci-dessus (dealType="negotiated_postes") qui génère
+  // les clés d'activation et prévient l'admin pour la création manuelle des comptes.
+  //
+  // Exemple d'appel :
+  // curl -s -X POST "https://app.gmep-france.eu/api/admin/create-pack-deal-checkout" \
+  //   -H "Content-Type: application/json" \
+  //   -d '{"secret":"gmep-digest-2026-secret","pack":"pack_ssp_essentiel","totalAmountHT":28500,"postesCount":5,"buyerEmail":"client@exemple.fr","buyerName":"Client SARL"}'
+  app.post("/api/admin/create-pack-deal-checkout", async (req: Request, res: Response) => {
+    const secret = (req.query.secret as string) || (req.body && (req.body as any).secret);
+    const expected = process.env.ADMIN_DIGEST_SECRET || "gmep-digest-2026-secret";
+    if (secret !== expected) return res.status(403).json({ message: "Secret invalide" });
+
+    if (!stripe || !isStripeConfigured) {
+      return res.status(503).json({ message: "Configuration Stripe en cours." });
+    }
+
+    try {
+      const { pack, totalAmountHT, postesCount, buyerEmail, buyerName } = req.body as {
+        pack: string; totalAmountHT: number; postesCount: number; buyerEmail?: string; buyerName?: string;
+      };
+      const packConfig = PACK_CONFIG[pack];
+      if (!packConfig) {
+        return res.status(400).json({ message: `Pack inconnu. Valeurs possibles : ${Object.keys(PACK_CONFIG).join(", ")}` });
+      }
+      const amount = Number(totalAmountHT);
+      const postes = Number(postesCount);
+      if (!amount || amount <= 0 || !postes || postes < 1) {
+        return res.status(400).json({ message: "totalAmountHT (> 0) et postesCount (>= 1) sont requis" });
+      }
+      if (!buyerEmail) {
+        return res.status(400).json({ message: "buyerEmail est requis (pour retrouver/créer le client Stripe)" });
+      }
+
+      // Retrouver ou créer le client Stripe par e-mail
+      const existingCustomers = await stripe.customers.list({ email: buyerEmail, limit: 1 });
+      const customerId = existingCustomers.data[0]?.id || (await stripe.customers.create({
+        email: buyerEmail,
+        name: buyerName || undefined,
+      })).id;
+
+      const metadata: Record<string, string> = {
+        dealType: "negotiated_postes",
+        pack,
+        postesCount: String(postes),
+        buyerEmail,
+        buyerName: buyerName || "",
+      };
+
+      const session = await stripe.checkout.sessions.create({
+        customer: customerId,
+        payment_method_types: ["card"],
+        mode: "subscription",
+        line_items: [{
+          price_data: {
+            currency: "eur",
+            product: packConfig.productId,
+            recurring: { interval: "month", interval_count: 24 },
+            unit_amount: Math.round(amount * 100),
+            tax_behavior: "exclusive",
+          },
+          quantity: 1,
+        }],
+        success_url: `https://www.gmep-france.eu/tarifs.html?deal=success`,
+        cancel_url: `https://www.gmep-france.eu/tarifs.html?deal=cancel`,
+        metadata,
+        subscription_data: { metadata },
+        automatic_tax: { enabled: true },
+        billing_address_collection: "required",
+        tax_id_collection: { enabled: true },
+      });
+
+      return res.json({ url: session.url, sessionId: session.id, pack, postes, amount });
+    } catch (err: any) {
+      console.error("[CREATE PACK DEAL CHECKOUT ERROR]", err);
+      return res.status(500).json({ message: "Erreur serveur", error: err.message });
+    }
   });
 
   // Stripe customer portal
