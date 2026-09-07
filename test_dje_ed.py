@@ -75,6 +75,60 @@ TEMPORAL_CHECKS = [
     },
 ]
 
+# Tests Monte-Carlo — distribution QD et ERI
+MONTE_CARLO_CHECKS = [
+    {
+        "name": "MC calcule QD (qdSamples)",
+        "pattern": r"qdSamples",
+        "required": True,
+    },
+    {
+        "name": "MC calcule ERI (eriSamples)",
+        "pattern": r"eriSamples",
+        "required": True,
+    },
+    {
+        "name": "MC tire EF (exposure frequency)",
+        "pattern": r"EF_mc\s*=\s*rngTriangular",
+        "required": True,
+    },
+    {
+        "name": "MC tire ED (exposure duration)",
+        "pattern": r"ED_mc\s*=\s*rngTriangular",
+        "required": True,
+    },
+    {
+        "name": "MC tire IRa (inhalation rate)",
+        "pattern": r"IRa_mc\s*=",
+        "required": True,
+    },
+    {
+        "name": "MC tire BW (body weight)",
+        "pattern": r"BW_mc\s*=",
+        "required": True,
+    },
+    {
+        "name": "MC tire Fi (fraction exposure)",
+        "pattern": r"Fi_mc\s*=\s*rngTriangular",
+        "required": True,
+    },
+    {
+        "name": "MC output QD stats (qd:)",
+        "pattern": r"qd:\s*qdStats",
+        "required": True,
+    },
+    {
+        "name": "MC output ERI stats (eri:)",
+        "pattern": r"eri:\s*eriStats",
+        "required": True,
+    },
+    {
+        "name": "MC histogramme 3 distributions (drawMCHistogram avec qdSamples)",
+        "pattern": r"drawMCHistogram\(.*qdSamples.*eriSamples\)",
+        "required": True,
+    },
+]
+
 # Patterns anti-régression : vérifier que l'ancien bug n'est pas revenu
 ANTI_REGRESSION_PATTERNS = [
     {
@@ -184,6 +238,21 @@ def run_tests():
                     print(f"  ✗ FAIL: {check['name']} — EF/365 manquant dans ERI temporel !")
                 else:
                     print(f"  ✗ FAIL: {check['name']} — ancien bug ERI temporel toujours présent !")
+
+        # Tests Monte-Carlo (QD et ERI distributions)
+        print(f"\n  --- Tests Monte-Carlo ---")
+        for check in MONTE_CARLO_CHECKS:
+            total += 1
+            found = bool(re.search(check["pattern"], content))
+            if found == check["required"]:
+                status = "✓ PASS" if found else "✓ PASS (absent comme attendu)"
+                print(f"  {status}: {check['name']}")
+            else:
+                failures += 1
+                if check["required"]:
+                    print(f"  ✗ FAIL: {check['name']} — manquant dans computeMonteCarlo !")
+                else:
+                    print(f"  ✗ FAIL: {check['name']} — ancien code toujours présent !")
 
         # Tests anti-régression (ancien bug ne doit pas être revenu)
         print(f"\n  --- Tests anti-régression (ancien bug ne doit pas revenir) ---")

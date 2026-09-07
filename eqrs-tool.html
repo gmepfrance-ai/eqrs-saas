@@ -2691,10 +2691,19 @@ function computeMonteCarlo() {
   const N = state.v7.mc_runs;
   const C0_median = state.v7.mc_c0_median;
   const C0_gsd = state.v7.mc_c0_gsd;
+  const p = state.params.adulte;
+
+  // Substance courante pour VTR/ERU
+  const subname = state.v7.tp_substance || Object.keys(VTR_SEUIL)[0] || '';
+  const vtr = VTR_SEUIL[subname] || {};
+  const eru = VTR_SANSSEUIL[subname] || {};
+
   const samples = [];
+  const qdSamples = [];
+  const eriSamples = [];
 
   for (let i = 0; i < N; i++) {
-    // Tirages
+    // Tirages parametres de transfert (existants)
     const C0 = Math.exp(Math.log(C0_median) + rngNorm() * C0_gsd);
     const n = rngTriangular(0.30, 0.45);
     const tw = rngTriangular(0.10, 0.25);
@@ -2703,26 +2712,73 @@ function computeMonteCarlo() {
     const eta = Math.pow(10, -3.7 + rngNorm() * 0.5);
     const er = rngTriangular(0.20, 0.70);
 
-    // Approximation de alpha avec sensibilités
     const alpha_base = state.modeleJE.alpha || 3.67e-4;
     const var_factor = (eta / 0.0002) * (0.45 / er) * (0.15 / lcrack) * Math.pow(n / 0.35, -2);
     const alpha_mc = alpha_base * var_factor;
     const Cindoor = C0 * alpha_mc;
     samples.push(Cindoor);
+
+    // Tirages parametres d'exposition (NOUVEAU)
+    // EF : triangulaire [300, 365] (jours/an)
+    const EF_mc = rngTriangular(300, 365);
+    // ED : triangulaire [20, 40] (annees, adulte)
+    const ED_mc = rngTriangular(20, 40);
+    // IRa : normale moyenne 20, CV 20% (m3/jour)
+    const IRa_mc = Math.max(5, 20 + rngNorm() * 4);
+    // BW : normale moyenne 70, CV 15% (kg)
+    const BW_mc = Math.max(30, 70 + rngNorm() * 10.5);
+    // Fi : triangulaire [0.6, 1.0] (fraction temps exposition)
+    const Fi_mc = rngTriangular(0.6, 1.0);
+
+    // QD inhalation (seuil) = CI / VTR_inhal
+    // CI = Cindoor * Fi * (EF/365) * (ED/AT)  en ug/m3
+    // VTR_inhal en mg/m3 -> diviser par 1000
+    let qd_total = 0;
+    if (vtr.inhal) {
+      const CI = Cindoor * Fi_mc * (EF_mc / 365) * (ED_mc / (p.AT_seuil || 30));
+      qd_total = CI / (vtr.inhal * 1000);
+    }
+    qdSamples.push(qd_total);
+
+    // ERI inhalation (sans seuil) = CI_ss * ERU_inhal * ADAF
+    // CI_ss = Cindoor * Fi * (EF/365) * (ED/AT_sansseuil)
+    let eri_total = 0;
+    if (eru.inhal) {
+      const CI_ss = Cindoor * Fi_mc * (EF_mc / 365) * (ED_mc / (p.AT_sansseuil || 70));
+      eri_total = CI_ss * eru.inhal * 1; // ADAF=1 adulte
+    }
+    eriSamples.push(eri_total);
   }
 
   samples.sort((a, b) => a - b);
-  const min = samples[0];
-  const p5 = samples[Math.floor(N * 0.05)];
-  const p50 = samples[Math.floor(N * 0.50)];
-  const mean = samples.reduce((a, b) => a + b, 0) / N;
-  const p95 = samples[Math.floor(N * 0.95)];
-  const max = samples[N - 1];
-  const std = Math.sqrt(samples.reduce((s, x) => s + Math.pow(x - mean, 2), 0) / N);
-  const cv = std / mean;
-  const ratio = p95 / p50;
+  qdSamples.sort((a, b) => a - b);
+  eriSamples.sort((a, b) => a - b);
 
-  state.v7.mc_results = { samples, min, p5, p50, mean, p95, max, std, cv, ratio };
+  function mcStats(arr) {
+    const n = arr.length;
+    const mean = arr.reduce((a, b) => a + b, 0) / n;
+    const std = Math.sqrt(arr.reduce((s, x) => s + Math.pow(x - mean, 2), 0) / n);
+    return {
+      min: arr[0], p5: arr[Math.floor(n * 0.05)], p50: arr[Math.floor(n * 0.50)],
+      mean: mean, p95: arr[Math.floor(n * 0.95)], max: arr[n - 1],
+      std: std, cv: std / mean
+    };
+  }
+
+  const cindoorStats = mcStats(samples);
+  const qdStats = mcStats(qdSamples);
+  const eriStats = mcStats(eriSamples);
+
+  state.v7.mc_results = {
+    samples, qdSamples, eriSamples,
+    cindoor: cindoorStats, qd: qdStats, eri: eriStats,
+    // Retro-compatibilite
+    min: cindoorStats.min, p5: cindoorStats.p5, p50: cindoorStats.p50,
+    mean: cindoorStats.mean, p95: cindoorStats.p95, max: cindoorStats.max,
+    std: cindoorStats.std, cv: cindoorStats.cv,
+    ratio: cindoorStats.p95 / cindoorStats.p50,
+    substance: subname
+  };
 }
 
 // ============================================================
@@ -2935,119 +2991,166 @@ sheetRenderers.calcul_inverse = function() {
 
 // --- Monte-Carlo ---
 sheetRenderers.monte_carlo = function() {
-  let h = '<div class="sheet-title">Monte-Carlo — Propagation des incertitudes</div>';
-  h += '<div class="sheet-subtitle">1000 tirages aléatoires sur les 8 paramètres incertains du modèle J&E</div>';
+  let h = '<div class="sheet-title">Monte-Carlo \xe2\x80\x94 Propagation des incertitudes</div>';
+  h += '<div class="sheet-subtitle">1000 tirages al\xc3\xa9atoires sur les param\xc3\xa8tres incertains du mod\xc3\xa8le J&E (transfert + exposition)</div>';
 
   h += '<div class="info-box"><h3>Principe</h3>';
-  h += 'Propagation probabiliste des incertitudes via 1000 tirages aléatoires sur les paramètres clés ';
-  h += '(C₀, n, θw, kv, Lcrack, η, ER, H\'). Lois utilisées : log-normale (concentrations, perméabilité), ';
-  h += 'triangulaire (porosité, ER), uniforme (épaisseur). Sortie : médiane, percentiles, coefficient de variation.';
-  h += '<br><br><button onclick="computeMonteCarlo();renderActiveSheet()" style="margin-top:8px;padding:8px 20px;background:#1a5276;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;font-weight:600">🎲 Lancer 1000 tirages</button>';
+  h += 'Propagation probabiliste des incertitudes via 1000 tirages al\xc3\xa9atoires sur les param\xc3\xa8tres cl\xc3\xa8s ';
+  h += '(C\xe2\x82\x80, n, \xce\xb8w, kv, Lcrack, \xce\xb7, ER) et param\xc3\xa8tres d\'exposition (EF, ED, IRa, BW, Fi). ';
+  h += 'Lois : log-normale (concentrations, perm\xc3\xa9abilit\xc3\xa9), triangulaire (porosit\xc3\xa9, ER, EF, ED, Fi). ';
+  h += 'Sortie : distributions Cindoor, QD (quotient de danger) et ERI (exc\xc3\xa8s de risque individuel).';
+  h += '<br><br><button onclick="computeMonteCarlo();renderActiveSheet()" style="margin-top:8px;padding:8px 20px;background:#1a5276;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;font-weight:600">\xf0\x9f\x8e\xb2 Lancer 1000 tirages</button>';
   h += '</div>';
 
   if (!state.v7.mc_results) {
-    h += '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-style:italic">Cliquer sur "Lancer 1000 tirages" pour démarrer la simulation</div>';
+    h += '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-style:italic">Cliquer sur "Lancer 1000 tirages" pour d\xc3\xa9marrer la simulation</div>';
     return h;
   }
 
   const r = state.v7.mc_results;
+
+  // KPI Cindoor
+  h += '<h3 style="margin-top:1.5rem;color:var(--blue-dark)">Distribution Cindoor (\xc2\xb5g/m\xc2\xb3)</h3>';
   h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:1rem 0">';
-  const kpis = [
-    ['Médiane P50', fmtSci(r.p50) + ' µg/m³', 'var(--blue)'],
-    ['P95 (conservatif)', fmtSci(r.p95) + ' µg/m³', '#9c0006'],
-    ['Coefficient variation', (r.cv * 100).toFixed(1) + '%', 'var(--blue-dark)'],
-    ['Ratio P95/P50', r.ratio.toFixed(2) + 'x', 'var(--blue-dark)']
-  ];
-  kpis.forEach(([lbl, val, col]) => {
+  [['M\xc3\xa9diane P50', fmtSci(r.cindoor.p50) + ' \xc2\xb5g/m\xc2\xb3', 'var(--blue)'],
+   ['P95 (conservatif)', fmtSci(r.cindoor.p95) + ' \xc2\xb5g/m\xc2\xb3', '#9c0006'],
+   ['CV', (r.cindoor.cv * 100).toFixed(1) + '%', 'var(--blue-dark)'],
+   ['Ratio P95/P50', (r.cindoor.p95 / r.cindoor.p50).toFixed(2) + 'x', 'var(--blue-dark)']
+  ].forEach(([lbl, val, col]) => {
     h += `<div style="background:#fff;border:1px solid var(--border);border-top:4px solid ${col};border-radius:6px;padding:1rem;text-align:center">`;
     h += `<div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">${lbl}</div>`;
     h += `<div style="font-size:1.3rem;font-weight:700;color:${col};margin-top:4px">${val}</div></div>`;
   });
   h += '</div>';
 
-  h += '<div class="table-wrap" style="max-width:520px"><table class="data-table"><thead><tr>';
-  h += '<th>Statistique</th><th>Cindoor (µg/m³)</th></tr></thead><tbody>';
-  [
-    ['Min', r.min], ['P5 (5e percentile)', r.p5], ['Médiane (P50)', r.p50],
-    ['Moyenne', r.mean], ['P95 (95e percentile)', r.p95], ['Max', r.max],
-    ['Écart-type', r.std]
-  ].forEach(([lbl, v]) => {
-    h += `<tr><td>${lbl}</td><td class="computed">${fmtSci(v)}</td></tr>`;
+  // KPI QD
+  h += '<h3 style="margin-top:1.5rem;color:#9c0006">Distribution QD \xe2\x80\x94 Quotient de Danger (seuil)</h3>';
+  h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:1rem 0">';
+  [['M\xc3\xa9diane P50', fmtSci(r.qd.p50), 'var(--blue)'],
+   ['P95 (conservatif)', fmtSci(r.qd.p95), '#9c0006'],
+   ['Moyenne', fmtSci(r.qd.mean), 'var(--blue-dark)'],
+   ['CV', (r.qd.cv * 100).toFixed(1) + '%', 'var(--blue-dark)']
+  ].forEach(([lbl, val, col]) => {
+    h += `<div style="background:#fff;border:1px solid var(--border);border-top:4px solid ${col};border-radius:6px;padding:1rem;text-align:center">`;
+    h += `<div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">${lbl}</div>`;
+    h += `<div style="font-size:1.3rem;font-weight:700;color:${col};margin-top:4px">${val}</div></div>`;
+  });
+  h += '</div>';
+
+  // KPI ERI
+  h += '<h3 style="margin-top:1.5rem;color:#9c0006">Distribution ERI \xe2\x80\x94 Exc\xc3\xa8s de Risque Individuel (sans seuil)</h3>';
+  h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:1rem 0">';
+  [['M\xc3\xa9diane P50', fmtSci(r.eri.p50), 'var(--blue)'],
+   ['P95 (conservatif)', fmtSci(r.eri.p95), '#9c0006'],
+   ['Moyenne', fmtSci(r.eri.mean), 'var(--blue-dark)'],
+   ['CV', (r.eri.cv * 100).toFixed(1) + '%', 'var(--blue-dark)']
+  ].forEach(([lbl, val, col]) => {
+    h += `<div style="background:#fff;border:1px solid var(--border);border-top:4px solid ${col};border-radius:6px;padding:1rem;text-align:center">`;
+    h += `<div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">${lbl}</div>`;
+    h += `<div style="font-size:1.3rem;font-weight:700;color:${col};margin-top:4px">${val}</div></div>`;
+  });
+  h += '</div>';
+
+  // Tableau comparatif
+  h += '<div class="table-wrap" style="max-width:700px"><table class="data-table"><thead><tr>';
+  h += '<th>Statistique</th><th>Cindoor (\xc2\xb5g/m\xc2\xb3)</th><th>QD (seuil)</th><th>ERI (sans seuil)</th></tr></thead><tbody>';
+  [['Min', r.cindoor.min, r.qd.min, r.eri.min],
+   ['P5', r.cindoor.p5, r.qd.p5, r.eri.p5],
+   ['M\xc3\xa9diane (P50)', r.cindoor.p50, r.qd.p50, r.eri.p50],
+   ['Moyenne', r.cindoor.mean, r.qd.mean, r.eri.mean],
+   ['P95', r.cindoor.p95, r.qd.p95, r.eri.p95],
+   ['Max', r.cindoor.max, r.qd.max, r.eri.max],
+   ['\xc3\x89cart-type', r.cindoor.std, r.qd.std, r.eri.std]
+  ].forEach(([lbl, cv, qd, eri]) => {
+    h += `<tr><td>${lbl}</td><td class="computed">${fmtSci(cv)}</td><td class="computed">${fmtSci(qd)}</td><td class="computed">${fmtSci(eri)}</td></tr>`;
   });
   h += '</tbody></table></div>';
 
+  if (r.substance) {
+    h += `<div style="margin-top:0.5rem;font-size:0.8rem;color:var(--text-muted)">Substance : <strong>${r.substance}</strong> \xe2\x80\x94 VTR inhal : ${VTR_SEUIL[r.substance]?.inhal || 'N/A'} mg/m\xc2\xb3 | ERU inhal : ${VTR_SANSSEUIL[r.substance]?.eruInhal ? fmtSci(VTR_SANSSEUIL[r.substance].eruInhal) : 'N/A'} (mg/m\xc2\xb3)\xe2\x80\x91</div>`;
+  }
+
+  // Canvas pour histogramme
   h += '<canvas id="mc_canvas" width="900" height="280" style="margin-top:1rem;max-width:100%;border:1px solid var(--border);border-radius:6px;background:#fff"></canvas>';
 
-  h += '<div class="info-box" style="background:#fff8e5;border-left:4px solid #d4a017;margin-top:1rem"><strong>Recommandation INERIS :</strong> retenir le <strong>P95</strong> comme valeur conservative pour décision réglementaire. Si CV > 100%, multiplier les mesures avant conclusion.</div>';
+  h += '<div class="info-box" style="background:#fff8e5;border-left:4px solid #d4a017;margin-top:1rem"><strong>Recommandation :</strong> retenir le <strong>P95</strong> comme valeur conservative pour d\xc3\xa9cision r\xc3\xa9glementaire. Si CV > 100%, multiplier les mesures avant conclusion. Le QD > 1 indique un risque non n\xc3\xa9gligeable (seuil d\xc3\xa9pass\xc3\xa9). L\'ERI > 10\xe2\x81\xbb\xe2\x81\xb6 indique un risque canc\xc3\xa9rog\xc3\xa8ne sup\xc3\xa9rieur au seuil r\xc3\xa9glementaire.</div>';
 
-  setTimeout(() => drawMCHistogram(r.samples), 50);
+  setTimeout(() => drawMCHistogram(r.samples, r.qdSamples, r.eriSamples), 50);
   return h;
 };
-
-function drawMCHistogram(samples) {
+function drawMCHistogram(samples, qdSamples, eriSamples) {
   const canvas = document.getElementById('mc_canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   const W = canvas.width, H = canvas.height, padding = 50;
-  const bins = 40;
-  const minV = samples[0], maxV = samples[samples.length - 1];
-  const range = maxV - minV;
-  const binSize = range / bins;
-  const counts = new Array(bins).fill(0);
-  samples.forEach(v => {
-    let b = Math.floor((v - minV) / binSize);
-    if (b >= bins) b = bins - 1;
-    counts[b]++;
-  });
-  const maxC = Math.max(...counts);
 
-  ctx.fillStyle = '#0e2f44';
-  ctx.font = 'bold 13px Segoe UI';
-  ctx.textAlign = 'center';
-  ctx.fillText('Distribution Cindoor (µg/m³) — 1000 tirages', W / 2, 22);
+  function drawOne(arr, title, color, yOffset) {
+    if (!arr || arr.length === 0) return;
+    const bins = 40;
+    const minV = arr[0], maxV = arr[arr.length - 1];
+    const range = maxV - minV || 1;
+    const binSize = range / bins;
+    const counts = new Array(bins).fill(0);
+    arr.forEach(v => {
+      let b = Math.floor((v - minV) / binSize);
+      if (b >= bins) b = bins - 1;
+      if (b < 0) b = 0;
+      counts[b]++;
+    });
+    const maxC = Math.max(...counts);
+    const subH = (H - 3 * padding) / 3;
+    const y0 = padding + yOffset * (subH + padding);
 
-  const barWidth = (W - 2 * padding) / bins;
-  ctx.fillStyle = '#1a5276';
-  for (let i = 0; i < bins; i++) {
-    const bh = (counts[i] / maxC) * (H - 2 * padding);
-    ctx.fillRect(padding + i * barWidth, H - padding - bh, barWidth - 1, bh);
-  }
+    ctx.fillStyle = '#0e2f44';
+    ctx.font = 'bold 12px Segoe UI';
+    ctx.textAlign = 'left';
+    ctx.fillText(title, padding, y0 - 8);
 
-  ctx.strokeStyle = '#333';
-  ctx.beginPath();
-  ctx.moveTo(padding, padding);
-  ctx.lineTo(padding, H - padding);
-  ctx.lineTo(W - padding, H - padding);
-  ctx.stroke();
+    const barWidth = (W - 2 * padding) / bins;
+    ctx.fillStyle = color;
+    for (let i = 0; i < bins; i++) {
+      const bh = (counts[i] / maxC) * subH;
+      ctx.fillRect(padding + i * barWidth, y0 + subH - bh, barWidth - 1, bh);
+    }
 
-  ctx.fillStyle = '#333';
-  ctx.font = '10px Segoe UI';
-  for (let i = 0; i <= 5; i++) {
-    const x = padding + (i / 5) * (W - 2 * padding);
-    const v = minV + (i / 5) * range;
-    ctx.fillText(fmtSci(v), x, H - padding + 16);
-  }
-
-  // Markers P5, P50, P95
-  const p5 = samples[Math.floor(samples.length * 0.05)];
-  const p50 = samples[Math.floor(samples.length * 0.50)];
-  const p95 = samples[Math.floor(samples.length * 0.95)];
-  [['P5', p5, '#6b6b66'], ['P50', p50, '#1a5276'], ['P95', p95, '#9c0006']].forEach(([lbl, val, col]) => {
-    const x = padding + ((val - minV) / range) * (W - 2 * padding);
-    ctx.strokeStyle = col;
-    ctx.setLineDash([4, 3]);
+    ctx.strokeStyle = '#999';
     ctx.beginPath();
-    ctx.moveTo(x, padding);
-    ctx.lineTo(x, H - padding);
+    ctx.moveTo(padding, y0);
+    ctx.lineTo(padding, y0 + subH);
+    ctx.lineTo(W - padding, y0 + subH);
     ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle = col;
-    ctx.font = 'bold 11px Segoe UI';
-    ctx.fillText(lbl, x, padding - 5);
-  });
-}
 
+    ctx.fillStyle = '#666';
+    ctx.font = '9px Segoe UI';
+    for (let i = 0; i <= 4; i++) {
+      const x = padding + (i / 4) * (W - 2 * padding);
+      const v = minV + (i / 4) * range;
+      ctx.fillText(fmtSci(v), x, y0 + subH + 14);
+    }
+
+    const p5 = arr[Math.floor(arr.length * 0.05)];
+    const p50 = arr[Math.floor(arr.length * 0.50)];
+    const p95 = arr[Math.floor(arr.length * 0.95)];
+    [['P5', p5, '#6b6b66'], ['P50', p50, color], ['P95', p95, '#9c0006']].forEach(([lbl, val, col]) => {
+      const x = padding + ((val - minV) / range) * (W - 2 * padding);
+      ctx.strokeStyle = col;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.moveTo(x, y0);
+      ctx.lineTo(x, y0 + subH);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = col;
+      ctx.font = 'bold 10px Segoe UI';
+      ctx.fillText(lbl, x, y0 - 2);
+    });
+  }
+
+  drawOne(samples, 'Cindoor', '#1a5276', 0);
+  drawOne(qdSamples, 'QD (quotient de danger)', '#9c0006', 1);
+  drawOne(eriSamples, 'ERI (exces de risque)', '#7a39bb', 2);
+}
 // --- Temporel ---
 sheetRenderers.temporel = function() {
   computeTemporel();
