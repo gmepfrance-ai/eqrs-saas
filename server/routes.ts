@@ -40,7 +40,7 @@ try {
   console.error("Warning: Could not load rabattement-tool.html", e);
 }
 
-// Load EQRS V31.05 + ECOTOX V8 tool HTML at startup (NEW V8 calculator with ecotoxicology module)
+// Load EQRS V9 + ECOTOX V9 tool HTML at startup
 let eqrsV31EcotoxToolHtml = "";
 try {
   eqrsV31EcotoxToolHtml = fs.readFileSync(
@@ -48,7 +48,7 @@ try {
     "utf-8"
   );
 } catch (e) {
-  console.error("Warning: Could not load eqrs-v31-ecotox-tool.html", e);
+  console.error("Warning: Could not load eqrs-v31-ecotox-tool.html (V9)", e);
 }
 
 // Load Schéma Conceptuel tool HTML at startup
@@ -121,7 +121,7 @@ try {
 let eqrsV8HumainToolHtml = "";
 try {
   eqrsV8HumainToolHtml = fs.readFileSync(
-    path.resolve(process.cwd(), "eqrs-v8-humain-tool.html"),
+    path.resolve(process.cwd(), "eqrs-v8-humain-tool.html"), // V9 tool (filename kept for backward compat)
     "utf-8"
   );
 } catch (e) {
@@ -942,7 +942,7 @@ export async function registerRoutes(
   function fmt(d){ if(!d) return ''; var x=new Date(d); return x.toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
   function fmtDate(d){ if(!d) return ''; var x=new Date(d); return x.toLocaleDateString('fr-FR'); }
   function daysLeft(end){ if(!end) return ''; var ms=new Date(end)-new Date(); var d=Math.ceil(ms/86400000); return d>0?d+' j':'expiré'; }
-  function toolLabel(t){ var m={je:'EQRS V7 J&E',eqrs_v31:'EQRS V31+ECOTOX',tsn:'TSN',rabattement:'Rabattement V15.89',schema:'Schéma Conceptuel',bundle:'Bundle'}; return m[t]||t||'?'; }
+  function toolLabel(t){ var m={je:'EQRS V7 J&E',eqrs_v31:'EQRS V9+ECOTOX',tsn:'TSN',rabattement:'Rabattement V15.89',schema:'Schéma Conceptuel',bundle:'Bundle'}; return m[t]||t||'?'; }
 
   function showLogin(errMsg){
     app.innerHTML = '<div class="login">' +
@@ -1069,7 +1069,7 @@ export async function registerRoutes(
       tip: "Importez vos concentrations mesurées, choisissez le scénario d'exposition (résidentiel, tertiaire, extérieur) et générez en quelques minutes le rapport ERS complet (VTR, fond hydrogéologique, quotients de danger) au format PDF prêt à joindre à votre dossier.",
     },
     eqrs_v31: {
-      label: "EQRS V31.05 + Extension ECOTOX",
+      label: "EQRS V9 + Extension ECOTOX V9",
       url: "https://www.gmep-france.eu/#/subscribe-eqrs-v31-ecotox",
       duration: 14,
       tip: "Le module ECOTOX ajoute automatiquement le volet écotoxicologique (compartiments sol/eau/faune) à votre évaluation des risques sanitaires — un seul dossier pour couvrir sanitaire et environnemental.",
@@ -1264,7 +1264,7 @@ export async function registerRoutes(
       if (!resendKey) {
         return res.status(503).json({ message: "Resend non configuré" });
       }
-      const toolLabels: Record<string,string> = {je:'EQRS V7 J&E',eqrs_v31:'EQRS V31+ECOTOX',tsn:'TSN',rabattement:'Rabattement V15.89',schema:'Schéma Conceptuel',piezometres:'Piézomètres v2.9c',msp:'MSP Pollution des Sols',bundle:'Bundle'};
+      const toolLabels: Record<string,string> = {je:'EQRS V7 J&E',eqrs_v31:'EQRS V9+ECOTOX',tsn:'TSN',rabattement:'Rabattement V15.89',schema:'Schéma Conceptuel',piezometres:'Piézomètres v2.9c',msp:'MSP Pollution des Sols',bundle:'Bundle'};
       const tl = (t:string)=>toolLabels[t]||t||'?';
       let rowsTools = '';
       for (const r of stats.trials_last_14_days) {
@@ -1430,7 +1430,7 @@ export async function registerRoutes(
         currentPeriodEnd: trial14.toISOString(),
       });
 
-      // 2. EQRS V31.05 + ECOTOX — 14 jours
+      // 2. EQRS V9 + ECOTOX — 14 jours
       await storage.createSubscription(user.id, {
         status: "trialing",
         plan: "eqrs_v31_ecotox_trial",
@@ -1498,7 +1498,7 @@ export async function registerRoutes(
                   <table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;">
                     <tr style="background:#e8f4fd;"><td style="padding:10px;border:1px solid #cce0f0;font-weight:bold;">Compte</td><td style="padding:10px;border:1px solid #cce0f0;">${email}</td></tr>
                     <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">EQRS V7 Johnson &amp; Ettinger</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 208 € HT/mois</td></tr>
-                    <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">EQRS V31.05 + ECOTOX V8</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 395 € HT/mois</td></tr>
+                    <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">EQRS V9 + ECOTOX V9</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 395 € HT/mois</td></tr>
                     <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">TSN Transfert Sol-Nappe</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 1 100 € HT/an</td></tr>
                     <tr style="background:#f8f9fa;"><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">Rabattement V15.89</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 1 500 € HT/an</td></tr>
                     <tr><td style="padding:10px;border:1px solid #e2e8f0;font-weight:bold;">GMEP Piézomètres v2.9c</td><td style="padding:10px;border:1px solid #e2e8f0;">14 jours — 1 100 € HT/an</td></tr>
@@ -2613,7 +2613,7 @@ export async function registerRoutes(
     }
   );
 
-  // ── EQRS V31.05 + ECOTOX Trial : activer essai 14 jours ────────────────
+  // ── EQRS V9 + ECOTOX Trial : activer essai 14 jours ────────────────
   app.post(
     "/api/eqrs-v31-ecotox-trial/activate",
     requireAuth as any,
@@ -2622,7 +2622,7 @@ export async function registerRoutes(
         const subs = await storage.getSubscriptionsByUserId(req.user!.id);
         const existing = subs.find(s => s.tool === "eqrs_v31");
         if (existing && (existing.status === "active" || existing.status === "trialing")) {
-          return res.status(409).json({ message: "Vous avez déjà un accès EQRS V31.05 + ECOTOX actif ou en cours d'essai." });
+          return res.status(409).json({ message: "Vous avez déjà un accès EQRS V9 + ECOTOX actif ou en cours d'essai." });
         }
         const trialEnd = new Date();
         trialEnd.setDate(trialEnd.getDate() + 14);
@@ -2642,30 +2642,59 @@ export async function registerRoutes(
             currentPeriodEnd: trialEnd.toISOString(),
           });
         }
-        return res.json({ message: "Essai EQRS V31.05 + ECOTOX activé (14 jours)", subscription: sub });
+        return res.json({ message: "Essai EQRS V9 + ECOTOX activé (14 jours)", subscription: sub });
       } catch (err: any) {
         return res.status(500).json({ message: err.message });
       }
     }
   );
 
-  // ── EQRS V31.05 + ECOTOX Tool : accès outil (essai ou abonné) ──────────
+  // ── EQRS V9 + ECOTOX Tool : accès outil (essai ou abonné) ──────────
   app.get(
     "/api/eqrs-v31-ecotox-tool",
     requireAuth as any,
     async (req: AuthRequest, res: Response) => {
-      // CORRECTIF v16.3 : utilise le calculateur V8 avec module écotox (pas l'ancien V7)
-      if (!eqrsV31EcotoxToolHtml) return res.status(500).json({ message: "Outil EQRS V31.05 + ECOTOX non disponible" });
+      // CORRECTIF v16.3 : utilise le calculateur V9 avec module écotox
+      if (!eqrsV31EcotoxToolHtml) return res.status(500).json({ message: "Outil EQRS V9 + ECOTOX non disponible" });
       if (!isAdminEmail((req.user as any).email)) {
         const subs = await storage.getSubscriptionsByUserId(req.user!.id);
         const toolSub = subs.find(s => (s.tool === "eqrs_v31" || s.tool === "bundle") && (s.status === "active" || s.status === "trialing"));
         if (!toolSub) {
-          return res.status(403).json({ message: "Abonnement EQRS V31.05 + ECOTOX requis pour accéder à cet outil." });
+          return res.status(403).json({ message: "Abonnement EQRS V9 + ECOTOX requis pour accéder à cet outil." });
         }
         if (toolSub.status === "trialing" && toolSub.currentPeriodEnd && new Date(toolSub.currentPeriodEnd) < new Date()) {
           try { await storage.updateSubscription(toolSub.id, { status: "expired" }); } catch {}
           res.setHeader("Content-Type", "text/html; charset=utf-8");
-          return res.status(403).send(trialExpiredHtml("/#/subscribe-eqrs-v31-ecotox", "EQRS V31.05 + Extension ECOTOX", 14));
+          return res.status(403).send(trialExpiredHtml("/#/subscribe-eqrs-v31-ecotox", "EQRS V9 + Extension ECOTOX V9", 14));
+        }
+      }
+      res.setHeader("X-Frame-Options", "SAMEORIGIN");
+      res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://unpkg.com"
+      );
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.send(protectToolHtml(eqrsV31EcotoxToolHtml));
+    }
+  );
+
+  // ── Alias V9 : /api/eqrs-v9-ecotox-tool (mêmes permissions, même contenu) ──
+  app.get(
+    "/api/eqrs-v9-ecotox-tool",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      if (!eqrsV31EcotoxToolHtml) return res.status(500).json({ message: "Outil EQRS V9 + ECOTOX non disponible" });
+      if (!isAdminEmail((req.user as any).email)) {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const toolSub = subs.find(s => (s.tool === "eqrs_v31" || s.tool === "bundle") && (s.status === "active" || s.status === "trialing"));
+        if (!toolSub) {
+          return res.status(403).json({ message: "Abonnement EQRS V9 + ECOTOX requis pour accéder à cet outil." });
+        }
+        if (toolSub.status === "trialing" && toolSub.currentPeriodEnd && new Date(toolSub.currentPeriodEnd) < new Date()) {
+          try { await storage.updateSubscription(toolSub.id, { status: "expired" }); } catch {}
+          res.setHeader("Content-Type", "text/html; charset=utf-8");
+          return res.status(403).send(trialExpiredHtml("/#/subscribe-eqrs-v31-ecotox", "EQRS V9 + Extension ECOTOX V9", 14));
         }
       }
       res.setHeader("X-Frame-Options", "SAMEORIGIN");

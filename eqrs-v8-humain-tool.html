@@ -1256,10 +1256,10 @@ function computeDJEIngestion() {
       const denom_ss = denom_sansseuil > 0 ? denom_sansseuil : 1;
 
       res[receptor][s.name] = {
-        djeSol: denom > 0 ? Csol * p.IRs * p.EF / denom : 0,
-        djeEau: denom > 0 ? (Ceau / 1000) * p.IRw * p.EF / denom : 0,
-        djeSol_ss: denom_ss > 0 ? Csol * p.IRs * p.EF / denom_ss : 0,
-        djeEau_ss: denom_ss > 0 ? (Ceau / 1000) * p.IRw * p.EF / denom_ss : 0,
+        djeSol: denom > 0 ? Csol * p.IRs * p.EF * p.ED / denom : 0,
+        djeEau: denom > 0 ? (Ceau / 1000) * p.IRw * p.EF * p.ED / denom : 0,
+        djeSol_ss: denom_ss > 0 ? Csol * p.IRs * p.EF * p.ED / denom_ss : 0,
+        djeEau_ss: denom_ss > 0 ? (Ceau / 1000) * p.IRw * p.EF * p.ED / denom_ss : 0,
       };
     });
   });
@@ -1310,8 +1310,8 @@ function computeDJEContact() {
       const denom_ss = denom_sansseuil > 0 ? denom_sansseuil : 1;
 
       res[receptor][s.name] = {
-        dje: denom > 0 ? Csol * p.Scut * p.AF * p.ABS * 1e-6 * p.EF / denom : 0,
-        dje_ss: denom_ss > 0 ? Csol * p.Scut * p.AF * p.ABS * 1e-6 * p.EF / denom_ss : 0,
+        dje: denom > 0 ? Csol * p.Scut * p.AF * p.ABS * 1e-6 * p.EF * p.ED / denom : 0,
+        dje_ss: denom_ss > 0 ? Csol * p.Scut * p.AF * p.ABS * 1e-6 * p.EF * p.ED / denom_ss : 0,
       };
     });
   });
@@ -3299,7 +3299,7 @@ sheetRenderers.melange_organe = function() {
 // EXPORT PDF
 // ============================================================
 // ============================================================
-// EQRS V8 — MODULE ÉVALUATION ÉCOTOXICOLOGIQUE
+// EQRS V9 — MODULE ÉVALUATION ÉCOTOXICOLOGIQUE
 // Tier 1 (PEC/PNEC) + Tier 2 (Transferts trophiques)
 // Conforme INERIS DRC-08-94882 + ECHA REACH R.10 + US EPA Eco-SSL
 // Sources PNEC en cascade : INERIS → ECHA → US EPA
@@ -4051,7 +4051,7 @@ if (typeof renderActiveSheet === 'function') {
 
 // ============================================================
 // EQRS V9 — MODULE TIER 3 : VOIE ALIMENTAIRE HUMAINE
-// Extension ECOTOX V8 — Chaîne sol/eau → aliment → homme
+// Extension ECOTOX V9 — Chaîne sol/eau → aliment → homme
 // Conforme INERIS DRC-09-103096-09387C (sommation QD/ERI)
 // EFSA 2020 (TWI PFAS), ANSES 2023, US EPA IRIS
 // GMEP — v1.0 Juin 2026
