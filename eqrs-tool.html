@@ -2748,7 +2748,7 @@ function computeTemporel() {
     const Cs = C0 * Math.exp(-lambda_total * t);
     const Ci = alpha_eff * Cs;
     const QD = (vtr.inhal > 0) ? Ci * p.Fi * p.IRa * p.EF / (365 * (p.AT_seuil || 30) * p.P * 1000 * vtr.inhal) : null;
-    const ERI_annuel = (eru.inhal > 0) ? Ci * eru.inhal * p.Fi / 70 : 0;
+    const ERI_annuel = (eru.inhal > 0) ? Ci * eru.inhal * p.Fi * (p.EF/365) / 70 : 0;
     eri_cumul += ERI_annuel;
     series.push({ t, Cs, Ci, QD, ERI: eri_cumul, pct: Cs / C0 });
   }

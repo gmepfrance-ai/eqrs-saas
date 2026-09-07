@@ -61,6 +61,20 @@ DJE_PATTERNS = [
     },
 ]
 
+# Tests supplémentaires — Module temporel (ERI annuel)
+TEMPORAL_CHECKS = [
+    {
+        "name": "ERI temporel inclut EF/365 (exposure frequency)",
+        "pattern": r"ERI_annuel.*p\.Fi \* \(p\.EF/365\)",
+        "required": True,
+    },
+    {
+        "name": "ERI temporel — ancien bug sans EF/365",
+        "pattern": r"ERI_annuel.*p\.Fi / 70",
+        "required": False,  # Ne doit PAS être présent
+    },
+]
+
 # Patterns anti-régression : vérifier que l'ancien bug n'est pas revenu
 ANTI_REGRESSION_PATTERNS = [
     {
@@ -155,6 +169,21 @@ def run_tests():
                     print(f"  ✗ FAIL: {check['name']} — p.ED MANQUANT dans la formule !")
                 else:
                     print(f"  ✗ FAIL: {check['name']} — pattern inattendu trouvé")
+
+        # Tests temporels (ERI annuel doit inclure EF/365)
+        print(f"\n  --- Tests module temporel ---")
+        for check in TEMPORAL_CHECKS:
+            total += 1
+            found = bool(re.search(check["pattern"], content))
+            if found == check["required"]:
+                status = "✓ PASS" if found else "✓ PASS (absent comme attendu)"
+                print(f"  {status}: {check['name']}")
+            else:
+                failures += 1
+                if check["required"]:
+                    print(f"  ✗ FAIL: {check['name']} — EF/365 manquant dans ERI temporel !")
+                else:
+                    print(f"  ✗ FAIL: {check['name']} — ancien bug ERI temporel toujours présent !")
 
         # Tests anti-régression (ancien bug ne doit pas être revenu)
         print(f"\n  --- Tests anti-régression (ancien bug ne doit pas revenir) ---")
