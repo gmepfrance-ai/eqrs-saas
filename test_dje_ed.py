@@ -20,8 +20,9 @@ import os
 
 # Fichiers outil à tester
 TOOL_FILES = [
-    "eqrs-v31-ecotox-tool.html",
-    "eqrs-v8-humain-tool.html",
+    "eqrs-tool.html",  # EQRS V7 J&E (outil de base)
+    "eqrs-v31-ecotox-tool.html",  # EQRS V9 + ECOTOX
+    "eqrs-v8-humain-tool.html",  # EQRS V9 Humain (Tier 3)
 ]
 
 # Patterns à vérifier (chaque formule DJE doit contenir p.ED)
@@ -80,7 +81,8 @@ ANTI_REGRESSION_PATTERNS = [
 ]
 
 # Vérification des labels V9 (pas de V8/V31 dans le texte affiché)
-LABEL_CHECKS = [
+# Uniquement pour les outils V31/V8 renommés en V9 (pas pour eqrs-tool.html qui reste V7)
+LABEL_CHECKS_V9 = [
     {
         "name": "Title tag contient V9",
         "pattern": r"<title>EQRS V9",
@@ -101,6 +103,15 @@ LABEL_CHECKS = [
         "pattern": r"ECOTOX V8 Tier|Extension ECOTOX V8",
         "required": False,
     },
+    {
+        "name": "Pas de 'V31.05' dans le texte affiché",
+        "pattern": r"V31\.05",
+        "required": False,
+    },
+]
+
+# Checks anti-régression applicables à tous les outils (pas de V31.05)
+LABEL_CHECKS_ALL = [
     {
         "name": "Pas de 'V31.05' dans le texte affiché",
         "pattern": r"V31\.05",
@@ -156,20 +167,32 @@ def run_tests():
                 failures += 1
                 print(f"  ✗ FAIL: {check['name']} — RÉGRESSION détectée !")
 
-        # Tests labels V9
-        print(f"\n  --- Tests labels V9 ---")
-        for check in LABEL_CHECKS:
-            total += 1
-            found = bool(re.search(check["pattern"], content))
-            if found == check["required"]:
-                status = "✓ PASS" if found else "✓ PASS (absent comme attendu)"
-                print(f"  {status}: {check['name']}")
-            else:
-                failures += 1
-                if check["required"]:
-                    print(f"  ✗ FAIL: {check['name']} — label V9 manquant !")
+        # Tests labels V9 (uniquement pour les outils V31/V8 renommés en V9)
+        is_v9_tool = "v31" in tool_file or "v8-humain" in tool_file
+        if is_v9_tool:
+            print(f"\n  --- Tests labels V9 ---")
+            for check in LABEL_CHECKS_V9:
+                total += 1
+                found = bool(re.search(check["pattern"], content))
+                if found == check["required"]:
+                    status = "✓ PASS" if found else "✓ PASS (absent comme attendu)"
+                    print(f"  {status}: {check['name']}")
                 else:
-                    print(f"  ✗ FAIL: {check['name']} — ancien label V8/V31 toujours présent !")
+                    failures += 1
+                    if check["required"]:
+                        print(f"  ✗ FAIL: {check['name']} — label V9 manquant !")
+                    else:
+                        print(f"  ✗ FAIL: {check['name']} — ancien label V8/V31 toujours présent !")
+        else:
+            print(f"\n  --- Tests labels (anti-régression V31.05) ---")
+            for check in LABEL_CHECKS_ALL:
+                total += 1
+                found = bool(re.search(check["pattern"], content))
+                if not found:
+                    print(f"  ✓ PASS: {check['name']}")
+                else:
+                    failures += 1
+                    print(f"  ✗ FAIL: {check['name']} — V31.05 toujours présent !")
 
     # Résumé
     print(f"\n{'='*60}")

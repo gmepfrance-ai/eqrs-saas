@@ -1260,10 +1260,10 @@ function computeDJEIngestion() {
       const denom_ss = denom_sansseuil > 0 ? denom_sansseuil : 1;
 
       res[receptor][s.name] = {
-        djeSol: denom > 0 ? Csol * p.IRs * p.EF / denom : 0,
-        djeEau: denom > 0 ? (Ceau / 1000) * p.IRw * p.EF / denom : 0,
-        djeSol_ss: denom_ss > 0 ? Csol * p.IRs * p.EF / denom_ss : 0,
-        djeEau_ss: denom_ss > 0 ? (Ceau / 1000) * p.IRw * p.EF / denom_ss : 0,
+        djeSol: denom > 0 ? Csol * p.IRs * p.EF * p.ED / denom : 0,
+        djeEau: denom > 0 ? (Ceau / 1000) * p.IRw * p.EF * p.ED / denom : 0,
+        djeSol_ss: denom_ss > 0 ? Csol * p.IRs * p.EF * p.ED / denom_ss : 0,
+        djeEau_ss: denom_ss > 0 ? (Ceau / 1000) * p.IRw * p.EF * p.ED / denom_ss : 0,
       };
     });
   });
@@ -1314,8 +1314,8 @@ function computeDJEContact() {
       const denom_ss = denom_sansseuil > 0 ? denom_sansseuil : 1;
 
       res[receptor][s.name] = {
-        dje: denom > 0 ? Csol * p.Scut * p.AF * p.ABS * 1e-6 * p.EF / denom : 0,
-        dje_ss: denom_ss > 0 ? Csol * p.Scut * p.AF * p.ABS * 1e-6 * p.EF / denom_ss : 0,
+        dje: denom > 0 ? Csol * p.Scut * p.AF * p.ABS * 1e-6 * p.EF * p.ED / denom : 0,
+        dje_ss: denom_ss > 0 ? Csol * p.Scut * p.AF * p.ABS * 1e-6 * p.EF * p.ED / denom_ss : 0,
       };
     });
   });
