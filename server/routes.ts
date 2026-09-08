@@ -152,6 +152,20 @@ const STRIPE_PRICE_RABATTEMENT_SIMPLE_ANNUAL =
   process.env.STRIPE_PRICE_RABATTEMENT_SIMPLE_ANNUAL || "price_1U171F3A2g3lkch9euyej9Ek";
 const STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY =
   process.env.STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY || "price_1TiYe43A2g3lkch9P8imRRvG";
+// Licence poste unique — palier de volume -15 % à partir de la 2e clé d'activation.
+// Prix "tiered/graduated" créés dans Stripe (Live) le 08/09/2026 : 1er poste plein tarif,
+// 2e poste et suivants à -15 %. Stripe applique la remise automatiquement selon la
+// quantité choisie (adjustable_quantity ci-dessous) — aucun calcul côté serveur requis.
+const STRIPE_PRICE_EQRS_V31_ECOTOX_1AN_PALIER =
+  process.env.STRIPE_PRICE_EQRS_V31_ECOTOX_1AN_PALIER || "price_1UDKxV3A2g3lkch9SpBG5WAI";
+const STRIPE_PRICE_EQRS_V31_ECOTOX_2ANS_PALIER =
+  process.env.STRIPE_PRICE_EQRS_V31_ECOTOX_2ANS_PALIER || "price_1UDKxd3A2g3lkch9UCfVtzAO";
+// Plans dont la quantité (nombre de clés/postes) doit être sélectionnable par le
+// client sur la page Stripe Checkout, pour que le palier de volume -15 % s'applique.
+const PALIER_VOLUME_PLANS = new Set([
+  "eqrs_v31_ecotox_1an_palier",
+  "eqrs_v31_ecotox_2ans_palier",
+]);
 const STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL =
   process.env.STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL || "price_1TiYqB3A2g3lkch9s0brXOXq";
 const STRIPE_PRICE_PIEZOMETRES_ANNUAL =
@@ -1830,6 +1844,8 @@ export async function registerRoutes(
           plan === "je_annual" ? STRIPE_PRICE_ANNUAL :
           plan === "je_monthly" ? STRIPE_PRICE_MONTHLY :
           plan === "eqrs_v31_ecotox_monthly" ? STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY :
+          plan === "eqrs_v31_ecotox_1an_palier" ? STRIPE_PRICE_EQRS_V31_ECOTOX_1AN_PALIER :
+          plan === "eqrs_v31_ecotox_2ans_palier" ? STRIPE_PRICE_EQRS_V31_ECOTOX_2ANS_PALIER :
           plan === "schema_conceptuel_annual" ? STRIPE_PRICE_SCHEMA_CONCEPTUEL_ANNUAL :
           plan === "piezometres_annual" ? STRIPE_PRICE_PIEZOMETRES_ANNUAL :
           plan === "msp_monthly" ? STRIPE_PRICE_MSP_MONTHLY :
@@ -1918,10 +1934,26 @@ export async function registerRoutes(
         const origin = `${req.protocol}://${req.get("host")}`;
         const token = req.query.token as string;
 
+        // Postes/clés supplémentaires : quantité ajustable directement sur la page
+        // Stripe Checkout pour les plans à palier de volume (-15 % à partir de la 2e
+        // clé). Stripe calcule alors automatiquement le total dégressif via le Price
+        // "tiered/graduated" — aucune remise ni calcul manuel côté serveur.
+        const isPalierVolumePlan = PALIER_VOLUME_PLANS.has(plan);
+        const requestedQuantity = Number.isInteger(req.body?.quantity)
+          ? Math.min(Math.max(req.body.quantity, 1), 10)
+          : 1;
+        const lineItem: Stripe.Checkout.SessionCreateParams.LineItem = {
+          price: priceId,
+          quantity: isPalierVolumePlan ? requestedQuantity : 1,
+        };
+        if (isPalierVolumePlan) {
+          lineItem.adjustable_quantity = { enabled: true, minimum: 1, maximum: 10 };
+        }
+
         const session = await stripe.checkout.sessions.create({
           customer: customerId,
           payment_method_types: ["card"],
-          line_items: [{ price: priceId, quantity: 1 }],
+          line_items: [lineItem],
           mode: "subscription",
           success_url: `${origin}/#/dashboard?token=${token}&checkout=success`,
           cancel_url: `${origin}/#/dashboard?token=${token}&checkout=cancel`,
