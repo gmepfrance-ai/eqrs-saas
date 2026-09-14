@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="es" data-alt-fr="/outils/eaux-pluviales-dle-gep.html" data-alt-en="/en/outils/eaux-pluviales-dle-gep.html" data-alt-es="/es/outils/eaux-pluviales-dle-gep.html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modelización GEP — DLE &amp; Ley del Agua | GMEP</title>
+<meta name="description" content="Software SaaS de dimensionamiento de aguas pluviales y de elaboración de los expedientes de la Ley del Agua (DLE L.214-1 a L.214-6 del Código de Medio Ambiente francés) y GEP. Clasificación IOTA automática (R.214-1 del Código de Medio Ambiente), compatible con la importación de ensayos de permeabilidad de Porchet. 5.500 € sin IVA/año.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/es/outils/eaux-pluviales-dle-gep.html">
+<link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/eaux-pluviales-dle-gep.html">
+<link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/eaux-pluviales-dle-gep.html">
+<link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/eaux-pluviales-dle-gep.html">
+<link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/eaux-pluviales-dle-gep.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/es/outils/eaux-pluviales-dle-gep.html">
+<meta property="og:title" content="Modelización GEP — DLE &amp; Ley del Agua | GMEP">
+<meta property="og:description" content="Software SaaS de dimensionamiento de aguas pluviales y de elaboración de los expedientes de la Ley del Agua (DLE) y GEP. Clasificación IOTA automática, compatible con la importación de ensayos de Porchet.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Modelización GEP DLE & Ley del Agua">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Modelización GEP — DLE &amp; Ley del Agua | GMEP">
+<meta name="twitter:description" content="Dimensionamiento de aguas pluviales, expedientes de la Ley del Agua (DLE) y GEP. Clasificación IOTA, compatible con la importación de ensayos de Porchet.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Inicio GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Ingeniería medioambiental e hidrogeología</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navegación principal">
+      <a href="../index.html">Inicio</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Herramientas
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modelización 3D suelo / acuífero / estructuras · NUEVO</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modelización GEP — DLE &amp; Ley del Agua<span class="nav-mi-desc">Dimensionamiento de pluviales + expedientes DLE/GEP · NUEVO</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modelización Ensayo de Porchet<span class="nav-mi-desc">Cálculo de K en campo + comparación GEP · NUEVO</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX V8<span class="nav-mi-desc">HHRA + ecotoxicología — 104 sustancias · NUEVO</span></a>
+          <a href="../outils/eqrs-v8-ecotox-humain.html" role="menuitem">EQRS V8 + ECOTOX + HUMAIN<span class="nav-mi-desc">Vía alimentaria humana — PFAS, PCB, metales · NUEVO</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Abatimiento V15.87<span class="nav-mi-desc">Multicapa con IA · NUEVO</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">Dimensionamiento ANC<span class="nav-mi-desc">Saneamiento individual y colectivo · NUEVO</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transferencia Suelo-Acuífero<span class="nav-mi-desc">Domenico 1987 + API Hub'eau · NUEVO</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Modelo Conceptual<span class="nav-mi-desc">IEM + Plan de Gestión · NUEVO</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Intrusión de vapores — EPA 2004</span></a>
+          <a href="../outils/domenico.html" role="menuitem">Transferencia Suelo → Acuífero → Captación<span class="nav-mi-desc">Modelo Domenico 1987</span></a>
+          <a href="../outils/rabattement/index.html" role="menuitem">Abatimiento del nivel freático<span class="nav-mi-desc">Theis + IOTA</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Precios</a>
+      <a href="../expertise.html">Experiencia</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../contact.html">Contacto</a>
+    <a href="../lexique.html">Glosario</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Elegir idioma">
+        <button class="lang-btn" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn active" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Iniciar sesión</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Registrarse</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menú" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge">Ley del Agua · R.214-1 CE · DDT(M) / DREAL</span>
+        <h1>Modelización GEP <span style="color:#2ECC71;">— DLE &amp; Ley del Agua</span></h1>
+        <p class="lead">Dimensionamiento hidráulico, clasificación IOTA automática y generación de los expedientes de la Ley del Agua (DLE) y de los estudios de peligrosidad (GEP). Compatible con las mediciones de campo importadas desde Modelización Ensayo de Porchet. Entregables en PDF listos para presentar ante el organismo tramitador.</p>
+        <div class="hero-cta">
+          <a href="../tarifs.html#eaux_pluviales_annual" class="btn btn-primary">Suscribirse — 5.500 € sin IVA/año</a>
+          <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-outline">Prueba gratuita de 14 días</a>
+        </div>
+      </div>
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">aguas pluviales · dle / gep</span>
+        </div>
+        <div class="hero-mock-row"><span class="l">Superficie del proyecto</span><span class="v">15.650 m² (1,465 ha)</span></div>
+        <div class="hero-mock-row"><span class="l">Ca (impermeab.)</span><span class="v">0,58</span></div>
+        <div class="hero-mock-row"><span class="l">Montana (zona 5)</span><span class="v">a = 5,286 / b = 0,660</span></div>
+        <div class="hero-mock-row"><span class="l">Q admisible</span><span class="v">4,40 L/s</span></div>
+        <div class="hero-mock-row"><span class="l">Volumen útil de la balsa</span><span class="v">171 m³</span></div>
+        <div class="hero-mock-result"><strong>IOTA 2.1.5.0</strong><span>Declaración &gt; 1 ha</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="max-width:900px;margin:0 auto;">
+    <div style="background:#eef4fb;border:1px solid #c6dcf0;border-radius:12px;padding:1.3rem 1.5rem;">
+      <p style="margin:0;"><strong style="color:#1a2b4a;">Disponibilidad internacional —</strong> la recuperación automática de los datos geológicos y piezométricos (BRGM, Hub&#39;Eau) cubre Francia. Para un proyecto situado en otro país, estos parámetros deben introducirse manualmente por el usuario; la automatización de esta recuperación por país está en desarrollo.</p>
+    </div>
+  </div>
+</section>
+
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Funcionalidades</span>
+      <h2>La cadena completa, desde el dimensionamiento hasta la presentación</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 16v6M2 12h6M16 12h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Dimensionamiento hidráulico</h3>
+        <p>Balsas de retención / infiltración, vertido regulado. Cálculo del volumen útil (V_útil) y crítico (V_crítico), caudal de fuga, caudal admisible, coeficiente de Montana por zona climática.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 12v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Clasificación IOTA automática</h3>
+        <p>Artículo R.214-1 del Código de Medio Ambiente. Determinación automática del régimen (declaración / autorización) respecto a los epígrafes 2.1.5.0, 3.3.1.0, 3.2.2.0 y 1.1.1.0.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="currentColor" stroke-width="2"/><path d="M15 3v5h5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Informe DLE 10 bis</h3>
+        <p>Expediente de la Ley del Agua (artículos L.214-1 a L.214-6 del Código de Medio Ambiente), estructurado para su presentación ante la DDT(M). Cajetín dinámico: referencia, índice, elaborado por / revisado por, ciudad, fecha.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Expediente GEP + nota técnica</h3>
+        <p>Estudio de peligrosidad de la infiltración: nota técnica argumentada (permeabilidad, impacto hidrogeológico, pasivo ambiental), masa de agua DMA, formación geológica.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Plano de principio</h3>
+        <p>Esquema del recorrido del agua y de la balsa de retención. Mapas de localización (IGN Géoplateforme, BRGM, masas de agua DMA, ZNIEFF, Red Natura 2000).</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2C8 7 6 11 6 14a6 6 0 1012 0c0-3-2-7-6-12z" stroke="currentColor" stroke-width="2"/><path d="M9 14a3 3 0 003 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Compatibilidad — ensayos de Porchet</h3>
+        <p>Importación directa de las mediciones de campo introducidas en Modelización Ensayo de Porchet para comparar el K medido con el K teórico utilizado en el dimensionamiento GEP.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION 1 — IDENTIFICATION DU STATUT DU SITE (passif environnemental) -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Sección 1 — Identificación del estatus del emplazamiento</span>
+      <h2>Consideración del pasivo ambiental</h2>
+      <p>La aptitud de un emplazamiento para la infiltración de las aguas pluviales depende de su historial ambiental. El software integra este pasivo como criterio de alerta y de ayuda a la decisión entre infiltración, retención, tratamiento, vertido regulado o investigaciones adicionales.</p>
+    </div>
+
+    <div class="compliance-list" style="margin-bottom:32px;">
+      <h3>Marcos normativos y bases de datos cruzadas</h3>
+      <ul>
+        <li><strong>SIS — Sectores de Información sobre los Suelos</strong> (art. <strong>L.125-6 del Código de Medio Ambiente</strong>, ley ALUR del 24 de marzo de 2014): sectores en los que el Estado tiene conocimiento de una contaminación del suelo que justifica una información y, según los casos, estudios adaptados.</li>
+        <li><strong>BASOL / ex-BASOL</strong>: emplazamientos contaminados o potencialmente contaminados que requieren una actuación administrativa o una vigilancia.</li>
+        <li><strong>BASIAS / CASIAS</strong>: inventario histórico de antiguas actividades industriales o de servicios — indicador de vigilancia, no constituye una prueba de contaminación.</li>
+        <li><strong>Antiguos terrenos industriales abandonados</strong> o actividades industriales pasadas, estatus <strong>ICPE</strong>.</li>
+      </ul>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature-card" style="border-left:4px solid #e74c3c;">
+        <h3 style="color:#e74c3c;">Alerta de infiltración sobre pasivo industrial</h3>
+        <p>En un emplazamiento SIS o antiguo terreno industrial abandonado, la infiltración de las aguas pluviales puede <strong>movilizar contaminaciones superficiales hacia las aguas subterráneas</strong>. El software señala este riesgo y orienta la modelización hacia una estrategia adaptada: retención prioritaria, impermeabilización, tratamiento, vertido regulado o investigaciones adicionales.</p>
+      </div>
+      <div class="feature-card" style="border-left:4px solid #2ECC71;">
+        <h3 style="color:#2ECC71;">Ayuda a la elección del sistema</h3>
+        <p>Cruce automático SIS / BASOL / BASIAS / ICPE con los datos geológicos (BRGM) e hidrogeológicos (masa de agua DMA) para decidir entre infiltración, retención y vertido regulado según la sensibilidad del emplazamiento.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION 2 — MODULE IA & ESSAIS PORCHET (note technique) -->
+<!-- ==================================================================== -->
+<section>
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Nota técnica</span>
+      <h2>Compatibilidad con Modelización Ensayo de Porchet</h2>
+    </div>
+
+    <div class="compliance-list">
+      <p>El módulo GEP integra de forma nativa los resultados de <strong>Modelización Ensayo de Porchet</strong> (herramienta específica, disponible por separado) para calificar la aptitud a la infiltración a partir de mediciones de campo en lugar de basarse únicamente en la estimación bibliográfica del BRGM. Cruza los datos geológicos, hidrogeológicos, históricos, bibliográficos y ambientales disponibles con el fin de dar mayor fiabilidad al valor de permeabilidad utilizado en el dimensionamiento.</p>
+
+      <h3>Datos utilizados por el módulo</h3>
+      <ul>
+        <li>Datos geológicos (mapa del BRGM, formación del sustrato) e hidrogeológicos (masa de agua DMA, nivel del acuífero).</li>
+        <li>Resultados de ensayos de Porchet importados (K medido, Kdim, facies, coeficiente de seguridad Cs).</li>
+        <li>Pasivo ambiental del emplazamiento (SIS / BASOL / BASIAS / ICPE).</li>
+        <li>Parámetros hidráulicos del proyecto (superficie, coeficiente de impermeabilización, caudal de fuga, caudal admisible).</li>
+      </ul>
+
+      <h3>Aporte operativo</h3>
+      <p>Cuando se dispone de un ensayo de Porchet de campo, el K medido <strong>prevalece sobre la estimación bibliográfica del BRGM</strong> para el dimensionamiento de la obra de infiltración, siempre que exista concordancia (desviación log10 ≤ 0,5 entre ambos valores). En ausencia de un ensayo de campo, el software utiliza el valor bibliográfico del BRGM por formación geológica. La realización de un ensayo in situ sigue evaluándose en función del nivel de incertidumbre, la sensibilidad del emplazamiento, el pasivo ambiental, los requisitos locales y las expectativas del organismo tramitador.</p>
+
+      <p style="background:#fff8e1;border-left:4px solid #f5b94d;padding:14px 18px;border-radius:6px;margin-top:18px;">
+        <strong>El software no sustituye la experiencia del ingeniero</strong>, ni las posibles solicitudes de la DDT(M), la DREAL, el promotor o el organismo de control.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION 3 — CADRE RÉGLEMENTAIRE -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Marco normativo</span>
+      <h2>Ley del Agua y nomenclatura IOTA</h2>
+      <p>Régimen de la Ley del Agua aplicable a las Instalaciones, Obras, Trabajos y Actividades (IOTA) — artículos L.214-1 a L.214-6 del Código de Medio Ambiente. El régimen de autorización / declaración está definido por el <strong>artículo R.214-1 del Código de Medio Ambiente</strong> y su nomenclatura.</p>
+    </div>
+
+    <table class="substances-table">
+      <thead><tr><th>Epígrafe IOTA</th><th>Objeto</th><th>Umbrales (declaración / autorización)</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>2.1.5.0</strong></td>
+          <td>Vertido de aguas pluviales en aguas dulces superficiales, sobre el suelo o en el subsuelo</td>
+          <td>Criterio: superficie total del proyecto más la cuenca natural interceptada — Declaración &gt; 1 ha y &lt; 20 ha; Autorización ≥ 20 ha</td>
+        </tr>
+        <tr>
+          <td><strong>3.3.1.0</strong></td>
+          <td>Desecación, inundación, impermeabilización o relleno de zonas húmedas o marismas</td>
+          <td>Declaración &gt; 0,1 ha y &lt; 1 ha; Autorización ≥ 1 ha</td>
+        </tr>
+        <tr>
+          <td><strong>3.2.2.0</strong></td>
+          <td>Instalaciones, obras o rellenos en el lecho mayor de un curso de agua (superficie sustraída a la expansión de crecidas)</td>
+          <td>Declaración ≥ 400 m² y &lt; 10.000 m²; Autorización ≥ 10.000 m²</td>
+        </tr>
+        <tr>
+          <td><strong>1.1.1.0</strong></td>
+          <td>Sondeo, perforación, creación de pozos u obra subterránea no doméstica (investigación / vigilancia / extracción de aguas subterráneas)</td>
+          <td>Generalmente declaración — debe examinarse si se prevén perforaciones, piezómetros, ensayos de bombeo u obras asociadas</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:13px;color:var(--text-mute,#6b7280);margin-top:18px;">Los umbrales y regímenes (declaración / autorización) deben verificarse caso por caso en Légifrance y con el organismo tramitador. La clasificación propuesta por el software constituye una ayuda y no prejuzga la tramitación administrativa.</p>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION 4 — LIVRABLES & DÉLAIS -->
+<!-- ==================================================================== -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Entregables y plazos</span>
+      <h2>Expedientes listos para presentar</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Informe DLE 10 bis</h3>
+        <p>Expediente de la Ley del Agua (L.214-1 a L.214-6 del Código de Medio Ambiente), estructurado para su presentación ante la DDT(M). Datos del cajetín dinámicos y modificables.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Expediente GEP + nota técnica</h3>
+        <p>Estudio de peligrosidad de la infiltración, nota argumentada: permeabilidad, impacto hidrogeológico, pasivo ambiental.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Plano de principio</h3>
+        <p>Esquema del recorrido del agua / balsa de retención. Informes generados en formato PDF, listos para su envío.</p>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:48px;">
+      <span class="section-eyebrow">Plazos de elaboración</span>
+      <h2>Elaboración de los informes DLE</h2>
+    </div>
+    <table class="substances-table">
+      <thead><tr><th>Alcance</th><th>Plazo indicativo</th></tr></thead>
+      <tbody>
+        <tr><td>Preanálisis y clasificación IOTA</td><td>24 a 48 h</td></tr>
+        <tr><td>Informe DLE / GEP estándar (emplazamiento poco sensible)</td><td>3 a 5 días laborables</td></tr>
+        <tr><td>Expediente complejo (emplazamiento sensible, zona húmeda, pasivo industrial, intercambio con el organismo tramitador)</td><td>7 a 15 días laborables</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:var(--text-mute,#6b7280);margin-top:14px;">Plazos indicativos de elaboración por parte de GMEP, tras la recepción de los datos completos del proyecto. No prejuzgan los plazos de tramitación administrativa por parte de la DDT(M) o la DREAL.</p>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- TARIF -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Precio</span>
+      <h2>Licencia anual</h2>
+    </div>
+    <div class="pricing-grid" style="max-width:560px;margin:0 auto;">
+      <div class="price-card featured" id="eaux_pluviales_annual" style="border-color:#2ECC71;">
+        <span class="badge" style="background:#2ECC71;color:#fff;">NUEVO</span>
+        <h3>Modelización GEP — DLE &amp; Ley del Agua</h3>
+        <p class="sub">Suscripción anual — 1 puesto</p>
+        <div class="price-amount" style="color:#1a2b4a;"><span class="currency">€</span>5.500</div>
+        <div class="price-period">sin IVA / año (6.600 € IVA incl.)</div>
+        <div class="country-select">
+          <label for="country-ep-a">País de facturación</label>
+          <select id="country-ep-a">
+            <option value="FR">Francia metropolitana (IVA 20 %)</option>
+            <option value="FR-DOM">DROM (Guadalupe, Martinica, Reunión, Mayotte, Guayana)</option>
+            <option value="EU">Unión Europea (fuera de Francia)</option>
+            <option value="INTL">Fuera de la Unión Europea</option>
+          </select>
+        </div>
+        <div class="price-breakdown">
+          <div class="pb-row"><span>Importe sin IVA</span><span data-ht="5500">5.500,00 €</span></div>
+          <div class="pb-row"><span data-tva-label>IVA 20 %</span><span data-tva-val>1.100,00 €</span></div>
+          <div class="pb-row pb-total"><span>Total con IVA</span><span data-ttc-val>6.600,00 €</span></div>
+        </div>
+        <p style="font-size:12px;color:var(--text-mute);margin-bottom:var(--sp-4)" data-vat-note>IVA francés al tipo general del 20 % (art. 278 del CGI).</p>
+        <ul class="price-features">
+          <li>Acceso a la aplicación v2.1</li>
+          <li>Generación de los entregables (DLE, GEP + nota técnica, plano)</li>
+          <li>Clasificación IOTA automática (R.214-1 del Código de Medio Ambiente)</li>
+          <li>Importación de los ensayos de Porchet de campo (comparación K medido / K teórico)</li>
+          <li>Consideración del pasivo ambiental (SIS / BASOL / BASIAS)</li>
+          <li>Actualizaciones funcionales estándar incluidas</li>
+          <li>Prueba gratuita de 14 días incluida</li>
+        </ul>
+        <button class="btn btn-primary btn-block" style="margin-bottom:8px;" onclick="GmepCheckout.start('eaux_pluviales_annual', document.getElementById('country-ep-a').value)">Suscribirse — Pago con Stripe</button>
+        <p style="text-align:center;font-size:0.74rem;color:var(--text-mute);margin-top:6px;">
+          <svg width="11" height="13" viewBox="0 0 12 14" fill="none" style="vertical-align:middle;margin-right:3px;" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="6" width="10" height="8" rx="2" stroke="#6B7280" stroke-width="1.5"/><path d="M3.5 6V4a2.5 2.5 0 0 1 5 0v2" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Pago seguro con <strong style="color:#635BFF;">Stripe</strong> — cancelable en cualquier momento
+        </p>
+      </div>
+    </div>
+    <div class="text-center mt-6">
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-ghost">Prueba gratuita de 14 días — sin tarjeta bancaria</a>
+    </div>
+    <p style="text-align:center;font-size:13px;color:var(--text-mute,#6b7280);margin-top:16px;">Formación, configuración específica o asesoramiento normativo personalizado: bajo presupuesto — <a href="../contact.html">contacte con GMEP</a>.</p>
+  </div>
+</section>
+
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tel. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nuestras herramientas</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modelización GEP — DLE &amp; Ley del Agua</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modelización Ensayo de Porchet</a></li>
+          <li><a href="../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../outils/domenico.html">Transferencia Suelo → Acuífero → Captación</a></li>
+          <li><a href="../outils/rabattement/index.html">Abatimiento del nivel freático IOTA</a></li>
+          <li><a href="../outils/anc-assainissement.html">Dimensionamiento ANC</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Empresa</h6>
+        <ul>
+          <li><a href="../tarifs.html">Precios</a></li>
+          <li><a href="../guide-11-outils/index.html">Guía de 13 herramientas (PDF)</a></li>
+          <li><a href="../expertise.html">Experiencia</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../mentions-legales.html">Aviso legal</a></li>
+          <li><a href="../cgv.html">Condiciones generales de venta</a></li>
+          <li><a href="../contact.html">Contacto</a></li>
+        <li><a href="../lexique.html">Glosario</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Todos los derechos reservados.</p>
+        <p>Todos nuestros programas son propiedad exclusiva de SARL G.M.E.P. Queda prohibida cualquier reproducción, difusión o utilización, incluso parcial, sin autorización escrita previa.</p>
+        <p class="credit">Diseño y desarrollo: Eric Azulay — Gerente de SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/nav.js"></script>
+<script src="../../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

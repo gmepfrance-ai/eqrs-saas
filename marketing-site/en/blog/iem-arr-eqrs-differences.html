@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en" data-alt-fr="/blog/iem-arr-eqrs-differences.html" data-alt-en="/en/blog/iem-arr-eqrs-differences.html" data-alt-es="/es/blog/iem-arr-eqrs-differences.html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IEM, ARR and EQRS: differences and interplay in contaminated site management | GMEP</title>
+<meta name="description" content="IEM ARR EQRS differences: initial diagnosis, residual risk analysis, quantitative risk assessment, conceptual site model, management plan.">
+<meta name="keywords" content="IEM ARR EQRS differences, initial diagnosis contaminated sites, simplified risk assessment, management plan, conceptual site model, national SSP methodology">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/en/blog/iem-arr-eqrs-differences.html">
+<link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/iem-arr-eqrs-differences.html">
+<link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/iem-arr-eqrs-differences.html">
+<link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/iem-arr-eqrs-differences.html">
+<link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/iem-arr-eqrs-differences.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.gmep-france.eu/en/blog/iem-arr-eqrs-differences.html">
+<meta property="og:title" content="IEM, ARR and EQRS: differences and interplay | GMEP">
+<meta property="og:description" content="Definitions and chronological interplay of the IEM, the ARR and the EQRS in contaminated site management, role of the conceptual site model and management plan.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Environmental modeling software">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="IEM, ARR and EQRS: differences and interplay | GMEP">
+<meta name="twitter:description" content="Definitions and chronological interplay of the IEM, the ARR and the EQRS in contaminated site management, role of the conceptual site model and management plan.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://www.gmep-france.eu/blog/iem-arr-eqrs-differences.html#article",
+      "headline": "IEM, ARR and EQRS: differences and interplay in contaminated site management",
+      "description": "IEM ARR EQRS differences: initial diagnosis, residual risk analysis, quantitative risk assessment, conceptual site model, management plan.",
+      "datePublished": "2026-07-03",
+      "dateModified": "2026-07-03",
+      "inLanguage": "fr-FR",
+      "author": {
+        "@type": "Person",
+        "name": "Eric Azulay",
+        "jobTitle": "SSP Engineer (contaminated land)",
+        "url": "https://www.gmep-france.eu/expertise.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "G.M.E.P",
+        "url": "https://www.gmep-france.eu",
+        "logo": { "@type": "ImageObject", "url": "https://www.gmep-france.eu/assets/img/og-image.png" }
+      },
+      "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.gmep-france.eu/blog/iem-arr-eqrs-differences.html" },
+      "image": "https://www.gmep-france.eu/assets/img/og-image.png"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What is the IEM in contaminated site management?", "acceptedAnswer": { "@type": "Answer", "text": "The IEM (Interpretation of Environmental Media Status) is the initial diagnosis that compares the concentrations measured in the various media (soil, water, air) to management values or VTRs, to determine whether the site's condition is compatible with its current or planned use." } },
+        { "@type": "Question", "name": "What is the ARR?", "acceptedAnswer": { "@type": "Answer", "text": "The ARR (Residual Risk Analysis) assesses the health risks that remain after remediation work or management measures have been implemented, to verify that the residual risk level is compatible with the intended use of the site." } },
+        { "@type": "Question", "name": "What is the difference between IEM, ARR and EQRS?", "acceptedAnswer": { "@type": "Answer", "text": "The IEM is a simplified initial diagnosis based on comparison with management values. The EQRS (Quantitative Human Health Risk Assessment) is a detailed assessment calculating the QD and the ERI from site-specific exposure scenarios. The ARR is an EQRS carried out after remediation work to verify the residual risk." } },
+        { "@type": "Question", "name": "What is the conceptual site model (CSM)?", "acceptedAnswer": { "@type": "Answer", "text": "The conceptual site model (Conceptual Site Model, CSM) is the structured representation of pollution sources, transfer pathways (soil, air, water) and exposed receptors (populations, ecosystems). It is the common foundation on which the IEM, the EQRS and the ARR are built." } },
+        { "@type": "Question", "name": "What is the role of the DDT, the DREAL and the ARS in a contaminated site file?", "acceptedAnswer": { "@type": "Answer", "text": "The DREAL oversees regulated facilities (ICPE) and reviews contaminated land and remediation files. The DDT is mainly involved in Water Law and urban planning aspects. The ARS is consulted on public health issues, particularly when drinking water intakes or sensitive populations are involved." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="GMEP home">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Environmental &amp; hydrogeology engineering firm</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Main navigation">
+      <a href="../index.html">Home</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Tools
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">3D modeling soil / groundwater / structures · NEW</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">GEP Modeling — DLE &amp; Water Law<span class="nav-mi-desc">Stormwater sizing + DLE/GEP filings · NEW</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Porchet Test Modeling<span class="nav-mi-desc">Field K calculation + GEP comparison · NEW</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX<span class="nav-mi-desc">HHRA + ecotoxicology — 104 substances · NEW</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Drawdown V15.87<span class="nav-mi-desc">Multi-layer + AI assistant · NEW</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">ANC Sizing<span class="nav-mi-desc">Individual &amp; collective sanitation · NEW</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Soil-Groundwater Transfer<span class="nav-mi-desc">Domenico 1987 + Hub'eau API · NEW</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Conceptual Site Model<span class="nav-mi-desc">IEM + Management Plan · NEW</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Vapor intrusion — EPA 2004</span></a>
+          <a href="../outils/domenico.html" role="menuitem">Soil → Groundwater → Well Transfer<span class="nav-mi-desc">Domenico 1987 model</span></a>
+          <a href="../outils/rabattement/index.html" role="menuitem">Groundwater drawdown<span class="nav-mi-desc">Theis + IOTA</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Pricing</a>
+      <a href="../expertise.html">Expertise</a>
+      <a href="index.html" aria-current="page">Blog</a>
+      <a href="../contact.html">Contact</a>
+    <a href="../lexique.html">Glossary</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Language selection">
+        <button class="lang-btn" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn active" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Sign in</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Sign up</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <span class="hero-badge">Technical guide — French SSP doctrine</span>
+    <h1>IEM, ARR and EQRS: differences and interplay in contaminated site management</h1>
+    <p class="lead" style="max-width:780px;">
+      IEM, ARR and EQRS are three complementary tools within the French methodology for managing contaminated
+      land, often confused with one another. This article clarifies their <strong>respective definitions</strong>, their
+      <strong>chronological interplay</strong>, the central role of the <strong>conceptual site model</strong>, the expected content
+      of a <strong>management plan</strong>, and the relevant administrative bodies involved (DDT, DREAL, ARS).
+    </p>
+  </div>
+</section>
+
+<article>
+<div class="container container-narrow" style="line-height:1.75;">
+
+<p style="font-size:13px;color:var(--text-mute);">Written by <strong>Eric Azulay</strong> — SSP Engineer (contaminated land), Managing Director of SARL G.M.E.P · Published on July 3, 2026</p>
+
+<h2>Three tools, three stages of managing a contaminated site</h2>
+<p>
+The <strong>national methodology for managing contaminated land</strong> (ministerial doctrine, carried successively
+by the MEDDE, the MTES and then the MTECT, supported by INERIS and BRGM) draws on several risk assessment
+tools at distinct stages of the process: the <strong>IEM</strong> for the initial diagnosis, the <strong>EQRS</strong> for
+detailed risk assessment, and the <strong>ARR</strong> for post-remediation verification. These three approaches share a
+common foundation, the conceptual site model, but answer different questions and occur at different points
+in the process.
+</p>
+
+<h2>The IEM — Interpretation of Environmental Media Status</h2>
+<p>
+The <strong>IEM</strong> is the <strong>initial diagnosis</strong> of the management process. It consists of comparing the
+pollutant concentrations measured in the various media (soil, groundwater, ambient air or indoor
+air) against <strong>management values</strong> or toxicological reference values, to determine the
+compatibility of the current state of the media with the observed or planned use of the site.
+</p>
+<p>
+The IEM typically answers the question: <em>"is the current state of the site compatible with its use, without the
+need for a detailed risk assessment?"</em>. When the measured concentrations are well
+below the management values, the IEM can conclude that there is no significant risk without a full EQRS
+being necessary. Otherwise, or in case of uncertainty, an EQRS is undertaken to refine the assessment.
+</p>
+
+<h2>The EQRS — Quantitative Human Health Risk Assessment</h2>
+<p>
+The <strong>EQRS</strong> is a detailed assessment, specific to the site under study, which calculates quantitative risk
+indicators — the <strong>Hazard Quotient (QD)</strong> and the <strong>Individual Excess Risk (ERI)</strong> — based on specific
+exposure scenarios (target populations, transfer pathways, exposure duration and frequency). Unlike the IEM, which
+compares concentrations to generic values, the EQRS reconstructs the entire source-transfer-receptor chain
+specific to the site, including, where relevant, modeling of vapor intrusion (Johnson &amp; Ettinger model) or of
+soil-groundwater-well transfer (Domenico model).
+</p>
+<p>
+For a detailed presentation of the QD and ERI calculation, see our dedicated article on
+<a href="eqrs-calcul-qd-eri.html">QD and ERI calculation in EQRS</a>.
+</p>
+
+<h2>The ARR — Residual Risk Analysis</h2>
+<p>
+The <strong>ARR</strong> takes place <strong>after remediation work or management measures have been implemented</strong> (excavation,
+containment, groundwater treatment, use restriction). It follows the same methodology as the EQRS — calculation of the QD
+and the ERI — but based on the residual concentrations measured after the work, to verify that the remaining
+risk level is compatible with the intended use of the site. The ARR is thus, from a methodological standpoint, an
+EQRS applied to the post-remediation state of the site.
+</p>
+
+<h2>Chronological interplay</h2>
+<div style="overflow-x:auto;">
+<table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;margin:18px 0;">
+<thead>
+<tr style="background:#1a2b4a;color:#fff;">
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Stage</th>
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Tool used</th>
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Question asked</th>
+</tr>
+</thead>
+<tbody>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">1. Initial diagnosis</td><td style="padding:8px;border:1px solid #d1dce8;">Conceptual site model + IEM</td><td style="padding:8px;border:1px solid #d1dce8;">Is the current state compatible with the observed use?</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">2. Detailed assessment (if necessary)</td><td style="padding:8px;border:1px solid #d1dce8;">EQRS</td><td style="padding:8px;border:1px solid #d1dce8;">What is the quantified risk level (QD, ERI) for each target population?</td></tr>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">3. Definition of management measures</td><td style="padding:8px;border:1px solid #d1dce8;">Management plan</td><td style="padding:8px;border:1px solid #d1dce8;">What work, restrictions or easements should be implemented?</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">4. Post-remediation verification</td><td style="padding:8px;border:1px solid #d1dce8;">ARR</td><td style="padding:8px;border:1px solid #d1dce8;">Is the residual risk after remediation acceptable for the intended use?</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>The central role of the conceptual site model (CSM)</h2>
+<p>
+The <strong>conceptual site model</strong> (Conceptual Site Model, CSM) is the structured, usually
+graphical, representation of the identified pollution <strong>sources</strong>, the possible <strong>transfer pathways</strong>
+(volatilization to air, leaching to groundwater, transfer by direct contact) and the potentially exposed
+<strong>receptors</strong> (resident populations, employees, ecosystems, water resource uses). It is the common
+methodological foundation on which the IEM, the EQRS and the ARR are built, and it must be updated at each stage based on new
+data acquired (results of additional investigations, effects of completed remediation work).
+</p>
+<p>
+A robust conceptual model determines the relevance of the entire process: a source, transfer
+pathway or receptor omitted at this stage will not be taken into account in subsequent calculations, regardless of how
+rigorous the EQRS or ARR carried out later may be.
+</p>
+
+<h2>Content of a management plan</h2>
+<p>
+The <strong>management plan</strong> translates the results of the risk assessment (IEM or EQRS) into concrete actions. It
+generally includes:
+</p>
+<ul>
+<li>A <strong>summary of the conceptual model</strong> and the risk assessment results (QD, ERI by target population)</li>
+<li>The <strong>prioritization of issues</strong> — substances, transfer pathways and media that contribute most to the risk</li>
+<li>The <strong>management options considered</strong> (source treatment, containment, use restriction, public utility easements) and their cost-benefit analysis</li>
+<li>The <strong>monitoring measures</strong> to be implemented (piezometry, periodic checks) to verify the effectiveness of the measures over time</li>
+<li>Where relevant, the <strong>work program</strong> selected, its schedule and site monitoring arrangements</li>
+</ul>
+
+<h2>French doctrine for contaminated land management</h2>
+<p>
+This IEM / EQRS / ARR / management plan interplay is part of the <strong>national methodology for managing contaminated
+land</strong>, driven by the ministry in charge of the environment with the technical support of INERIS and BRGM.
+This doctrine promotes a <strong>proportionate and iterative</strong> approach: investigations and assessments are
+deepened as the issues become clearer, avoiding assessments disproportionate to
+the site's actual risk, while ensuring the protection of populations and the environment.
+</p>
+
+<h2>Common mistakes in the IEM / EQRS / ARR interplay</h2>
+<p>
+Confusion between these three tools is common among project owners and can sometimes delay
+the review of files. A few pitfalls to avoid:
+</p>
+<h3>Undertaking a full EQRS when an IEM would suffice</h3>
+<p>
+When the measured concentrations are well below the management values and the site's use is stable,
+a well-conducted IEM may be enough to reach a conclusion, avoiding a detailed EQRS disproportionate to the
+actual issue at stake.
+</p>
+<h3>Confusing EQRS and ARR</h3>
+<p>
+The ARR is not a new methodology: it applies the same calculation principles as the EQRS (QD, ERI), but
+based on the residual post-remediation concentrations and an updated exposure scenario reflecting the
+uses adopted after the work (for example, residential use with green spaces, after partial excavation
+of the most contaminated soils).
+</p>
+<h3>Neglecting to update the conceptual model</h3>
+<p>
+Each new investigation or remediation phase should trigger an update of the conceptual site model.
+A conceptual model frozen since the initial diagnosis, not updated after partial remediation work,
+mechanically skews the conclusions of the ARR carried out afterward.
+</p>
+
+<h2>Role of the authorities: DDT, DREAL, ARS</h2>
+<p>
+Several government departments may be involved in monitoring a contaminated site file, depending on the nature of the issues:
+</p>
+<ul>
+<li><strong>DREAL</strong> (Regional Directorate for the Environment, Planning and Housing) — oversight of regulated facilities (ICPE), review of activity-cessation and remediation files, opinions on management plans</li>
+<li><strong>DDT</strong> (Departmental Directorate for Territories) — review of files falling under the Water Law (groundwater drawdown, discharges), urban planning and land-use planning</li>
+<li><strong>ARS</strong> (Regional Health Agency) — expertise on health issues, particularly when drinking water intakes, sensitive facilities (schools, daycare centers) or vulnerable populations are involved</li>
+</ul>
+<p>
+The consistency and traceability of the documents submitted (conceptual model, IEM, EQRS, ARR, management plan) are
+essential to facilitate the review of the file by these various departments and to avoid repeated
+requests for additional information.
+</p>
+
+<div style="background:linear-gradient(135deg,#1a2b4a 0%,#213354 100%);border-radius:16px;padding:32px;margin:32px 0;color:#fff;">
+  <h3 style="color:#fff;margin-top:0;">Build your conceptual site model and your EQRS with GMEP</h3>
+  <p style="color:#dbe4f0;">
+    GMEP's <strong>Conceptual Site Model</strong> tool structures the identification of sources, transfer pathways and receptors, and
+    connects directly with <strong>EQRS V31.05 + ECOTOX</strong> to produce a consistent and traceable risk assessment and management
+    plan.
+  </p>
+  <p style="margin-bottom:0;">
+    <a href="../outils/schema-conceptuel.html" class="btn btn-primary">Discover the Conceptual Site Model tool</a>
+    <a href="../outils/eqrs-v31-05-ecotox.html" class="btn btn-outline" style="margin-left:10px;color:#fff;border-color:#fff;">See EQRS V31.05 + ECOTOX</a>
+  </p>
+</div>
+
+<h2>FAQ — IEM, ARR and EQRS</h2>
+<div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">What is the IEM in contaminated site management?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">The IEM (Interpretation of Environmental Media Status) is the initial diagnosis that compares the concentrations measured in the various media (soil, water, air) to management values or VTRs, to determine whether the site's condition is compatible with its current or planned use.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">What is the ARR?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">The ARR (Residual Risk Analysis) assesses the health risks that remain after remediation work or management measures have been implemented, to verify that the residual risk level is compatible with the intended use of the site.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">What is the difference between IEM, ARR and EQRS?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">The IEM is a simplified initial diagnosis based on comparison with management values. The EQRS (Quantitative Human Health Risk Assessment) is a detailed assessment calculating the QD and the ERI from site-specific exposure scenarios. The ARR is an EQRS carried out after remediation work to verify the residual risk.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">What is the conceptual site model (CSM)?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">The conceptual site model (Conceptual Site Model, CSM) is the structured representation of pollution sources, transfer pathways (soil, air, water) and exposed receptors (populations, ecosystems). It is the common foundation on which the IEM, the EQRS and the ARR are built.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">What is the role of the DDT, the DREAL and the ARS in a contaminated site file?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">The DREAL oversees regulated facilities (ICPE) and reviews contaminated land and remediation files. The DDT is mainly involved in Water Law and urban planning aspects. The ARS is consulted on public health issues, particularly when drinking water intakes or sensitive populations are involved.</p></div>
+  </details>
+</div>
+
+
+<section style="margin:40px 0;border-top:1px solid var(--border);padding-top:20px;" aria-labelledby="refs-title">
+  <h2 id="refs-title" style="font-size:1.15rem;">Methodological references</h2>
+  <ul style="line-height:1.9;font-size:0.92rem;">
+      <li><a href="https://www.ecologie.gouv.fr/sites-et-sols-pollues" rel="noopener" target="_blank">Ministry / INERIS — National methodology for managing contaminated land</a></li>
+      <li><a href="https://www.ineris.fr/fr/diagnostic-sites-sols-pollues" rel="noopener" target="_blank">INERIS — Guide to contaminated land diagnosis (IEM)</a></li>
+      <li><a href="https://www.legifrance.gouv.fr/codes/texte_lc/LEGITEXT000006071556/" rel="noopener" target="_blank">French Environmental Code — ICPE (regulated facilities)</a></li>
+      <li><a href="https://www.ineris.fr/fr" rel="noopener" target="_blank">INERIS — Detailed risk assessment (EDR)</a></li>
+  </ul>
+</section>
+
+<div style="text-align:center;margin:40px 0;">
+  <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-primary" style="font-size:16px;padding:14px 32px;">14-day free trial — no credit card required</a>
+  <p style="font-size:13px;color:var(--text-mute);margin-top:10px;">See also the GMEP software <a href="../tarifs.html">pricing</a>.</p>
+</div>
+
+<p style="font-size:13px;color:var(--text-mute);border-top:1px solid var(--border);padding-top:16px;">
+Written by <strong>Eric Azulay</strong> — SSP Engineer (contaminated land), Managing Director of SARL G.M.E.P
+</p>
+
+</div>
+</article>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tel. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Our tools</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">GEP Modeling — DLE &amp; Water Law</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Porchet Test Modeling</a></li>
+          <li><a href="../outils/eqrs-v31-05-ecotox.html">EQRS V8 + ECOTOX V8</a></li>
+          <li><a href="../outils/eqrs-v8-ecotox-humain.html">EQRS V8 + HUMAIN Module</a></li>
+          <li><a href="../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../outils/domenico.html">Soil → Groundwater → Well Transfer</a></li>
+          <li><a href="../outils/rabattement/index.html">IOTA groundwater drawdown</a></li>
+          <li><a href="../outils/anc-assainissement.html">ANC Sizing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Company</h6>
+        <ul>
+          <li><a href="../expertise.html">Expertise</a></li>
+          <li><a href="../tarifs.html">Pricing</a></li>
+          <li><a href="../guide-11-outils/index.html">13-tool guide (PDF)</a></li>
+          <li><a href="../mentions-legales.html">Legal notice</a></li>
+          <li><a href="../cgv.html">Terms of sale</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        <li><a href="../lexique.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — All rights reserved.</p>
+        <p>All our software is the exclusive property of SARL G.M.E.P. Any reproduction, distribution or use, even partial, without prior written authorization is prohibited.</p>
+        <p class="credit">Design and development: Eric Azulay — Managing Director, SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/nav.js"></script>
+<script src="../../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

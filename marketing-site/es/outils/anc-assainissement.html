@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="es" data-alt-fr="/outils/anc-assainissement.html" data-alt-en="/en/outils/anc-assainissement.html" data-alt-es="/es/outils/anc-assainissement.html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dimensionamiento ANC — Saneamiento Individual &amp; Colectivo | GMEP</title>
+<meta name="description" content="Software SaaS de dimensionamiento de saneamiento no colectivo (ANC): importación de ensayos de Porchet, perfil de suelo multicapa, triple cruce BRGM, vulnerabilidad de las aguas subterráneas, motor DTU 64.1 e informe PDF listo para tramitación SPANC. 550 € sin IVA/año.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/es/outils/anc-assainissement.html">
+<link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/anc-assainissement.html">
+<link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/anc-assainissement.html">
+<link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/anc-assainissement.html">
+<link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/anc-assainissement.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/es/outils/anc-assainissement.html">
+<meta property="og:title" content="Dimensionamiento ANC — Saneamiento Individual &amp; Colectivo | GMEP">
+<meta property="og:description" content="Importación de ensayos de Porchet, perfil de suelo multicapa, triple cruce BRGM, vulnerabilidad de las aguas subterráneas y motor DTU 64.1 para el dimensionamiento ANC.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Dimensionamiento ANC">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dimensionamiento ANC — Saneamiento Individual &amp; Colectivo | GMEP">
+<meta name="twitter:description" content="Dimensionamiento completo de un saneamiento no colectivo: suelo, ensayos de Porchet, vulnerabilidad, motor DTU 64.1, informe listo para tramitación SPANC.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Inicio GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Ingeniería medioambiental e hidrogeología</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navegación principal">
+      <a href="../index.html">Inicio</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Herramientas
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <p class="nav-mi-head" role="presentation">Suelos Contaminados (SSP)</p>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Intrusión de vapores — EPA 2004</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX V8<span class="nav-mi-desc">HHRA + ecotoxicología — 104 sustancias · NUEVO</span></a>
+          <a href="../outils/eqrs-v8-ecotox-humain.html" role="menuitem">EQRS V8 + ECOTOX + HUMAIN<span class="nav-mi-desc">Vía alimentaria humana — PFAS, PCB, metales · NUEVO</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transferencia Suelo-Acuífero<span class="nav-mi-desc">Domenico 1987 + API Hub'eau · NUEVO</span></a>
+          <a href="../outils/domenico.html" role="menuitem">Transferencia Suelo → Acuífero → Captación<span class="nav-mi-desc">Modelo Domenico 1987</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Modelo Conceptual<span class="nav-mi-desc">IEM + Plan de Gestión · NUEVO</span></a>
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modelización 3D suelo / acuífero / estructuras · NUEVO</span></a>
+          <a href="../outils/msp.html" role="menuitem">MSP — Fuentes de Contaminación del Suelo<span class="nav-mi-desc">Diagnóstico de fuentes · NUEVO</span></a>
+          <p class="nav-mi-head" role="presentation">Hidrogeología</p>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modelización Ensayo de Porchet<span class="nav-mi-desc">Cálculo de K en campo + comparación GEP · NUEVO</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modelización GEP — DLE &amp; Ley del Agua<span class="nav-mi-desc">Dimensionamiento de pluviales + expedientes DLE/GEP · NUEVO</span></a>
+          <a href="../outils/rabattement/index.html" role="menuitem">Abatimiento del nivel freático<span class="nav-mi-desc">Theis + IOTA</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Abatimiento V15.87<span class="nav-mi-desc">Multicapa con IA · NUEVO</span></a>
+          <a href="../outils/piezometres.html" role="menuitem">Piezómetros de Vigilancia<span class="nav-mi-desc">Redes de seguimiento del acuífero v2.9c · NUEVO</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">Dimensionamiento ANC<span class="nav-mi-desc">Saneamiento individual y colectivo · NUEVO</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Precios</a>
+      <a href="../expertise.html">Experiencia</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../contact.html">Contacto</a>
+    <a href="../lexique.html">Glosario</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Elegir idioma">
+        <button class="lang-btn" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn active" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Iniciar sesión</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Registrarse</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menú" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge" style="background:#2E7D5B;color:#fff;">Saneamiento no colectivo · DTU 64.1</span>
+        <h1>Dimensionamiento <span style="color:#2E7D5B;">ANC</span> — Saneamiento Individual &amp; Colectivo</h1>
+        <p class="lead">Importación directa de los ensayos de Porchet, perfil de suelo multicapa, triple cruce entre valores medidos / teóricos y el mapa geológico del BRGM, análisis de vulnerabilidad de las aguas subterráneas y motor de dimensionamiento completo conforme a la NF DTU 64.1. Informe PDF listo para tramitación SPANC y exportación JSON en un clic.</p>
+        <div class="hero-cta">
+          <a href="../tarifs.html#anc_annual" class="btn btn-primary" style="background:#2E7D5B;border-color:#2E7D5B;">Suscribirse — 550 € sin IVA/año</a>
+          <a href="https://app.gmep-france.eu/#/subscribe-anc" rel="noopener" class="btn btn-outline">Prueba gratuita de 14 días</a>
+        </div>
+      </div>
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">dimensionamiento anc · suelo e hidrogeología</span>
+        </div>
+        <div class="hero-mock-row"><span class="l">Kdim retenido (Porchet)</span><span class="v">2,5 × 10⁻⁵ m/s</span></div>
+        <div class="hero-mock-row"><span class="l">Clase DTU 64.1</span><span class="v">90 mm/h · permeable</span></div>
+        <div class="hero-mock-row"><span class="l">Facies de campo / BRGM</span><span class="v">Arena granítica — concordante</span></div>
+        <div class="hero-mock-row"><span class="l">Sistema seleccionado</span><span class="v">Zanjas de infiltración</span></div>
+        <div class="hero-mock-row"><span class="l">Longitud / número de drenes</span><span class="v">45 ml — 2 drenes</span></div>
+        <div class="hero-mock-result"><strong>Vulnerabilidad de las aguas subterráneas</strong><span>Ninguna captación &lt;35 m — riesgo bajo</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="max-width:900px;margin:0 auto;">
+    <div style="background:#eef4fb;border:1px solid #c6dcf0;border-radius:12px;padding:1.3rem 1.5rem;">
+      <p style="margin:0;"><strong style="color:#1a2b4a;">Disponibilidad internacional —</strong> la recuperación automática de los datos geológicos y piezométricos (BRGM, Hub&#39;Eau) cubre Francia. Para un proyecto situado en otro país, estos parámetros deben introducirse manualmente por el usuario; la automatización de esta recuperación por país está en desarrollo.</p>
+    </div>
+  </div>
+</section>
+
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Funcionalidades</span>
+      <h2>Del ensayo de campo al expediente listo para tramitación SPANC</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="currentColor" stroke-width="2"/><path d="M15 3v5h5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Identificación completa del proyecto</h3>
+        <p>Propietario, organismo ejecutor, empresa de perforación, número de expediente SPANC y de licencia de obra. Identificación automática del SPANC competente por geolocalización (código postal) de los puntos de ensayo.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 4"/><rect x="9" y="2" width="6" height="20" rx="1" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <h3>Perfil de suelo multicapa e importación de Porchet</h3>
+        <p>Tabla de capas (profundidad, facies, porosidad), importación directa del JSON exportado por Modelización Ensayo de Porchet, y barra desplazable de 24 facies geológicas clasificadas por familia con Kdim retenido según DTU 64.1.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 12v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Triple cruce de coherencia</h3>
+        <p>Comparación automática del K medido (Porchet), la permeabilidad teórica de la facies (tabla bibliográfica) y la formación geológica oficial publicada por el BRGM (BD Charm-50 / InfoTerre) en el punto exacto del ensayo.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2C8 7 5 11 5 15a7 7 0 0014 0c0-4-3-8-7-13z" stroke="currentColor" stroke-width="2"/><path d="M9 15a3 3 0 003 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Vulnerabilidad e inventario de objetivos</h3>
+        <p>Regla de los 35 m (captaciones/pozos de agua potable), profundidad del acuífero frente al fondo de la zanja, inventario automático de captaciones Hub'eau/BRGM en un radio de 3 km y modelo de atenuación de Domenico para estimar el impacto residual en cada objetivo.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M8 12l2.5 2.5L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Motor de dimensionamiento DTU 64.1</h3>
+        <p>Pretratamiento de grasas, fosa séptica, selección automática del sistema (zanjas, lecho de reparto, filtro de arena no drenado/drenado, montículo), estación de bombeo si es necesaria — todas las fórmulas mostradas en pantalla y en el informe.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 15l3-4 3 3 4-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Mapas, modelo conceptual e informe</h3>
+        <p>Mapas hidrogeológicos BRGM/Sandre integrados, modelo conceptual de la instalación generado automáticamente, informe PDF listo para tramitación SPANC con nota de síntesis de viabilidad y exportación JSON estructurada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION — MÉTHODE ET FORMULES -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Método</span>
+      <h2>Del suelo en su estado natural al sistema seleccionado</h2>
+    </div>
+    <div class="compliance-list">
+      <p>El software determina primero si la infiltración en el suelo en su estado natural es posible, cruzando el Kdim medido (ensayos de Porchet), la facies geológica dominante y el espesor útil de la capa correspondiente bajo el fondo de zanja previsto.</p>
+      <h3>Clasificación de permeabilidad (NF DTU 64.1)</h3>
+      <p>Conversión Kdim (m/s) → mm/h, y a continuación clasificación: <strong>K &gt; 500 mm/h</strong> suelo muy permeable (lecho de reparto) · <strong>50–500 mm/h</strong> permeable (zanjas de infiltración, 45 ml hasta 5 EH + 9 ml/EH adicional) · <strong>30–50 mm/h</strong> medianamente permeable (zanjas, 50 ml + 10 ml/EH adicional) · <strong>15–30 mm/h</strong> permeabilidad deficiente (estudio a nivel de parcela, filtro de arena no drenado como alternativa prudente) · <strong>K &lt; 15 mm/h</strong> suelo impermeable (filtro de arena drenado obligatorio con salida autorizada).</p>
+      <h3>Incapacidad de infiltración confirmada</h3>
+      <p>Cuando el Kdim es &lt; 15 mm/h y/o la facies dominante (arcilla, marga, limo arcilloso, esquisto compacto) está presente en un espesor continuo significativo, la herramienta muestra un veredicto explícito de infiltración imposible y determina automáticamente el sistema sustitutivo (filtro de arena vertical drenado) con superficie, espesor del lecho filtrante y longitud de los drenes.</p>
+      <h3>Regla de vulnerabilidad — distancia a las captaciones</h3>
+      <p>Prohibición absoluta y no derogable de instalación a menos de <strong>35 m</strong> de una captación o pozo declarado de agua destinada al consumo humano (Orden del 7 de septiembre de 2009, modificada por la Orden del 7 de marzo de 2012; art. R.214-5 del Código de Medio Ambiente).</p>
+      <h3>Modelo de atenuación (solución de Domenico)</h3>
+      <p>Para cada objetivo identificado en la pluma de flujo, la concentración residual se estima mediante la solución analítica de Domenico &amp; Schwartz (dispersividades, retardo, degradación de primer orden), comparada con las referencias de calidad de las aguas destinadas al consumo humano.</p>
+      <p style="background:#fff8e1;border-left:4px solid #f5b94d;padding:14px 18px;border-radius:6px;margin-top:18px;">
+        <strong>El software no exime de la visita de campo contradictoria ni de la tramitación por el SPANC competente.</strong> No sustituye la experiencia del ingeniero.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION — LIVRABLES -->
+<!-- ==================================================================== -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Entregables</span>
+      <h2>Un expediente completo, listo para tramitar</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Informe PDF listo para tramitación SPANC</h3>
+        <p>Portada, índice, marco normativo citado y enlazado, datos de entrada, dimensionamiento detallado, mapas hidrogeológicos, modelo conceptual y nota de síntesis de viabilidad individual/colectiva.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Exportación JSON estructurada</h3>
+        <p>Todos los datos del proyecto, con marca de tiempo, mapas incluidos en base64 — para archivo, intercambio entre puestos de trabajo o transferencia a Modelización GEP.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Modelo conceptual de la instalación</h3>
+        <p>Cadena completa de tratamiento, vista en planta del campo de drenes y corte vertical del lecho filtrante, generados automáticamente a partir de los resultados de cálculo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- TARIF -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Precio</span>
+      <h2>Licencia anual</h2>
+    </div>
+    <div class="pricing-grid" style="max-width:560px;margin:0 auto;">
+      <div class="price-card featured" id="anc_annual" style="border-color:#2E7D5B;">
+        <span class="badge" style="background:#2E7D5B;color:#fff;">NUEVO</span>
+        <h3>Dimensionamiento ANC</h3>
+        <p class="sub">Suscripción anual — 1 puesto</p>
+        <div class="price-amount" style="color:#1a2b4a;"><span class="currency">€</span>550</div>
+        <div class="price-period">sin IVA / año (660 € IVA incl.)</div>
+        <div class="country-select">
+          <label for="country-anc-b">País de facturación</label>
+          <select id="country-anc-b">
+            <option value="FR">Francia metropolitana (IVA 20 %)</option>
+            <option value="FR-DOM">DROM (Guadalupe, Martinica, Reunión, Mayotte, Guayana)</option>
+            <option value="EU">Unión Europea (fuera de Francia)</option>
+            <option value="INTL">Fuera de la Unión Europea</option>
+          </select>
+        </div>
+        <div class="price-breakdown">
+          <div class="pb-row"><span>Importe sin IVA</span><span data-ht="550">550,00 €</span></div>
+          <div class="pb-row"><span data-tva-label>IVA 20 %</span><span data-tva-val>110,00 €</span></div>
+          <div class="pb-row pb-total"><span>Total con IVA</span><span data-ttc-val>660,00 €</span></div>
+        </div>
+        <p style="font-size:12px;color:var(--text-mute);margin-bottom:var(--sp-4)" data-vat-note>IVA francés al tipo general del 20 % (art. 278 del CGI).</p>
+        <ul class="price-features">
+          <li>Importación directa de los ensayos de Porchet (JSON) + entrada manual</li>
+          <li>Perfil de suelo multicapa + barra de 24 facies geológicas</li>
+          <li>Triple cruce: medido / teórico / mapa geológico del BRGM</li>
+          <li>Vulnerabilidad de las aguas subterráneas + inventario automático de objetivos</li>
+          <li>Motor de dimensionamiento completo NF DTU 64.1</li>
+          <li>Informe PDF listo para tramitación SPANC + exportación JSON</li>
+          <li>Actualizaciones funcionales incluidas</li>
+          <li>Prueba gratuita de 14 días incluida</li>
+        </ul>
+        <button class="btn btn-primary btn-block" style="margin-bottom:8px;background:#2E7D5B;border-color:#2E7D5B;" onclick="GmepCheckout.start('anc_annual', document.getElementById('country-anc-b').value)">Suscribirse — Pago con Stripe</button>
+        <p style="text-align:center;font-size:0.74rem;color:var(--text-mute);margin-top:6px;">
+          <svg width="11" height="13" viewBox="0 0 12 14" fill="none" style="vertical-align:middle;margin-right:3px;" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="6" width="10" height="8" rx="2" stroke="#6B7280" stroke-width="1.5"/><path d="M3.5 6V4a2.5 2.5 0 0 1 5 0v2" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Pago seguro con <strong style="color:#635BFF;">Stripe</strong> — cancelable en cualquier momento
+        </p>
+      </div>
+    </div>
+    <div class="text-center mt-6">
+      <a href="https://app.gmep-france.eu/#/subscribe-anc" rel="noopener" class="btn btn-ghost">Prueba gratuita de 14 días — sin tarjeta bancaria</a>
+    </div>
+    <p style="text-align:center;font-size:13px;color:var(--text-mute,#6b7280);margin-top:16px;">Compatible con Modelización Ensayo de Porchet (550 € sin IVA/año) para la importación directa de las mediciones de campo. Formación o asesoramiento normativo personalizado: bajo presupuesto — <a href="../contact.html">contacte con GMEP</a>.</p>
+  </div>
+</section>
+
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tel. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nuestras herramientas</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modelización GEP — DLE &amp; Ley del Agua</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modelización Ensayo de Porchet</a></li>
+          <li><a href="../outils/anc-assainissement.html">Dimensionamiento ANC</a></li>
+          <li><a href="../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../outils/domenico.html">Transferencia Suelo → Acuífero → Captación</a></li>
+          <li><a href="../outils/rabattement/index.html">Abatimiento del nivel freático IOTA</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Empresa</h6>
+        <ul>
+          <li><a href="../tarifs.html">Precios</a></li>
+          <li><a href="../guide-11-outils/index.html">Guía de 11 herramientas (PDF)</a></li>
+          <li><a href="../expertise.html">Experiencia</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../mentions-legales.html">Aviso legal</a></li>
+          <li><a href="../cgv.html">Condiciones generales de venta</a></li>
+          <li><a href="../contact.html">Contacto</a></li>
+        <li><a href="../lexique.html">Glosario</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Todos los derechos reservados.</p>
+        <p>Todos nuestros programas son propiedad exclusiva de SARL G.M.E.P. Queda prohibida cualquier reproducción, difusión o utilización, incluso parcial, sin autorización escrita previa.</p>
+        <p class="credit">Diseño y desarrollo: Eric Azulay — Gerente de SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/nav.js"></script>
+<script src="../../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

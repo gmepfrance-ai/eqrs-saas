@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="es" data-alt-fr="/blog/rabattement-nappe-calcul-debit.html" data-alt-en="/en/blog/rabattement-nappe-calcul-debit.html" data-alt-es="/es/blog/rabattement-nappe-calcul-debit.html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Descenso del nivel freático: cálculo del caudal (Theis, Dupuit-Thiem) y clasificación IOTA | GMEP</title>
+<meta name="description" content="Cálculo del descenso del nivel freático: ecuaciones de Theis y Dupuit-Thiem, caudal de bombeo, transmisividad, clasificación IOTA R.214-1, expediente de la Ley del Agua.">
+<meta name="keywords" content="cálculo descenso nivel freático, caudal bombeo Theis, Dupuit-Thiem, IOTA R.214-1, Ley del Agua, transmisividad, coeficiente de almacenamiento, descenso multicapa">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/es/blog/rabattement-nappe-calcul-debit.html">
+<link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html">
+<link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/rabattement-nappe-calcul-debit.html">
+<link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/rabattement-nappe-calcul-debit.html">
+<link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.gmep-france.eu/es/blog/rabattement-nappe-calcul-debit.html">
+<meta property="og:title" content="Descenso del nivel freático: cálculo del caudal (Theis, Dupuit-Thiem) | GMEP">
+<meta property="og:description" content="Principio del descenso del nivel freático, ecuaciones de Theis y Dupuit-Thiem, parámetros hidrogeológicos, clasificación IOTA y expediente de la Ley del Agua.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Software de modelización ambiental">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Descenso del nivel freático: cálculo del caudal (Theis, Dupuit-Thiem) | GMEP">
+<meta name="twitter:description" content="Principio del descenso del nivel freático, ecuaciones de Theis y Dupuit-Thiem, parámetros hidrogeológicos, clasificación IOTA y expediente de la Ley del Agua.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html#article",
+      "headline": "Descenso del nivel freático: cálculo del caudal (Theis, Dupuit-Thiem) y clasificación IOTA",
+      "description": "Cálculo del descenso del nivel freático: ecuaciones de Theis y Dupuit-Thiem, caudal de bombeo, transmisividad, clasificación IOTA R.214-1, expediente de la Ley del Agua.",
+      "datePublished": "2026-07-03",
+      "dateModified": "2026-07-03",
+      "inLanguage": "fr-FR",
+      "author": {
+        "@type": "Person",
+        "name": "Eric Azulay",
+        "jobTitle": "Ingeniero SSP (suelos y aguas contaminados)",
+        "url": "https://www.gmep-france.eu/expertise.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "G.M.E.P",
+        "url": "https://www.gmep-france.eu",
+        "logo": { "@type": "ImageObject", "url": "https://www.gmep-france.eu/assets/img/og-image.png" }
+      },
+      "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html" },
+      "image": "https://www.gmep-france.eu/assets/img/og-image.png"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "¿Qué diferencia hay entre la ecuación de Theis y la de Dupuit-Thiem?", "acceptedAnswer": { "@type": "Answer", "text": "La ecuación de Theis se aplica a acuíferos confinados en régimen transitorio y tiene en cuenta el coeficiente de almacenamiento. La ecuación de Dupuit-Thiem se aplica a acuíferos libres en régimen permanente y se basa en la hipótesis de flujo radial horizontal hacia el pozo de bombeo." } },
+        { "@type": "Question", "name": "¿Qué son la transmisividad y el coeficiente de almacenamiento?", "acceptedAnswer": { "@type": "Answer", "text": "La transmisividad (T) caracteriza la capacidad del acuífero para transmitir el agua horizontalmente, expresada en m²/s. El coeficiente de almacenamiento (S) representa el volumen de agua liberado o almacenado por unidad de superficie para una variación unitaria de la carga hidráulica; es adimensional en un acuífero confinado." } },
+        { "@type": "Question", "name": "¿Qué es la clasificación IOTA y el epígrafe 2.1.3.0?", "acceptedAnswer": { "@type": "Answer", "text": "La clasificación IOTA (Instalaciones, Obras, Trabajos y Actividades) del Código de Medio Ambiente francés somete las captaciones y vertidos de agua a declaración o autorización según su magnitud. El epígrafe 2.1.3.0 (antes 1.1.1.0, antes R.214-1) regula las captaciones en un acuífero subterráneo según su profundidad y su caudal." } },
+        { "@type": "Question", "name": "¿Cuándo es necesario un expediente de la Ley del Agua para un descenso del nivel freático?", "acceptedAnswer": { "@type": "Answer", "text": "Un expediente de la Ley del Agua (declaración o autorización según los umbrales de la nomenclatura IOTA) es necesario cuando el descenso del nivel freático implica una captación de agua subterránea que supera los umbrales fijados por el epígrafe 2.1.3.0 u otros epígrafes aplicables (vertido, impacto sobre una zona húmeda, etc.)." } },
+        { "@type": "Question", "name": "¿El software de GMEP calcula el descenso multicapa?", "acceptedAnswer": { "@type": "Answer", "text": "Sí, la herramienta Descenso V15.87 de GMEP integra el cálculo multicapa, las ecuaciones de Theis y Dupuit-Thiem, un asistente de IA de ayuda a la interpretación y la clasificación IOTA conforme al epígrafe 2.1.3.0 del Código de Medio Ambiente." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Inicio GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Consultora de medio ambiente e hidrogeología</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navegación principal">
+      <a href="../index.html">Inicio</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Herramientas
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modelización 3D suelo / agua subterránea / estructuras · NUEVO</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modelización GEP — DLE y Ley del Agua<span class="nav-mi-desc">Dimensionamiento de aguas pluviales + expedientes DLE/GEP · NUEVO</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modelización del ensayo de Porchet<span class="nav-mi-desc">Cálculo de K de campo + comparación con GEP · NUEVO</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX<span class="nav-mi-desc">HHRA + ecotoxicología — 104 sustancias · NUEVO</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Descenso V15.87<span class="nav-mi-desc">Multicapa + asistente de IA · NUEVO</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">Dimensionamiento ANC<span class="nav-mi-desc">Saneamiento individual y colectivo · NUEVO</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transferencia suelo-agua subterránea<span class="nav-mi-desc">Domenico 1987 + API Hub'eau · NUEVO</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Modelo conceptual del emplazamiento<span class="nav-mi-desc">IEM + Plan de gestión · NUEVO</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Intrusión de vapores — EPA 2004</span></a>
+          <a href="../outils/domenico.html" role="menuitem">Transferencia suelo → agua subterránea → captación<span class="nav-mi-desc">Modelo Domenico 1987</span></a>
+          <a href="../outils/rabattement/index.html" role="menuitem">Descenso del nivel freático<span class="nav-mi-desc">Theis + IOTA</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Precios</a>
+      <a href="../expertise.html">Experiencia</a>
+      <a href="index.html" aria-current="page">Blog</a>
+      <a href="../contact.html">Contacto</a>
+    <a href="../lexique.html">Glosario</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Selección de idioma">
+        <button class="lang-btn" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn active" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Iniciar sesión</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Registrarse</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menú" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <span class="hero-badge">Guía técnica — Hidrogeología</span>
+    <h1>Cálculo del descenso del nivel freático: caudal de bombeo (Theis, Dupuit-Thiem) y clasificación IOTA</h1>
+    <p class="lead" style="max-width:780px;">
+      El <strong>cálculo del descenso del nivel freático</strong> condiciona el dimensionamiento de las instalaciones de bombeo y la
+      elaboración de los expedientes reglamentarios. Este artículo detalla las ecuaciones de <strong>Theis</strong> (acuífero confinado) y de
+      <strong>Dupuit-Thiem</strong> (acuífero libre), los parámetros hidrogeológicos necesarios, así como la <strong>clasificación IOTA</strong>
+      (epígrafe 2.1.3.0, antes R.214-1) y las condiciones para presentar un expediente de la Ley del Agua.
+    </p>
+  </div>
+</section>
+
+<article>
+<div class="container container-narrow" style="line-height:1.75;">
+
+<p style="font-size:13px;color:var(--text-mute);">Escrito por <strong>Eric Azulay</strong> — Ingeniero SSP (suelos y aguas contaminados), gerente de SARL G.M.E.P · Publicado el 3 de julio de 2026</p>
+
+<h2>Principio del descenso del nivel freático</h2>
+<p>
+El <strong>descenso</strong> designa la disminución del nivel piezométrico de un acuífero subterráneo provocada por un bombeo.
+Se calcula como la diferencia entre el nivel piezométrico inicial (antes del bombeo) y el nivel observado a una
+distancia determinada del punto de bombeo, en un instante dado. El cálculo del descenso es fundamental para dos tipos
+de aplicaciones: el <strong>dimensionamiento de las instalaciones de bombeo</strong> (pozos de agotamiento de obra, bombeo de rehabilitación
+de emplazamientos contaminados, abastecimiento de agua) y la <strong>evaluación de los impactos</strong> sobre los usos vecinos del acuífero (otras
+captaciones, zonas húmedas, cursos de agua).
+</p>
+<p>
+Dos familias de ecuaciones analíticas dominan la práctica de las consultoras de ingeniería hidrogeológica: la ecuación de
+<strong>Theis</strong>, adaptada a los acuíferos confinados en régimen transitorio, y la ecuación de <strong>Dupuit-Thiem</strong>, adaptada a los acuíferos
+libres en régimen permanente.
+</p>
+
+<h2>Ecuación de Theis — acuífero confinado, régimen transitorio</h2>
+<p>
+La ecuación de Theis (1935) describe la evolución del descenso en función del tiempo y de la distancia al pozo de
+bombeo, en un acuífero confinado supuesto homogéneo, isótropo y de extensión infinita:
+</p>
+<p style="background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:16px 20px;font-family:var(--font-mono);font-size:14px;">
+s(r,t) = Q / (4πT) × W(u)<br>
+con u = r²S / (4Tt)
+</p>
+<p>
+donde <strong>s</strong> es el descenso (m) a la distancia <strong>r</strong> (m) del pozo y en el tiempo <strong>t</strong> (s), <strong>Q</strong> el caudal de
+bombeo (m³/s), <strong>T</strong> la transmisividad del acuífero (m²/s), <strong>S</strong> el coeficiente de almacenamiento (adimensional)
+y <strong>W(u)</strong> la función de pozo de Theis, función matemática tabulada o aproximada numéricamente.
+Esta ecuación permite en particular estimar T y S a partir de un ensayo de bombeo, ajustando la curva de
+descenso medida a la curva teórica de Theis.
+</p>
+
+<h2>Ecuación de Dupuit-Thiem — acuífero libre, régimen permanente</h2>
+<p>
+La ecuación de Dupuit-Thiem se aplica a los acuíferos libres en régimen permanente (descenso estabilizado en el tiempo) y
+se basa en la hipótesis de un flujo radial horizontal hacia el pozo:
+</p>
+<p style="background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:16px 20px;font-family:var(--font-mono);font-size:14px;">
+Q = πK(h2² − h1²) / ln(r2/r1)
+</p>
+<p>
+donde <strong>K</strong> es la permeabilidad (o conductividad hidráulica, m/s), <strong>h1</strong> y <strong>h2</strong> las cargas hidráulicas (m)
+medidas respectivamente a las distancias <strong>r1</strong> y <strong>r2</strong> del pozo de bombeo. Esta fórmula permite, a partir de
+mediciones de descenso en dos piezómetros de observación, determinar el caudal máximo explotable para un
+descenso objetivo, o a la inversa, estimar el descenso esperado para un caudal de bombeo determinado.
+</p>
+
+<h2>Parámetros hidrogeológicos necesarios</h2>
+<div style="overflow-x:auto;">
+<table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;margin:18px 0;">
+<thead>
+<tr style="background:#1a2b4a;color:#fff;">
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Parámetro</th>
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Símbolo / Unidad</th>
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Obtención</th>
+</tr>
+</thead>
+<tbody>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">Transmisividad</td><td style="padding:8px;border:1px solid #d1dce8;">T (m²/s)</td><td style="padding:8px;border:1px solid #d1dce8;">Ensayo de bombeo, interpretación mediante el método de Theis o Jacob</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Coeficiente de almacenamiento</td><td style="padding:8px;border:1px solid #d1dce8;">S (adimensional)</td><td style="padding:8px;border:1px solid #d1dce8;">Ensayo de bombeo con piezómetro(s) de observación</td></tr>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">Permeabilidad (conductividad hidráulica)</td><td style="padding:8px;border:1px solid #d1dce8;">K (m/s)</td><td style="padding:8px;border:1px solid #d1dce8;">Ensayos Lefranc/Lugeon, ensayos de bombeo, granulometría</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Espesor del acuífero</td><td style="padding:8px;border:1px solid #d1dce8;">e (m)</td><td style="padding:8px;border:1px solid #d1dce8;">Sondeos geológicos, columna litológica</td></tr>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">Nivel piezométrico inicial</td><td style="padding:8px;border:1px solid #d1dce8;">h0 (m NGF)</td><td style="padding:8px;border:1px solid #d1dce8;">Seguimiento piezométrico previo</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Radio de acción del bombeo</td><td style="padding:8px;border:1px solid #d1dce8;">R (m)</td><td style="padding:8px;border:1px solid #d1dce8;">Calculado (Theis/Dupuit) o estimado (fórmula de Sichardt)</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Clasificación IOTA y epígrafe 2.1.3.0</h2>
+<p>
+Toda instalación de captación de agua subterránea, incluidos los bombeos temporales de descenso del nivel freático para una
+obra o una rehabilitación de un emplazamiento contaminado, puede estar sujeta a la nomenclatura <strong>IOTA</strong>
+(Instalaciones, Obras, Trabajos y Actividades) del Código de Medio Ambiente francés. El epígrafe históricamente designado
+<strong>R.214-1</strong> — hoy codificado como <strong>epígrafe 2.1.3.0</strong> (nomenclatura del agua, anexo al artículo R.214-1 del
+Código de Medio Ambiente) — regula las captaciones permanentes o temporales en un sistema acuífero según su
+profundidad y el volumen captado.
+</p>
+<p>
+Según el caudal y la duración del bombeo, la operación está sujeta a un régimen de <strong>declaración</strong> o de <strong>autorización</strong>
+previa ante los servicios del Estado (DDT). Otros epígrafes de la nomenclatura IOTA también pueden
+aplicarse en función del contexto: vertido del agua bombeada al medio natural, impacto sobre una zona húmeda,
+proximidad a una captación de abastecimiento de agua potable.
+</p>
+
+<h2>Elaboración del expediente de la Ley del Agua</h2>
+<p>
+Cuando el descenso del nivel freático está sujeto a declaración o autorización en virtud de la Ley del Agua, el expediente
+técnico presentado a la administración debe generalmente demostrar:
+</p>
+<ul>
+<li>La <strong>caracterización hidrogeológica</strong> del emplazamiento (naturaleza del acuífero, parámetros T, S, K)</li>
+<li>El <strong>dimensionamiento del bombeo</strong> (caudal, duración, radio de acción estimado mediante Theis o Dupuit-Thiem)</li>
+<li>La <strong>evaluación de las incidencias</strong> sobre los usos sensibles cercanos (otras captaciones, zonas húmedas, cursos de agua)</li>
+<li>Las <strong>medidas de seguimiento</strong> propuestas (piezometría de control, umbrales de alerta) y, en su caso, las medidas compensatorias</li>
+</ul>
+
+<h2>Interpretación de un ensayo de bombeo</h2>
+<p>
+La determinación fiable de la transmisividad y del coeficiente de almacenamiento requiere la realización e interpretación de un
+<strong>ensayo de bombeo</strong> en campo. El procedimiento habitual comprende varias etapas:
+</p>
+<h3>1. Seguimiento piezométrico previo</h3>
+<p>
+Antes de iniciar cualquier bombeo, un seguimiento piezométrico de referencia permite establecer el nivel inicial del
+acuífero e identificar posibles tendencias naturales (mareas, influencia de precipitaciones o de un curso de agua cercano)
+que deberán corregirse en la interpretación de los datos de descenso.
+</p>
+<h3>2. Bombeo a caudal constante o por escalones</h3>
+<p>
+El ensayo puede realizarse a caudal constante (ensayo de larga duración, de varias horas a varios días) para caracterizar el
+régimen transitorio según Theis, o por escalones de caudal creciente para evaluar las pérdidas de carga en la instalación
+y determinar su capacidad óptima de explotación.
+</p>
+<h3>3. Medición del descenso en piezómetros de observación</h3>
+<p>
+El descenso se mide no solo en la instalación de bombeo sino, idealmente, en uno o varios piezómetros
+de observación situados a distancias crecientes, lo que permite separar las pérdidas de carga propias de la instalación
+(efectos de pozo) de la respuesta hidrogeológica real del acuífero.
+</p>
+<h3>4. Ajuste del modelo analítico</h3>
+<p>
+Las curvas de descenso medidas se ajustan después a las curvas teóricas de Theis (o a su
+aproximación logarítmica de Jacob para tiempos largos), lo que permite obtener por regresión los valores de
+T y S más coherentes con las observaciones de campo. Estos parámetros calibrados se reintroducen después en el
+cálculo previsional del descenso para el caudal de explotación previsto.
+</p>
+
+<h2>Descenso multicapa</h2>
+<p>
+En numerosos emplazamientos, el acuífero solicitado por el bombeo no es homogéneo en todo su espesor, sino que comprende
+varias capas de permeabilidades diferentes (acuífero multicapa), separadas o no por niveles semipermeables.
+El cálculo del <strong>descenso multicapa</strong> requiere entonces un enfoque por capas equivalentes o por
+superposición, teniendo en cuenta la transmisividad propia de cada capa y los intercambios verticales entre capas
+(drenancia). Esta configuración es frecuente en emplazamientos industriales antiguos, donde varias formaciones
+geológicas superpuestas pueden contribuir cada una al flujo hacia la instalación de bombeo, con consecuencias
+directas sobre el radio de acción real del descenso y sobre el dimensionamiento de los sistemas de tratamiento del agua
+bombeada en el contexto de la rehabilitación de emplazamientos contaminados.
+</p>
+
+<h2>Aplicaciones en la rehabilitación de emplazamientos contaminados</h2>
+<p>
+El descenso del nivel freático se emplea con frecuencia en el marco de la <strong>gestión de suelos y emplazamientos contaminados</strong>, para
+varios fines: descenso de obra para permitir trabajos de movimiento de tierras o excavación por encima del nivel freático,
+bombeo de rehabilitación (pump &amp; treat) para captar una pluma de contaminación disuelta, o bombeo de ensayo para
+caracterizar los parámetros hidrodinámicos del acuífero antes de la modelización de la transferencia suelo-agua subterránea-captación. En
+todos estos casos, el dimensionamiento del caudal y la estimación del radio de acción condicionan directamente la eficacia
+del sistema y la conformidad del expediente reglamentario presentado.
+</p>
+
+<div style="background:linear-gradient(135deg,#1a2b4a 0%,#213354 100%);border-radius:16px;padding:32px;margin:32px 0;color:#fff;">
+  <h3 style="color:#fff;margin-top:0;">Calcular el descenso del nivel freático con la herramienta de GMEP</h3>
+  <p style="color:#dbe4f0;">
+    La herramienta <strong>Descenso del nivel freático</strong> de GMEP aplica las ecuaciones de Theis y Dupuit-Thiem, gestiona el cálculo
+    multicapa y determina automáticamente la clasificación IOTA (epígrafe 2.1.3.0) aplicable a su proyecto.
+  </p>
+  <p style="margin-bottom:0;">
+    <a href="../outils/rabattement/index.html" class="btn btn-primary">Descubrir la herramienta de descenso del nivel freático</a>
+    <a href="../outils/rabattement-v15-87.html" class="btn btn-outline" style="margin-left:10px;color:#fff;border-color:#fff;">Ver Descenso V15.87</a>
+  </p>
+</div>
+
+<h2>Preguntas frecuentes — Descenso del nivel freático, cálculo del caudal y clasificación IOTA</h2>
+<div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">¿Qué diferencia hay entre la ecuación de Theis y la de Dupuit-Thiem?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">La ecuación de Theis se aplica a acuíferos confinados en régimen transitorio y tiene en cuenta el coeficiente de almacenamiento. La ecuación de Dupuit-Thiem se aplica a acuíferos libres en régimen permanente y se basa en la hipótesis de flujo radial horizontal hacia el pozo de bombeo.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">¿Qué son la transmisividad y el coeficiente de almacenamiento?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">La transmisividad (T) caracteriza la capacidad del acuífero para transmitir el agua horizontalmente, expresada en m²/s. El coeficiente de almacenamiento (S) representa el volumen de agua liberado o almacenado por unidad de superficie para una variación unitaria de la carga hidráulica; es adimensional en un acuífero confinado.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">¿Qué es la clasificación IOTA y el epígrafe 2.1.3.0?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">La clasificación IOTA (Instalaciones, Obras, Trabajos y Actividades) del Código de Medio Ambiente francés somete las captaciones y vertidos de agua a declaración o autorización según su magnitud. El epígrafe 2.1.3.0 (antes 1.1.1.0, antes R.214-1) regula las captaciones en un acuífero subterráneo según su profundidad y su caudal.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">¿Cuándo es necesario un expediente de la Ley del Agua para un descenso del nivel freático?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Un expediente de la Ley del Agua (declaración o autorización según los umbrales de la nomenclatura IOTA) es necesario cuando el descenso del nivel freático implica una captación de agua subterránea que supera los umbrales fijados por el epígrafe 2.1.3.0 u otros epígrafes aplicables (vertido, impacto sobre una zona húmeda, etc.).</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">¿El software de GMEP calcula el descenso multicapa?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Sí, la herramienta Descenso V15.87 de GMEP integra el cálculo multicapa, las ecuaciones de Theis y Dupuit-Thiem, un asistente de IA de ayuda a la interpretación y la clasificación IOTA conforme al epígrafe 2.1.3.0 del Código de Medio Ambiente.</p></div>
+  </details>
+</div>
+
+
+<section style="margin:40px 0;border-top:1px solid var(--border);padding-top:20px;" aria-labelledby="refs-title">
+  <h2 id="refs-title" style="font-size:1.15rem;">Referencias metodológicas</h2>
+  <ul style="line-height:1.9;font-size:0.92rem;">
+      <li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006837384/" rel="noopener" target="_blank">Código de Medio Ambiente francés — Epígrafes sobre acuíferos / IOTA (R.214-1)</a></li>
+      <li><a href="https://www.ecologie.gouv.fr/politiques-publiques/loi-leau" rel="noopener" target="_blank">Ministerio de Transición Ecológica — Procedimiento de la Ley del Agua</a></li>
+      <li><a href="https://hubeau.eaufrance.fr/" rel="noopener" target="_blank">Hub'Eau — API de datos piezométricos (Banco Nacional del Agua francés)</a></li>
+      <li><a href="https://www.brgm.fr/fr" rel="noopener" target="_blank">BRGM — Métodos de ensayos de bombeo e hidrogeología</a></li>
+  </ul>
+</section>
+
+<div style="text-align:center;margin:40px 0;">
+  <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-primary" style="font-size:16px;padding:14px 32px;">Prueba gratuita de 14 días — sin tarjeta de crédito</a>
+  <p style="font-size:13px;color:var(--text-mute);margin-top:10px;">Consulte también las <a href="../tarifs.html">tarifas</a> de los programas de GMEP.</p>
+</div>
+
+<p style="font-size:13px;color:var(--text-mute);border-top:1px solid var(--border);padding-top:16px;">
+Escrito por <strong>Eric Azulay</strong> — Ingeniero SSP (suelos y aguas contaminados), gerente de SARL G.M.E.P
+</p>
+
+</div>
+</article>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tel. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nuestras herramientas</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modelización GEP — DLE y Ley del Agua</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modelización del ensayo de Porchet</a></li>
+          <li><a href="../outils/eqrs-v31-05-ecotox.html">EQRS V8 + ECOTOX V8</a></li>
+          <li><a href="../outils/eqrs-v8-ecotox-humain.html">EQRS V8 + Módulo HUMAIN</a></li>
+          <li><a href="../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../outils/domenico.html">Transferencia suelo → agua subterránea → captación</a></li>
+          <li><a href="../outils/rabattement/index.html">Descenso del nivel freático IOTA</a></li>
+          <li><a href="../outils/anc-assainissement.html">Dimensionamiento ANC</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Empresa</h6>
+        <ul>
+          <li><a href="../expertise.html">Experiencia</a></li>
+          <li><a href="../tarifs.html">Precios</a></li>
+          <li><a href="../guide-11-outils/index.html">Guía de 13 herramientas (PDF)</a></li>
+          <li><a href="../mentions-legales.html">Aviso legal</a></li>
+          <li><a href="../cgv.html">Condiciones de venta</a></li>
+          <li><a href="../contact.html">Contacto</a></li>
+        <li><a href="../lexique.html">Glosario</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Todos los derechos reservados.</p>
+        <p>Todo nuestro software es propiedad exclusiva de SARL G.M.E.P. Queda prohibida cualquier reproducción, difusión o uso, incluso parcial, sin autorización previa por escrito.</p>
+        <p class="credit">Diseño y desarrollo: Eric Azulay — Gerente de SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/nav.js"></script>
+<script src="../../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en" data-alt-fr="/blog/rabattement-nappe-calcul-debit.html" data-alt-en="/en/blog/rabattement-nappe-calcul-debit.html" data-alt-es="/es/blog/rabattement-nappe-calcul-debit.html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Groundwater drawdown: flow rate calculation (Theis, Dupuit-Thiem) and IOTA classification | GMEP</title>
+<meta name="description" content="Groundwater drawdown calculation: Theis and Dupuit-Thiem equations, pumping flow rate, transmissivity, IOTA R.214-1 classification, Water Law filing.">
+<meta name="keywords" content="groundwater drawdown calculation, Theis pumping flow rate, Dupuit-Thiem, IOTA R.214-1, Water Law, transmissivity, storativity, multi-layer drawdown">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/en/blog/rabattement-nappe-calcul-debit.html">
+<link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html">
+<link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/rabattement-nappe-calcul-debit.html">
+<link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/rabattement-nappe-calcul-debit.html">
+<link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.gmep-france.eu/en/blog/rabattement-nappe-calcul-debit.html">
+<meta property="og:title" content="Groundwater drawdown: flow rate calculation (Theis, Dupuit-Thiem) | GMEP">
+<meta property="og:description" content="Principle of groundwater drawdown, Theis and Dupuit-Thiem equations, hydrogeological parameters, IOTA classification, and Water Law filing.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Environmental modeling software">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Groundwater drawdown: flow rate calculation (Theis, Dupuit-Thiem) | GMEP">
+<meta name="twitter:description" content="Principle of groundwater drawdown, Theis and Dupuit-Thiem equations, hydrogeological parameters, IOTA classification, and Water Law filing.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html#article",
+      "headline": "Groundwater drawdown: flow rate calculation (Theis, Dupuit-Thiem) and IOTA classification",
+      "description": "Groundwater drawdown calculation: Theis and Dupuit-Thiem equations, pumping flow rate, transmissivity, IOTA R.214-1 classification, Water Law filing.",
+      "datePublished": "2026-07-03",
+      "dateModified": "2026-07-03",
+      "inLanguage": "fr-FR",
+      "author": {
+        "@type": "Person",
+        "name": "Eric Azulay",
+        "jobTitle": "SSP Engineer (contaminated land)",
+        "url": "https://www.gmep-france.eu/expertise.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "G.M.E.P",
+        "url": "https://www.gmep-france.eu",
+        "logo": { "@type": "ImageObject", "url": "https://www.gmep-france.eu/assets/img/og-image.png" }
+      },
+      "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html" },
+      "image": "https://www.gmep-france.eu/assets/img/og-image.png"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What is the difference between the Theis equation and the Dupuit-Thiem equation?", "acceptedAnswer": { "@type": "Answer", "text": "The Theis equation applies to confined aquifers under transient conditions and accounts for the storativity coefficient. The Dupuit-Thiem equation applies to unconfined aquifers under steady-state conditions and relies on the assumption of horizontal radial flow toward the pumping well." } },
+        { "@type": "Question", "name": "What are transmissivity and storativity?", "acceptedAnswer": { "@type": "Answer", "text": "Transmissivity (T) characterizes the aquifer's capacity to transmit water horizontally, expressed in m²/s. The storativity coefficient (S) represents the volume of water released or stored per unit surface area for a unit change in hydraulic head; it is dimensionless for a confined aquifer." } },
+        { "@type": "Question", "name": "What is the IOTA classification and item 2.1.3.0?", "acceptedAnswer": { "@type": "Answer", "text": "The IOTA classification (Installations, Structures, Works and Activities) under the French Environmental Code subjects water withdrawals and discharges to declaration or authorization requirements depending on their scale. Item 2.1.3.0 (formerly 1.1.1.0, formerly R.214-1) governs groundwater withdrawal structures according to their depth and flow rate." } },
+        { "@type": "Question", "name": "When is a Water Law filing required for groundwater drawdown?", "acceptedAnswer": { "@type": "Answer", "text": "A Water Law filing (declaration or authorization depending on the IOTA nomenclature thresholds) is required whenever groundwater drawdown involves a groundwater withdrawal exceeding the thresholds set by item 2.1.3.0 or other relevant items (discharge, impact on a wetland, etc.)." } },
+        { "@type": "Question", "name": "Does GMEP software calculate multi-layer drawdown?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, GMEP's Drawdown V15.87 tool incorporates multi-layer calculation, the Theis and Dupuit-Thiem equations, an AI assistant to help with interpretation, and IOTA classification in accordance with item 2.1.3.0 of the Environmental Code." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="GMEP Home">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Environmental &amp; hydrogeology engineering firm</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Main navigation">
+      <a href="../index.html">Home</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Tools
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">3D modeling of soil / groundwater / structures · NEW</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">GEP Modeling — DLE &amp; Water Law<span class="nav-mi-desc">Stormwater sizing + DLE/GEP filings · NEW</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Porchet Test Modeling<span class="nav-mi-desc">Field K calculation + GEP comparison · NEW</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX<span class="nav-mi-desc">HHRA + ecotoxicology — 104 substances · NEW</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Drawdown V15.87<span class="nav-mi-desc">Multi-layer + AI assistant · NEW</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">Onsite Sanitation Sizing<span class="nav-mi-desc">Individual &amp; collective sanitation · NEW</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Soil-to-Groundwater Transfer<span class="nav-mi-desc">Domenico 1987 + Hub'eau API · NEW</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Conceptual Site Model<span class="nav-mi-desc">IEM + Management Plan · NEW</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Vapor intrusion — EPA 2004</span></a>
+          <a href="../outils/domenico.html" role="menuitem">Soil → Groundwater → Well Transfer<span class="nav-mi-desc">Domenico 1987 model</span></a>
+          <a href="../outils/rabattement/index.html" role="menuitem">Groundwater drawdown<span class="nav-mi-desc">Theis + IOTA</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Pricing</a>
+      <a href="../expertise.html">Expertise</a>
+      <a href="index.html" aria-current="page">Blog</a>
+      <a href="../contact.html">Contact</a>
+    <a href="../lexique.html">Glossary</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Language selection">
+        <button class="lang-btn" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn active" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Sign in</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Sign up</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <span class="hero-badge">Technical guide — Hydrogeology</span>
+    <h1>Groundwater drawdown calculation: pumping flow rate (Theis, Dupuit-Thiem) and IOTA classification</h1>
+    <p class="lead" style="max-width:780px;">
+      <strong>Groundwater drawdown calculation</strong> drives the sizing of pumping structures and the
+      preparation of regulatory filings. This article details the <strong>Theis</strong> (confined aquifer) and
+      <strong>Dupuit-Thiem</strong> (unconfined aquifer) equations, the required hydrogeological parameters, as well as the <strong>IOTA classification</strong>
+      (item 2.1.3.0, formerly R.214-1) and the conditions for filing a Water Law application.
+    </p>
+  </div>
+</section>
+
+<article>
+<div class="container container-narrow" style="line-height:1.75;">
+
+<p style="font-size:13px;color:var(--text-mute);">Written by <strong>Eric Azulay</strong> — SSP Engineer (contaminated land), Managing Director of SARL G.M.E.P · Published on July 3, 2026</p>
+
+<h2>Principle of groundwater drawdown</h2>
+<p>
+<strong>Drawdown</strong> refers to the lowering of the piezometric level of a groundwater body caused by pumping.
+It is calculated as the difference between the initial piezometric level (before pumping) and the level observed at a
+given distance from the pumping point, at a given time. Drawdown calculation is central to two types
+of applications: <strong>sizing pumping structures</strong> (construction site dewatering wells, remediation pumping
+of contaminated sites, water supply) and <strong>assessing impacts</strong> on nearby uses of the groundwater (other
+wells, wetlands, watercourses).
+</p>
+<p>
+Two families of analytical equations dominate the practice of hydrogeological engineering firms: the
+<strong>Theis</strong> equation, suited to confined aquifers under transient conditions, and the <strong>Dupuit-Thiem</strong> equation, suited to
+unconfined aquifers under steady-state conditions.
+</p>
+
+<h2>Theis equation — confined aquifer, transient conditions</h2>
+<p>
+The Theis equation (1935) describes the evolution of drawdown as a function of time and distance from the pumping
+well, in a confined aquifer assumed to be homogeneous, isotropic, and of infinite extent:
+</p>
+<p style="background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:16px 20px;font-family:var(--font-mono);font-size:14px;">
+s(r,t) = Q / (4πT) × W(u)<br>
+with u = r²S / (4Tt)
+</p>
+<p>
+where <strong>s</strong> is the drawdown (m) at distance <strong>r</strong> (m) from the well and at time <strong>t</strong> (s), <strong>Q</strong> the
+pumping flow rate (m³/s), <strong>T</strong> the aquifer transmissivity (m²/s), <strong>S</strong> the storativity coefficient (dimensionless)
+and <strong>W(u)</strong> the Theis well function, a mathematical function that is tabulated or numerically approximated.
+This equation notably allows T and S to be estimated from a pumping test, by fitting the measured drawdown
+curve to the theoretical Theis curve.
+</p>
+
+<h2>Dupuit-Thiem equation — unconfined aquifer, steady-state conditions</h2>
+<p>
+The Dupuit-Thiem equation applies to unconfined aquifers under steady-state conditions (drawdown stabilized over time) and
+relies on the assumption of horizontal radial flow toward the well:
+</p>
+<p style="background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:16px 20px;font-family:var(--font-mono);font-size:14px;">
+Q = πK(h2² − h1²) / ln(r2/r1)
+</p>
+<p>
+where <strong>K</strong> is the permeability (or hydraulic conductivity, m/s), <strong>h1</strong> and <strong>h2</strong> the hydraulic heads (m)
+measured respectively at distances <strong>r1</strong> and <strong>r2</strong> from the pumping well. This formula makes it possible, from
+drawdown measurements in two observation piezometers, to determine the maximum exploitable flow rate for a
+target drawdown, or conversely to estimate the expected drawdown for a given pumping flow rate.
+</p>
+
+<h2>Required hydrogeological parameters</h2>
+<div style="overflow-x:auto;">
+<table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;margin:18px 0;">
+<thead>
+<tr style="background:#1a2b4a;color:#fff;">
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Parameter</th>
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Symbol / Unit</th>
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">Transmissivity</td><td style="padding:8px;border:1px solid #d1dce8;">T (m²/s)</td><td style="padding:8px;border:1px solid #d1dce8;">Pumping test, interpretation via the Theis or Jacob method</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Storativity coefficient</td><td style="padding:8px;border:1px solid #d1dce8;">S (dimensionless)</td><td style="padding:8px;border:1px solid #d1dce8;">Pumping test with observation piezometer(s)</td></tr>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">Permeability (hydraulic conductivity)</td><td style="padding:8px;border:1px solid #d1dce8;">K (m/s)</td><td style="padding:8px;border:1px solid #d1dce8;">Lefranc/Lugeon tests, pumping tests, grain size analysis</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Aquifer thickness</td><td style="padding:8px;border:1px solid #d1dce8;">e (m)</td><td style="padding:8px;border:1px solid #d1dce8;">Geological borings, lithological log</td></tr>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">Initial piezometric level</td><td style="padding:8px;border:1px solid #d1dce8;">h0 (m NGF)</td><td style="padding:8px;border:1px solid #d1dce8;">Prior piezometric monitoring</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Radius of influence of pumping</td><td style="padding:8px;border:1px solid #d1dce8;">R (m)</td><td style="padding:8px;border:1px solid #d1dce8;">Calculated (Theis/Dupuit) or estimated (Sichardt formula)</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>IOTA classification and item 2.1.3.0</h2>
+<p>
+Any groundwater withdrawal structure, including temporary drawdown pumping for a
+construction site or remediation of a contaminated site, may fall under the <strong>IOTA</strong> nomenclature
+(Installations, Structures, Works and Activities) of the French Environmental Code. The item historically designated
+<strong>R.214-1</strong> — now codified as <strong>item 2.1.3.0</strong> (water nomenclature, annex to Article R.214-1 of the
+Environmental Code) — governs permanent or temporary withdrawals from an aquifer system according to their
+depth and volume withdrawn.
+</p>
+<p>
+Depending on the flow rate and duration of the pumping, the operation is subject to a <strong>declaration</strong> or <strong>authorization</strong>
+requirement from the relevant State authorities (DDT). Other items of the IOTA nomenclature may also
+apply depending on the context: discharge of pumped water to the natural environment, impact on a wetland,
+proximity to a drinking water supply well.
+</p>
+
+<h2>Preparing the Water Law filing</h2>
+<p>
+When groundwater drawdown is subject to a declaration or authorization requirement under the Water Law, the
+technical file submitted to the authorities must generally demonstrate:
+</p>
+<ul>
+<li><strong>Hydrogeological characterization</strong> of the site (nature of the aquifer, parameters T, S, K)</li>
+<li><strong>Sizing of the pumping operation</strong> (flow rate, duration, radius of influence estimated via Theis or Dupuit-Thiem)</li>
+<li><strong>Impact assessment</strong> on sensitive uses nearby (other wells, wetlands, watercourses)</li>
+<li>Proposed <strong>monitoring measures</strong> (control piezometry, alert thresholds) and, where applicable, compensatory measures</li>
+</ul>
+
+<h2>Interpreting a pumping test</h2>
+<p>
+Reliable determination of transmissivity and storativity requires carrying out and interpreting a
+<strong>pumping test</strong> in the field. The typical process comprises several steps:
+</p>
+<h3>1. Prior piezometric monitoring</h3>
+<p>
+Before starting any pumping, a baseline piezometric survey establishes the initial level of the groundwater
+and identifies any natural trends (tidal influence, effects of rainfall or a nearby watercourse)
+that will need to be corrected for when interpreting the drawdown data.
+</p>
+<h3>2. Constant-rate or step-rate pumping</h3>
+<p>
+The test can be conducted at a constant flow rate (long-duration test, several hours to several days) to characterize the
+transient regime according to Theis, or in increasing flow-rate steps to assess head losses in the structure
+and determine its optimal operating capacity.
+</p>
+<h3>3. Measuring drawdown in observation piezometers</h3>
+<p>
+Drawdown is measured not only in the pumping structure but, ideally, in one or more observation piezometers
+located at increasing distances, which makes it possible to separate the head losses specific to the structure
+(well effects) from the actual hydrogeological response of the aquifer.
+</p>
+<h3>4. Fitting the analytical model</h3>
+<p>
+The measured drawdown curves are then fitted to the theoretical Theis curves (or to its
+logarithmic Jacob approximation for long time periods), which makes it possible to derive by regression the values of
+T and S most consistent with field observations. These calibrated parameters are then fed back into the
+predictive drawdown calculation for the intended operating flow rate.
+</p>
+
+<h2>Multi-layer drawdown</h2>
+<p>
+At many sites, the aquifer targeted by pumping is not homogeneous throughout its thickness but comprises
+several layers of differing permeability (multi-layer aquifer), separated or not by semi-permeable layers.
+Calculating <strong>multi-layer drawdown</strong> then requires an approach based on equivalent layers or on
+superposition, taking into account the transmissivity specific to each layer and vertical exchanges between layers
+(leakage). This configuration is common at older industrial sites, where several superimposed geological
+formations can each contribute to flow toward the pumping structure, with direct consequences
+on the actual radius of influence of the drawdown and on the sizing of treatment systems for the water
+pumped in the context of contaminated site remediation.
+</p>
+
+<h2>Applications in contaminated site remediation</h2>
+<p>
+Groundwater drawdown is frequently used in the context of <strong>contaminated land management</strong>, for
+several purposes: construction site drawdown to allow earthworks or excavation above the water table,
+remediation pumping (pump &amp; treat) to capture a dissolved contamination plume, or test pumping to
+characterize the hydrodynamic parameters of the aquifer prior to soil-groundwater-well transfer modeling. In
+all these cases, sizing the flow rate and estimating the radius of influence directly determine the effectiveness
+of the system and the compliance of the regulatory filing submitted.
+</p>
+
+<div style="background:linear-gradient(135deg,#1a2b4a 0%,#213354 100%);border-radius:16px;padding:32px;margin:32px 0;color:#fff;">
+  <h3 style="color:#fff;margin-top:0;">Calculate groundwater drawdown with the GMEP tool</h3>
+  <p style="color:#dbe4f0;">
+    GMEP's <strong>Groundwater drawdown</strong> tool applies the Theis and Dupuit-Thiem equations, handles
+    multi-layer calculation, and automatically determines the applicable IOTA classification (item 2.1.3.0) for your project.
+  </p>
+  <p style="margin-bottom:0;">
+    <a href="../outils/rabattement/index.html" class="btn btn-primary">Discover the Groundwater drawdown tool</a>
+    <a href="../outils/rabattement-v15-87.html" class="btn btn-outline" style="margin-left:10px;color:#fff;border-color:#fff;">See Drawdown V15.87</a>
+  </p>
+</div>
+
+<h2>FAQ — Groundwater drawdown, flow rate calculation, and IOTA classification</h2>
+<div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">What is the difference between the Theis equation and the Dupuit-Thiem equation?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">The Theis equation applies to confined aquifers under transient conditions and accounts for the storativity coefficient. The Dupuit-Thiem equation applies to unconfined aquifers under steady-state conditions and relies on the assumption of horizontal radial flow toward the pumping well.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">What are transmissivity and storativity?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Transmissivity (T) characterizes the aquifer's capacity to transmit water horizontally, expressed in m²/s. The storativity coefficient (S) represents the volume of water released or stored per unit surface area for a unit change in hydraulic head; it is dimensionless for a confined aquifer.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">What is the IOTA classification and item 2.1.3.0?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">The IOTA classification (Installations, Structures, Works and Activities) under the French Environmental Code subjects water withdrawals and discharges to declaration or authorization requirements depending on their scale. Item 2.1.3.0 (formerly 1.1.1.0, formerly R.214-1) governs groundwater withdrawal structures according to their depth and flow rate.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">When is a Water Law filing required for groundwater drawdown?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">A Water Law filing (declaration or authorization depending on the IOTA nomenclature thresholds) is required whenever groundwater drawdown involves a groundwater withdrawal exceeding the thresholds set by item 2.1.3.0 or other relevant items (discharge, impact on a wetland, etc.).</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">Does GMEP software calculate multi-layer drawdown?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Yes, GMEP's Drawdown V15.87 tool incorporates multi-layer calculation, the Theis and Dupuit-Thiem equations, an AI assistant to help with interpretation, and IOTA classification in accordance with item 2.1.3.0 of the Environmental Code.</p></div>
+  </details>
+</div>
+
+
+<section style="margin:40px 0;border-top:1px solid var(--border);padding-top:20px;" aria-labelledby="refs-title">
+  <h2 id="refs-title" style="font-size:1.15rem;">Methodological references</h2>
+  <ul style="line-height:1.9;font-size:0.92rem;">
+      <li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006837384/" rel="noopener" target="_blank">French Environmental Code — Groundwater / IOTA items (R.214-1)</a></li>
+      <li><a href="https://www.ecologie.gouv.fr/politiques-publiques/loi-leau" rel="noopener" target="_blank">Ministry for Ecological Transition — Water Law procedure</a></li>
+      <li><a href="https://hubeau.eaufrance.fr/" rel="noopener" target="_blank">Hub'Eau — Piezometric data API (French National Water Bank)</a></li>
+      <li><a href="https://www.brgm.fr/fr" rel="noopener" target="_blank">BRGM — Pumping test methods and hydrogeology</a></li>
+  </ul>
+</section>
+
+<div style="text-align:center;margin:40px 0;">
+  <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-primary" style="font-size:16px;padding:14px 32px;">14-day free trial — no credit card required</a>
+  <p style="font-size:13px;color:var(--text-mute);margin-top:10px;">Also see the <a href="../tarifs.html">pricing</a> of GMEP software.</p>
+</div>
+
+<p style="font-size:13px;color:var(--text-mute);border-top:1px solid var(--border);padding-top:16px;">
+Written by <strong>Eric Azulay</strong> — SSP Engineer (contaminated land), Managing Director of SARL G.M.E.P
+</p>
+
+</div>
+</article>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tel. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Our tools</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">GEP Modeling — DLE &amp; Water Law</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Porchet Test Modeling</a></li>
+          <li><a href="../outils/eqrs-v31-05-ecotox.html">EQRS V8 + ECOTOX V8</a></li>
+          <li><a href="../outils/eqrs-v8-ecotox-humain.html">EQRS V8 + HUMAIN Module</a></li>
+          <li><a href="../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../outils/domenico.html">Soil → Groundwater → Well Transfer</a></li>
+          <li><a href="../outils/rabattement/index.html">IOTA Groundwater Drawdown</a></li>
+          <li><a href="../outils/anc-assainissement.html">Onsite Sanitation Sizing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Company</h6>
+        <ul>
+          <li><a href="../expertise.html">Expertise</a></li>
+          <li><a href="../tarifs.html">Pricing</a></li>
+          <li><a href="../guide-11-outils/index.html">13-Tool Guide (PDF)</a></li>
+          <li><a href="../mentions-legales.html">Legal notice</a></li>
+          <li><a href="../cgv.html">Terms of sale</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        <li><a href="../lexique.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — All rights reserved.</p>
+        <p>All our software is the exclusive property of SARL G.M.E.P. Any reproduction, distribution, or use, even partial, without prior written authorization is prohibited.</p>
+        <p class="credit">Design and development: Eric Azulay — Managing Director of SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/nav.js"></script>
+<script src="../../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

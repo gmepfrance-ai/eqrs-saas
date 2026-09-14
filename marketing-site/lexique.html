@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="fr" data-alt-fr="/lexique.html" data-alt-en="/en/lexique.html" data-alt-es="/es/lexique.html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lexique — HHRA, ERE, Tier 1/2/3, EQRS... | GMEP</title>
+<meta name="description" content="Lexique des sigles et notions utilisés dans les outils GMEP : HHRA, ERE, Tier 1, Tier 2, Tier 3, EQRS, QD, ERI, VTR, PEC/PNEC, IEM, IOTA, ICPE. Définitions conformes US EPA, ANSES, INERIS, ECHA, EFSA.">
+<meta name="keywords" content="lexique EQRS, HHRA définition, ERE définition, Tier 1 Tier 2 Tier 3, évaluation des risques sanitaires, évaluation des risques écologiques, PEC PNEC, VTR, IEM, IOTA, ICPE, GMEP">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/lexique.html">
+<link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/lexique.html">
+<link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/lexique.html">
+<link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/lexique.html">
+<link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/lexique.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/lexique.html">
+<meta property="og:title" content="Lexique — HHRA, ERE, Tier 1/2/3, EQRS... | GMEP">
+<meta property="og:description" content="Lexique des sigles et notions utilisés dans les outils GMEP : HHRA, ERE, Tier 1, Tier 2, Tier 3, EQRS, QD, ERI, VTR, PEC/PNEC, IEM, IOTA, ICPE.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Logiciels de modélisation environnementale">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Lexique GMEP — HHRA, ERE, Tier 1/2/3, EQRS">
+<meta name="twitter:description" content="Définitions des sigles utilisés dans les outils GMEP : HHRA, ERE, Tier 1/2/3, EQRS, QD, ERI, VTR, PEC/PNEC, IEM, IOTA, ICPE.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+
+<!-- Schema.org : DefinedTermSet pour indexation du lexique -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "DefinedTermSet",
+  "name": "Lexique GMEP — Sites et sols pollués, EQRS, écotoxicologie",
+  "url": "https://www.gmep-france.eu/lexique.html",
+  "inDefinedTermSet": "https://www.gmep-france.eu/lexique.html",
+  "hasDefinedTerm": [
+    { "@type": "DefinedTerm", "name": "HHRA", "description": "Human Health Risk Assessment — évaluation quantitative des risques sanitaires pour l'humain." },
+    { "@type": "DefinedTerm", "name": "ERE", "description": "Évaluation des Risques Écologiques — évaluation des effets d'une pollution sur les écosystèmes via le ratio PEC/PNEC." },
+    { "@type": "DefinedTerm", "name": "Tier 1", "description": "Niveau de dépistage (screening) d'une évaluation des risques, basé sur des seuils génériques et des hypothèses conservatives." },
+    { "@type": "DefinedTerm", "name": "Tier 2", "description": "Niveau intermédiaire d'une évaluation des risques, affiné avec des données spécifiques au site." },
+    { "@type": "DefinedTerm", "name": "Tier 3", "description": "Niveau le plus poussé d'une évaluation des risques ; chez GMEP, module HUMAIN intégrant la voie alimentaire (chaîne trophique)." },
+    { "@type": "DefinedTerm", "name": "EQRS", "description": "Évaluation Quantitative des Risques Sanitaires liés à un site pollué." }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="index.html" class="brand" aria-label="Accueil GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Bureau d'études environnement &amp; hydrogéologie</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navigation principale">
+      <a href="index.html">Accueil</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Outils
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modélisation 3D sols / nappe / ouvrages · NOUVEAU</span></a>
+          <a href="outils/eaux-pluviales-dle-gep.html" role="menuitem">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau<span class="nav-mi-desc">Dimensionnement EP + dossiers DLE/GEP · NOUVEAU</span></a>
+          <a href="outils/porchet-essai-permeabilite.html" role="menuitem">Modélisation Essai de Porchet<span class="nav-mi-desc">Calcul K terrain + comparaison GEP · NOUVEAU</span></a>
+          <a href="outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX<span class="nav-mi-desc">HHRA + écotoxicologie — 104 substances · NOUVEAU</span></a>
+          <a href="outils/rabattement-v15-87.html" role="menuitem">Rabattement V15.87<span class="nav-mi-desc">Multicouche + assistant IA · NOUVEAU</span></a>
+          <a href="outils/anc-assainissement.html" role="menuitem">Dimensionnement ANC<span class="nav-mi-desc">Assainissement individuel &amp; collectif · NOUVEAU</span></a>
+          <a href="outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transfert Sol-Nappe<span class="nav-mi-desc">Domenico 1987 + API Hub'eau · NOUVEAU</span></a>
+          <a href="outils/schema-conceptuel.html" role="menuitem">Schéma Conceptuel<span class="nav-mi-desc">IEM + Plan de Gestion · NOUVEAU</span></a>
+          <a href="outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Intrusion de vapeurs — EPA 2004</span></a>
+          <a href="outils/domenico.html" role="menuitem">Transfert Sol → Nappe → Captage<span class="nav-mi-desc">Modèle Domenico 1987</span></a>
+          <a href="outils/rabattement/index.html" role="menuitem">Rabattement de nappe<span class="nav-mi-desc">Theis + IOTA</span></a>
+        </div>
+      </div>
+      <a href="tarifs.html">Tarifs</a>
+      <a href="expertise.html">Expertise</a>
+      <a href="blog/index.html">Blog</a>
+      <a href="contact.html">Contact</a>
+      <a href="lexique.html" aria-current="page">Lexique</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Choix de langue">
+        <button class="lang-btn active" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Connexion</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Inscription</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <span class="hero-badge">Sigles &amp; notions techniques</span>
+    <h1>Lexique GMEP</h1>
+    <p class="lead" style="max-width:780px;">
+      Définitions des sigles et notions utilisés dans les outils GMEP (EQRS, ECOTOX, hydrogéologie, réglementation),
+      conformes aux référentiels US EPA, ANSES, INERIS, ECHA et EFSA.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Évaluation des risques sanitaires</span>
+      <h2>HHRA, EQRS et approche par paliers (Tier 1 / 2 / 3)</h2>
+    </div>
+    <div class="faq-list">
+      <details open>
+        <summary>HHRA — Human Health Risk Assessment</summary>
+        <p>
+          Démarche qui estime la nature, l'ampleur et la probabilité d'effets sanitaires indésirables chez des personnes
+          exposées à des substances présentes dans un milieu contaminé (sols, eaux souterraines, air intérieur), selon la
+          méthodologie de l'US EPA. En français, on parle d'Évaluation Quantitative des Risques Sanitaires (EQRS) : elle combine
+          caractérisation des sources, modélisation du transfert (sol → nappe → captage, intrusion de vapeurs...), estimation
+          de la dose reçue par les récepteurs (adulte, enfant, salarié) et comparaison à des Valeurs Toxicologiques de Référence
+          (VTR) pour calculer le Quotient de Danger (QD) et l'Excès de Risque Individuel (ERI).
+        </p>
+      </details>
+      <details>
+        <summary>EQRS — Évaluation Quantitative des Risques Sanitaires</summary>
+        <p>
+          Traduction française et opérationnelle de la démarche HHRA, encadrée en France par la méthodologie INERIS ERS 2021 et
+          les VTR ANSES. C'est le cœur des outils EQRS GMEP : calcul du QD et de l'ERI par voie d'exposition (ingestion de sol,
+          inhalation, contact dermique, voie alimentaire) et par récepteur (adulte, enfant avec facteur ADAF, salarié).
+        </p>
+      </details>
+      <details>
+        <summary>Approche par paliers — Tier 1, Tier 2, Tier 3</summary>
+        <p>
+          Méthode d'évaluation progressive : on démarre par un niveau générique et conservatif (Tier 1), et on ne passe au
+          niveau suivant, plus fin mais plus coûteux en données, que si le précédent ne permet pas d'écarter un risque.
+        </p>
+      </details>
+      <details>
+        <summary>Tier 1 — Évaluation de dépistage (screening)</summary>
+        <p>
+          Premier niveau, le plus conservateur : comparaison à des seuils génériques et hypothèses prudentes (éco-SSL US EPA en
+          écotoxicologie ; voies d'exposition standards — ingestion de sol, inhalation, contact dermique — en évaluation
+          sanitaire). Objectif : écarter rapidement les substances et milieux sans risque avéré, sans engager de données
+          complémentaires.
+        </p>
+      </details>
+      <details>
+        <summary>Tier 2 — Évaluation affinée</summary>
+        <p>
+          Deuxième niveau : on remplace les valeurs génériques par des données spécifiques au site — concentrations mesurées et
+          PNEC ECHA REACH en écotoxicologie ; paramètres d'exposition site-spécifiques et sous-populations sensibles en
+          évaluation sanitaire. Ce niveau réduit la marge de conservatisme du Tier 1 tout en restant protecteur.
+        </p>
+      </details>
+      <details>
+        <summary>Tier 3 — Évaluation la plus poussée</summary>
+        <p>
+          Troisième niveau, le plus détaillé : intégration de voies d'exposition ou d'effets supplémentaires. Dans les outils
+          GMEP, le Tier 3 correspond au module HUMAIN qui ajoute la <strong>voie alimentaire</strong> (chaîne trophique
+          sol → plante/animal → humain) à l'EQRS classique — ingestion de légumes, œufs, lait, viande et poisson produits sur un
+          site pollué — conformément à la méthodologie INERIS DRC-09-103096 et aux VTR EFSA 2020.
+        </p>
+      </details>
+      <details>
+        <summary>QD — Quotient de Danger</summary>
+        <p>Rapport entre la dose d'exposition estimée et une VTR à seuil (effet à seuil). Un QD supérieur à 1 signale un risque potentiel pour l'effet considéré.</p>
+      </details>
+      <details>
+        <summary>ERI — Excès de Risque Individuel</summary>
+        <p>Probabilité supplémentaire, sur une vie entière, de développer un effet sans seuil (cancérogène) du fait de l'exposition étudiée, calculée à partir d'une VTR sans seuil.</p>
+      </details>
+      <details>
+        <summary>VTR — Valeur Toxicologique de Référence</summary>
+        <p>Valeur numérique (dose ou concentration) établie par une agence de référence (ANSES, US EPA, EFSA...) au-dessous de laquelle un effet indésirable n'est pas attendu (effet à seuil) ou qui permet de quantifier un excès de risque (effet sans seuil).</p>
+      </details>
+      <details>
+        <summary>ADAF — Age-Dependent Adjustment Factor</summary>
+        <p>Facteur d'ajustement lié à l'âge, appliqué pour les substances cancérogènes à mode d'action mutagène afin de tenir compte de la sensibilité accrue de l'enfant lors de l'exposition précoce.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Écotoxicologie</span>
+      <h2>ERE et notions associées</h2>
+    </div>
+    <div class="faq-list">
+      <details>
+        <summary>ERE — Évaluation des Risques Écologiques</summary>
+        <p>
+          Évalue les effets d'une pollution sur la faune et la flore plutôt que sur l'humain, en trois phases : formulation du
+          problème, analyse de l'exposition et des effets, puis caractérisation du risque. L'outil central est le ratio
+          <strong>PEC/PNEC</strong> : un ratio supérieur à 1 signale un risque potentiel pour les récepteurs écologiques
+          (invertébrés du sol, végétation, faune sentinelle).
+        </p>
+      </details>
+      <details>
+        <summary>PEC — Predicted Environmental Concentration</summary>
+        <p>Concentration d'exposition prévisible d'un polluant dans un compartiment environnemental (sol, eau, sédiment), estimée à partir des données de terrain ou de modélisation.</p>
+      </details>
+      <details>
+        <summary>PNEC — Predicted No-Effect Concentration</summary>
+        <p>Concentration sans effet prévisible : seuil au-dessous duquel aucun effet néfaste n'est attendu sur les organismes du compartiment considéré. Établie notamment via ECHA REACH.</p>
+      </details>
+      <details>
+        <summary>Éco-SSL — Ecological Soil Screening Level</summary>
+        <p>Seuils de dépistage écotoxicologique dans les sols publiés par l'US EPA, utilisés en Tier 1 pour identifier rapidement les substances sans risque écologique avéré pour les récepteurs terrestres.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Hydrogéologie &amp; réglementation</span>
+      <h2>Sigles des dossiers Loi sur l'Eau et ICPE</h2>
+    </div>
+    <div class="faq-list">
+      <details>
+        <summary>IEM — Interprétation de l'État des Milieux</summary>
+        <p>Démarche de la doctrine française des sites et sols pollués qui compare les concentrations mesurées dans les milieux (sols, eaux, air) à des valeurs de gestion, en amont ou en complément d'une EQRS complète.</p>
+      </details>
+      <details>
+        <summary>DAF — Facteur d'Atténuation / Dilution</summary>
+        <p>Facteur qui traduit la diminution de concentration d'un polluant entre la source et le point d'exposition (dilution dans la nappe, atténuation lors du transfert sol-nappe-captage, modèle de Domenico 1987).</p>
+      </details>
+      <details>
+        <summary>IOTA — Installations, Ouvrages, Travaux et Activités</summary>
+        <p>Nomenclature de l'article R.214-1 du Code de l'environnement qui classe les opérations soumises à déclaration ou autorisation au titre de la Loi sur l'Eau (prélèvements, rabattement de nappe, rejets, ouvrages en lit de cours d'eau...).</p>
+      </details>
+      <details>
+        <summary>ICPE — Installation Classée pour la Protection de l'Environnement</summary>
+        <p>Régime de classement (déclaration, enregistrement, autorisation) des installations présentant des risques ou nuisances pour l'environnement et la santé, encadré par le Code de l'environnement.</p>
+      </details>
+    </div>
+    <p style="margin-top:24px;text-align:center;">
+      <a href="contact.html" class="btn btn-primary">Discuter de votre projet</a>
+      <a href="expertise.html" class="btn btn-outline" style="margin-left:8px;">Voir l'expertise GMEP</a>
+    </p>
+  </div>
+</section>
+
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tél. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nos outils</h6>
+        <ul>
+          <li><a href="outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="outils/eaux-pluviales-dle-gep.html">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau</a></li>
+          <li><a href="outils/porchet-essai-permeabilite.html">Modélisation Essai de Porchet</a></li>
+          <li><a href="outils/eqrs-v31-05-ecotox.html">EQRS V8 + ECOTOX V8</a></li>
+          <li><a href="outils/eqrs-v8-ecotox-humain.html">EQRS V8 + Module HUMAIN</a></li>
+          <li><a href="outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="outils/domenico.html">Transfert Sol → Nappe → Captage</a></li>
+          <li><a href="outils/rabattement/index.html">Rabattement de nappe IOTA</a></li>
+          <li><a href="outils/anc-assainissement.html">Dimensionnement ANC</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Société</h6>
+        <ul>
+          <li><a href="expertise.html">Expertise</a></li>
+          <li><a href="blog/index.html">Blog</a></li>
+          <li><a href="tarifs.html">Tarifs</a></li>
+          <li><a href="guide-11-outils/index.html">Guide 13 outils (PDF)</a></li>
+          <li><a href="mentions-legales.html">Mentions légales</a></li>
+          <li><a href="cgv.html">CGV</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="lexique.html">Lexique</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Tous droits réservés.</p>
+        <p>Tous nos logiciels sont la propriété exclusive de la SARL G.M.E.P. Toute reproduction, diffusion ou utilisation, même partielle, sans autorisation écrite préalable est interdite.</p>
+        <p class="credit">Conception et développement : Eric Azulay — Gérant SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/nav.js"></script>
+<script src="assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

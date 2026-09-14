@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="es" data-alt-fr="/outils/tsn-transfert-sol-nappe.html" data-alt-en="/en/outils/tsn-transfert-sol-nappe.html" data-alt-es="/es/outils/tsn-transfert-sol-nappe.html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TSN — Transferencia Suelo-Acuífero-Captación AEP | Software SSP | GMEP</title>
+<meta name="description" content="TSN — Evaluación Tier 1 analítica del impacto de un emplazamiento SSP sobre las captaciones AEP, pozos y sondeos. Modelo Domenico 1987, API Hub'eau nativa, conformidad IOTA R.214-1, cartografía de isodistancias 500-3000 m, conversión Lambert 93 ↔ WGS84. 30 minutos frente a varias semanas con MODFLOW. Prueba gratuita de 14 días.">
+<meta name="keywords" content="TSN, transferencia suelo acuífero, Domenico 1987, API Hub'eau, eaufrance, captación AEP, pozo sondeo, IOTA R.214-1, isodistancias, Lambert 93 WGS84, cribado Tier 1, alternativa a MODFLOW, alternativa a MARTHE, tierras excavadas, ICPE, aguas subterráneas ESO, GMEP">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/es/outils/tsn-transfert-sol-nappe.html">
+<link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/tsn-transfert-sol-nappe.html">
+<link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/tsn-transfert-sol-nappe.html">
+<link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/tsn-transfert-sol-nappe.html">
+<link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/tsn-transfert-sol-nappe.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/es/outils/tsn-transfert-sol-nappe.html">
+<meta property="og:title" content="TSN — Transferencia Suelo-Acuífero-Captación AEP | Software SSP | GMEP">
+<meta property="og:description" content="TSN — Evaluación Tier 1 analítica del impacto de un emplazamiento SSP sobre las captaciones AEP, pozos y sondeos. Modelo Domenico 1987, API Hub'eau nativa, conformidad IOTA R.214-1, cartografía de isodistancias 500-3000 m, conversión Lambert 93 ↔ WGS84. 30 minutos frente a varias semanas con MODFLOW. Prueba gratuita de 14 días.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Software de modelización ambiental">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TSN — Transferencia Suelo-Acuífero-Captación AEP | Software SSP | GMEP">
+<meta name="twitter:description" content="TSN — Evaluación Tier 1 analítica del impacto de un emplazamiento SSP sobre las captaciones AEP, pozos y sondeos. Modelo Domenico 1987, API Hub'eau nativa, conformidad IOTA R.214-1, cartografía de isodistancias 500-3000 m, conversión Lambert 93 ↔ WGS84. 30 minutos frente a varias semanas con MODFLOW. Prueba gratuita de 14 días.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Inicio GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Consultora de medio ambiente e hidrogeología</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navegación principal">
+      <a href="../index.html">Inicio</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Herramientas
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modelización 3D de suelo / acuífero / estructuras · NUEVO</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modelización GEP — DLE y Ley del Agua<span class="nav-mi-desc">Dimensionamiento de pluviales + expedientes DLE/GEP · NUEVO</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modelización del Ensayo de Porchet<span class="nav-mi-desc">Cálculo de K en campo + comparación GEP · NUEVO</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX<span class="nav-mi-desc">104 sustancias HHRA + 12 ecotox — NUEVO V8</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Abatimiento V15.87<span class="nav-mi-desc">Multicapa con IA — Ley del Agua</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">Dimensionamiento ANC<span class="nav-mi-desc">Saneamiento individual y colectivo · NUEVO</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transferencia Suelo → Acuífero<span class="nav-mi-desc">Domenico 1987 — API Hub'eau</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Modelo Conceptual<span class="nav-mi-desc">IEM + Plan de Gestión</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS V7 Johnson &amp; Ettinger<span class="nav-mi-desc">+ 5 módulos avanzados</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Tarifas</a>
+      <a href="../expertise.html">Experiencia</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../contact.html">Contacto</a>
+    <a href="../lexique.html">Glosario</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Selección de idioma">
+        <button class="lang-btn" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn active" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Iniciar sesión</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Registrarse</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menú" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge" style="background:linear-gradient(135deg,#39e07a 0%,#1a5276 100%);color:#fff;">API HUB'EAU NATIVA</span>
+        <h1>TSN — Transferencia Suelo &lt; Acuífero</h1>
+        <p class="lead">Evaluación <strong>Tier 1 analítica</strong> del impacto de un emplazamiento de sitios y suelos contaminados (SSP) sobre las captaciones AEP, pozos y sondeos. Modelo <strong>Domenico 1987</strong>, <strong>API Hub'eau nativa</strong>, conformidad <strong>IOTA R.214-1</strong>, cartografía de isodistancias de 500 a 3000 m. <strong>30 minutos</strong> allí donde MODFLOW requiere <strong>varias semanas</strong>.</p>
+        <div class="hero-cta">
+          <a href="../tarifs.html#tsn_annual" class="btn btn-primary">Suscribirse — 1.100 € sin IVA/año</a>
+          <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-outline">Prueba gratuita de 14 días</a>
+          <a href="../contact.html" class="btn btn-outline">Demostración a petición</a>
+        </div>
+      </div>
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">tsn · suelo &lt; acuífero</span>
+        </div>
+        <div class="hero-mock-row"><span class="l">Modelo</span><span class="v">Domenico 1987</span></div>
+        <div class="hero-mock-row"><span class="l">Objetivo (Hub'eau)</span><span class="v">Captación AEP — 1.250 m</span></div>
+        <div class="hero-mock-row"><span class="l">Cc(x) aguas abajo</span><span class="v">4,1 µg/L</span></div>
+        <div class="hero-mock-row"><span class="l">Tiempo de análisis</span><span class="v">~ 30 min</span></div>
+        <div class="hero-mock-result"><strong>Criticidad del objetivo</strong><span>🟠 media</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="max-width:900px;margin:0 auto;">
+    <div style="background:#eef4fb;border:1px solid #c6dcf0;border-radius:12px;padding:1.3rem 1.5rem;">
+      <p style="margin:0;"><strong style="color:#1a2b4a;">Disponibilidad internacional —</strong> la recuperación automática de los datos geológicos y piezométricos (BRGM, Hub'Eau) cubre Francia. Para un proyecto ubicado en otro país, estos parámetros deben introducirse manualmente por el usuario; la automatización por país de esta recuperación está en desarrollo.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- 1. Présentation -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Presentación</span>
+      <h2>TSN — la evaluación rápida del impacto sobre las captaciones AEP</h2>
+      <p>Una solución analítica Domenico 1987 conectada a las API públicas Hub'eau para identificar automáticamente los pozos, sondeos y captaciones dentro del radio de análisis.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 12c3-6 15-6 18 0-3 6-15 6-18 0z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Modelo Domenico 1987</h3>
+        <p>Solución analítica de la concentración aguas abajo Cc(x) de una pluma, sin malla: una fuente puntual, algunos parámetros físicos (K, n, dispersividad, gradiente).</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="7" r="1.5" fill="currentColor"/><circle cx="14" cy="12" r="1.5" fill="currentColor"/><circle cx="10" cy="17" r="1.5" fill="currentColor"/></svg></div>
+        <h3>API Hub'eau nativa</h3>
+        <p>Recuperación automática de los pozos, sondeos y estaciones de calidad (eaufrance.fr) situados dentro del radio de análisis alrededor de la fuente.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Lambert 93 ↔ WGS84</h3>
+        <p>Coordenadas Lambert 93 (EPSG:2154) por objetivo con conversión proj4 a WGS84 para la cartografía.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Objetivos AEP</h3>
+        <p>Pozos privados, sondeos de abastecimiento de agua potable y captaciones prioritarias posicionados y jerarquizados automáticamente por criticidad.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Fonctionnalités -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Funciones</span>
+      <h2>Cartografía e informe listos para el expediente reglamentario</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card" style="border-left:4px solid #1a5276;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/><circle cx="12" cy="12" r="10.5" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3"/></svg></div>
+        <h3>Cartografía de isodistancias</h3>
+        <p>Fuente en el centro, círculos de isodistancias de 500 / 1000 / 1500 / 2000 / 2500 / 3000 m, escala adaptativa y leyenda integrada en el informe PDF.</p>
+      </div>
+      <div class="feature-card" style="border-left:4px solid #1a5276;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" fill="currentColor"/></svg></div>
+        <h3>Marcadores de criticidad</h3>
+        <p>Objetivos coloreados según su criticidad (alta / media / baja) en función de la concentración aguas abajo estimada y de la distancia.</p>
+      </div>
+      <div class="feature-card" style="border-left:4px solid #1a5276;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <h3>Rosa de los vientos y acimut</h3>
+        <p>Flecha de acimut de flujo y rosa de los vientos para visualizar el sentido de transferencia de la pluma hacia los objetivos.</p>
+      </div>
+      <div class="feature-card" style="border-left:4px solid #1a5276;">
+        <div class="feature-ico" aria-hidden="true" style="color:#1a5276;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M21 12c0 5-4 9-9 9s-9-4-9-9 4-9 9-9 9 4 9 9z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Lógica IOTA R.214-1</h3>
+        <p>Marco IOTA estricto (Código del Medio Ambiente R.214-1) aplicado de forma nativa para producir un expediente conforme.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Comparatif -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Comparativa</span>
+      <h2>TSN frente a MODFLOW y MARTHE</h2>
+      <p>Una herramienta de cribado «Tier 1»: <strong>30 minutos</strong> frente a <strong>varias semanas</strong> para una modelización numérica completa.</p>
+    </div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;">
+        <thead>
+          <tr style="background:#1a5276;color:#fff;">
+            <th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Criterio</th>
+            <th style="padding:10px;text-align:center;border:1px solid #0e2f44;width:22%;">MODFLOW (USGS)</th>
+            <th style="padding:10px;text-align:center;border:1px solid #0e2f44;width:22%;">MARTHE (BRGM)</th>
+            <th style="padding:10px;text-align:center;border:1px solid #0e2f44;width:22%;background:#39e07a;color:#0e2f44;">TSN (GMEP)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Método</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Diferencias finitas 3D</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Volúmenes finitos 3D</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">Analítico Domenico 1987</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;"><strong>Tiempo de implementación</strong></td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Varias semanas</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Varias semanas</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:700;">~ 30 minutos</td></tr>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Mallado</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Discretización pesada</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Malla anidada</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">Sin mallado</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Experiencia requerida</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Modelizador experimentado</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">Modelizador experimentado</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">Consultora SSP no especializada</td></tr>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Integración con API públicas</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ Hub'eau</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Conformidad IOTA R.214-1</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗ (genérico)</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#c0392b;">✗ (genérico)</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ nativa</td></tr>
+          <tr><td style="padding:8px;border:1px solid #d1dce8;">Cartografía de objetivos AEP</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Piezometría detallada</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Mapas de pluma</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">✓ isodistancias + objetivos</td></tr>
+          <tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Caso de uso ideal</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Grandes acuíferos regionales</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#999;">Hidrosistemas complejos</td><td style="padding:8px;border:1px solid #d1dce8;text-align:center;color:#27ae60;font-weight:600;">Impacto de un emplazamiento SSP sobre un objetivo AEP</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:#666;margin-top:14px;line-height:1.6;"><strong>Fuentes:</strong> <a href="https://www.usgs.gov/mission-areas/water-resources/science/modflow-and-related-programs">USGS MODFLOW</a>, <a href="https://www.brgm.fr/fr/logiciel/marthe-logiciel-modelisation-ecoulements-souterrains">BRGM MARTHE</a>, <a href="https://hubeau.eaufrance.fr/">API Hub'eau</a>, Código del Medio Ambiente francés artículo R.214-1.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Applications -->
+<section>
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Aplicaciones</span>
+      <h2>¿Para qué usos?</h2>
+    </div>
+    <div class="compliance-list">
+      <h3>Casos de uso típicos</h3>
+      <ul>
+        <li><strong>Impacto de un emplazamiento SSP sobre una captación AEP</strong> — evaluación rápida de una captación situada a 500-3000 m de la fuente.</li>
+        <li><strong>Reutilización de tierras excavadas</strong> — evaluación de la transferencia hacia el acuífero antes de su reutilización.</li>
+        <li><strong>Estudio de impacto ESO (Aguas Subterráneas) para instalaciones clasificadas (ICPE)</strong> — cribado de riesgo para un proyecto de instalación clasificada.</li>
+        <li><strong>Expediente de la Ley del Agua (IOTA R.214-1)</strong> — justificación del impacto sobre las aguas subterráneas.</li>
+        <li><strong>Herramienta «Tier 1» complementaria</strong> — apoyo a la decisión antes de una modelización numérica pesada (MODFLOW / MARTHE).</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Tarif -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Tarifa</span>
+      <h2>Suscríbase a TSN</h2>
+    </div>
+    <div class="pricing-grid" style="max-width:520px;margin:0 auto;">
+      <div class="price-card featured">
+        <span class="badge">API Hub'eau</span>
+        <h3>Suscripción anual</h3>
+        <p class="sub">Transferencia Suelo-Acuífero-Captación AEP — Domenico 1987</p>
+        <div class="price-amount"><span class="currency">€</span>1.100</div>
+        <div class="price-period">sin IVA / año</div>
+        <ul class="price-features">
+          <li>Modelo analítico Domenico 1987</li>
+          <li>API Hub'eau nativa (pozos, sondeos, calidad)</li>
+          <li>Cartografía de isodistancias + criticidad</li>
+          <li>Conversión Lambert 93 ↔ WGS84</li>
+          <li>Conformidad IOTA R.214-1</li>
+        </ul>
+        <a href="../tarifs.html#tsn_annual" class="btn btn-primary btn-block">Suscribirse</a>
+      </div>
+    </div>
+    <div class="text-center mt-6" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-ghost">Prueba gratuita de 14 días</a>
+      <a href="../contact.html" class="btn btn-ghost">Demostración a petición</a>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Note technique PDF -->
+<section>
+  <div class="container">
+    <div class="demo-placeholder">
+      <h3>Nota técnica — TSN Transferencia Suelo-Acuífero</h3>
+      <p>Descargue la nota técnica: ecuación de Domenico 1987, parametrización de la pluma, integración de las API Hub'eau y método de jerarquización de los objetivos AEP.</p>
+      <a href="/notes-techniques/Note_Technique_TSN_Transfert_Sol_Nappe.pdf" class="btn btn-primary">Descargar la nota técnica (PDF)</a>
+    </div>
+  </div>
+</section>
+
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tel. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a><br>
+        <a href="https://www.gmep-france.eu">www.gmep-france.eu</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nuestras herramientas</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modelización GEP — DLE y Ley del Agua</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modelización del Ensayo de Porchet</a></li>
+          <li><a href="../outils/eqrs-v31-05-ecotox.html">EQRS V31.05 + ECOTOX</a></li>
+          <li><a href="../outils/rabattement-v15-87.html">Abatimiento V15.87</a></li>
+          <li><a href="../outils/anc-assainissement.html">Dimensionamiento ANC</a></li>
+          <li><a href="../outils/tsn-transfert-sol-nappe.html">TSN — Transferencia Suelo → Acuífero</a></li>
+          <li><a href="../outils/schema-conceptuel.html">Modelo Conceptual</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Empresa</h6>
+        <ul>
+          <li><a href="../tarifs.html">Tarifas</a></li>
+          <li><a href="../guide-11-outils/index.html">Guía de 13 herramientas (PDF)</a></li>
+          <li><a href="../expertise.html">Experiencia</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../mentions-legales.html">Aviso legal</a></li>
+          <li><a href="../cgv.html">Condiciones generales de venta</a></li>
+          <li><a href="../contact.html">Contacto</a></li>
+        <li><a href="../lexique.html">Glosario</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Todos los derechos reservados.</p>
+        <p>Todos nuestros programas son propiedad exclusiva de SARL G.M.E.P. Queda prohibida cualquier reproducción, difusión o uso, incluso parcial, sin autorización escrita previa.</p>
+        <p class="credit">Diseño y desarrollo: Eric Azulay — Gerente de SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/nav.js"></script>
+<script src="../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

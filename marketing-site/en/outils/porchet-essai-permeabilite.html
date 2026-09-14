@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en" data-alt-fr="/outils/porchet-essai-permeabilite.html" data-alt-en="/en/outils/porchet-essai-permeabilite.html" data-alt-es="/es/outils/porchet-essai-permeabilite.html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Porchet Permeability Test Modelling | GMEP</title>
+<meta name="description" content="SaaS software for field data entry and calculation of the permeability coefficient K using the Porchet test (hemispherical formula). Direct comparison with the sizing from the GEP Modelling module. €550 excl. tax/year.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/en/outils/porchet-essai-permeabilite.html">
+<link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/porchet-essai-permeabilite.html">
+<link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/porchet-essai-permeabilite.html">
+<link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/porchet-essai-permeabilite.html">
+<link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/porchet-essai-permeabilite.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/en/outils/porchet-essai-permeabilite.html">
+<meta property="og:title" content="Porchet Permeability Test Modelling | GMEP">
+<meta property="og:description" content="Field data entry, automated calculation of permeability K (Porchet test) and comparison with GEP sizing.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Porchet Permeability Test Modelling">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Porchet Permeability Test Modelling | GMEP">
+<meta name="twitter:description" content="Automated calculation of permeability K using the Porchet test, direct comparison with the GEP module.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="GMEP Home">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Environmental &amp; hydrogeology consultancy</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Main navigation">
+      <a href="../index.html">Home</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Tools
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">3D modelling of soil / groundwater / structures · NEW</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">GEP Modelling — DLE &amp; Water Act<span class="nav-mi-desc">Stormwater sizing + DLE/GEP files · NEW</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Porchet Permeability Test Modelling<span class="nav-mi-desc">Field K calculation + GEP comparison · NEW</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX V8<span class="nav-mi-desc">HHRA + ecotoxicology — 104 substances · NEW</span></a>
+          <a href="../outils/eqrs-v8-ecotox-humain.html" role="menuitem">EQRS V8 + ECOTOX + HUMAIN<span class="nav-mi-desc">Human food pathway — PFAS, PCBs, metals · NEW</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Drawdown V15.87<span class="nav-mi-desc">Multi-layer + AI assistant · NEW</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">ANC Sizing<span class="nav-mi-desc">Individual &amp; collective sanitation · NEW</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Soil-Groundwater Transfer<span class="nav-mi-desc">Domenico 1987 + Hub'eau API · NEW</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Conceptual Site Model<span class="nav-mi-desc">IEM + Management Plan · NEW</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Vapour intrusion — EPA 2004</span></a>
+          <a href="../outils/domenico.html" role="menuitem">Soil → Groundwater → Well Transfer<span class="nav-mi-desc">Domenico 1987 model</span></a>
+          <a href="../outils/rabattement/index.html" role="menuitem">Groundwater Drawdown<span class="nav-mi-desc">Theis + IOTA</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Pricing</a>
+      <a href="../expertise.html">Expertise</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../contact.html">Contact</a>
+    <a href="../lexique.html">Glossary</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Language selection">
+        <button class="lang-btn" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn active" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Log in</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Sign up</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge" style="background:#20808D;color:#fff;">Permeability test · Field standard</span>
+        <h1>Porchet <span style="color:#20808D;">Permeability Test</span> Modelling</h1>
+        <p class="lead">Field entry of permeability tests, automated calculation of the K coefficient (hemispherical formula) and direct comparison with the theoretical K adopted by the GEP Modelling module. PDF report sheets ready to attach to a Water Act file.</p>
+        <div class="hero-cta">
+          <a href="../tarifs.html#porchet_annual" class="btn btn-primary" style="background:#20808D;border-color:#20808D;">Subscribe — €550 excl. tax/year</a>
+          <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-outline">14-day free trial</a>
+        </div>
+      </div>
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">porchet test · field</span>
+        </div>
+        <div class="hero-mock-row"><span class="l">Hole diameter</span><span class="v">15 cm</span></div>
+        <div class="hero-mock-row"><span class="l">Volume poured</span><span class="v">4.5 L</span></div>
+        <div class="hero-mock-row"><span class="l">Drainage time</span><span class="v">312 s</span></div>
+        <div class="hero-mock-row"><span class="l">Measured K</span><span class="v">3.8 × 10⁻⁵ m/s</span></div>
+        <div class="hero-mock-row"><span class="l">Kdim (Cs = 1.5)</span><span class="v">2.5 × 10⁻⁵ m/s</span></div>
+        <div class="hero-mock-result"><strong>GEP agreement</strong><span>log10 deviation = 0.18 — compliant</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Features</span>
+      <h2>From field entry to report sheet</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 20V4M12 4l-4 4M12 4l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Guided field entry</h3>
+        <p>Landmark, date, hole diameter and depth (cm), geological facies, volume poured (L), drainage time (s) and safety coefficient Cs. Unlimited test entry, organised by project.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 15l3-4 3 3 4-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Automatic K calculation</h3>
+        <p>Hemispherical formula (t1=0, h2=0): K = R ÷ (2×t) × ln(1 + 2×H1 ÷ R), with H1 = volume poured ÷ (π×R²). All lengths are entered in centimetres; the calculation automatically converts to the standard hydrogeological unit (m/s).</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 16v6M2 12h6M16 12h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Design permeability</h3>
+        <p>Kdim = K ÷ Cs (safety coefficient, 1.5 by default). Value directly usable for sizing an infiltration structure.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 12v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Comparison with GEP Modelling</h3>
+        <p>Deviation = log10(field Kdim ÷ GEP Kdim). Agreement validated if |deviation| ≤ 0.5 (factor ~3.16), consistent with the geological accuracy of the BRGM module. Measured K then takes precedence over the literature estimate.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M8 12l2.5 2.5L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Infiltration curve &amp; summary</h3>
+        <p>Visualisation of the infiltration curve per test and a multi-test summary for a given project (summary table, agreement badges).</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="currentColor" stroke-width="2"/><path d="M15 3v5h5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Report sheet &amp; export</h3>
+        <p>Generation of a PDF report sheet per test. JSON export/import (all tests or a single test) for archiving or direct transfer to GEP Modelling.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION — MÉTHODE ET FORMULES -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Method</span>
+      <h2>Principle of the Porchet test</h2>
+    </div>
+    <div class="compliance-list">
+      <p>The Porchet test consists of drilling a vertical hole with an auger, saturating the soil, then pouring a known volume of water (V) and measuring the time (t) needed for the hole to fully drain.</p>
+      <h3>Formula used (hemispherical correction)</h3>
+      <p><strong>K = R ÷ (2×t) × ln(1 + 2×H1 ÷ R)</strong>, where R = hole radius, H1 = initial water height = volume poured ÷ (π×R²).</p>
+      <p>All lengths (diameter, depth, calculated radius, water height H1) are entered and displayed in <strong>centimetres (cm)</strong> to avoid any mixing of units. Only permeability (K, Kdim) remains in m/s, the standard hydrogeological unit used by the GEP Modelling software — the internal calculation automatically converts cm to metres for this step.</p>
+      <h3>Design permeability</h3>
+      <p><strong>Kdim = K ÷ Cs</strong> (safety coefficient, 1.5 by default).</p>
+      <h3>Comparison with the GEP module</h3>
+      <p>Order-of-magnitude reasoning — <strong>deviation = log10(field Kdim ÷ GEP Kdim)</strong>, considered in agreement if |deviation| ≤ 0.5 (factor ~3.16, consistent with the geological accuracy stated by the BRGM module).</p>
+      <p style="background:#fff8e1;border-left:4px solid #f5b94d;padding:14px 18px;border-radius:6px;margin-top:18px;">
+        <strong>The software does not replace the engineer's expertise</strong>, nor any requirements from the DDT(M), the DREAL, the project owner or the inspection body.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION — LIVRABLES -->
+<!-- ==================================================================== -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Deliverables</span>
+      <h2>From field data to a usable sheet</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>PDF report sheet</h3>
+        <p>One sheet per test: location, facies, raw data, K / Kdim result, GEP comparison, agreement badge.</p>
+      </div>
+      <div class="feature-card">
+        <h3>JSON export / import</h3>
+        <p>All tests from a project, or a single test — for archiving, sharing between workstations or transfer to the GEP module.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Multi-test summary</h3>
+        <p>Summary table of all tests performed on a site, with agreement badges per test.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- TARIF -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Pricing</span>
+      <h2>Annual licence</h2>
+    </div>
+    <div class="pricing-grid" style="max-width:560px;margin:0 auto;">
+      <div class="price-card featured" id="porchet_annual" style="border-color:#20808D;">
+        <span class="badge" style="background:#20808D;color:#fff;">NEW</span>
+        <h3>Porchet Permeability Test Modelling</h3>
+        <p class="sub">Annual subscription — 1 seat</p>
+        <div class="price-amount" style="color:#1a2b4a;"><span class="currency">€</span>550</div>
+        <div class="price-period">excl. tax / year (€660 incl. tax)</div>
+        <div class="country-select">
+          <label for="country-porchet-b">Billing country</label>
+          <select id="country-porchet-b">
+            <option value="FR">Mainland France (VAT 20%)</option>
+            <option value="FR-DOM">French overseas departments (Guadeloupe, Martinique, Réunion, Mayotte, Guyane)</option>
+            <option value="EU">European Union (outside France)</option>
+            <option value="INTL">Outside the European Union</option>
+          </select>
+        </div>
+        <div class="price-breakdown">
+          <div class="pb-row"><span>Amount excl. tax</span><span data-ht="550">€550.00</span></div>
+          <div class="pb-row"><span data-tva-label>VAT 20%</span><span data-tva-val>€110.00</span></div>
+          <div class="pb-row pb-total"><span>Total incl. tax</span><span data-ttc-val>€660.00</span></div>
+        </div>
+        <p style="font-size:12px;color:var(--text-mute);margin-bottom:var(--sp-4)" data-vat-note>French VAT at the standard rate of 20% (Article 278 of the French Tax Code).</p>
+        <ul class="price-features">
+          <li>Unlimited field entry (landmark, date, diameter, depth, volume, time)</li>
+          <li>Automatic calculation of K (hemispherical formula) and Kdim = K / Cs</li>
+          <li>Comparison of field K / theoretical K from the GEP module (log10 deviation)</li>
+          <li>PDF report sheet per test + infiltration curve</li>
+          <li>JSON export / import (all tests or a single test)</li>
+          <li>Feature updates included</li>
+          <li>14-day free trial included</li>
+        </ul>
+        <button class="btn btn-primary btn-block" style="margin-bottom:8px;background:#20808D;border-color:#20808D;" onclick="GmepCheckout.start('porchet_annual', document.getElementById('country-porchet-b').value)">Subscribe — Stripe Payment</button>
+        <p style="text-align:center;font-size:0.74rem;color:var(--text-mute);margin-top:6px;">
+          <svg width="11" height="13" viewBox="0 0 12 14" fill="none" style="vertical-align:middle;margin-right:3px;" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="6" width="10" height="8" rx="2" stroke="#6B7280" stroke-width="1.5"/><path d="M3.5 6V4a2.5 2.5 0 0 1 5 0v2" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Secure payment by <strong style="color:#635BFF;">Stripe</strong> — cancel anytime
+        </p>
+      </div>
+    </div>
+    <div class="text-center mt-6">
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-ghost">14-day free trial — no credit card required</a>
+    </div>
+    <p style="text-align:center;font-size:13px;color:var(--text-mute,#6b7280);margin-top:16px;">Used together with GEP Modelling (€5,500 excl. tax/year) to support a Water Act file with field measurements. Training or tailored regulatory support: on request — <a href="../contact.html">contact GMEP</a>.</p>
+  </div>
+</section>
+
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tel. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Our tools</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">GEP Modelling — DLE &amp; Water Act</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Porchet Permeability Test Modelling</a></li>
+          <li><a href="../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../outils/domenico.html">Soil → Groundwater → Well Transfer</a></li>
+          <li><a href="../outils/rabattement/index.html">IOTA Groundwater Drawdown</a></li>
+          <li><a href="../outils/anc-assainissement.html">ANC Sizing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Company</h6>
+        <ul>
+          <li><a href="../tarifs.html">Pricing</a></li>
+          <li><a href="../guide-11-outils/index.html">13-tool guide (PDF)</a></li>
+          <li><a href="../expertise.html">Expertise</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../mentions-legales.html">Legal notice</a></li>
+          <li><a href="../cgv.html">Terms of sale</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        <li><a href="../lexique.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — All rights reserved.</p>
+        <p>All our software is the exclusive property of SARL G.M.E.P. Any reproduction, distribution or use, even partial, without prior written authorisation is prohibited.</p>
+        <p class="credit">Design and development: Eric Azulay — Manager, SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/nav.js"></script>
+<script src="../../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

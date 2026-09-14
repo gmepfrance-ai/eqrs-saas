@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="es" data-alt-fr="/outils/rabattement/" data-alt-en="/en/outils/rabattement/" data-alt-es="/es/outils/rabattement/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abatimiento del nivel freático multicapa con IA | GMEP — Theis, Dupuit-Thiem, IOTA</title>
+<meta name="description" content="Software profesional en línea de modelización del abatimiento del nivel freático. Fórmulas de Theis y Dupuit-Thiem, clasificación IOTA de la Ley del Agua, asistente de IA multicapa. Prueba gratuita de 14 días. 1.100 € sin IVA/año.">
+<meta name="keywords" content="abatimiento del nivel freático, software de abatimiento, Theis Dupuit-Thiem, clasificación IOTA, Ley del Agua, acuífero Artois-Picardie, piezometría, sondeo hidrogeología, orden IOTA">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../../assets/css/base.css">
+<link rel="stylesheet" href="../../../assets/css/site.css">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+<style>
+  /* Override : la démo utilise .btn-secondary, on définit ici */
+  .btn-secondary {
+    background: #fff;
+    color: var(--navy-800);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--bg-soft); }
+  /* Ajustements pour cohabitation avec le header global */
+  .demo-section .container, #fonctions .container, #tarif .container, #faq .container {
+    max-width: 1200px;
+  }
+</style>
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/es/outils/rabattement/">
+<link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/rabattement/">
+<link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/rabattement/">
+<link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/rabattement/">
+<link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/rabattement/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/es/outils/rabattement/">
+<meta property="og:title" content="Abatimiento del nivel freático multicapa con IA | GMEP — Theis, Dupuit-Thiem, IOTA">
+<meta property="og:description" content="Software profesional en línea de modelización del abatimiento del nivel freático. Fórmulas de Theis y Dupuit-Thiem, clasificación IOTA de la Ley del Agua, asistente de IA multicapa. Prueba gratuita de 14 días. 1.100 € sin IVA/año.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Software de modelización ambiental">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Abatimiento del nivel freático multicapa con IA | GMEP — Theis, Dupuit-Thiem, IOTA">
+<meta name="twitter:description" content="Software profesional en línea de modelización del abatimiento del nivel freático. Fórmulas de Theis y Dupuit-Thiem, clasificación IOTA de la Ley del Agua, asistente de IA multicapa. Prueba gratuita de 14 días. 1.100 € sin IVA/año.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../../index.html" class="brand" aria-label="Inicio GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Consultora de medio ambiente e hidrogeología</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navegación principal">
+      <a href="../../index.html">Inicio</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Herramientas
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modelización 3D de suelo / acuífero / estructuras · NUEVO</span></a>
+          <a href="../../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modelización GEP — DLE y Ley del Agua<span class="nav-mi-desc">Dimensionamiento de pluviales + expedientes DLE/GEP · NUEVO</span></a>
+          <a href="../../outils/porchet-essai-permeabilite.html" role="menuitem">Modelización del Ensayo de Porchet<span class="nav-mi-desc">Cálculo de K en campo + comparación GEP · NUEVO</span></a>
+          <a href="../../outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger<span class="nav-mi-desc">Intrusión de vapores — EPA 2004</span></a>
+          <a href="../../outils/domenico.html" role="menuitem">Transferencia Suelo → Acuífero → Captación<span class="nav-mi-desc">Modelo Domenico 1987</span></a>
+          <a href="../../outils/rabattement/index.html" role="menuitem">Abatimiento del nivel freático<span class="nav-mi-desc">Theis + IOTA — NUEVO</span></a>
+          <a href="../../outils/anc-assainissement.html" role="menuitem">Dimensionamiento ANC<span class="nav-mi-desc">Saneamiento individual y colectivo · NUEVO</span></a>
+        </div>
+      </div>
+      <a href="../../tarifs.html">Tarifas</a>
+      <a href="../../expertise.html">Experiencia</a>
+      <a href="../../blog/index.html">Blog</a>
+      <a href="../../contact.html">Contacto</a>
+    <a href="../../lexique.html">Glosario</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Selección de idioma">
+        <button class="lang-btn" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn active" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Iniciar sesión</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Registrarse</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menú" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<!-- ╭───────── HERO ─────────╮ -->
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge">Conforme con el artículo R.214-1 — Ley del Agua</span>
+        <h1>Modelización del <span class="accent">abatimiento</span> del nivel freático en pocos clics</h1>
+        <p class="lead">
+          Cálculos hidráulicos según Theis y Dupuit-Thiem, clasificación IOTA automática,
+          generación de expediente reglamentario listo para la DDT. Diseñado por y para
+          consultoras de hidrogeología.
+        </p>
+        <div class="hero-cta">
+          <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-primary">Prueba gratuita de 14 días</a>
+          <a href="#tarif" class="btn btn-outline">Ver la tarifa</a>
+        </div>
+        <p style="margin-top:16px;font-size:13px;color:rgba(255,255,255,0.65);">
+          No se requiere tarjeta bancaria. Cree su cuenta para acceder por completo al software.
+        </p>
+      </div>
+
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">abatimiento · gmep</span>
+        </div>
+        <div class="hero-mock-row"><span class="l">Sustrato</span><span class="v">→ por seleccionar</span></div>
+        <div class="hero-mock-row"><span class="l">Abatimiento s</span><span class="v">→ su cota</span></div>
+        <div class="hero-mock-row"><span class="l">Q Theis corregido</span><span class="v">→ cálculo automático</span></div>
+        <div class="hero-mock-row"><span class="l">Volumen anual</span><span class="v">→ cálculo automático</span></div>
+        <div class="hero-mock-result"><strong>ESTADO IOTA</strong><span>NO SUJETO / DECLARACIÓN / AUTORIZACIÓN</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ╭───────── FONCTIONS ─────────╮ -->
+<section id="fonctions">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Funciones clave</span>
+      <h2>Todo lo necesario para un expediente de la Ley del Agua</h2>
+      <p>Desde la parametrización hidrogeológica hasta la exportación en PDF, pasando por la clasificación IOTA — una sola herramienta, diseñada para las exigencias reales del terreno.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M12 2C8 8 6 12 6 15a6 6 0 0012 0c0-3-2-7-6-13z" fill="#2563eb"/></svg>
+        </div>
+        <h3>Cálculos Theis + Dupuit-Thiem</h3>
+        <p>Función de pozo W(u) en serie de Taylor, régimen transitorio y permanente, correcciones η y f_K.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M3 4l6-2 6 2 6-2v18l-6 2-6-2-6 2V4z" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 2v18M15 4v18" stroke="#2563eb" stroke-width="1.6"/></svg>
+        </div>
+        <h3>Mapa OpenStreetMap</h3>
+        <p>Conversión Lambert 93 → WGS84 y trazado de la zona de influencia directamente sobre el mapa.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="#2563eb" stroke-width="1.6"/><path d="M8 8h8M8 12h8M8 16h5" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Clasificación IOTA automática</h3>
+        <p>Epígrafes 1.1.1.0, 1.1.2.0, 1.3.1.0 — estado NO SUJETO / DECLARACIÓN / AUTORIZACIÓN calculado en tiempo real.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M3 17l5-5 4 4 9-9" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Base geológica integrada</h3>
+        <p>13 sustratos parametrizados (calizas, aluviones, granitos, esquistos, margas, rellenos…) con K, T, S, ne, espesor.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M6 4l-2 5M10 4l-2 5M14 4l-2 5M18 4l-2 5M3 12h18M5 14c1 4 4 6 7 6s6-2 7-6" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Balance hídrico departamental</h3>
+        <p>15 departamentos de referencia con lluvia, ETP y recarga calibradas con Météo-France.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M15 3v5h5M8 13h8M8 17h6" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Expediente PDF listo para la DDT</h3>
+        <p>Maquetación profesional, cálculos, tabla IOTA, mapa. En la versión completa: firma digital y encabezado personalizable.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ╭───────── ACCÈS LOGICIEL ─────────╮ -->
+<section id="demo" class="demo-section">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Prueba gratuita — 14 días</span>
+      <h2>Acceda al software en línea</h2>
+      <p>El software de abatimiento del nivel freático (introducción de parámetros, cálculos Theis/Dupuit-Thiem, clasificación IOTA, mapa OpenStreetMap, expediente PDF de 27 páginas) es accesible a través de la aplicación GMEP tras crear una cuenta. Sin instalación.</p>
+    </div>
+    <div class="demo-placeholder">
+      <h3>Abatimiento v15 en línea — acceso mediante cuenta</h3>
+      <p>Active su prueba gratuita de 14 días para acceder por completo al motor de cálculo, sin tarjeta bancaria: 13 sustratos hidrogeológicos, 15 departamentos, clasificación IOTA automática (R.214-1) y generación del expediente PDF listo para la DDT.</p>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-primary">Activar la prueba gratuita</a>
+      <p style="margin-top:14px;font-size:0.84rem;color:var(--text-mute);">¿Ya es cliente? <a href="https://app.gmep-france.eu/#/login" rel="noopener">Acceda a su espacio</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ╭───────── TARIF ─────────╮ -->
+<section id="tarif">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Tarifa</span>
+      <h2>Una sola suscripción, proyectos ilimitados</h2>
+      <p>Un precio sencillo, sin compromiso de permanencia y sin renovación automática. Tarifa válida para 1 usuario, proyectos ilimitados.</p>
+    </div>
+    <div class="pricing-wrap" id="souscrire">
+      <div class="price-card" style="max-width:520px;margin:0 auto;">
+        <span class="price-tag">★ Oferta estándar</span>
+        <div class="price-title">Software de Abatimiento v15</div>
+        <div class="price-sub">Para consultoras, operadores de obras públicas, gestores de infraestructuras.</div>
+
+        <div class="country-select">
+          <label for="buyer-country">País de facturación</label>
+          <select id="buyer-country">
+            <option value="FR" selected>Francia metropolitana (IVA 20 %)</option>
+            <option value="FR-DOM">DROM (Guadalupe, Martinica, Reunión, Mayotte, Guayana)</option>
+            <option value="EU">Unión Europea (fuera de Francia)</option>
+            <option value="INTL">Fuera de la Unión Europea</option>
+          </select>
+        </div>
+
+        <div class="price-amount"><span class="currency">€</span>1.100</div>
+        <div class="price-unit">sin IVA / usuario / año</div>
+
+        <div class="price-breakdown" id="price-breakdown">
+          <div class="pb-row"><span>Importe sin IVA</span><span class="pb-val">1.100,00 €</span></div>
+          <div class="pb-row" id="pb-tva-row"><span id="pb-tva-label">IVA 20 %</span><span class="pb-val" id="pb-tva-val">220,00 €</span></div>
+          <div class="pb-row pb-total"><span>Total con IVA</span><span class="pb-val" id="pb-ttc-val">1.320,00 €</span></div>
+        </div>
+
+        <div class="price-vat" id="price-vat-note">
+          IVA francés al tipo normal del 20 % (art. 278 del CGI).
+        </div>
+
+        <ul class="price-features">
+          <li>Proyectos y cálculos ilimitados</li>
+          <li>13 sustratos hidrogeológicos + 15 departamentos</li>
+          <li>Generación del expediente de la Ley del Agua (PDF oficial sin marca de agua)</li>
+          <li>Tabla IOTA conforme al R.214-1</li>
+          <li>Mapa OpenStreetMap integrado</li>
+          <li>Soporte técnico por correo electrónico</li>
+          <li>Actualizaciones normativas incluidas</li>
+        </ul>
+
+        <a id="btn-souscrire" href="../../tarifs.html#rabattement_simple_annual" class="btn btn-primary btn-block">Suscribirse — 1.320,00 € con IVA / año</a>
+
+        <p style="text-align:center;font-size:12.5px;color:var(--text-mute);margin-top:14px;">
+          Pago seguro con tarjeta bancaria a través de <strong>Stripe</strong> — acceso inmediato tras el pago, factura enviada por correo electrónico.<br>
+          Sin compromiso de permanencia, cancelable al vencimiento.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ╭───────── FAQ ─────────╮ -->
+<section id="faq" style="background:var(--bg-soft);">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Preguntas frecuentes</span>
+      <h2>Preguntas frecuentes</h2>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item" open>
+        <summary>¿Cómo funciona la prueba gratuita de 14 días?</summary>
+        <p>Cree su cuenta gratuita en la aplicación GMEP: dispondrá de acceso completo al software de abatimiento del nivel freático (cálculos Theis/Dupuit-Thiem, clasificación IOTA, expediente PDF) durante 14 días, sin tarjeta bancaria. Pasado ese plazo, suscríbase a la versión completa para continuar.</p>
+      </details>
+      <details class="faq-item">
+        <summary>¿Tiene valor reglamentario el PDF generado en la demostración?</summary>
+        <p>No. Todos los PDF generados en modo demostración llevan la mención «DEMOSTRACIÓN — NO VÁLIDO PARA PRESENTACIÓN EN LA DDT» en marca de agua. Solo los PDF producidos por la versión completa, sin marca de agua, pueden presentarse ante el Servicio de Agua y Biodiversidad de la DDT.</p>
+      </details>
+      <details class="faq-item">
+        <summary>¿Se transmiten mis datos a un servidor?</summary>
+        <p>Los datos de su proyecto (parámetros hidráulicos, coordenadas, resultados) se asocian a su cuenta en la aplicación GMEP. El cálculo y la generación del expediente PDF se ejecutan en su espacio seguro tras iniciar sesión.</p>
+      </details>
+      <details class="faq-item">
+        <summary>¿Qué métodos de cálculo se utilizan?</summary>
+        <p>El motor reproduce exactamente la lógica de la hoja de cálculo GMEP v15.60: función de pozo W(u) de Theis en serie de Taylor (régimen transitorio), fórmula de Dupuit-Thiem (régimen permanente), correcciones de rendimiento hidráulico η = 0,70 y f_K = 0,95. Las clasificaciones IOTA siguen el artículo R.214-1 del Código del Medio Ambiente francés.</p>
+      </details>
+      <details class="faq-item">
+        <summary>¿Puedo personalizar el PDF con mi logotipo?</summary>
+        <p>La personalización del PDF (logotipo de la consultora, encabezado, pie de página, firma digital) está disponible en la versión completa tras la suscripción.</p>
+      </details>
+      <details class="faq-item">
+        <summary>¿Cómo puedo suscribirme?</summary>
+        <p>Haga clic en el botón «Suscribirse» de arriba. Será redirigido a la página de Tarifas para completar su suscripción mediante <strong>pago con tarjeta a través de Stripe</strong> (pago seguro). Acceso inmediato a la versión completa en cuanto se confirme el pago. Recibirá automáticamente su factura por correo electrónico.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tel. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nuestras herramientas</h6>
+        <ul>
+          <li><a href="../../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../../outils/eaux-pluviales-dle-gep.html">Modelización GEP — DLE y Ley del Agua</a></li>
+          <li><a href="../../outils/porchet-essai-permeabilite.html">Modelización del Ensayo de Porchet</a></li>
+          <li><a href="../../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../../outils/domenico.html">Transferencia Suelo → Acuífero → Captación</a></li>
+          <li><a href="../../outils/rabattement/index.html">Abatimiento del nivel freático IOTA</a></li>
+          <li><a href="../../outils/anc-assainissement.html">Dimensionamiento ANC</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Empresa</h6>
+        <ul>
+          <li><a href="../../tarifs.html">Tarifas</a></li>
+          <li><a href="../../guide-11-outils/index.html">Guía de 13 herramientas (PDF)</a></li>
+          <li><a href="../../expertise.html">Experiencia</a></li>
+          <li><a href="../../blog/index.html">Blog</a></li>
+          <li><a href="../../mentions-legales.html">Aviso legal</a></li>
+          <li><a href="../../cgv.html">Condiciones generales de venta</a></li>
+          <li><a href="../../contact.html">Contacto</a></li>
+        <li><a href="../../lexique.html">Glosario</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Todos los derechos reservados.</p>
+        <p>Todos nuestros programas son propiedad exclusiva de SARL G.M.E.P. Queda prohibida cualquier reproducción, difusión o uso, incluso parcial, sin autorización escrita previa.</p>
+        <p class="credit">Diseño y desarrollo: Eric Azulay — Gerente de SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Scripts du site -->
+<script src="../../../assets/js/nav.js"></script>
+<script src="../../../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

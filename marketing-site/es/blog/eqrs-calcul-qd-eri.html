@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="es" data-alt-fr="/blog/eqrs-calcul-qd-eri.html" data-alt-en="/en/blog/eqrs-calcul-qd-eri.html" data-alt-es="/es/blog/eqrs-calcul-qd-eri.html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cálculo de QD y ERI en EQRS: método y umbrales de aceptabilidad | GMEP</title>
+<meta name="description" content="Cálculo de QD y ERI en EQRS para sitios contaminados: cociente de peligro, exceso de riesgo individual, VTR, ADAF infantil, umbrales de aceptabilidad INERIS/ANSES.">
+<meta name="keywords" content="cálculo QD ERI, cociente de peligro, exceso de riesgo individual, EQRS sitios contaminados, VTR, ADAF infantil, INERIS ERS 2021, ANSES 2018, umbrales de aceptabilidad">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/es/blog/eqrs-calcul-qd-eri.html">
+<link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/eqrs-calcul-qd-eri.html">
+<link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/eqrs-calcul-qd-eri.html">
+<link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/eqrs-calcul-qd-eri.html">
+<link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/eqrs-calcul-qd-eri.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.gmep-france.eu/es/blog/eqrs-calcul-qd-eri.html">
+<meta property="og:title" content="Cálculo de QD y ERI en EQRS: método y umbrales de aceptabilidad | GMEP">
+<meta property="og:description" content="Método de cálculo del Cociente de Peligro (QD) y del Exceso de Riesgo Individual (ERI) en EQRS: VTR, ADAF, umbrales INERIS/ANSES, poblaciones objetivo.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Software de modelización medioambiental">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cálculo de QD y ERI en EQRS: método y umbrales de aceptabilidad | GMEP">
+<meta name="twitter:description" content="Método de cálculo del Cociente de Peligro (QD) y del Exceso de Riesgo Individual (ERI) en EQRS: VTR, ADAF, umbrales INERIS/ANSES, poblaciones objetivo.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://www.gmep-france.eu/blog/eqrs-calcul-qd-eri.html#article",
+      "headline": "Cálculo de QD y ERI en EQRS: método y umbrales de aceptabilidad",
+      "description": "Cálculo de QD y ERI en EQRS para sitios contaminados: cociente de peligro, exceso de riesgo individual, VTR, ADAF infantil, umbrales de aceptabilidad INERIS/ANSES.",
+      "datePublished": "2026-07-03",
+      "dateModified": "2026-07-03",
+      "inLanguage": "fr-FR",
+      "author": {
+        "@type": "Person",
+        "name": "Eric Azulay",
+        "jobTitle": "Ingeniero SSP (suelos y aguas contaminados)",
+        "url": "https://www.gmep-france.eu/expertise.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "G.M.E.P",
+        "url": "https://www.gmep-france.eu",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.gmep-france.eu/assets/img/og-image.png"
+        }
+      },
+      "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.gmep-france.eu/blog/eqrs-calcul-qd-eri.html" },
+      "image": "https://www.gmep-france.eu/assets/img/og-image.png"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "¿Cuál es la diferencia entre QD y ERI?", "acceptedAnswer": { "@type": "Answer", "text": "El Cociente de Peligro (QD) evalúa el riesgo de las sustancias con umbral (efectos no cancerígenos) comparando la dosis de exposición con una dosis de referencia (VTR con umbral). El Exceso de Riesgo Individual (ERI) evalúa el riesgo de las sustancias sin umbral (cancerígenas) multiplicando la dosis de exposición por un exceso de riesgo unitario (ERU)." } },
+        { "@type": "Question", "name": "¿Cuál es el umbral de aceptabilidad del QD?", "acceptedAnswer": { "@type": "Answer", "text": "El umbral de aceptabilidad habitual del Cociente de Peligro es QD < 1 por órgano diana. Por encima de 1, la dosis de exposición supera la dosis de referencia toxicológica y el riesgo se considera no aceptable en su estado actual." } },
+        { "@type": "Question", "name": "¿Cuál es el umbral de aceptabilidad del ERI?", "acceptedAnswer": { "@type": "Answer", "text": "El Exceso de Riesgo Individual se considera habitualmente aceptable por debajo de 10⁻⁵, con una zona de gestión caso por caso entre 10⁻⁶ y 10⁻⁵ según el contexto del sitio, el número de personas expuestas y la política de gestión adoptada por la administración." } },
+        { "@type": "Question", "name": "¿Qué es el factor ADAF y por qué el niño tiene un factor 3?", "acceptedAnswer": { "@type": "Answer", "text": "El ADAF (Age-Dependent Adjustment Factor) pondera la mayor sensibilidad del organismo en desarrollo a las sustancias cancerígenas con modo de acción genotóxico. Para el niño de 0 a 2 años se aplica un factor multiplicador de 3 al ERU, conforme a las recomendaciones de la US EPA y a la doctrina ANSES 2018." } },
+        { "@type": "Question", "name": "¿El software EQRS de GMEP cumple con la metodología INERIS y ANSES?", "acceptedAnswer": { "@type": "Answer", "text": "Sí. EQRS V31.05 + ECOTOX aplica la metodología INERIS ERS 2021, los VTR y el factor ADAF conformes a ANSES 2018, así como las reglas de suma por órgano diana y por efecto cancerígeno de la US EPA RAGS Part A." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Inicio GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Consultora de medio ambiente e hidrogeología</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navegación principal">
+      <a href="../index.html">Inicio</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Herramientas
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modelización 3D suelo / nivel freático / estructuras · NUEVO</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modelización GEP — DLE y Ley del Agua<span class="nav-mi-desc">Dimensionamiento de pluviales + expedientes DLE/GEP · NUEVO</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modelización del ensayo Porchet<span class="nav-mi-desc">Cálculo K de campo + comparación GEP · NUEVO</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX<span class="nav-mi-desc">HHRA + ecotoxicología — 104 sustancias · NUEVO</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Abatimiento V15.87<span class="nav-mi-desc">Multicapa + asistente de IA · NUEVO</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">Dimensionamiento ANC<span class="nav-mi-desc">Saneamiento individual y colectivo · NUEVO</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transferencia suelo-acuífero<span class="nav-mi-desc">Domenico 1987 + API Hub'eau · NUEVO</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Modelo conceptual del sitio<span class="nav-mi-desc">IEM + Plan de Gestión · NUEVO</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Intrusión de vapores — EPA 2004</span></a>
+          <a href="../outils/domenico.html" role="menuitem">Transferencia suelo → acuífero → captación<span class="nav-mi-desc">Modelo Domenico 1987</span></a>
+          <a href="../outils/rabattement/index.html" role="menuitem">Abatimiento del nivel freático<span class="nav-mi-desc">Theis + IOTA</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Precios</a>
+      <a href="../expertise.html">Experiencia</a>
+      <a href="index.html" aria-current="page">Blog</a>
+      <a href="../contact.html">Contacto</a>
+    <a href="../lexique.html">Glosario</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Selección de idioma">
+        <button class="lang-btn" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn active" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Iniciar sesión</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Registrarse</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menú" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <span class="hero-badge">Guía técnica EQRS</span>
+    <h1>Cálculo de QD y ERI en EQRS: método y umbrales de aceptabilidad</h1>
+    <p class="lead" style="max-width:780px;">
+      El cálculo del <strong>QD (Cociente de Peligro)</strong> y del <strong>ERI (Exceso de Riesgo Individual)</strong> constituye el
+      núcleo de la evaluación cuantitativa de riesgos para la salud (EQRS) en sitios y suelos contaminados. Este artículo detalla
+      las fórmulas, los valores toxicológicos de referencia (VTR) utilizados, el factor ADAF aplicable al niño, y los umbrales
+      de aceptabilidad aplicados por la administración francesa, conforme a la metodología INERIS ERS 2021 y a las recomendaciones ANSES 2018.
+    </p>
+  </div>
+</section>
+
+<article>
+<div class="container container-narrow" style="line-height:1.75;">
+
+<p style="font-size:13px;color:var(--text-mute);">Redactado por <strong>Eric Azulay</strong> — Ingeniero SSP (suelos y aguas contaminados), gerente de SARL G.M.E.P · Publicado el 3 de julio de 2026</p>
+
+<h2>¿Qué es el Cociente de Peligro (QD)?</h2>
+<p>
+El <strong>Cociente de Peligro</strong> (QD), a veces llamado índice de riesgo, es el indicador utilizado en EQRS para
+evaluar el riesgo asociado a las sustancias <strong>con umbral</strong>, es decir, a las sustancias para las cuales un efecto
+tóxico solo aparece por encima de una determinada dosis de exposición (efectos no cancerígenos: hepatotoxicidad, neurotoxicidad,
+efectos renales, etc.). El QD compara la dosis de exposición realmente recibida por un individuo con una dosis de referencia
+toxicológica, por debajo de la cual no se espera ningún efecto adverso.
+</p>
+
+<h3>Fórmula de cálculo del QD</h3>
+<p>La fórmula general es:</p>
+<p style="background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:16px 20px;font-family:var(--font-mono);font-size:14px;">
+QD = Dosis de exposición (DJE) / VTR con umbral (DJR o DJT)
+</p>
+<p>
+donde la <strong>DJE</strong> (Dosis Diaria de Exposición) es la cantidad de sustancia recibida por vía oral, cutánea o
+inhalada, referida al peso corporal y a la duración de la exposición, y la <strong>VTR con umbral</strong> —
+Dosis Diaria Admisible (DJA), Dosis Diaria Tolerable (DJT) o Reference Dose (RfD) según los organismos — es la dosis por
+debajo de la cual la exposición se considera sin riesgo apreciable para la salud humana.
+</p>
+<p>
+Cuando varias sustancias afectan al mismo órgano diana, los QD individuales se suman (regla de suma por
+órgano diana, US EPA RAGS Part A §8.2), para obtener un <strong>QD acumulado</strong> representativo del riesgo global para ese órgano.
+</p>
+
+<h2>¿Qué es el Exceso de Riesgo Individual (ERI)?</h2>
+<p>
+El <strong>Exceso de Riesgo Individual</strong> (ERI) evalúa el riesgo asociado a las sustancias <strong>sin umbral</strong>, principalmente
+las sustancias cancerígenas genotóxicas, para las cuales se considera que no existe una dosis por debajo de la cual el
+riesgo sea nulo. El ERI expresa la probabilidad adicional, a lo largo de la vida, de desarrollar cáncer debido a
+la exposición a la sustancia considerada, en comparación con una población no expuesta.
+</p>
+
+<h3>Fórmula de cálculo del ERI</h3>
+<p style="background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:16px 20px;font-family:var(--font-mono);font-size:14px;">
+ERI = Dosis de exposición (DJE) × ERU (Exceso de Riesgo Unitario)
+</p>
+<p>
+El <strong>ERU</strong> (Exceso de Riesgo Unitario), también llamado Cancer Slope Factor (CSF) para la vía oral o Unit Risk para
+la vía inhalada, cuantifica la relación dosis-respuesta cancerígena de la sustancia. Igual que con el QD, los ERI individuales
+se suman por tipo de efecto cancerígeno (suma por diana tumoral) para obtener un ERI acumulado.
+</p>
+
+<h2>Los valores toxicológicos de referencia (VTR)</h2>
+<p>
+Los VTR son valores umbral o factores de pendiente establecidos por organismos científicos reconocidos (ANSES, US EPA
+IRIS, ATSDR, OMS) a partir de estudios toxicológicos y epidemiológicos. La elección del VTR condiciona directamente el
+resultado del QD o del ERI: la metodología INERIS ERS 2021 exige una jerarquización de las fuentes de VTR y su
+trazabilidad completa en el informe de evaluación.
+</p>
+<div style="overflow-x:auto;">
+<table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;margin:18px 0;">
+<thead>
+<tr style="background:#1a2b4a;color:#fff;">
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Tipo de VTR</th>
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Efecto considerado</th>
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Indicador asociado</th>
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Fuente habitual</th>
+</tr>
+</thead>
+<tbody>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">VTR con umbral (DJA/DJT/RfD)</td><td style="padding:8px;border:1px solid #d1dce8;">Efectos no cancerígenos (órgano diana)</td><td style="padding:8px;border:1px solid #d1dce8;">QD</td><td style="padding:8px;border:1px solid #d1dce8;">ANSES, US EPA IRIS, ATSDR</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">VTR sin umbral (ERU/CSF)</td><td style="padding:8px;border:1px solid #d1dce8;">Efectos cancerígenos genotóxicos</td><td style="padding:8px;border:1px solid #d1dce8;">ERI</td><td style="padding:8px;border:1px solid #d1dce8;">US EPA IRIS, OEHHA</td></tr>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">VLEP (vía profesional)</td><td style="padding:8px;border:1px solid #d1dce8;">Exposición en el entorno laboral</td><td style="padding:8px;border:1px solid #d1dce8;">QD del trabajador</td><td style="padding:8px;border:1px solid #d1dce8;">INRS, Código de Trabajo francés</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>El factor ADAF y la sensibilidad del niño</h2>
+<p>
+Para las sustancias cancerígenas con modo de acción mutagénico, la exposición durante la infancia presenta un peso
+toxicológico más elevado que la misma dosis recibida en la edad adulta, debido a la mayor sensibilidad de los tejidos en
+desarrollo y a la mayor esperanza de vida restante durante la cual la mutación puede evolucionar. Este fenómeno se tiene en
+cuenta mediante el factor <strong>ADAF</strong> (Age-Dependent Adjustment Factor):
+</p>
+<ul>
+<li><strong>ADAF = 3</strong> para el tramo de edad 0-2 años (primera infancia)</li>
+<li><strong>ADAF = 3</strong> aplicado también en Francia para el tramo «niño» según la doctrina ANSES 2018, en función del escenario</li>
+<li><strong>ADAF = 1</strong> para el adulto (sin mayoración)</li>
+</ul>
+<p>
+El factor ADAF multiplica directamente el ERU para la fracción de exposición correspondiente a este grupo de edad, lo que
+aumenta mecánicamente el ERI calculado para un niño en comparación con un adulto expuesto a la misma concentración.
+</p>
+
+<h2>Umbrales de aceptabilidad del riesgo</h2>
+<p>
+Los umbrales presentados a continuación son los habitualmente adoptados por la doctrina francesa y las guías metodológicas
+INERIS/ANSES para valorar la aceptabilidad de un riesgo sanitario en el marco de un IEM o de un plan de gestión.
+</p>
+<div style="overflow-x:auto;">
+<table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;margin:18px 0;">
+<thead>
+<tr style="background:#1a2b4a;color:#fff;">
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Indicador</th>
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Umbral habitual</th>
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Interpretación</th>
+</tr>
+</thead>
+<tbody>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">QD (por órgano diana)</td><td style="padding:8px;border:1px solid #d1dce8;">&lt; 1</td><td style="padding:8px;border:1px solid #d1dce8;">Riesgo no cancerígeno considerado aceptable</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">ERI (por efecto cancerígeno)</td><td style="padding:8px;border:1px solid #d1dce8;">&lt; 10⁻⁵ (zona de gestión 10⁻⁶ a 10⁻⁵)</td><td style="padding:8px;border:1px solid #d1dce8;">Riesgo cancerígeno considerado aceptable o a examinar según el contexto</td></tr>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">ERI (umbral de vigilancia reforzada)</td><td style="padding:8px;border:1px solid #d1dce8;">&gt; 10⁻⁵</td><td style="padding:8px;border:1px solid #d1dce8;">Riesgo generalmente considerado no aceptable, requiere gestión</td></tr>
+</tbody>
+</table>
+</div>
+<p style="font-size:12px;color:#666;">
+Estos umbrales son orientativos y deben valorarse caso por caso por la consultora y la administración competente
+(DDT, DREAL, ARS) en función del contexto local, del número de personas expuestas y del uso del sitio.
+</p>
+
+<h2>Las poblaciones objetivo de la EQRS</h2>
+<p>
+La EQRS distingue varias poblaciones cuyos parámetros de exposición (duración, frecuencia, peso corporal, cantidad
+de aire inhalado, cantidad de suelo ingerido) difieren significativamente:
+</p>
+<ul>
+<li><strong>Adulto residente</strong> — exposición crónica de larga duración en el lugar de residencia</li>
+<li><strong>Niño (0-6 años)</strong> — parámetros de exposición aumentados, aplicación del factor ADAF para los efectos sin umbral</li>
+<li><strong>Trabajador</strong> — exposición profesional, comparación con los Valores Límite de Exposición Profesional (VLEP) como complemento del QD</li>
+</ul>
+
+<h2>Conformidad con INERIS ERS 2021 y ANSES 2018</h2>
+<p>
+La metodología de evaluación de riesgos sanitarios promovida por el <strong>INERIS (ERS 2021)</strong> regula todo el
+proceso: selección de las sustancias, elección y jerarquización de los VTR, reglas de suma de los QD y de los ERI, y
+presentación de los resultados en el informe. Los propios VTR, así como el factor ADAF aplicable al niño, son
+actualizados por la <strong>ANSES</strong>, cuya doctrina de 2018 es la referencia para los profesionales franceses.
+</p>
+
+<h2>Metodología práctica de cálculo en EQRS</h2>
+<p>
+En la práctica de una consultora SSP, el cálculo del QD y del ERI se enmarca en una secuencia metodológica
+estructurada, que se deriva directamente del modelo conceptual del sitio (identificación de las fuentes, de las vías de
+transferencia y de las dianas):
+</p>
+<h3>1. Selección de las sustancias de interés</h3>
+<p>
+La lista de sustancias a incluir en el cálculo resulta de las investigaciones de campo (suelos, aguas subterráneas, aire
+del suelo, aire interior) y del historial de actividad del sitio. Cada sustancia se clasifica luego según su modo de
+acción toxicológico: con umbral (QD) o sin umbral (ERI), y algunas sustancias presentan ambos tipos de efectos, lo que
+requiere un cálculo paralelo de los dos indicadores.
+</p>
+<h3>2. Construcción del escenario de exposición</h3>
+<p>
+Para cada población objetivo (adulto, niño, trabajador), el escenario de exposición define las vías de transferencia
+pertinentes (ingestión de suelo, contacto cutáneo, inhalación de aire exterior o de aire interior mediante el modelo Johnson
+&amp; Ettinger, ingestión de agua), la frecuencia y la duración de la exposición, así como los parámetros fisiológicos (peso
+corporal, volumen de aire inhalado, cantidad de suelo ingerido) procedentes de las guías de referencia.
+</p>
+<h3>3. Cálculo de la Dosis Diaria de Exposición (DJE)</h3>
+<p>
+La DJE agrega, para cada vía de transferencia, la concentración de la sustancia en el punto de exposición, la tasa de
+contacto, la frecuencia y la duración de la exposición, referidas al peso corporal y al período de cálculo (toda la
+vida para el ERI, duración de exposición para el QD).
+</p>
+<h3>4. Aplicación de los VTR y suma</h3>
+<p>
+La DJE se compara luego con la VTR con umbral (cálculo del QD) o se multiplica por el ERU (cálculo del ERI), para cada
+vía de transferencia y sustancia. Los resultados se suman finalmente por órgano diana para el QD, y por efecto
+cancerígeno para el ERI, para obtener los indicadores acumulados comparados con los umbrales de aceptabilidad.
+</p>
+<h3>5. Interpretación y jerarquización</h3>
+<p>
+Cuando se superan los umbrales, el evaluador identifica las sustancias, vías de transferencia y órganos diana que más
+contribuyen, lo que permite orientar el plan de gestión (trabajos de descontaminación, restricción de uso, servidumbres)
+hacia las palancas más eficaces para reducir el riesgo por debajo de los umbrales de aceptabilidad.
+</p>
+
+<h2>Limitaciones y precauciones metodológicas</h2>
+<p>
+El cálculo del QD y del ERI se basa en hipótesis conservadoras (concentración máxima representativa, escenarios de
+exposición mayorados) destinadas a proteger a las poblaciones más sensibles. Estas hipótesis pueden llevar a
+sobrestimar el riesgo real, lo que justifica, en algunos casos, el uso de un análisis de sensibilidad (por ejemplo
+mediante simulación Monte-Carlo) para evaluar la variabilidad de los resultados y evitar medidas de gestión
+desproporcionadas. La calidad del cálculo también depende en gran medida de la representatividad de los datos de campo
+(número de puntos de medición, período de muestreo) y de la trazabilidad de los VTR utilizados, que siempre deben
+citarse con su fuente y su fecha de actualización en el informe de EQRS.
+</p>
+
+<div style="background:linear-gradient(135deg,#1a2b4a 0%,#213354 100%);border-radius:16px;padding:32px;margin:32px 0;color:#fff;">
+  <h3 style="color:#fff;margin-top:0;">Calcule automáticamente el QD y el ERI con EQRS V31.05 + ECOTOX</h3>
+  <p style="color:#dbe4f0;">
+    El software <strong>EQRS V31.05 + ECOTOX</strong> integra 104 sustancias HHRA con VTR actualizados, cálculo automático
+    del QD y del ERI por órgano diana y por población, aplicación del factor ADAF, y generación de un informe PDF listo
+    para presentar a la administración.
+  </p>
+  <p style="margin-bottom:0;">
+    <a href="../outils/eqrs-v31-05-ecotox.html" class="btn btn-primary">Descubrir EQRS V31.05 + ECOTOX</a>
+    <a href="../outils/eqrs-je.html" class="btn btn-outline" style="margin-left:10px;color:#fff;border-color:#fff;">Ver EQRS Johnson &amp; Ettinger</a>
+  </p>
+</div>
+
+<h2>Preguntas frecuentes — Cálculo de QD y ERI en EQRS</h2>
+<div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">¿Cuál es la diferencia entre QD y ERI?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">El Cociente de Peligro (QD) evalúa el riesgo de las sustancias con umbral (efectos no cancerígenos) comparando la dosis de exposición con una dosis de referencia (VTR con umbral). El Exceso de Riesgo Individual (ERI) evalúa el riesgo de las sustancias sin umbral (cancerígenas) multiplicando la dosis de exposición por un exceso de riesgo unitario (ERU).</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">¿Cuál es el umbral de aceptabilidad del QD?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">El umbral de aceptabilidad habitual del Cociente de Peligro es QD &lt; 1 por órgano diana. Por encima de 1, la dosis de exposición supera la dosis de referencia toxicológica y el riesgo se considera no aceptable en su estado actual.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">¿Cuál es el umbral de aceptabilidad del ERI?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">El Exceso de Riesgo Individual se considera habitualmente aceptable por debajo de 10⁻⁵, con una zona de gestión caso por caso entre 10⁻⁶ y 10⁻⁵ según el contexto del sitio, el número de personas expuestas y la política de gestión adoptada por la administración.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">¿Qué es el factor ADAF y por qué el niño tiene un factor 3?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">El ADAF (Age-Dependent Adjustment Factor) pondera la mayor sensibilidad del organismo en desarrollo a las sustancias cancerígenas con modo de acción genotóxico. Para el niño de 0 a 2 años se aplica un factor multiplicador de 3 al ERU, conforme a las recomendaciones de la US EPA y a la doctrina ANSES 2018.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">¿El software EQRS de GMEP cumple con la metodología INERIS y ANSES?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Sí. EQRS V31.05 + ECOTOX aplica la metodología INERIS ERS 2021, los VTR y el factor ADAF conformes a ANSES 2018, así como las reglas de suma por órgano diana y por efecto cancerígeno de la US EPA RAGS Part A.</p></div>
+  </details>
+</div>
+
+
+<section style="margin:40px 0;border-top:1px solid var(--border);padding-top:20px;" aria-labelledby="refs-title">
+  <h2 id="refs-title" style="font-size:1.15rem;">Referencias metodológicas</h2>
+  <ul style="line-height:1.9;font-size:0.92rem;">
+      <li><a href="https://www.ineris.fr/fr/ers-2021-methodologie-evaluation-risques-sanitaires-sites-sols-pollues" rel="noopener" target="_blank">INERIS — Metodología ERS 2021</a></li>
+      <li><a href="https://www.anses.fr/fr/content/valeurs-toxicologiques-de-r%C3%A9f%C3%A9rence-vtr" rel="noopener" target="_blank">ANSES — Valores toxicológicos de referencia (VTR)</a></li>
+      <li><a href="https://www.epa.gov/risk/risk-assessment-guidance-superfund-rags-part" rel="noopener" target="_blank">US EPA — RAGS Part A (Risk Assessment Guidance)</a></li>
+      <li><a href="https://www.epa.gov/risk/childrens-environmental-exposure-factors" rel="noopener" target="_blank">US EPA — Child-Specific Exposure Factors (ADAF)</a></li>
+  </ul>
+</section>
+
+<div style="text-align:center;margin:40px 0;">
+  <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-primary" style="font-size:16px;padding:14px 32px;">Prueba gratuita de 14 días — sin tarjeta de crédito</a>
+  <p style="font-size:13px;color:var(--text-mute);margin-top:10px;">Consulte también los <a href="../tarifs.html">precios</a> de los programas GMEP.</p>
+</div>
+
+<p style="font-size:13px;color:var(--text-mute);border-top:1px solid var(--border);padding-top:16px;">
+Redactado por <strong>Eric Azulay</strong> — Ingeniero SSP (suelos y aguas contaminados), gerente de SARL G.M.E.P
+</p>
+
+</div>
+</article>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tel. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nuestras herramientas</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modelización GEP — DLE y Ley del Agua</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modelización del ensayo Porchet</a></li>
+          <li><a href="../outils/eqrs-v31-05-ecotox.html">EQRS V8 + ECOTOX V8</a></li>
+          <li><a href="../outils/eqrs-v8-ecotox-humain.html">EQRS V8 + Módulo HUMAIN</a></li>
+          <li><a href="../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../outils/domenico.html">Transferencia suelo → acuífero → captación</a></li>
+          <li><a href="../outils/rabattement/index.html">Abatimiento del nivel freático IOTA</a></li>
+          <li><a href="../outils/anc-assainissement.html">Dimensionamiento ANC</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Empresa</h6>
+        <ul>
+          <li><a href="../expertise.html">Experiencia</a></li>
+          <li><a href="../tarifs.html">Precios</a></li>
+          <li><a href="../guide-11-outils/index.html">Guía de 13 herramientas (PDF)</a></li>
+          <li><a href="../mentions-legales.html">Aviso legal</a></li>
+          <li><a href="../cgv.html">Condiciones de venta</a></li>
+          <li><a href="../contact.html">Contacto</a></li>
+        <li><a href="../lexique.html">Glosario</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Todos los derechos reservados.</p>
+        <p>Todo nuestro software es propiedad exclusiva de SARL G.M.E.P. Queda prohibida cualquier reproducción, difusión o utilización, incluso parcial, sin autorización previa por escrito.</p>
+        <p class="credit">Diseño y desarrollo: Eric Azulay — Gerente de SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/nav.js"></script>
+<script src="../../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

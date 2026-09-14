@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="es" data-alt-fr="/blog/modele-johnson-ettinger-intrusion-vapeurs.html" data-alt-en="/en/blog/modele-johnson-ettinger-intrusion-vapeurs.html" data-alt-es="/es/blog/modele-johnson-ettinger-intrusion-vapeurs.html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modelo Johnson & Ettinger: modelizar la intrusión de vapores en edificios | GMEP</title>
+<meta name="description" content="Modelo Johnson & Ettinger para la intrusión de vapores: factor de atenuación alfa, parámetros clave, COV y disolventes clorados, límites y mediciones.">
+<meta name="keywords" content="modelo Johnson Ettinger, intrusión de vapores, factor de atenuación alfa, aire interior suelos contaminados, TCE PCE, EPA 2004, COV disolventes clorados">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/es/blog/modele-johnson-ettinger-intrusion-vapeurs.html">
+<link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/modele-johnson-ettinger-intrusion-vapeurs.html">
+<link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/modele-johnson-ettinger-intrusion-vapeurs.html">
+<link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/modele-johnson-ettinger-intrusion-vapeurs.html">
+<link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/modele-johnson-ettinger-intrusion-vapeurs.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.gmep-france.eu/es/blog/modele-johnson-ettinger-intrusion-vapeurs.html">
+<meta property="og:title" content="Modelo Johnson & Ettinger: modelizar la intrusión de vapores | GMEP">
+<meta property="og:description" content="Principio del modelo Johnson & Ettinger (EPA 2004): factor de atenuación alfa, ecuación de transporte, parámetros clave, sustancias implicadas, límites.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — Software de modelización ambiental">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Modelo Johnson & Ettinger: modelizar la intrusión de vapores | GMEP">
+<meta name="twitter:description" content="Principio del modelo Johnson & Ettinger (EPA 2004): factor de atenuación alfa, ecuación de transporte, parámetros clave, sustancias implicadas, límites.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://www.gmep-france.eu/blog/modele-johnson-ettinger-intrusion-vapeurs.html#article",
+      "headline": "Modelo Johnson & Ettinger: modelizar la intrusión de vapores en edificios",
+      "description": "Modelo Johnson & Ettinger para la intrusión de vapores: factor de atenuación alfa, parámetros clave, COV y disolventes clorados, límites y mediciones.",
+      "datePublished": "2026-07-03",
+      "dateModified": "2026-07-03",
+      "inLanguage": "fr-FR",
+      "author": {
+        "@type": "Person",
+        "name": "Eric Azulay",
+        "jobTitle": "Ingeniero SSP (suelos y aguas contaminados)",
+        "url": "https://www.gmep-france.eu/expertise.html"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "G.M.E.P",
+        "url": "https://www.gmep-france.eu",
+        "logo": { "@type": "ImageObject", "url": "https://www.gmep-france.eu/assets/img/og-image.png" }
+      },
+      "mainEntityOfPage": { "@type": "WebPage", "@id": "https://www.gmep-france.eu/blog/modele-johnson-ettinger-intrusion-vapeurs.html" },
+      "image": "https://www.gmep-france.eu/assets/img/og-image.png"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "¿Qué es el modelo Johnson & Ettinger?", "acceptedAnswer": { "@type": "Answer", "text": "El modelo Johnson & Ettinger (1991, formalizado por la US EPA en 2004) es un modelo analítico de transporte que simula la migración de compuestos volátiles desde una fuente subterránea (suelo o agua subterránea contaminados) hacia el aire interior de un edificio, mediante difusión y advección en la zona no saturada y luego a través de los cimientos." } },
+        { "@type": "Question", "name": "¿Qué es el factor de atenuación alfa?", "acceptedAnswer": { "@type": "Answer", "text": "El factor de atenuación alfa es la relación entre la concentración en el aire interior y la concentración en la fuente. Refleja la dilución y la atenuación que sufre el compuesto volátil al transferirse a través del suelo y luego de los cimientos del edificio. Un valor típico de alfa se encuentra entre 10⁻² y 10⁻⁴." } },
+        { "@type": "Question", "name": "¿Qué sustancias están implicadas en la intrusión de vapores?", "acceptedAnswer": { "@type": "Answer", "text": "Los compuestos orgánicos volátiles (COV), en particular los disolventes clorados como el tricloroetileno (TCE) y el tetracloroetileno (PCE), el benceno y los hidrocarburos aromáticos policíclicos (HAP) ligeros, son las sustancias evaluadas con mayor frecuencia con el modelo Johnson & Ettinger." } },
+        { "@type": "Question", "name": "¿Cuáles son las limitaciones del modelo Johnson & Ettinger?", "acceptedAnswer": { "@type": "Answer", "text": "El modelo se basa en hipótesis simplificadoras (régimen estacionario, suelo homogéneo, ausencia de degradación biológica), lo que puede llevar a sobreestimar o subestimar la concentración real en el aire interior. Se recomienda complementarlo, cuando sea posible, con mediciones directas de gas del suelo o de aire interior." } },
+        { "@type": "Question", "name": "¿El software de GMEP integra el modelo Johnson & Ettinger?", "acceptedAnswer": { "@type": "Answer", "text": "Sí, la herramienta EQRS Johnson & Ettinger (V7) de GMEP implementa el modelo conforme a la US EPA 2004, con cálculo automático del factor de atenuación alfa e integración directa en el cálculo del QD y del ERI por inhalación de aire interior." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Inicio GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Consultora de medio ambiente e hidrogeología</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navegación principal">
+      <a href="../index.html">Inicio</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Herramientas
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modelización 3D suelo / agua subterránea / estructuras · NUEVO</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modelización GEP — DLE y Ley del Agua<span class="nav-mi-desc">Dimensionamiento de aguas pluviales + expedientes DLE/GEP · NUEVO</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modelización del ensayo de Porchet<span class="nav-mi-desc">Cálculo de K de campo + comparación con GEP · NUEVO</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX<span class="nav-mi-desc">HHRA + ecotoxicología — 104 sustancias · NUEVO</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Descenso V15.87<span class="nav-mi-desc">Multicapa + asistente de IA · NUEVO</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">Dimensionamiento ANC<span class="nav-mi-desc">Saneamiento individual y colectivo · NUEVO</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transferencia suelo-agua subterránea<span class="nav-mi-desc">Domenico 1987 + API Hub'eau · NUEVO</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Modelo conceptual del emplazamiento<span class="nav-mi-desc">IEM + Plan de gestión · NUEVO</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Intrusión de vapores — EPA 2004</span></a>
+          <a href="../outils/domenico.html" role="menuitem">Transferencia suelo → agua subterránea → captación<span class="nav-mi-desc">Modelo Domenico 1987</span></a>
+          <a href="../outils/rabattement/index.html" role="menuitem">Descenso del nivel freático<span class="nav-mi-desc">Theis + IOTA</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Precios</a>
+      <a href="../expertise.html">Experiencia</a>
+      <a href="index.html" aria-current="page">Blog</a>
+      <a href="../contact.html">Contacto</a>
+    <a href="../lexique.html">Glosario</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Selección de idioma">
+        <button class="lang-btn" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn active" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Iniciar sesión</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Registrarse</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menú" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <span class="hero-badge">Guía técnica — Intrusión de vapores</span>
+    <h1>Modelo Johnson &amp; Ettinger: modelizar la intrusión de vapores en edificios</h1>
+    <p class="lead" style="max-width:780px;">
+      El <strong>modelo Johnson &amp; Ettinger</strong> es la referencia internacional para estimar la concentración en el aire interior
+      de compuestos volátiles procedentes de un suelo o de aguas subterráneas contaminados. Este artículo presenta el principio del modelo
+      (EPA 2004), el <strong>factor de atenuación α</strong>, los parámetros clave del cálculo, las sustancias implicadas y las
+      precauciones a tener en cuenta para un diagnóstico robusto de intrusión de vapores.
+    </p>
+  </div>
+</section>
+
+<article>
+<div class="container container-narrow" style="line-height:1.75;">
+
+<p style="font-size:13px;color:var(--text-mute);">Escrito por <strong>Eric Azulay</strong> — Ingeniero SSP (suelos y aguas contaminados), gerente de SARL G.M.E.P · Publicado el 3 de julio de 2026</p>
+
+<h2>Principio del modelo Johnson &amp; Ettinger</h2>
+<p>
+Desarrollado inicialmente por Paul Johnson y Robert Ettinger en 1991 y formalizado posteriormente en la guía de la <strong>US EPA de 2004</strong>
+("User's Guide for Evaluating Subsurface Vapor Intrusion into Buildings"), el modelo Johnson &amp; Ettinger es un modelo
+analítico en régimen estacionario que simula el transporte de compuestos volátiles desde una fuente de contaminación
+subterránea (suelo contaminado o agua subterránea contaminada) hasta el aire interior de un edificio situado en superficie.
+</p>
+<p>
+El modelo representa dos mecanismos de transporte sucesivos: la <strong>difusión/advección en la zona no saturada</strong>
+(entre la fuente y los cimientos), y luego el <strong>paso a través de los cimientos del edificio</strong> (losa, fisuras,
+juntas), seguido de una dilución en el volumen de aire interior renovado por la ventilación.
+</p>
+
+<h2>El factor de atenuación α</h2>
+<p>
+El resultado central del modelo es el <strong>factor de atenuación α</strong> (alfa), definido como la relación entre la
+concentración en el aire interior y la concentración en la fuente (gas del suelo o agua subterránea, según el punto de cálculo):
+</p>
+<p style="background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:16px 20px;font-family:var(--font-mono);font-size:14px;">
+α = Concentración en el aire interior (Ci) / Concentración en la fuente (Cs)
+</p>
+<p>
+Este factor, generalmente comprendido entre <strong>10⁻² y 10⁻⁴</strong>, depende de la profundidad de la fuente, de las propiedades del
+suelo atravesado (porosidad, permeabilidad, contenido de agua) y de las características del edificio (superficie de cimentación en
+contacto con el suelo, tasa de renovación de aire, caudal de entrada de aire por las fisuras). Una vez determinado α, la
+concentración en el aire interior es simplemente: Ci = α × Cs, valor que después se introduce en el cálculo de la dosis
+de exposición por inhalación para el EQRS.
+</p>
+
+<h2>Ecuación de transporte</h2>
+<p>
+El modelo Johnson &amp; Ettinger resuelve una ecuación de difusión-advección unidimensional a través de la zona no
+saturada, acoplada a un balance de masa en el volumen de aire interior del edificio. De forma simplificada, el flujo de
+vapores que entra en el edificio (Jf) se expresa como:
+</p>
+<p style="background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:16px 20px;font-family:var(--font-mono);font-size:14px;">
+Jf = Deff × Cs / Lt (flujo difusivo a través de la zona no saturada)<br>
+Ci = Jf × Ab / (Qbuilding) (balance de masa en el volumen del edificio)
+</p>
+<p>
+donde <strong>Deff</strong> es el coeficiente de difusión efectivo del compuesto en el suelo, <strong>Lt</strong> la distancia total de
+difusión (profundidad de la fuente), <strong>Ab</strong> la superficie de cimentación en contacto con el suelo contaminado, y
+<strong>Qbuilding</strong> el caudal de renovación de aire del edificio. El modelo completo (EPA 2004) integra en realidad un
+acoplamiento difusión/advección a través de las fisuras de los cimientos, mediante un parámetro de permeabilidad al gas del suelo.
+</p>
+
+<h2>Parámetros clave del cálculo</h2>
+<div style="overflow-x:auto;">
+<table style="width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;margin:18px 0;">
+<thead>
+<tr style="background:#1a2b4a;color:#fff;">
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Parámetro</th>
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Función en el modelo</th>
+<th style="padding:10px;text-align:left;border:1px solid #0e2f44;">Origen típico</th>
+</tr>
+</thead>
+<tbody>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">Porosidad total y efectiva del suelo</td><td style="padding:8px;border:1px solid #d1dce8;">Controla el coeficiente de difusión efectivo</td><td style="padding:8px;border:1px solid #d1dce8;">Ensayos geotécnicos, valores por defecto de la EPA según textura</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Permeabilidad al gas del suelo</td><td style="padding:8px;border:1px solid #d1dce8;">Determina el flujo advectivo a través de las fisuras</td><td style="padding:8px;border:1px solid #d1dce8;">Ensayos in situ, correlaciones con la textura del suelo</td></tr>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">Profundidad de la fuente (Lt)</td><td style="padding:8px;border:1px solid #d1dce8;">Distancia de difusión entre la fuente y los cimientos</td><td style="padding:8px;border:1px solid #d1dce8;">Sondeos geotécnicos, piezometría</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Caudal de ventilación del edificio (Qbuilding)</td><td style="padding:8px;border:1px solid #d1dce8;">Dilución de los vapores en el volumen de aire interior</td><td style="padding:8px;border:1px solid #d1dce8;">Tasa de renovación de aire por defecto o medida</td></tr>
+<tr><td style="padding:8px;border:1px solid #d1dce8;">Superficie y fisuras de los cimientos</td><td style="padding:8px;border:1px solid #d1dce8;">Superficie de intercambio suelo/edificio</td><td style="padding:8px;border:1px solid #d1dce8;">Tipo de cimentación (losa, cámara sanitaria, sótano)</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px;border:1px solid #d1dce8;">Contenido de agua del suelo</td><td style="padding:8px;border:1px solid #d1dce8;">Reduce la porosidad al gas disponible para la difusión</td><td style="padding:8px;border:1px solid #d1dce8;">Mediciones de campo, estacionalidad</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Sustancias implicadas</h2>
+<p>
+El modelo Johnson &amp; Ettinger se aplica a compuestos suficientemente volátiles para migrar en fase gaseosa a través de la
+zona no saturada. Las familias de sustancias evaluadas con mayor frecuencia son:
+</p>
+<ul>
+<li><strong>Disolventes clorados</strong> — tricloroetileno (TCE), tetracloroetileno (PCE), cloruro de vinilo, 1,1-dicloroetileno: sustancias prioritarias en la intrusión de vapores debido a su toxicidad y a su elevada volatilidad</li>
+<li><strong>Compuestos orgánicos volátiles (COV) de origen petrolífero</strong> — benceno, tolueno, etilbenceno, xilenos (BTEX)</li>
+<li><strong>Hidrocarburos aromáticos policíclicos (HAP) ligeros</strong> — en particular el naftaleno, por su volatilidad relativamente elevada entre los HAP</li>
+</ul>
+<p>
+Los metales y la mayoría de los HAP pesados, poco o nada volátiles, no son en cambio pertinentes para esta vía de
+transferencia y corresponden a otras modelizaciones (ingestión, contacto cutáneo).
+</p>
+
+<h2>Límites y precauciones de uso</h2>
+<p>
+Como todo modelo analítico simplificado, Johnson &amp; Ettinger se basa en hipótesis que conviene tener presentes al
+interpretar los resultados:
+</p>
+<ul>
+<li><strong>Régimen estacionario</strong> — el modelo no capta las variaciones estacionales del nivel freático, del contenido de agua del suelo o de la presión barométrica, que pueden sin embargo hacer variar de forma significativa las concentraciones medidas en el aire interior</li>
+<li><strong>Suelo homogéneo</strong> — la heterogeneidad real de los suelos (lentejones de arena, fisuras, redes enterradas) puede crear vías preferenciales no representadas por el modelo 1D</li>
+<li><strong>Ausencia de degradación biológica</strong> en la versión conservadora del modelo, mientras que ciertos compuestos (en particular los hidrocarburos de origen petrolífero) pueden biodegradarse parcialmente en la zona no saturada</li>
+<li><strong>Fuerte sensibilidad a los parámetros de entrada</strong> — pequeñas variaciones de la permeabilidad o de la profundidad de la fuente pueden modificar el factor α en varios órdenes de magnitud</li>
+</ul>
+
+<h2>Comparación con las mediciones de campo</h2>
+<p>
+Debido a estas limitaciones, la doctrina metodológica recomienda, siempre que sea posible, <strong>confrontar los resultados
+del modelo con mediciones directas</strong>: toma de muestras de gas del suelo bajo la losa (sub-slab), mediciones de aire interior y de aire
+ambiente de referencia (para distinguir la contribución del emplazamiento de las fuentes domésticas), o incluso mediciones de flujo superficial.
+Este enfoque de múltiples líneas de evidencia (modelización + mediciones) se recomienda especialmente cuando los resultados
+del modelo Johnson &amp; Ettinger se sitúan cerca de los umbrales de aceptabilidad del QD o del ERI, o cuando el edificio
+estudiado ya está ocupado.
+</p>
+<p>
+La modelización sigue siendo, no obstante, una herramienta esencial en la fase de diagnóstico inicial (IEM) y de dimensionamiento de
+campañas de mediciones, así como para evaluar escenarios prospectivos (proyectos de construcción en un emplazamiento contaminado) en los que
+todavía no es posible ninguna medición directa.
+</p>
+
+<h2>Escenarios habituales de aplicación</h2>
+<p>
+El modelo Johnson &amp; Ettinger se utiliza en varios contextos operativos que encuentran las consultoras de ingeniería
+SSP:
+</p>
+<h3>Diagnóstico de un edificio existente en un emplazamiento contaminado</h3>
+<p>
+Cuando un edificio ya está construido sobre o cerca de una fuente de contaminación volátil identificada (agua subterránea o suelo
+contaminados), el modelo permite una primera estimación del riesgo de intrusión de vapores antes de emprender, si es necesario,
+una campaña de mediciones de aire interior o de gas del suelo bajo la losa.
+</p>
+<h3>Proyecto de urbanización o construcción</h3>
+<p>
+En el marco de un proyecto de construcción en un emplazamiento con contaminación residual del suelo o del agua subterránea, el
+modelo permite anticipar, desde la fase de diseño, el riesgo de intrusión de vapores en los futuros edificios y
+dimensionar medidas de gestión adecuadas (membrana anti-intrusión de vapores, ventilación de la cámara sanitaria,
+dren de despresurización bajo la losa).
+</p>
+<h3>Reevaluación tras las obras de descontaminación</h3>
+<p>
+El modelo también se utiliza para verificar, a partir de las nuevas concentraciones residuales medidas, que el
+riesgo de intrusión de vapores sigue siendo aceptable después de la ejecución de obras de descontaminación o de confinamiento,
+en el marco del seguimiento del plan de gestión.
+</p>
+
+<h2>Integración en el EQRS</h2>
+<p>
+La concentración en el aire interior calculada por el modelo Johnson &amp; Ettinger alimenta directamente el cálculo de la dosis
+diaria de exposición por inhalación, y luego el cálculo del QD y del ERI según la metodología descrita en nuestro
+artículo sobre el <a href="eqrs-calcul-qd-eri.html">cálculo de QD y ERI en EQRS</a>. Esta articulación permite cubrir
+toda la cadena fuente-transferencia-receptor, desde la fuente de contaminación hasta el riesgo sanitario para los
+ocupantes del edificio.
+</p>
+
+<div style="background:linear-gradient(135deg,#1a2b4a 0%,#213354 100%);border-radius:16px;padding:32px;margin:32px 0;color:#fff;">
+  <h3 style="color:#fff;margin-top:0;">Modelizar la intrusión de vapores con EQRS Johnson &amp; Ettinger</h3>
+  <p style="color:#dbe4f0;">
+    La herramienta <strong>EQRS Johnson &amp; Ettinger (V7)</strong> de GMEP calcula automáticamente el factor de atenuación α y la
+    concentración en el aire interior, conforme a la US EPA 2004, y la integra directamente en el cálculo del QD y del ERI
+    para todas las poblaciones objetivo.
+  </p>
+  <p style="margin-bottom:0;">
+    <a href="../outils/eqrs-je.html" class="btn btn-primary">Descubrir EQRS Johnson &amp; Ettinger (V7)</a>
+    <a href="../outils/eqrs-v31-05-ecotox.html" class="btn btn-outline" style="margin-left:10px;color:#fff;border-color:#fff;">Ver EQRS V31.05 + ECOTOX</a>
+  </p>
+</div>
+
+<h2>Preguntas frecuentes — Modelo Johnson &amp; Ettinger e intrusión de vapores</h2>
+<div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">¿Qué es el modelo Johnson &amp; Ettinger?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">El modelo Johnson &amp; Ettinger (1991, formalizado por la US EPA en 2004) es un modelo analítico de transporte que simula la migración de compuestos volátiles desde una fuente subterránea (suelo o agua subterránea contaminados) hacia el aire interior de un edificio, mediante difusión y advección en la zona no saturada y luego a través de los cimientos.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">¿Qué es el factor de atenuación alfa?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">El factor de atenuación alfa es la relación entre la concentración en el aire interior y la concentración en la fuente. Refleja la dilución y la atenuación que sufre el compuesto volátil al transferirse a través del suelo y luego de los cimientos del edificio. Un valor típico de alfa se encuentra entre 10⁻² y 10⁻⁴.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">¿Qué sustancias están implicadas en la intrusión de vapores?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Los compuestos orgánicos volátiles (COV), en particular los disolventes clorados como el tricloroetileno (TCE) y el tetracloroetileno (PCE), el benceno y los hidrocarburos aromáticos policíclicos (HAP) ligeros, son las sustancias evaluadas con mayor frecuencia con el modelo Johnson &amp; Ettinger.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">¿Cuáles son las limitaciones del modelo Johnson &amp; Ettinger?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">El modelo se basa en hipótesis simplificadoras (régimen estacionario, suelo homogéneo, ausencia de degradación biológica), lo que puede llevar a sobreestimar o subestimar la concentración real en el aire interior. Se recomienda complementarlo, cuando sea posible, con mediciones directas de gas del suelo o de aire interior.</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">¿El software de GMEP integra el modelo Johnson &amp; Ettinger?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Sí, la herramienta EQRS Johnson &amp; Ettinger (V7) de GMEP implementa el modelo conforme a la US EPA 2004, con cálculo automático del factor de atenuación alfa e integración directa en el cálculo del QD y del ERI por inhalación de aire interior.</p></div>
+  </details>
+</div>
+
+
+<section style="margin:40px 0;border-top:1px solid var(--border);padding-top:20px;" aria-labelledby="refs-title">
+  <h2 id="refs-title" style="font-size:1.15rem;">Referencias metodológicas</h2>
+  <ul style="line-height:1.9;font-size:0.92rem;">
+      <li><a href="https://www.epa.gov/vaporintrusion/epas-vapor-intrusion-technical-guide" rel="noopener" target="_blank">US EPA (2004) — Johnson & Ettinger model guidance</a></li>
+      <li><a href="https://www.epa.gov/vaporintrusion/visl-calculator" rel="noopener" target="_blank">US EPA — Vapor Intrusion Screening Level (VISL) calculator</a></li>
+      <li><a href="https://www.anses.fr/fr/system/files/AIR-Vi2014sa0088.pdf" rel="noopener" target="_blank">ANSES — Dictamen sobre la intrusión de vapores en el aire interior</a></li>
+      <li><a href="https://www.ineris.fr/fr" rel="noopener" target="_blank">INERIS — Guía sobre la consideración de la vía de exposición por inhalación de vapores</a></li>
+  </ul>
+</section>
+
+<div style="text-align:center;margin:40px 0;">
+  <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-primary" style="font-size:16px;padding:14px 32px;">Prueba gratuita de 14 días — sin tarjeta de crédito</a>
+  <p style="font-size:13px;color:var(--text-mute);margin-top:10px;">Consulte también las <a href="../tarifs.html">tarifas</a> de los programas de GMEP.</p>
+</div>
+
+<p style="font-size:13px;color:var(--text-mute);border-top:1px solid var(--border);padding-top:16px;">
+Escrito por <strong>Eric Azulay</strong> — Ingeniero SSP (suelos y aguas contaminados), gerente de SARL G.M.E.P
+</p>
+
+</div>
+</article>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tel. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nuestras herramientas</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modelización GEP — DLE y Ley del Agua</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modelización del ensayo de Porchet</a></li>
+          <li><a href="../outils/eqrs-v31-05-ecotox.html">EQRS V8 + ECOTOX V8</a></li>
+          <li><a href="../outils/eqrs-v8-ecotox-humain.html">EQRS V8 + Módulo HUMAIN</a></li>
+          <li><a href="../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../outils/domenico.html">Transferencia suelo → agua subterránea → captación</a></li>
+          <li><a href="../outils/rabattement/index.html">Descenso del nivel freático IOTA</a></li>
+          <li><a href="../outils/anc-assainissement.html">Dimensionamiento ANC</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Empresa</h6>
+        <ul>
+          <li><a href="../expertise.html">Experiencia</a></li>
+          <li><a href="../tarifs.html">Precios</a></li>
+          <li><a href="../guide-11-outils/index.html">Guía de 13 herramientas (PDF)</a></li>
+          <li><a href="../mentions-legales.html">Aviso legal</a></li>
+          <li><a href="../cgv.html">Condiciones de venta</a></li>
+          <li><a href="../contact.html">Contacto</a></li>
+        <li><a href="../lexique.html">Glosario</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Todos los derechos reservados.</p>
+        <p>Todo nuestro software es propiedad exclusiva de SARL G.M.E.P. Queda prohibida cualquier reproducción, difusión o uso, incluso parcial, sin autorización previa por escrito.</p>
+        <p class="credit">Diseño y desarrollo: Eric Azulay — Gerente de SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/nav.js"></script>
+<script src="../../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

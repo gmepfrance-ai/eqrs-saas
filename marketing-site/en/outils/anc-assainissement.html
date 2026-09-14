@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en" data-alt-fr="/outils/anc-assainissement.html" data-alt-en="/en/outils/anc-assainissement.html" data-alt-es="/es/outils/anc-assainissement.html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ANC Sizing — Individual &amp; Collective Sanitation | GMEP</title>
+<meta name="description" content="SaaS software for sizing non-collective sanitation (ANC): import of Porchet tests, multilayer soil profile, triple BRGM cross-check, groundwater vulnerability, DTU 64.1 calculation engine and PDF report ready for SPANC review. €550 excl. tax/year.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/en/outils/anc-assainissement.html">
+<link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/anc-assainissement.html">
+<link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/anc-assainissement.html">
+<link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/anc-assainissement.html">
+<link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/anc-assainissement.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/en/outils/anc-assainissement.html">
+<meta property="og:title" content="ANC Sizing — Individual &amp; Collective Sanitation | GMEP">
+<meta property="og:description" content="Import of Porchet tests, multilayer soil profile, triple BRGM cross-check, groundwater vulnerability and DTU 64.1 calculation engine for ANC sizing.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — ANC Sizing">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ANC Sizing — Individual &amp; Collective Sanitation | GMEP">
+<meta name="twitter:description" content="Complete sizing of a non-collective sanitation system: soil, Porchet tests, vulnerability, DTU 64.1 calculation engine, PDF report ready for SPANC review.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="GMEP Home">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Environmental &amp; hydrogeology engineering firm</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Main navigation">
+      <a href="../index.html">Home</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Tools
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <p class="nav-mi-head" role="presentation">Contaminated Land (SSP)</p>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS Johnson &amp; Ettinger (V7)<span class="nav-mi-desc">Vapor intrusion — EPA 2004</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX V8<span class="nav-mi-desc">HHRA + ecotoxicology — 104 substances · NEW</span></a>
+          <a href="../outils/eqrs-v8-ecotox-humain.html" role="menuitem">EQRS V8 + ECOTOX + HUMAIN<span class="nav-mi-desc">Human dietary pathway — PFAS, PCB, metals · NEW</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Soil-to-Groundwater Transfer<span class="nav-mi-desc">Domenico 1987 + Hub'eau API · NEW</span></a>
+          <a href="../outils/domenico.html" role="menuitem">Soil → Groundwater → Well Transfer<span class="nav-mi-desc">Domenico 1987 model</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Conceptual Site Model<span class="nav-mi-desc">IEM + Management Plan · NEW</span></a>
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">3D modeling of soil / groundwater / structures · NEW</span></a>
+          <a href="../outils/msp.html" role="menuitem">MSP — Soil Pollution Sources<span class="nav-mi-desc">Source diagnosis · NEW</span></a>
+          <p class="nav-mi-head" role="presentation">Hydrogeology</p>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Porchet Test Modeling<span class="nav-mi-desc">Field K calculation + GEP comparison · NEW</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">GEP Modeling — DLE &amp; Water Law<span class="nav-mi-desc">Stormwater sizing + DLE/GEP filings · NEW</span></a>
+          <a href="../outils/rabattement/index.html" role="menuitem">Groundwater Drawdown<span class="nav-mi-desc">Theis + IOTA</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Drawdown V15.87<span class="nav-mi-desc">Multilayer + AI assistant · NEW</span></a>
+          <a href="../outils/piezometres.html" role="menuitem">Monitoring Piezometers<span class="nav-mi-desc">Groundwater monitoring networks v2.9c · NEW</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">ANC Sizing<span class="nav-mi-desc">Individual &amp; collective sanitation · NEW</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Pricing</a>
+      <a href="../expertise.html">Expertise</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../contact.html">Contact</a>
+    <a href="../lexique.html">Glossary</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Choose language">
+        <button class="lang-btn" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn active" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Log in</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Sign up</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge" style="background:#2E7D5B;color:#fff;">Non-collective sanitation · DTU 64.1</span>
+        <h1>ANC <span style="color:#2E7D5B;">Sizing</span> — Individual &amp; Collective Sanitation</h1>
+        <p class="lead">Direct import of Porchet tests, multilayer soil profile, triple cross-check between measured / theoretical values and the BRGM geological map, groundwater vulnerability analysis and a complete sizing engine compliant with NF DTU 64.1. PDF report ready for SPANC review and one-click JSON export.</p>
+        <div class="hero-cta">
+          <a href="../tarifs.html#anc_annual" class="btn btn-primary" style="background:#2E7D5B;border-color:#2E7D5B;">Subscribe — €550 excl. tax/year</a>
+          <a href="https://app.gmep-france.eu/#/subscribe-anc" rel="noopener" class="btn btn-outline">Free 14-day trial</a>
+        </div>
+      </div>
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">anc sizing · soil &amp; hydrogeology</span>
+        </div>
+        <div class="hero-mock-row"><span class="l">Kdim retained (Porchet)</span><span class="v">2.5 × 10⁻⁵ m/s</span></div>
+        <div class="hero-mock-row"><span class="l">DTU 64.1 class</span><span class="v">90 mm/h · permeable</span></div>
+        <div class="hero-mock-row"><span class="l">Field facies / BRGM</span><span class="v">Granitic arena — consistent</span></div>
+        <div class="hero-mock-row"><span class="l">Selected system</span><span class="v">Infiltration trenches</span></div>
+        <div class="hero-mock-row"><span class="l">Length / number of drains</span><span class="v">45 ml — 2 drains</span></div>
+        <div class="hero-mock-result"><strong>Groundwater vulnerability</strong><span>No intake &lt;35 m — low risk</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="max-width:900px;margin:0 auto;">
+    <div style="background:#eef4fb;border:1px solid #c6dcf0;border-radius:12px;padding:1.3rem 1.5rem;">
+      <p style="margin:0;"><strong style="color:#1a2b4a;">International availability —</strong> the automatic retrieval of geological and piezometric data (BRGM, Hub&#39;Eau) covers France. For a project located in another country, these parameters must be entered manually by the user; the automation of this retrieval by country is under development.</p>
+    </div>
+  </div>
+</section>
+
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Features</span>
+      <h2>From the field test to the SPANC-ready file</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="currentColor" stroke-width="2"/><path d="M15 3v5h5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Complete project identification</h3>
+        <p>Owner, surveying organization, drilling company, SPANC case number and building permit number. Automatic identification of the competent SPANC by geolocation (postal code) of the test points.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 4"/><rect x="9" y="2" width="6" height="20" rx="1" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <h3>Multilayer soil profile &amp; Porchet import</h3>
+        <p>Layer table (depth, facies, porosity), direct import of the JSON exported by Porchet Test Modeling, and a scrolling bar of 24 geological facies classified by family with Kdim retained per DTU 64.1.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 12v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Triple consistency cross-check</h3>
+        <p>Automatic comparison of the measured K (Porchet), the theoretical permeability of the facies (bibliographic table) and the official geological formation published by the BRGM (BD Charm-50 / InfoTerre) at the exact test point.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2C8 7 5 11 5 15a7 7 0 0014 0c0-4-3-8-7-13z" stroke="currentColor" stroke-width="2"/><path d="M9 15a3 3 0 003 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Vulnerability &amp; receptor inventory</h3>
+        <p>The 35 m rule (drinking water intakes/wells), groundwater depth vs. trench bottom, automatic inventory of Hub'eau/BRGM structures within a 3 km radius, and Domenico attenuation model to estimate the residual impact at each receptor.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M8 12l2.5 2.5L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>DTU 64.1 sizing engine</h3>
+        <p>Grease pretreatment, septic tank, automatic selection of the system (trenches, spreading bed, non-drained/drained sand filter, mound), lifting station if required — all formulas displayed on screen and in the report.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 15l3-4 3 3 4-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Maps, conceptual model &amp; report</h3>
+        <p>Embedded BRGM/Sandre hydrogeological maps, automatically generated conceptual model of the installation, PDF report ready for SPANC review with a feasibility summary note and structured JSON export.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION — MÉTHODE ET FORMULES -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container container-narrow">
+    <div class="section-head">
+      <span class="section-eyebrow">Method</span>
+      <h2>From the in-situ soil to the selected system</h2>
+    </div>
+    <div class="compliance-list">
+      <p>The software first determines whether infiltration into the in-situ soil is possible, by cross-referencing the measured Kdim (Porchet tests), the dominant geological facies and the useful thickness of the relevant layer below the planned trench bottom.</p>
+      <h3>Permeability classification (NF DTU 64.1)</h3>
+      <p>Kdim (m/s) → mm/h conversion, then classification: <strong>K &gt; 500 mm/h</strong> very permeable soil (spreading bed) · <strong>50–500 mm/h</strong> permeable (infiltration trenches, 45 ml up to 5 PE + 9 ml/additional PE) · <strong>30–50 mm/h</strong> moderately permeable (trenches, 50 ml + 10 ml/additional PE) · <strong>15–30 mm/h</strong> poor permeability (parcel-level study, non-drained sand filter as a cautious alternative) · <strong>K &lt; 15 mm/h</strong> impermeable soil (drained sand filter mandatory with an authorized outlet).</p>
+      <h3>Confirmed infiltration incapacity</h3>
+      <p>When the Kdim is &lt; 15 mm/h and/or the dominant facies (clay, marl, clayey silt, compact shale) is present over a significant continuous thickness, the tool displays an explicit verdict of impossible infiltration and automatically determines the substitute system (vertical drained sand filter) with surface area, filter bed thickness and drain length.</p>
+      <h3>Vulnerability rule — distance to intakes</h3>
+      <p>Absolute, non-derogable prohibition on installation within <strong>35 m</strong> of a declared intake or well used for human consumption (Arrêté of 7 September 2009 as amended by the Arrêté of 7 March 2012; Art. R.214-5 of the Environmental Code).</p>
+      <h3>Attenuation model (Domenico solution)</h3>
+      <p>For each receptor identified in the flow plume, the residual concentration is estimated using the analytical Domenico &amp; Schwartz solution (dispersivities, retardation, first-order degradation), compared against the quality references for water intended for human consumption.</p>
+      <p style="background:#fff8e1;border-left:4px solid #f5b94d;padding:14px 18px;border-radius:6px;margin-top:18px;">
+        <strong>The software does not eliminate the need for a contradictory site visit or review by the competent SPANC.</strong> It does not replace the engineer's expertise.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION — LIVRABLES -->
+<!-- ==================================================================== -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Deliverables</span>
+      <h2>A complete, ready-to-review file</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>PDF report ready for SPANC review</h3>
+        <p>Cover page, table of contents, cited and linked regulatory framework, input data, detailed sizing, hydrogeological maps, conceptual model and individual/collective feasibility summary note.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Structured JSON export</h3>
+        <p>All timestamped project data, with maps included in base64 — for archiving, sharing between workstations or transfer to GEP Modeling.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Conceptual model of the installation</h3>
+        <p>Full treatment chain, plan view of the drain field and vertical cross-section of the filter bed, automatically generated from the calculation results.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- TARIF -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Pricing</span>
+      <h2>Annual license</h2>
+    </div>
+    <div class="pricing-grid" style="max-width:560px;margin:0 auto;">
+      <div class="price-card featured" id="anc_annual" style="border-color:#2E7D5B;">
+        <span class="badge" style="background:#2E7D5B;color:#fff;">NEW</span>
+        <h3>ANC Sizing</h3>
+        <p class="sub">Annual subscription — 1 seat</p>
+        <div class="price-amount" style="color:#1a2b4a;"><span class="currency">€</span>550</div>
+        <div class="price-period">excl. tax / year (€660 incl. tax)</div>
+        <div class="country-select">
+          <label for="country-anc-b">Billing country</label>
+          <select id="country-anc-b">
+            <option value="FR">Metropolitan France (20% VAT)</option>
+            <option value="FR-DOM">French overseas departments (Guadeloupe, Martinique, Réunion, Mayotte, Guyane)</option>
+            <option value="EU">European Union (outside France)</option>
+            <option value="INTL">Outside the European Union</option>
+          </select>
+        </div>
+        <div class="price-breakdown">
+          <div class="pb-row"><span>Amount excl. tax</span><span data-ht="550">€550.00</span></div>
+          <div class="pb-row"><span data-tva-label>VAT 20%</span><span data-tva-val>€110.00</span></div>
+          <div class="pb-row pb-total"><span>Total incl. tax</span><span data-ttc-val>€660.00</span></div>
+        </div>
+        <p style="font-size:12px;color:var(--text-mute);margin-bottom:var(--sp-4)" data-vat-note>French VAT at the standard rate of 20% (Art. 278 of the CGI).</p>
+        <ul class="price-features">
+          <li>Direct import of Porchet tests (JSON) + manual entry</li>
+          <li>Multilayer soil profile + bar of 24 geological facies</li>
+          <li>Triple cross-check: measured / theoretical / BRGM geological map</li>
+          <li>Groundwater vulnerability + automatic receptor inventory</li>
+          <li>Complete NF DTU 64.1 sizing engine</li>
+          <li>PDF report ready for SPANC review + JSON export</li>
+          <li>Feature updates included</li>
+          <li>Free 14-day trial included</li>
+        </ul>
+        <button class="btn btn-primary btn-block" style="margin-bottom:8px;background:#2E7D5B;border-color:#2E7D5B;" onclick="GmepCheckout.start('anc_annual', document.getElementById('country-anc-b').value)">Subscribe — Stripe payment</button>
+        <p style="text-align:center;font-size:0.74rem;color:var(--text-mute);margin-top:6px;">
+          <svg width="11" height="13" viewBox="0 0 12 14" fill="none" style="vertical-align:middle;margin-right:3px;" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="6" width="10" height="8" rx="2" stroke="#6B7280" stroke-width="1.5"/><path d="M3.5 6V4a2.5 2.5 0 0 1 5 0v2" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Secure payment by <strong style="color:#635BFF;">Stripe</strong> — cancel anytime
+        </p>
+      </div>
+    </div>
+    <div class="text-center mt-6">
+      <a href="https://app.gmep-france.eu/#/subscribe-anc" rel="noopener" class="btn btn-ghost">Free 14-day trial — no credit card required</a>
+    </div>
+    <p style="text-align:center;font-size:13px;color:var(--text-mute,#6b7280);margin-top:16px;">Compatible with Porchet Test Modeling (€550 excl. tax/year) for direct import of field measurements. Training or personalized regulatory support: on request — <a href="../contact.html">contact GMEP</a>.</p>
+  </div>
+</section>
+
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tel. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Our tools</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">GEP Modeling — DLE &amp; Water Law</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Porchet Test Modeling</a></li>
+          <li><a href="../outils/anc-assainissement.html">ANC Sizing</a></li>
+          <li><a href="../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../outils/domenico.html">Soil → Groundwater → Well Transfer</a></li>
+          <li><a href="../outils/rabattement/index.html">Groundwater Drawdown IOTA</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Company</h6>
+        <ul>
+          <li><a href="../tarifs.html">Pricing</a></li>
+          <li><a href="../guide-11-outils/index.html">11-tool guide (PDF)</a></li>
+          <li><a href="../expertise.html">Expertise</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../mentions-legales.html">Legal notice</a></li>
+          <li><a href="../cgv.html">Terms of sale</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        <li><a href="../lexique.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — All rights reserved.</p>
+        <p>All our software is the exclusive property of SARL G.M.E.P. Any reproduction, distribution or use, even partial, without prior written authorization is prohibited.</p>
+        <p class="credit">Design and development: Eric Azulay — Managing Director, SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/nav.js"></script>
+<script src="../../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

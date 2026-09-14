@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="es" data-alt-fr="/outils/3d-ssp.html" data-alt-en="/en/outils/3d-ssp.html" data-alt-es="/es/outils/3d-ssp.html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D_SSP — Modelización 3D integrada: suelo · acuífero · estructuras | GMEP</title>
+<meta name="description" content="3D_SSP de GMEP — Programa de modelización 3D interactiva que superpone la fuente de contaminación del suelo, la pluma de contaminación del acuífero y las estructuras del emplazamiento (edificios, viales, zonas verdes). Importación automática desde TSN y MSP, módulo de Plan de Gestión de tierras excavadas, análisis de solapamiento estructuras/pluma. Prueba gratuita de 14 días. 250 € sin IVA/mes o 2.400 € sin IVA/año.">
+<meta name="keywords" content="modelización 3D, SSP, fuente vector receptor, pluma de contaminación, plan de gestión, tierras excavadas, ISDI, HP14, ecotoxicidad, 3D_SSP, GMEP">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a2b4a'/%3E%3Cpath d='M16 6c-4 5-6 9-6 12a6 6 0 1012 0c0-3-2-7-6-12z' fill='%2339e07a'/%3E%3C/svg%3E">
+
+<!-- SEO : canonical + Open Graph + Twitter Card -->
+<link rel="canonical" href="https://www.gmep-france.eu/es/outils/3d-ssp.html">
+<link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/3d-ssp.html">
+<link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/3d-ssp.html">
+<link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/3d-ssp.html">
+<link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/3d-ssp.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.gmep-france.eu/es/outils/3d-ssp.html">
+<meta property="og:title" content="3D_SSP — Modelización 3D integrada: suelo · acuífero · estructuras | GMEP">
+<meta property="og:description" content="Superposición 3D interactiva de la fuente de contaminación del suelo, la pluma de contaminación del acuífero y las estructuras del emplazamiento. Módulo de Plan de Gestión de tierras excavadas integrado. Prueba gratuita de 14 días.">
+<meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GMEP — 3D_SSP, modelización 3D suelo / acuífero / estructuras">
+<meta property="og:site_name" content="GMEP">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="3D_SSP — Modelización 3D integrada: suelo · acuífero · estructuras | GMEP">
+<meta name="twitter:description" content="Superposición 3D interactiva suelo / acuífero / estructuras. Importación automática desde TSN y MSP, módulo de Plan de Gestión. Prueba gratuita de 14 días.">
+<meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <a href="../index.html" class="brand" aria-label="Inicio GMEP">
+      <svg class="brand-logo" viewBox="0 0 120 32" role="img" aria-label="G.M.E.P">
+  <g transform="translate(0,2)">
+    <path d="M10 0c-3 4-5.5 7.5-5.5 11A5.5 5.5 0 1 0 15.5 11c0-3.5-2.5-7-5.5-11z" fill="#39e07a"/>
+    <ellipse cx="8.5" cy="12.5" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)"/>
+  </g>
+  <text x="22" y="22" font-family="Inter, system-ui, sans-serif" font-size="17" font-weight="700" letter-spacing="0.5" fill="#ffffff">G.M.E.P</text>
+</svg>
+      <span class="brand-tag">Ingeniería medioambiental e hidrogeología</span>
+    </a>
+
+    <nav class="nav-center" aria-label="Navegación principal">
+      <a href="../index.html">Inicio</a>
+      <div class="nav-dropdown">
+        <button class="nav-trigger" type="button" aria-haspopup="true">
+          Herramientas
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modelización 3D suelo / acuífero / estructuras · NUEVO</span></a>
+          <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modelización GEP — DLE &amp; Ley del Agua<span class="nav-mi-desc">Dimensionamiento de pluviales + expedientes DLE/GEP · NUEVO</span></a>
+          <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modelización Ensayo de Porchet<span class="nav-mi-desc">Cálculo de K en campo + comparación GEP · NUEVO</span></a>
+          <a href="../outils/eqrs-v31-05-ecotox.html" role="menuitem">EQRS V31.05 + ECOTOX<span class="nav-mi-desc">104 sustancias HHRA + 12 ecotox</span></a>
+          <a href="../outils/eqrs-v8-ecotox-humain.html" role="menuitem">EQRS V8 + ECOTOX + HUMAIN<span class="nav-mi-desc">Vía alimentaria humana — PFAS, PCB, metales</span></a>
+          <a href="../outils/rabattement-v15-87.html" role="menuitem">Abatimiento V15.87<span class="nav-mi-desc">Multicapa con IA — Ley del Agua</span></a>
+          <a href="../outils/anc-assainissement.html" role="menuitem">Dimensionamiento ANC<span class="nav-mi-desc">Saneamiento individual y colectivo · NUEVO</span></a>
+          <a href="../outils/tsn-transfert-sol-nappe.html" role="menuitem">TSN — Transferencia Suelo → Acuífero<span class="nav-mi-desc">Domenico 1987 — API Hub'eau</span></a>
+          <a href="../outils/schema-conceptuel.html" role="menuitem">Modelo Conceptual<span class="nav-mi-desc">IEM + Plan de Gestión</span></a>
+          <a href="../outils/eqrs-je.html" role="menuitem">EQRS V7 Johnson &amp; Ettinger<span class="nav-mi-desc">+ 5 módulos avanzados</span></a>
+          <a href="../outils/domenico.html" role="menuitem">Transferencia Suelo → Acuífero → Captación<span class="nav-mi-desc">Modelo Domenico 1987</span></a>
+          <a href="../outils/rabattement/index.html" role="menuitem">Abatimiento del nivel freático<span class="nav-mi-desc">Theis + IOTA</span></a>
+        </div>
+      </div>
+      <a href="../tarifs.html">Precios</a>
+      <a href="../expertise.html">Experiencia</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../contact.html">Contacto</a>
+    <a href="../lexique.html">Glosario</a>
+    </nav>
+
+    <div class="nav-right">
+      <div class="lang-switcher" role="group" aria-label="Elegir idioma">
+        <button class="lang-btn" data-lang="fr" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+        <button class="lang-btn active" data-lang="es" aria-label="Español" title="Español">🇪🇸</button>
+      </div>
+      <a href="https://app.gmep-france.eu/#/login" rel="noopener" class="btn-header-outline">Iniciar sesión</a>
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn-header-cta">Registrarse</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Menú" aria-expanded="false">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+
+<section class="outil-hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-badge" style="background:linear-gradient(135deg,#39e07a 0%,#1a5276 100%);color:#fff;">NUEVO — MODELIZACIÓN 3D INTEGRADA</span>
+        <h1>3D_SSP — Suelo · Acuífero · Estructuras en una escena 3D</h1>
+        <p class="lead">Programa de modelización 3D interactiva que superpone, en una única escena, la <strong>fuente de contaminación del suelo</strong>, la <strong>pluma de contaminación del acuífero</strong> y las <strong>estructuras del emplazamiento</strong> (edificios, viales, aparcamientos, zonas verdes). Importación automática de datos desde <strong>TSN</strong> y <strong>MSP de GMEP</strong>, módulo integrado de <strong>Plan de Gestión</strong> de tierras excavadas y exportación en PDF lista para entregar.</p>
+        <div class="hero-cta">
+          <a href="../tarifs.html#3dssp" class="btn btn-primary">Suscribirse — 250 € sin IVA/mes</a>
+          <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-outline">Prueba gratuita de 14 días</a>
+          <a href="../contact.html" class="btn btn-outline">Demostración bajo petición</a>
+        </div>
+      </div>
+      <div class="hero-mock" aria-hidden="true">
+        <div class="hero-mock-head">
+          <span class="dot" style="background:#ed5d5d"></span>
+          <span class="dot" style="background:#f5b94d"></span>
+          <span class="dot" style="background:#62c87f"></span>
+          <span class="label">3d_ssp · escena 3d</span>
+        </div>
+        <svg viewBox="0 0 280 130" style="width:100%;height:auto;font-family:Inter,sans-serif;">
+          <polygon points="20,100 130,100 155,80 45,80" fill="rgba(88,101,242,0.14)" stroke="#5865F2" stroke-width="1.2"/>
+          <text x="70" y="72" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">TERRENO</text>
+          <rect x="55" y="55" width="34" height="24" fill="rgba(245,185,77,0.22)" stroke="#f5b94d" stroke-width="1.2"/>
+          <text x="72" y="50" font-size="7.5" fill="#fff" text-anchor="middle">Estructura</text>
+          <ellipse cx="95" cy="92" rx="26" ry="10" fill="rgba(192,57,43,0.28)" stroke="#c0392b" stroke-width="1.2"/>
+          <text x="95" y="112" font-size="7.5" fill="#fff" text-anchor="middle">Fuente en suelo</text>
+          <ellipse cx="150" cy="96" rx="42" ry="13" fill="rgba(61,224,122,0.22)" stroke="#39e07a" stroke-width="1.2"/>
+          <text x="150" y="118" font-size="7.5" fill="#fff" text-anchor="middle">Pluma en acuífero</text>
+          <line x1="235" y1="35" x2="235" y2="15" stroke="#fff" stroke-width="1.2"/>
+          <polygon points="235,10 231,20 239,20" fill="#fff"/>
+          <text x="235" y="45" font-size="7.5" fill="rgba(255,255,255,0.6)" text-anchor="middle">N</text>
+        </svg>
+        <div class="hero-mock-row"><span class="l">Fuente en suelo</span><span class="v">Solapamiento detectado</span></div>
+        <div class="hero-mock-row"><span class="l">Pluma en acuífero</span><span class="v">Importación automática TSN</span></div>
+        <div class="hero-mock-row"><span class="l">Tierras excavadas</span><span class="v">17 05 04 — no peligrosas</span></div>
+        <div class="hero-mock-result"><strong>Escena 3D</strong><span>Exportación PDF + JSON reutilizable</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Funcionalidades</span>
+      <h2>Una única escena 3D para visualizar todos los aspectos del emplazamiento</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2l9 5-9 5-9-5 9-5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M3 12l9 5 9-5M3 17l9 5 9-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Superposición 3D interactiva</h3>
+        <p>Fuente de contaminación del suelo, pluma de contaminación del acuífero y estructuras del emplazamiento (edificios, viales, aparcamientos, zonas verdes) reunidos en una misma escena 3D navegable, con indicador de norte y cámara libre.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4z" stroke="currentColor" stroke-width="2"/><path d="M9 4v16M4 9h16" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Importación automática multiherramienta</h3>
+        <p>Recuperación automática de datos desde <strong>TSN</strong> y <strong>MSP de GMEP</strong> en formato JSON, con detección automática del formato y editor de datos integrado para ajustes manuales.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Módulo de Plan de Gestión integrado</h3>
+        <p>Clasificación de las tierras excavadas (códigos de residuo <strong>17 05 04</strong> no peligrosas / <strong>17 05 03*</strong> peligrosas) con estimación de los costes de gestión asociados.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
+        <h3>Análisis de solapamiento y alertas</h3>
+        <p>Detección automática de las zonas de solapamiento poligonal entre las estructuras y la pluma de contaminación, con alertas visuales directamente en la escena 3D.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="currentColor" stroke-width="2"/><path d="M15 3v5h5" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3>Exportación PDF y guardado JSON</h3>
+        <p>Informe PDF de la superposición suelo / acuífero / estructuras listo para entregar, y archivo de proyecto JSON reutilizable para retomar o hacer evolucionar el modelo 3D más adelante.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33h0A1.65 1.65 0 009 4.09V4a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v0a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <h3>Cámara navegable</h3>
+        <p>Rotación, zoom y desplazamiento libre en la escena 3D para explorar cada nivel (suelo, acuífero, estructuras) y presentar el emplazamiento desde todos los ángulos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION 1 — PUBLIC CIBLE -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Público objetivo</span>
+      <h2>Una herramienta de visualización para todos los actores del emplazamiento</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Propietarios, operadores y promotores</h3>
+        <p>Visualización clara de los problemas de contaminación en emplazamientos sujetos a Servidumbres de Utilidad Pública por Suelos Contaminados (SSP) o clasificados como ICPE, y en proyectos de urbanización.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Servicios técnicos de las administraciones locales</h3>
+        <p>Apoyo a la comprensión y tramitación de expedientes para los servicios técnicos encargados de examinar casos de contaminación o proyectos en emplazamientos potencialmente contaminados.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Organismos terceros de verificación</h3>
+        <p>Apoyo a la verificación y al control independiente de los datos de contaminación del suelo y del acuífero presentados en el marco de un proyecto.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION 2 — CADRE RÉGLEMENTAIRE -->
+<!-- ==================================================================== -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Referencias normativas</span>
+      <h2>Un módulo alineado con los textos de referencia vigentes</h2>
+    </div>
+    <table class="substances-table">
+      <thead><tr><th>Referencia</th><th>Objeto</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Arrêté de 12/12/2014</strong></td>
+          <td>Condiciones de admisión de residuos inertes en instalaciones de almacenamiento de residuos inertes (ISDI) — criterios contemplados en el módulo de Plan de Gestión.</td>
+        </tr>
+        <tr>
+          <td><strong>Reglamento (UE) 2017/997</strong></td>
+          <td>Modificación del anexo III de la Directiva 2008/98/CE — propiedad de peligro HP14 «Ecotóxico», integrada en la clasificación de las tierras excavadas.</td>
+        </tr>
+        <tr>
+          <td><strong>Guía metodológica nacional (2020)</strong></td>
+          <td>Guía metodológica nacional de reutilización fuera del emplazamiento de tierras excavadas procedentes de emplazamientos potencialmente contaminados.</td>
+        </tr>
+        <tr>
+          <td><strong>NF EN ISO 10381-5</strong></td>
+          <td>Norma de calidad del suelo relativa a las directrices para la investigación de emplazamientos urbanos e industriales en relación con la contaminación de suelos.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:var(--text-mute,#6b7280);margin-top:18px;">3D_SSP es una herramienta de ayuda a la visualización y a la decisión; no sustituye la experiencia del ingeniero ni las prescripciones de los servicios competentes de tramitación.</p>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SECTION 3 — LIVRABLES -->
+<!-- ==================================================================== -->
+<section class="bg-soft">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Entregables</span>
+      <h2>Resultados listos para entregar</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Escena 3D interactiva</h3>
+        <p>Navegación con cámara libre, indicador de norte, superposición suelo / acuífero / estructuras consultable directamente en la aplicación.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Informe PDF de superposición</h3>
+        <p>Exportación en PDF de la escena 3D y de los aspectos identificados (solapamientos, alertas), lista para adjuntar a un expediente o entregar a un tercero.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Tabla de clasificación de residuos</h3>
+        <p>Clasificación de las tierras excavadas (17 05 04 / 17 05 03*) con estimación de los costes de gestión asociados.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Archivo JSON reutilizable</h3>
+        <p>Guardado del proyecto en formato JSON, para retomar o hacer evolucionar el modelo 3D en cualquier momento.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- TARIF -->
+<!-- ==================================================================== -->
+<section id="3dssp">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Precio</span>
+      <h2>Mensual o anual — sin permanencia</h2>
+    </div>
+    <div class="pricing-grid" style="max-width:760px;margin:0 auto;">
+      <div class="price-card">
+        <span class="badge" style="background:#5865F2;color:#fff;">NUEVO</span>
+        <h3>3D_SSP — Mensual</h3>
+        <p class="sub">Suscripción mensual — 1 puesto</p>
+        <div class="price-amount" style="color:#1a2b4a;"><span class="currency">€</span>250</div>
+        <div class="price-period">sin IVA / mes (300 € IVA incl.)</div>
+        <ul class="price-features">
+          <li>Escena 3D interactiva suelo / acuífero / estructuras</li>
+          <li>Importación automática desde TSN y MSP de GMEP</li>
+          <li>Módulo de Plan de Gestión de tierras excavadas</li>
+          <li>Exportación PDF + guardado JSON</li>
+          <li>Prueba gratuita de 14 días incluida</li>
+        </ul>
+        <button class="btn btn-primary btn-block" style="margin-bottom:8px;" onclick="GmepCheckout.start('ssp3d_monthly', 'FR')">Suscribirse — Pago con Stripe</button>
+      </div>
+      <div class="price-card featured" style="border-color:#5865F2;">
+        <span class="badge" style="background:#5865F2;color:#fff;">Ahorre 600 € sin IVA/año</span>
+        <h3>3D_SSP — Anual</h3>
+        <p class="sub">Suscripción anual — 1 puesto</p>
+        <div class="price-amount" style="color:#1a2b4a;"><span class="currency">€</span>2.400</div>
+        <div class="price-period">sin IVA / año (2.880 € IVA incl.)</div>
+        <ul class="price-features">
+          <li>Escena 3D interactiva suelo / acuífero / estructuras</li>
+          <li>Importación automática desde TSN y MSP de GMEP</li>
+          <li>Módulo de Plan de Gestión de tierras excavadas</li>
+          <li>Exportación PDF + guardado JSON</li>
+          <li>Prueba gratuita de 14 días incluida</li>
+          <li>2 meses gratis respecto a la facturación mensual</li>
+        </ul>
+        <button class="btn btn-primary btn-block" style="margin-bottom:8px;" onclick="GmepCheckout.start('ssp3d_annual', 'FR')">Suscribirse — Pago con Stripe</button>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:13px;color:var(--text-mute,#6b7280);margin-top:16px;">Precios y detalle de IVA por país disponibles en la página <a href="../tarifs.html#3dssp">Precios</a>. Cancelable en cualquier momento.</p>
+    <div class="text-center mt-6">
+      <a href="https://app.gmep-france.eu/#/register" rel="noopener" class="btn btn-ghost">Prueba gratuita de 14 días — sin tarjeta bancaria</a>
+    </div>
+    <p style="text-align:center;font-size:13px;color:var(--text-mute,#6b7280);margin-top:16px;">Formación, configuración específica o acompañamiento personalizado: bajo presupuesto — <a href="../contact.html">contacte con GMEP</a>.</p>
+  </div>
+</section>
+
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-company">
+        <strong>G.M.E.P</strong>
+        SARL G.M.E.P<br>
+        Global Management of Environmental Project<br>
+        9 rue de la Marne<br>
+        79400 Saint-Maixent-l'École<br>
+        SIREN 753 097 625<br>
+        Tel. <a href="tel:+33607737233">06 07 73 72 33</a><br>
+        <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h6>Nuestras herramientas</h6>
+        <ul>
+          <li><a href="../outils/3d-ssp.html">3D_SSP</a></li>
+          <li><a href="../outils/eaux-pluviales-dle-gep.html">Modelización GEP — DLE &amp; Ley del Agua</a></li>
+          <li><a href="../outils/porchet-essai-permeabilite.html">Modelización Ensayo de Porchet</a></li>
+          <li><a href="../outils/eqrs-v31-05-ecotox.html">EQRS V9 + ECOTOX V9</a></li>
+          <li><a href="../outils/eqrs-v8-ecotox-humain.html">EQRS V9 + Módulo HUMAIN</a></li>
+          <li><a href="../outils/eqrs-je.html">EQRS Johnson &amp; Ettinger</a></li>
+          <li><a href="../outils/domenico.html">Transferencia Suelo → Acuífero → Captación</a></li>
+          <li><a href="../outils/rabattement/index.html">Abatimiento del nivel freático IOTA</a></li>
+          <li><a href="../outils/anc-assainissement.html">Dimensionamiento ANC</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Empresa</h6>
+        <ul>
+          <li><a href="../tarifs.html">Precios</a></li>
+          <li><a href="../guide-11-outils/index.html">Guía de 13 herramientas (PDF)</a></li>
+          <li><a href="../expertise.html">Experiencia</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../mentions-legales.html">Aviso legal</a></li>
+          <li><a href="../cgv.html">Condiciones generales de venta</a></li>
+          <li><a href="../contact.html">Contacto</a></li>
+        <li><a href="../lexique.html">Glosario</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-legal">
+        <p>© 2023–2026 G.M.E.P — Todos los derechos reservados.</p>
+        <p>Todos nuestros programas son propiedad exclusiva de SARL G.M.E.P. Queda prohibida cualquier reproducción, difusión o utilización, incluso parcial, sin autorización escrita previa.</p>
+        <p class="credit">Diseño y desarrollo: Eric Azulay — Gerente de SARL G.M.E.P</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/js/nav.js"></script>
+<script src="../../assets/js/stripe-checkout.js"></script>
+
+</body>
+</html>

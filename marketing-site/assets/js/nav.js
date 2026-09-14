@@ -55,12 +55,17 @@
     }
   });
 
-  // Sélecteur de langue : FR actif, EN/ES → toast "Traduction en cours"
+  // Sélecteur de langue : navigue vers la page sœur traduite (data-alt-fr/en/es sur <html>)
   document.querySelectorAll('.lang-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
       const lang = btn.getAttribute('data-lang');
-      if (lang === 'fr') return; // Déjà actif
-      showToast('Traduction ' + (lang === 'en' ? 'anglaise' : 'espagnole') + ' en cours — disponible prochainement.');
+      if (btn.classList.contains('active')) return; // Déjà sur cette langue
+      const target = document.documentElement.getAttribute('data-alt-' + lang);
+      if (target) {
+        window.location.href = target;
+      } else {
+        showToast('Traduction ' + (lang === 'en' ? 'anglaise' : 'espagnole') + ' en cours — disponible prochainement.');
+      }
     });
   });
 
