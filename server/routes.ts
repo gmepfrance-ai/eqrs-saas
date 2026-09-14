@@ -3606,5 +3606,65 @@ export async function registerRoutes(
     );
   }
 
+  // ── Questionnaire de satisfaction (site vitrine www.gmep-france.eu) ──
+  app.post("/api/satisfaction", async (req: Request, res: Response) => {
+    try {
+      const b = req.body || {};
+      // Honeypot anti-spam
+      if (b.website) { return res.status(200).json({ ok: true }); }
+      // Validation : au moins une note ou un commentaire
+      const notes = ["q_pertinence","q_prise_en_main","q_clarte_resultats","q_exports","q_documentation","q_stabilite","q_intention_usage","q_recommandation"];
+      const hasNote = notes.some(n => b[n] && Number(b[n]) >= 1 && Number(b[n]) <= 10);
+      const hasText = [b.logiciels_testes, b.cas_usage, b.points_forts, b.difficultes, b.ameliorations].some(v => v && String(v).trim().length > 0);
+      if (!hasNote && !hasText) {
+        return res.status(400).json({ message: "Veuillez attribuer au moins une note ou rédiger un commentaire." });
+      }
+      const surveyTo = process.env.SURVEY_TO_EMAIL || "gmep.france@gmail.com";
+      const resendKey = process.env.RESEND_API_KEY;
+      if (!resendKey) {
+        return res.status(503).json({ message: "Service d'envoi non configuré. Écrivez-nous à gmep.france@gmail.com" });
+      }
+      const { Resend } = require("resend");
+      const resend = new Resend(resendKey);
+      const nom = (b.nom || "").substring(0, 80);
+      const email = (b.email || "").substring(0, 120);
+      const societe = (b.societe || "").substring(0, 120);
+      const rdv = b.rdv === "oui" ? "Oui" : b.rdv === "non" ? "Non" : "—";
+      const rows = notes.map(n => `<tr><td style="padding:4px 12px;border:1px solid #e2e8f0;font-weight:600;">${n.replace(/_/g," ").replace(/^q /,"")}</td><td style="padding:4px 12px;border:1px solid #e2e8f0;">${b[n] || "—"}/10</td></tr>`).join("");
+      const textFields = [
+        ["Logiciels testés", b.logiciels_testes],
+        ["Cas d'usage", b.cas_usage],
+        ["Points forts", b.points_forts],
+        ["Difficultés", b.difficultes],
+        ["Améliorations", b.ameliorations],
+        ["Créneaux souhaités", b.creneaux],
+      ].map(([label, val]) => val && String(val).trim() ? `<p><strong>${label}:</strong> ${String(val).substring(0,1000)}</p>` : "").join("");
+      const html = `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
+        <div style="background:#1a365d;color:white;padding:20px;border-radius:8px 8px 0 0;"><h2 style="margin:0;font-size:18px;">Questionnaire de satisfaction — GMEP</h2></div>
+        <div style="background:#f8f9fa;padding:24px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+          <p><strong>Nom:</strong> ${nom || "—"}<br><strong>Email:</strong> ${email || "—"}<br><strong>Société:</strong> ${societe || "—"}<br><strong>Échange souhaité:</strong> ${rdv}</p>
+          <h3 style="color:#1a365d;">Notes (1-10)</h3>
+          <table style="border-collapse:collapse;font-size:14px;width:100%;">${rows}</table>
+          <h3 style="color:#1a365d;">Commentaires</h3>
+          ${textFields || "<p>—</p>"}
+          <hr style="border:none;border-top:1px solid #e2e8f0;margin:16px 0;">
+          <p style="font-size:12px;color:#64748b;">Envoyé depuis www.gmep-france.eu/satisfaction.html — ${new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" })}</p>
+        </div>
+      </div>`;
+      await resend.emails.send({
+        from: "GMEP <noreply@gmep-france.eu>",
+        to: surveyTo,
+        subject: `Questionnaire de satisfaction — ${nom || email || "nouveau répondant"}`,
+        html,
+        ...(email ? { reply_to: email } : {}),
+      });
+      res.json({ ok: true });
+    } catch (err: any) {
+      console.error("[SATISFACTION ERROR]", err);
+      res.status(500).json({ message: "Erreur serveur" });
+    }
+  });
+
   return httpServer;
 }
