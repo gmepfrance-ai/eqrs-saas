@@ -1194,6 +1194,33 @@ export async function registerRoutes(
     };
   }
 
+  // Template email — questionnaire de satisfaction J+7
+  function surveyEmailHtml(opts: { name: string; toolLabel: string }): { subject: string; html: string } {
+    const firstName = (opts.name || "").split(" ")[0] || "Bonjour";
+    const surveyUrl = "https://www.gmep-france.eu/satisfaction.html";
+    return {
+      subject: `Votre avis nous intéresse — questionnaire de satisfaction GMEP`,
+      html: `
+      <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:20px;">
+        <div style="background:#1a365d;color:white;padding:24px;border-radius:8px 8px 0 0;text-align:center;">
+          <h2 style="margin:0;font-size:20px;">G.M.E.P</h2>
+          <p style="margin:4px 0 0;font-size:13px;opacity:0.85;">Questionnaire de satisfaction</p>
+        </div>
+        <div style="background:#f8f9fa;padding:28px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+          <p style="font-size:16px;">Bonjour ${firstName},</p>
+          <p>Vous avez ouvert un essai sur nos logiciels <strong>${opts.toolLabel}</strong>. Afin d'améliorer nos outils et de mieux répondre à vos besoins, nous souhaiterions recueillir votre retour d'utilisation.</p>
+          <p style="font-size:14px;color:#334155;">Quelques minutes suffisent : attribuez des notes de 1 à 10, indiquez les points forts et les améliorations souhaitées. Vos réponses sont transmises directement à notre équipe et restent confidentielles.</p>
+          <div style="text-align:center;margin:28px 0;">
+            <a href="${surveyUrl}" style="background:#16a34a;color:white;padding:14px 32px;border-radius:6px;font-weight:bold;text-decoration:none;font-size:15px;">Donner mon avis →</a>
+          </div>
+          <p style="font-size:13px;color:#64748b;">Une question ? <a href="mailto:contact@gmep-france.eu">contact@gmep-france.eu</a> — Tél. 06 07 73 72 33</p>
+          <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;">
+          <p style="font-size:11px;color:#94a3b8;text-align:center;">© 2026 SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École</p>
+        </div>
+      </div>`,
+    };
+  }
+
   app.get("/api/admin/send-trial-reminders", async (req: Request, res: Response) => {
     const secret = req.query.secret as string;
     const expected = process.env.ADMIN_DIGEST_SECRET || "gmep-digest-2026-secret";
@@ -1204,7 +1231,7 @@ export async function registerRoutes(
     if (!resendKey) {
       return res.status(503).json({ message: "Resend non configuré" });
     }
-    const results = { j3_sent: 0, expiry_sent: 0, skipped: 0, errors: [] as string[] };
+    const results = { j3_sent: 0, expiry_sent: 0, survey_sent: 0, skipped: 0, errors: [] as string[] };
     try {
       const anyStorage = storage as any;
       if (typeof anyStorage.getAllTrialingSubscriptionsWithUser !== "function") {
@@ -1246,6 +1273,18 @@ export async function registerRoutes(
               await resend.emails.send({ from: "GMEP <noreply@gmep-france.eu>", to: sub.email, subject, html });
               await anyStorage.markReminderSent(sub.id, "reminderExpirySentAt");
               results.expiry_sent++;
+              continue;
+            }
+          }
+
+          // Questionnaire de satisfaction "J+7" — à mi-essai (7 jours sur 14), une seule fois
+          if (createdAt && !sub.surveySentAt) {
+            const daysSince = (now - createdAt) / 86400000;
+            if (daysSince >= 6.5 && daysSince <= 9) {
+              const { subject, html } = surveyEmailHtml({ name: sub.name, toolLabel: info.label });
+              await resend.emails.send({ from: "GMEP <noreply@gmep-france.eu>", to: sub.email, subject, html });
+              await anyStorage.markReminderSent(sub.id, "surveySentAt");
+              results.survey_sent++;
               continue;
             }
           }

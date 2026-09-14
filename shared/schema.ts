@@ -30,6 +30,7 @@ export interface Subscription {
   createdAt: string;
   reminderJ3SentAt?: string | null;
   reminderExpirySentAt?: string | null;
+  surveySentAt?: string | null;
 }
 
 // Codes d'essai administration (DREAL / DRIEAT / ARS / DDT) — campagne

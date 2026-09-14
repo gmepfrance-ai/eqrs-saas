@@ -62,6 +62,7 @@ function rowToSubscription(row: any): Subscription {
     createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
     reminderJ3SentAt: row.reminder_j3_sent_at instanceof Date ? row.reminder_j3_sent_at.toISOString() : (row.reminder_j3_sent_at || null),
     reminderExpirySentAt: row.reminder_expiry_sent_at instanceof Date ? row.reminder_expiry_sent_at.toISOString() : (row.reminder_expiry_sent_at || null),
+    surveySentAt: row.survey_sent_at instanceof Date ? row.survey_sent_at.toISOString() : (row.survey_sent_at || null),
   };
 }
 
@@ -178,6 +179,7 @@ export class PgStorage implements IStorage {
       await client.query(`
         ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS reminder_j3_sent_at TIMESTAMPTZ DEFAULT NULL;
         ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS reminder_expiry_sent_at TIMESTAMPTZ DEFAULT NULL;
+        ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS survey_sent_at TIMESTAMPTZ DEFAULT NULL;
       `);
       console.log("[PgStorage] Tables initialized successfully");
     } finally {
@@ -412,8 +414,8 @@ export class PgStorage implements IStorage {
     }));
   }
 
-  async markReminderSent(id: number, field: "reminderJ3SentAt" | "reminderExpirySentAt"): Promise<void> {
-    const col = field === "reminderJ3SentAt" ? "reminder_j3_sent_at" : "reminder_expiry_sent_at";
+  async markReminderSent(id: number, field: "reminderJ3SentAt" | "reminderExpirySentAt" | "surveySentAt"): Promise<void> {
+    const col = field === "reminderJ3SentAt" ? "reminder_j3_sent_at" : (field === "surveySentAt" ? "survey_sent_at" : "reminder_expiry_sent_at");
     await this.pool.query(`UPDATE subscriptions SET ${col} = NOW() WHERE id = $1`, [id]);
   }
 
