@@ -8,7 +8,7 @@ const { execSync } = require('child_process');
 const ROOT = '/home/user/workspace/gmep-site';
 const FILES = [
   'index.html', 'tarifs.html', 'contact.html', 'mentions-legales.html', 'cgv.html', 'expertise.html',
-  'outils/eqrs-v31-05-ecotox.html', 'outils/eqrs-v8-ecotox-humain.html', 'outils/eqrs-je.html',
+  'outils/eqrs-v9-ecotox.html', 'outils/eqrs-v9-ecotox-humain.html', 'outils/eqrs-je.html',
   'outils/rabattement-v15-87.html', 'outils/rabattement-v15-85.html',
   'outils/tsn-transfert-sol-nappe.html', 'outils/domenico.html', 'outils/schema-conceptuel.html',
   'outils/rabattement/index.html'

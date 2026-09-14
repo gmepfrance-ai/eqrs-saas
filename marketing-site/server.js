@@ -18,6 +18,7 @@
 
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const Stripe = require('stripe');
 
@@ -60,8 +61,8 @@ const PLAN_LABELS = {
   domenico_annual:    'Transfert Sol → Nappe → Captage — Annuel',
   rabattement_annual: 'Rabattement de nappe — Annuel',
   // Module HUMAIN Tier 3 — juin 2026
-  humain_monthly:     'EQRS V8 + ECOTOX + Module HUMAIN Tier 3 — Mensuel (550 € HT/mois)',
-  humain_annual:      'EQRS V8 + ECOTOX + Module HUMAIN Tier 3 — Annuel (5 200 € HT/an)',
+  humain_monthly:     'EQRS V9 + ECOTOX + Module HUMAIN Tier 3 — Mensuel (550 € HT/mois)',
+  humain_annual:      'EQRS V9 + ECOTOX + Module HUMAIN Tier 3 — Annuel (5 200 € HT/an)',
   // Modélisation GEP — DLE & Loi sur l'Eau (ex Eaux pluviales v2.1) — juillet 2026
   eaux_pluviales_annual: 'Modélisation GEP — DLE & Loi sur l\'Eau — Annuel (5 500 € HT/an)',
   // Modélisation Essai de Porchet — juillet 2026
@@ -73,9 +74,9 @@ const PLAN_LABELS = {
 
 // Plans bénéficiant d'une période d'essai gratuite (en jours) avant le premier prélèvement
 const PLAN_TRIAL_DAYS = {
-  ssp3d_monthly: 8,
-  ssp3d_annual:  8,
-  porchet_annual: 8
+  ssp3d_monthly: 14,
+  ssp3d_annual:  14,
+  porchet_annual: 14
 };
 
 const COUNTRY_TO_BILLING = {
@@ -89,6 +90,19 @@ const app = express();
 
 // CORS — autoriser le frontend statique
 app.use(cors({ origin: CORS_ORIGIN === '*' ? true : CORS_ORIGIN.split(',').map(s => s.trim()) }));
+
+// ─── Redirections 301 permanentes (anciens URLs V8/V31.05 → V9) ───
+const PERMANENT_REDIRECTS = {
+  '/outils/eqrs-v8-ecotox-humain.html': '/outils/eqrs-v9-ecotox-humain.html',
+  '/outils/eqrs-v31-05-ecotox.html':   '/outils/eqrs-v9-ecotox.html'
+};
+app.use(function (req, res, next) {
+  const target = PERMANENT_REDIRECTS[req.path];
+  if (target) {
+    return res.redirect(301, target);
+  }
+  next();
+});
 
 // ─── Webhook Stripe : body brut requis pour la vérification de signature ───
 app.post('/api/webhook-stripe',

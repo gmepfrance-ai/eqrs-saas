@@ -1,0 +1,39 @@
+name: Tests EQRS — Verrouillage correction DJE
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "eqrs-tool.html"
+      - "eqrs-v31-ecotox-tool.html"
+      - "eqrs-v8-humain-tool.html"
+      - "test_dje_ed.py"
+  pull_request:
+    branches: [main]
+    paths:
+      - "eqrs-tool.html"
+      - "eqrs-v31-ecotox-tool.html"
+      - "eqrs-v8-humain-tool.html"
+      - "test_dje_ed.py"
+
+jobs:
+  test-dje:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run DJE tests (42 vérifications)
+        run: python3 test_dje_ed.py
+
+      - name: Fail if ED (exposure duration) is missing
+        if: failure()
+        run: |
+          echo "::error::Le paramètre ED (durée d'exposition) est MANQUANT dans une formule DJE."
+          echo "::error::Sans ED, la DJE est sous-estimée d'un facteur 30 (adulte), 6 (enfant), 25 (salarie)."
+          echo "::error::Conséquence: QD et ERI sous-évalués → risque sanitaire sous-estimé."
+          echo "::error::Vérifier computeDJEIngestion et computeDJEContact dans les fichiers outil HTML."

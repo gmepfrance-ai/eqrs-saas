@@ -11,7 +11,7 @@ const OG_IMG = BASE + '/assets/img/og-image.png';
 const FILES = [
   'index.html', 'tarifs.html', 'contact.html', 'mentions-legales.html', 'cgv.html',
   'plaquette/index.html',
-  'outils/eqrs-v31-05-ecotox.html', 'outils/eqrs-v8-ecotox-humain.html', 'outils/eqrs-je.html',
+  'outils/eqrs-v9-ecotox.html', 'outils/eqrs-v9-ecotox-humain.html', 'outils/eqrs-je.html',
   'outils/rabattement-v15-87.html', 'outils/rabattement-v15-85.html',
   'outils/tsn-transfert-sol-nappe.html', 'outils/domenico.html', 'outils/schema-conceptuel.html',
   'outils/rabattement/index.html'

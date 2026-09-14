@@ -19,6 +19,17 @@ if (fs.existsSync(marketingRoot)) {
   app.use((req, res, next) => {
     const host = (req.headers.host || "").split(":")[0].toLowerCase();
     if (!MARKETING_HOSTS.has(host)) return next();
+
+    // ─── Redirections 301 permanentes (anciens URLs V8/V31.05 → V9) ───
+    const PERMANENT_REDIRECTS: Record<string, string> = {
+      '/outils/eqrs-v8-ecotox-humain.html': '/outils/eqrs-v9-ecotox-humain.html',
+      '/outils/eqrs-v31-05-ecotox.html':   '/outils/eqrs-v9-ecotox.html',
+    };
+    const redirectTarget = PERMANENT_REDIRECTS[req.path];
+    if (redirectTarget) {
+      return res.redirect(301, redirectTarget);
+    }
+
     return express.static(marketingRoot, {
       extensions: ["html"],
       setHeaders: (resx, filePath) => {
