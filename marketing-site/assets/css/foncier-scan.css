@@ -1,0 +1,289 @@
+/* FONCIER-SCAN — page de vente et de téléchargement */
+:root {
+  --encre: #12211d;
+  --encre-2: #33403c;
+  --encre-3: #6c7b77;
+  --ocre: #b4622b;
+  --vert: #1f6b5b;
+  --bleu: #2b6f9e;
+  --fond: #fbfaf8;
+  --fond-2: #f3f1ec;
+  --carte: #ffffff;
+  --ligne: #e3e0d9;
+  --sans: 'Satoshi', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --pas: clamp(64px, 9vw, 120px);
+  --rayon: 14px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--fond); color: var(--encre-2);
+  font-family: var(--sans); font-size: 16.5px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+a { color: var(--ocre); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+.enveloppe { width: min(1140px, calc(100% - 44px)); margin-inline: auto; }
+
+h1, h2, h3, h4 { color: var(--encre); line-height: 1.15; letter-spacing: -0.015em; margin: 0; }
+h1 { font-size: clamp(32px, 4.1vw, 47px); font-weight: 700; }
+h2 { font-size: clamp(26px, 3.2vw, 38px); font-weight: 700; }
+h3 { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+.sur-titre {
+  font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ocre); font-weight: 600; margin-bottom: 14px;
+}
+.chapeau { font-size: clamp(17px, 1.6vw, 20px); color: var(--encre-2); max-width: 62ch; }
+
+/* ---------------------------------------------------------------- en-tête */
+header.barre {
+  position: sticky; top: 0; z-index: 50; background: rgba(18, 33, 29, .97);
+  backdrop-filter: blur(8px); color: #e7ece9;
+}
+.barre .enveloppe {
+  display: flex; align-items: center; gap: 28px; height: 62px;
+}
+.marque { display: flex; align-items: center; gap: 11px; color: #fff; text-decoration: none; }
+.marque svg { width: 30px; height: 30px; flex: none; }
+.marque b { font-size: 15.5px; letter-spacing: .12em; font-weight: 700; }
+.marque span { display: block; font-size: 9.5px; letter-spacing: .13em; color: #93a6a0; }
+.barre nav { margin-left: auto; display: flex; gap: 24px; font-size: 14px; }
+.barre nav a { color: #c8d3cf; text-decoration: none; }
+.barre nav a:hover { color: #fff; }
+.barre .btn { padding: 8px 15px; font-size: 13.5px; }
+@media (max-width: 860px) { .barre nav { display: none; } }
+@media (max-width: 560px) {
+  header.barre .marque span span { display: none; }
+  .barre .enveloppe { height: 56px; gap: 14px; }
+  .enveloppe { width: calc(100% - 34px); }
+}
+
+/* --------------------------------------------------------------- boutons */
+.btn {
+  display: inline-flex; align-items: center; gap: 9px; padding: 13px 22px;
+  border-radius: 9px; background: var(--ocre); color: #fff; font-weight: 600;
+  font-size: 15px; text-decoration: none; border: 1px solid transparent;
+  transition: filter .15s ease, transform .15s ease;
+}
+.btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.btn.fantome { background: transparent; color: var(--encre); border-color: var(--ligne); }
+.btn.fantome:hover { border-color: var(--ocre); color: var(--ocre); filter: none; }
+.btn.clair { background: #fff; color: var(--encre); }
+.btn.vert { background: var(--vert); }
+/* Variante contour claire, lisible sur les panneaux sombres (encadré tarif). */
+.btn.fantome-clair { background: transparent; color: #fff; border-color: rgba(255,255,255,.35); }
+.btn.fantome-clair:hover { border-color: #fff; color: #fff; filter: none; }
+
+/* ------------------------------------------------------------------ héros */
+.heros { padding: calc(var(--pas) * .9) 0 0; background:
+  radial-gradient(1200px 420px at 15% -12%, #eef3f0 0%, transparent 70%), var(--fond); }
+
+.heros h1 { margin-bottom: 18px; }
+.heros .chapeau { margin-bottom: 26px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.note-action { font-size: 13px; color: var(--encre-3); margin-top: 14px; }
+.reperes { display: flex; flex-wrap: wrap; gap: 26px; margin-top: 34px; }
+.repere strong { display: block; font-size: 25px; color: var(--encre); letter-spacing: -.02em; }
+.repere span { font-size: 12.5px; color: var(--encre-3); letter-spacing: .03em; }
+.capture {
+  border: 1px solid var(--ligne); border-radius: var(--rayon); overflow: hidden;
+  background: var(--carte); box-shadow: 0 22px 44px -28px rgba(18, 33, 29, .45);
+}
+.capture figcaption {
+  font-size: 12.5px; color: var(--encre-3); padding: 9px 13px;
+  border-top: 1px solid var(--ligne); background: var(--fond-2);
+}
+.heros .capture { margin-top: 6px; }
+@media (max-width: 900px) { .heros .grille { grid-template-columns: 1fr; } }
+
+/* --------------------------------------------------------------- sections */
+section { padding: var(--pas) 0; }
+section.alt { background: var(--fond-2); border-block: 1px solid var(--ligne); }
+.tete { max-width: 66ch; margin-bottom: 46px; }
+.tete h2 + p { margin-top: 16px; }
+
+.cartes { display: grid; gap: 22px; grid-template-columns: repeat(3, 1fr); }
+.cartes.deux { grid-template-columns: repeat(2, 1fr); }
+.carte {
+  background: var(--carte); border: 1px solid var(--ligne); border-radius: var(--rayon);
+  padding: 26px 24px;
+}
+.carte h3 { margin-bottom: 9px; }
+.carte p { margin: 0; font-size: 14.8px; color: var(--encre-2); }
+.carte .num {
+  font-family: var(--mono); font-size: 12px; color: var(--ocre); letter-spacing: .1em;
+  display: block; margin-bottom: 12px;
+}
+.carte ul { margin: 10px 0 0; padding-left: 18px; font-size: 14.5px; }
+.carte li { margin-bottom: 5px; }
+@media (max-width: 900px) { .cartes, .cartes.deux { grid-template-columns: 1fr; } }
+
+.duo { display: grid; gap: 46px; grid-template-columns: 1fr 1fr; align-items: center; }
+.duo.inverse > :first-child { order: 2; }
+@media (max-width: 900px) { .duo { grid-template-columns: 1fr; } .duo.inverse > :first-child { order: 0; } }
+
+.liste-plate { list-style: none; margin: 0; padding: 0; }
+.liste-plate li {
+  display: grid; grid-template-columns: 22px 1fr; gap: 12px;
+  padding: 11px 0; border-bottom: 1px solid var(--ligne); font-size: 15px;
+}
+.liste-plate li:last-child { border-bottom: 0; }
+.liste-plate svg { width: 18px; height: 18px; margin-top: 4px; color: var(--vert); }
+
+/* ------------------------------------------------------------------- prix */
+.prix {
+  display: grid; gap: 0; grid-template-columns: 1.15fr .85fr;
+  background: var(--carte); border: 1px solid var(--ligne); border-radius: var(--rayon);
+  overflow: hidden;
+}
+.prix .gauche { padding: 38px 36px; }
+.prix .droite { padding: 38px 36px; background: var(--encre); color: #d6dedb; }
+.montant { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.montant b { font-size: clamp(38px, 5vw, 54px); color: var(--encre); letter-spacing: -.03em; line-height: 1; }
+.montant span { font-size: 15px; color: var(--encre-3); }
+.ttc { font-size: 13.5px; color: var(--encre-3); margin: 0 0 22px; }
+.prix .droite h3 { color: #fff; margin-bottom: 14px; font-size: 17px; }
+.prix .droite ul { margin: 0; padding-left: 18px; font-size: 14.5px; }
+.prix .droite li { margin-bottom: 8px; }
+.prix .droite .btn { margin-top: 20px; width: 100%; justify-content: center; }
+@media (max-width: 860px) { .prix { grid-template-columns: 1fr; } }
+
+/* ------------------------------------------------------- téléchargement */
+.telecharger {
+  background: var(--encre); color: #dfe6e3; border-radius: var(--rayon);
+  padding: 40px 38px; display: grid; gap: 34px; grid-template-columns: 1.1fr .9fr;
+  align-items: center;
+}
+.telecharger h2 { color: #fff; }
+.telecharger p { color: #b9c6c2; }
+.fichier {
+  border: 1px solid #2c403a; border-radius: 11px; padding: 20px 22px; background: #182e28;
+}
+.fichier .nom { font-family: var(--mono); font-size: 13.5px; color: #fff; }
+.fichier dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 14px 0 18px; font-size: 13.5px; }
+.fichier dt { color: #8fa39d; }
+.fichier dd { margin: 0; color: #e4ebe8; }
+.fichier .btn { width: 100%; justify-content: center; }
+@media (max-width: 860px) { .telecharger { grid-template-columns: 1fr; padding: 30px 24px; } }
+
+/* -------------------------------------------------------------- questions */
+details {
+  background: var(--carte); border: 1px solid var(--ligne); border-radius: 11px;
+  padding: 16px 20px; margin-bottom: 12px;
+}
+details[open] { border-color: #cfd8d4; }
+summary {
+  cursor: pointer; font-weight: 600; color: var(--encre); font-size: 16px;
+  list-style: none; display: flex; justify-content: space-between; gap: 16px;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after { content: '+'; color: var(--ocre); font-size: 20px; line-height: 1; }
+details[open] summary::after { content: '–'; }
+details p { margin: 12px 0 0; font-size: 15px; }
+
+/* ------------------------------------------------------------------- pied */
+footer {
+  background: var(--encre); color: #97a8a3; padding: 48px 0 34px; font-size: 14px;
+}
+footer .grille { display: grid; gap: 30px; grid-template-columns: 1.4fr 1fr 1fr; }
+footer h4 { color: #fff; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 14px; }
+footer a { color: #c3d0cc; text-decoration: none; }
+footer a:hover { color: #fff; }
+footer ul { list-style: none; margin: 0; padding: 0; }
+footer li { margin-bottom: 7px; }
+.mentions { margin-top: 34px; padding-top: 20px; border-top: 1px solid #2a3c37; font-size: 12.5px; color: #7d8f8a; }
+@media (max-width: 860px) { footer .grille { grid-template-columns: 1fr; } }
+
+.avis {
+  margin-top: 18px; padding: 14px 16px; border-radius: 10px; font-size: 13.5px;
+  background: #fdf6ec; border: 1px solid #e6d3b8; color: #6d4a1e;
+}
+
+/* ------------------------------------------------ présentation des captures */
+.intro-heros { max-width: 800px; }
+.heros .reperes { max-width: 900px; }
+.capture.large { margin-top: 44px; }
+@media (min-width: 1240px) {
+  .capture.large { margin-left: -86px; margin-right: -86px; }
+}
+figure { margin: 0; }
+.capture picture { display: block; }
+.capture.large img { width: 100%; height: auto; }
+.capture.large figcaption { font-size: 13px; padding: 11px 16px; }
+.mono > div { max-width: 780px; }
+.mono .liste-plate { margin-bottom: 0; }
+@media (max-width: 700px) {
+  .capture.large { margin: 30px -12px 0; }
+  .capture.large figcaption { font-size: 12px; padding: 9px 12px; }
+  .capture { margin-left: 0; margin-right: 0; }
+}
+
+/* ---------------------------------------------- formulaire d'essai automatisé */
+.formulaire-essai { margin-top: 30px; max-width: 640px; }
+.formulaire-essai .champs {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px;
+}
+.formulaire-essai label {
+  display: flex; flex-direction: column; gap: 7px;
+  font-size: 13.5px; font-weight: 600; color: var(--encre-2);
+}
+.formulaire-essai input {
+  font: inherit; font-weight: 400; color: var(--encre);
+  padding: 11px 13px; border: 1px solid var(--ligne); border-radius: 9px;
+  background: var(--carte); transition: border-color .15s, box-shadow .15s;
+}
+.formulaire-essai input::placeholder { color: var(--encre-3); }
+.formulaire-essai input:focus {
+  outline: none; border-color: var(--ocre);
+  box-shadow: 0 0 0 3px rgba(180, 98, 43, .14);
+}
+.formulaire-essai button[disabled] { opacity: .6; cursor: progress; }
+.note-essai { font-size: 13px; color: var(--encre-3); margin: 14px 0 0; max-width: 58ch; }
+.retour-essai {
+  font-size: 14px; line-height: 1.6; margin: 16px 0 0; padding: 13px 15px;
+  border-radius: 9px; border: 1px solid var(--ligne); background: var(--fond-2);
+}
+.retour-essai.ok { border-color: rgba(31, 107, 91, .4); background: rgba(31, 107, 91, .08); color: var(--vert); }
+.retour-essai.ko { border-color: rgba(180, 98, 43, .4); background: rgba(180, 98, 43, .08); color: var(--ocre); }
+@media (max-width: 700px) {
+  .formulaire-essai .champs { grid-template-columns: 1fr; }
+}
+
+/* ---------------------------------------------- baseline éditeur G.M.E.P */
+.bandeau-editeur {
+  background: #0f1c18; color: #b6c7c1; font-size: 11.5px; letter-spacing: .05em;
+  padding: 7px 0; border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+.bandeau-editeur b { color: #fff; font-weight: 600; letter-spacing: .08em; }
+@media (max-width: 560px) { .bandeau-editeur { font-size: 10.5px; letter-spacing: .02em; } }
+.editeur-baseline {
+  margin-top: 14px; font-size: 12.5px; line-height: 1.6; letter-spacing: .02em;
+  color: #fff; font-weight: 600;
+}
+footer ul.coordonnees { font-size: 13.5px; line-height: 1.6; }
+footer ul.coordonnees li { margin-bottom: 11px; color: #c3d0cc; }
+footer ul.coordonnees b { color: #fff; }
+
+/* ------------------------------------------------ section « origine de l'outil »
+   Encadré du risque d'aménagement (fonciers dégradés, anciennes ICPE, SIS). */
+.encadre-risque{
+  background: var(--carte);
+  border: 1px solid var(--ligne);
+  border-left: 3px solid var(--ocre);
+  border-radius: var(--rayon);
+  padding: 28px 30px;
+}
+.encadre-risque h3{ margin: 0 0 18px; }
+.encadre-risque .liste-plate li{ margin-bottom: 13px; }
+.encadre-risque .liste-plate b{ color: var(--encre); }
+.note-risque{
+  margin: 20px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--ligne);
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--encre-3);
+}
+@media (max-width: 760px){ .encadre-risque{ padding: 22px; } }

@@ -63,6 +63,12 @@ export default function DashboardPage() {
           .then(r => r.json())
           .then(() => { window.location.href = `/api/tsn-trial?token=${token}`; })
           .catch(() => { navigateTo("/subscribe-tsn"); });
+      } else if (plan === "foncier_scan_trial") {
+        // FONCIER-SCAN : produit dissocie, retour sur sa propre page en cas d'echec
+        fetch(`/api/foncier-scan-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
+          .then(r => r.json())
+          .then(() => { window.location.href = `/api/foncier-scan-tool?token=${token}`; })
+          .catch(() => { navigateTo("/subscribe-foncier-scan"); });
       } else if (plan === "rabattement_trial") {
         fetch(`/api/rabattement-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
           .then(r => r.json())

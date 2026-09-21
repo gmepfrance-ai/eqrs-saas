@@ -128,6 +128,20 @@ try {
   console.error("Warning: Could not load eqrs-v8-humain-tool.html", e);
 }
 
+// Load FONCIER-SCAN tool HTML at startup
+// Outil autonome destiné aux services développement foncier (promoteurs, enseignes,
+// aménageurs). Volontairement dissocié du catalogue SSP / hydrogéologie : il ne
+// s'adresse pas aux mêmes utilisateurs et dispose de sa propre page de présentation.
+let foncierScanToolHtml = "";
+try {
+  foncierScanToolHtml = fs.readFileSync(
+    path.resolve(process.cwd(), "foncier-scan-tool.html"),
+    "utf-8"
+  );
+} catch (e) {
+  console.error("Warning: Could not load foncier-scan-tool.html", e);
+}
+
 // Stripe setup
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "sk_test_placeholder";
 const isStripeConfigured =
@@ -142,6 +156,8 @@ const STRIPE_PRICE_MONTHLY =
   process.env.STRIPE_PRICE_MONTHLY || "price_monthly_placeholder";
 const STRIPE_PRICE_ANNUAL =
   process.env.STRIPE_PRICE_ANNUAL || "price_annual_placeholder";
+const STRIPE_PRICE_FONCIER_SCAN_ANNUAL =
+  process.env.STRIPE_PRICE_FONCIER_SCAN_ANNUAL || "";
 const STRIPE_PRICE_TSN_ANNUAL =
   process.env.STRIPE_PRICE_TSN_ANNUAL || "price_1TiYjL3A2g3lkch9lRTAksYc";
 const STRIPE_PRICE_DOMENICO_ANNUAL =
@@ -341,9 +357,12 @@ async function requireSubscription(
   }
 
   const allSubs = await storage.getSubscriptionsByUserId(req.user.id);
-  const sub = allSubs.find(
+  // FONCIER-SCAN est un produit dissocie : il ne doit jamais ouvrir l'acces a
+  // l'outil EQRS, y compris par la clause de repli ci-dessous.
+  const eligibles = allSubs.filter((s) => s.tool !== "foncier_scan");
+  const sub = eligibles.find(
     (s) => (s.tool === "bundle" || s.tool === "je" || !s.tool) && (s.status === "active" || s.status === "trialing")
-  ) || allSubs[0];
+  ) || eligibles[0];
   if (!sub || (sub.status !== "active" && sub.status !== "trialing")) {
     return res
       .status(403)
@@ -383,6 +402,33 @@ async function requireTsnSubscription(
       try { await storage.updateSubscription(tsnSub.id, { status: "expired" }); } catch {}
       res.setHeader("Content-Type", "text/html; charset=utf-8");
       return res.status(403).send(trialExpiredHtml("/#/subscribe-tsn", "TSN — Transfert Sol-Nappe", 14));
+    }
+  }
+  next();
+}
+
+// Middleware spécifique à FONCIER-SCAN (recherche foncière, développeurs et promoteurs)
+async function requireFoncierScanSubscription(
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) {
+  if (!req.user) return res.status(401).json({ message: "Authentification requise" });
+  // Bypass admin
+  if (isAdminEmail((req.user as any).email)) return next();
+  const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+  const fsSub = subs.find(
+    (s) => s.tool === "foncier_scan" &&
+           (s.status === "active" || s.status === "trialing")
+  );
+  if (!fsSub) {
+    return res.status(403).json({ message: "Abonnement FONCIER-SCAN requis pour accéder à cet outil" });
+  }
+  if (fsSub.status === "trialing" && fsSub.currentPeriodEnd) {
+    if (new Date(fsSub.currentPeriodEnd) < new Date()) {
+      try { await storage.updateSubscription(fsSub.id, { status: "expired" }); } catch {}
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.status(403).send(trialExpiredHtml("/#/subscribe-foncier-scan", "FONCIER-SCAN", 14));
     }
   }
   next();
@@ -1833,12 +1879,17 @@ export async function registerRoutes(
     requireAuth as any,
     async (req: AuthRequest, res: Response) => {
       const subs = await storage.getSubscriptionsByUserId(req.user!.id);
-    const sub = subs.find(s => s.tool === "je" || s.tool === null) || subs[0];
+    // FONCIER-SCAN exclu du repli : un essai FONCIER-SCAN ne doit pas apparaitre
+    // comme abonnement a la suite SSP dans le tableau de bord.
+    const sub = subs.find(s => s.tool === "je" || s.tool === null)
+      || subs.filter(s => s.tool !== "foncier_scan")[0];
+    const foncierScanSub = subs.find(s => s.tool === "foncier_scan");
     const tsnSub = subs.find(s => s.tool === "tsn");
     const rabattementSub = subs.find(s => s.tool === "rabattement");
       return res.json({
         user: req.user,
         subscription: sub || null,
+      foncierScanSubscription: foncierScanSub || null,
       tsnSubscription: tsnSub || null,
       rabattementSubscription: rabattementSub || null,
       });
@@ -1877,6 +1928,7 @@ export async function registerRoutes(
         const priceId =
           plan === "rabattement_annual" ? STRIPE_PRICE_RABATTEMENT_ANNUAL :
           plan === "rabattement_simple_annual" ? STRIPE_PRICE_RABATTEMENT_SIMPLE_ANNUAL :
+          plan === "foncier_scan_annual" ? STRIPE_PRICE_FONCIER_SCAN_ANNUAL :
           plan === "tsn_annual" ? STRIPE_PRICE_TSN_ANNUAL :
           plan === "domenico_annual" ? STRIPE_PRICE_DOMENICO_ANNUAL :
           plan === "annual" ? STRIPE_PRICE_ANNUAL :
@@ -1906,6 +1958,7 @@ export async function registerRoutes(
         const tool =
           plan === "rabattement_annual" ? "rabattement" :
           plan === "rabattement_simple_annual" ? "rabattement" :
+          plan === "foncier_scan_annual" ? "foncier_scan" :
           plan === "tsn_annual" ? "tsn" :
           plan === "domenico_annual" ? "tsn" :
           plan === "eqrs_v31_ecotox_monthly" ? "eqrs_v31" :
@@ -2200,6 +2253,7 @@ export async function registerRoutes(
           let plan =
             priceIdFromStripe === STRIPE_PRICE_RABATTEMENT_ANNUAL ? "rabattement_annual" :
             priceIdFromStripe === STRIPE_PRICE_RABATTEMENT_SIMPLE_ANNUAL ? "rabattement_simple_annual" :
+            (STRIPE_PRICE_FONCIER_SCAN_ANNUAL && priceIdFromStripe === STRIPE_PRICE_FONCIER_SCAN_ANNUAL) ? "foncier_scan_annual" :
             priceIdFromStripe === STRIPE_PRICE_TSN_ANNUAL ? "tsn_annual" :
             priceIdFromStripe === STRIPE_PRICE_DOMENICO_ANNUAL ? "domenico_annual" :
             (STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY && priceIdFromStripe === STRIPE_PRICE_EQRS_V31_ECOTOX_MONTHLY) ? "eqrs_v31_ecotox_monthly" :
@@ -2216,6 +2270,7 @@ export async function registerRoutes(
           let tool =
             plan === "rabattement_annual" ? "rabattement" :
             plan === "rabattement_simple_annual" ? "rabattement" :
+            plan === "foncier_scan_annual" ? "foncier_scan" :
             plan === "tsn_annual" ? "tsn" :
             plan === "domenico_annual" ? "tsn" :
             plan === "eqrs_v31_ecotox_monthly" ? "eqrs_v31" :
@@ -2551,6 +2606,65 @@ export async function registerRoutes(
       res.setHeader("Content-Type", "text/html; charset=utf-8");
 
       return res.send(protectToolHtml(tsnToolHtml));
+    }
+  );
+
+  // ── FONCIER-SCAN : accès à l'outil ──────────────────────────────────────
+  // Produit dissocié : aucun accès via l'abonnement "bundle" de la suite SSP.
+  app.get(
+    "/api/foncier-scan-tool",
+    requireAuth as any,
+    requireFoncierScanSubscription as any,
+    (req: AuthRequest, res: Response) => {
+      if (!foncierScanToolHtml) {
+        return res.status(500).json({ message: "Outil FONCIER-SCAN non disponible" });
+      }
+
+      res.setHeader("X-Frame-Options", "SAMEORIGIN");
+      res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https://*.geopf.fr https://unpkg.com https://*.tile.openstreetmap.org https://*.openstreetmap.org; connect-src 'self' https://*.geopf.fr https://apicarto.ign.fr https://www.georisques.gouv.fr https://georisques.gouv.fr https://geo.api.gouv.fr https://api-adresse.data.gouv.fr https://app.dvf.etalab.gouv.fr https://recherche-entreprises.api.gouv.fr https://cdn.jsdelivr.net"
+      );
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+
+      return res.send(protectToolHtml(foncierScanToolHtml));
+    }
+  );
+
+  // ── FONCIER-SCAN : activer l'essai de 14 jours ─────────────────────────
+  app.post(
+    "/api/foncier-scan-trial/activate",
+    requireAuth as any,
+    async (req: AuthRequest, res: Response) => {
+      try {
+        const subs = await storage.getSubscriptionsByUserId(req.user!.id);
+        const existing = subs.find(s => s.tool === "foncier_scan");
+        if (existing && (existing.status === "active" || existing.status === "trialing")) {
+          return res.status(409).json({ message: "Vous avez déjà un accès FONCIER-SCAN actif ou en cours d'essai." });
+        }
+        const trialEnd = new Date();
+        trialEnd.setDate(trialEnd.getDate() + 14);
+        let sub;
+        if (existing) {
+          sub = await storage.updateSubscription(existing.id, {
+            status: "trialing",
+            plan: "foncier_scan_trial",
+            tool: "foncier_scan",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        } else {
+          sub = await storage.createSubscription(req.user!.id, {
+            status: "trialing",
+            plan: "foncier_scan_trial",
+            tool: "foncier_scan",
+            currentPeriodEnd: trialEnd.toISOString(),
+          });
+        }
+        return res.json({ message: "Essai FONCIER-SCAN activé (14 jours)", subscription: sub });
+      } catch (err: any) {
+        return res.status(500).json({ message: err.message });
+      }
     }
   );
 

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FONCIER-SCAN — recherche de fonciers et risque pollution pour les développeurs et promoteurs | G.M.E.P</title>
+<meta name="description" content="Logiciel de prospection foncière pour les responsables de développement immobilier et les développeurs d'enseignes : fonciers de 2 000 à 10 000 m² (logements et résidences, restauration rapide, commerce alimentaire) dans les agglomérations de plus de 20 000 habitants, en ZAC et sur les ronds-points d'entrée, avec antécédents de pollution ICPE, BASIAS, BASOL, SIS et CASIAS. Essai gratuit de 14 jours, puis abonnement annuel 2 500 € HT.">
+<link rel="canonical" href="https://www.gmep-france.eu/foncier-scan.html">
+<meta property="og:title" content="FONCIER-SCAN — prospection foncière et risque pollution">
+<meta property="og:description" content="Identifiez les fonciers de 2 000 à 10 000 m² mobilisables dans les agglomérations de plus de 20 000 habitants, qualifiés parcelle par parcelle.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=jetbrains-mono@400&display=swap">
+<link rel="stylesheet" href="./assets/css/foncier-scan.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1.2' y='1.2' width='29.6' height='29.6' rx='6' fill='%2312211d'/%3E%3Cpath d='M5.5 23.5 12 12.5l4.6 6.4 3.2-4.3 6.7 8.9z' fill='none' stroke='%23b4622b' stroke-width='1.8' stroke-linejoin='round'/%3E%3Ccircle cx='21.5' cy='9.5' r='3.4' fill='none' stroke='%23fff' stroke-width='1.6'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<div class="bandeau-editeur"><div class="enveloppe">Outils de gestion développés par <b>G.M.E.P</b> — Éditeur de logiciels SSP et hydrologie</div></div>
+<header class="barre">
+  <div class="enveloppe">
+    <a class="marque" href="#">
+      <svg viewBox="0 0 32 32" aria-label="Logo FONCIER-SCAN" fill="none">
+        <rect x="1.2" y="1.2" width="29.6" height="29.6" rx="6" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M5.5 23.5 12 12.5l4.6 6.4 3.2-4.3 6.7 8.9z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+        <circle cx="21.5" cy="9.5" r="3.4" stroke="currentColor" stroke-width="1.6"/>
+      </svg>
+      <span><b>FONCIER-SCAN</b><span>PROSPECTION FONCIÈRE &amp; RISQUE POLLUTION</span></span>
+    </a>
+    <nav>
+      <a href="#programmes">Programmes</a>
+      <a href="#methode">Méthode</a>
+      <a href="#fonctions">Fonctions</a>
+      <a href="#origine">Origine</a>
+      <a href="#tarif">Tarif</a>
+      <a href="#acces">Accès</a>
+      <a href="#questions">Questions</a>
+    </nav>
+    <a class="btn" href="https://app.gmep-france.eu/#/subscribe-foncier-scan">Essai gratuit de 14 jours</a>
+  </div>
+</header>
+
+<!-- ------------------------------------------------------------------ héros -->
+<section class="heros">
+  <div class="enveloppe">
+    <div class="intro-heros">
+      <p class="sur-titre">Application en ligne · destinée aux services développement</p>
+      <h1>Les fonciers mobilisables de 2&#8239;000&nbsp;à&nbsp;10&#8239;000&nbsp;m², agglomération par agglomération.</h1>
+      <p class="chapeau">Vous saisissez le nom d'une agglomération de plus de 20 000 habitants et
+        choisissez le programme visé — logements et résidences, restauration rapide ou commerce
+        alimentaire. FONCIER-SCAN identifie les parcelles de la surface correspondante situées dans
+        ou en bordure immédiate des zones d'activité, sur les ronds-points d'entrée
+        d'agglomération, et les qualifie une par une : référence cadastrale, Lambert 93, altitude
+        NGF, zonage PLU, antécédents de pollution, photo aérienne, propriétaire présumé et
+        référence de prix.</p>
+      <div class="actions">
+        <a class="btn" href="https://app.gmep-france.eu/#/subscribe-foncier-scan">Ouvrir l'essai gratuit de 14 jours</a>
+        <a class="btn fantome" href="#origine">Pourquoi cet outil</a>
+      </div>
+      <p class="note-action">Essai gratuit de 14 jours, toutes fonctions comprises, sans
+        engagement · puis abonnement annuel 2 500 € HT par poste · sans carte bancaire · rien à
+        installer : l'application s'ouvre depuis votre compte G.M.E.P.</p>
+      <div class="reperes">
+        <div class="repere"><strong>3</strong><span>programmes prédéfinis</span></div>
+        <div class="repere"><strong>9</strong><span>bases publiques interrogées</span></div>
+        <div class="repere"><strong>40</strong><span>fonciers qualifiés par recherche</span></div>
+        <div class="repere"><strong>8 j</strong><span>d'essai gratuit</span></div>
+        <div class="repere"><strong>3 min</strong><span>pour une agglomération</span></div>
+      </div>
+    </div>
+    <figure class="capture large">
+      <picture>
+        <source media="(max-width: 700px)" srcset="./assets/img/foncier-scan/criteres-mobile.jpg">
+        <img src="./assets/img/foncier-scan/interface.jpg" width="2400" height="1680" loading="eager"
+        alt="Interface de FONCIER-SCAN : critères de recherche, indicateurs, carte des fonciers notés et tableau des résultats">
+      </picture>
+      <figcaption>Programme « logements et résidences » (3&#8239;000 – 4&#8239;000 m²) sur
+        l'agglomération de Niort : 40 fonciers qualifiés, 10 prioritaires, 32 sur un rond-point
+        d'entrée, notés de 0 à 100.</figcaption>
+    </figure>
+  </div>
+</section>
+
+
+<!-- ----------------------------------------------------------------- origine -->
+<section id="origine" class="alt">
+  <div class="enveloppe">
+    <div class="tete">
+      <p class="sur-titre">Origine de l'outil</p>
+      <h2>Né du retour d'expérience du concepteur, pas d'un cahier des charges théorique.</h2>
+      <p class="chapeau">FONCIER-SCAN a été conçu par Eric Azulay, responsable conception et
+        modélisation de G.M.E.P, à partir de plusieurs années d'études de pollution, de diagnostics
+        de sites et de dossiers réglementaires conduits pour des promoteurs, des aménageurs et des
+        collectivités. L'outil prend en compte les besoins exprimés par les services développement
+        eux-mêmes, sur deux points précis : la recherche du foncier, et le risque que fait peser le
+        passif environnemental sur l'opération.</p>
+    </div>
+    <div class="duo" style="align-items:start">
+      <div>
+        <h3>Ce que les missions font apparaître</h3>
+        <p>Côté développement foncier, la recherche du terrain et l'appréciation du risque
+          environnemental sont presque toujours conduites séparément. Le foncier est repéré,
+          sécurisé, parfois signé — puis les antécédents industriels se révèlent : ancienne
+          installation classée sur l'emprise, activité BASIAS absente de l'acte, secteur
+          d'information sur les sols grevant la parcelle. Le programme est alors renégocié, retardé
+          ou abandonné, après avoir immobilisé des mois de travail.</p>
+        <p>L'outil répond à ce besoin : voir sur une même carte les fonciers compatibles avec le
+          programme visé et leur passif environnemental, avant l'engagement, et non après.</p>
+      </div>
+      <div class="encadre-risque">
+        <h3>Le risque d'aménagement, pris en compte en amont</h3>
+        <ul class="liste-plate">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span><b>Fonciers dégradés</b> — remblais, anciennes emprises industrielles, friches en
+            cours de reconversion, dont la requalification pèse sur le bilan de l'opération.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span><b>Anciennes ICPE</b> — installations classées dont l'activité a cessé, et dont la
+            mémoire conditionne le coût de dépollution et les obligations du maître d'ouvrage.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span><b>Secteurs d'information sur les sols (SIS)</b> — servitude qui impose, pour tout
+            projet de construction, une attestation de prise en compte de la pollution des sols
+            établie par un bureau d'études certifié.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span><b>BASIAS, BASOL, CASIAS, cessations d'activité</b> — antécédents rapprochés de
+            chaque parcelle, avec la distance au projet et le lien vers la fiche d'origine.</span></li>
+        </ul>
+        <p class="note-risque">L'outil signale le risque et le documente. Il ne remplace ni un
+          diagnostic de pollution, ni une étude de sols : il indique quand l'engager, et sur quel
+          terrain.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- -------------------------------------------------------------- programmes -->
+<section id="programmes">
+  <div class="enveloppe">
+    <div class="tete">
+      <p class="sur-titre">Programmes</p>
+      <h2>Trois plages de surface, selon l'enseigne à implanter.</h2>
+      <p class="chapeau">Chaque programme règle d'un clic la fourchette de surface recherchée. Les
+        bornes restent modifiables pour une plage personnalisée.</p>
+    </div>
+    <div class="cartes">
+      <div class="carte">
+        <span class="num">2 000 – 5 000 m²</span>
+        <h3>Restauration rapide</h3>
+        <p>Plage recherchée par les développeurs de McDonald's, KFC et Burger King : unités isolées
+          sur rond-point d'entrée d'agglomération, en entrée de zone commerciale, avec visibilité
+          et accès directs.</p>
+      </div>
+      <div class="carte">
+        <span class="num">5 000 – 10 000 m²</span>
+        <h3>Commerce alimentaire</h3>
+        <p>Plage recherchée par Grand Frais, Lidl et Aldi : emprises permettant un bâtiment de
+          vente et son parking, en périphérie commerciale ou en ZAC desservie.</p>
+      </div>
+      <div class="carte">
+        <span class="num">3 000 – 4 000 m²</span>
+        <h3>Logements &amp; résidences</h3>
+        <p>Plage d'origine du logiciel : opérations de logements collectifs, résidences gérées et
+          locaux commerciaux en pied d'immeuble, dans ou à proximité immédiate des agglomérations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ----------------------------------------------------------------- méthode -->
+<section id="methode">
+  <div class="enveloppe">
+    <div class="tete">
+      <p class="sur-titre">Méthode</p>
+      <h2>Le foncier constructible ne se trouve pas dans les annonces.</h2>
+      <p class="chapeau">Les parcelles bien situées de 2 000 à 10 000 m² se négocient avant
+        publication. FONCIER-SCAN les détecte à la source, dans les données publiques, qu'elles
+        soient en vente ou non : terrains nus, friches à requalifier, anciennes stations-service,
+        garages, bâtiments commerciaux et industriels en zone d'activité.</p>
+    </div>
+    <div class="cartes">
+      <div class="carte">
+        <span class="num">01</span>
+        <h3>Détection du périmètre utile</h3>
+        <p>À partir du nom de l'agglomération, la commune-centre et son intercommunalité sont
+          retenues au-delà de 20 000 habitants, puis les communes périphériques d'entrée
+          d'agglomération.</p>
+        <ul>
+          <li>Ronds-points d'entrée relevés sur la BD TOPO</li>
+          <li>Zones d'activité et ZAC, contour réel</li>
+          <li>Axes structurants et voies numérotées</li>
+        </ul>
+      </div>
+      <div class="carte">
+        <span class="num">02</span>
+        <h3>Sélection cadastrale</h3>
+        <p>Les parcelles de la surface recherchée sont extraites du cadastre autour de chaque
+          rond-point et de chaque zone d'activité, avec leur contenance officielle.</p>
+        <ul>
+          <li>Identifiant, section, numéro, contenance</li>
+          <li>Lambert 93 X/Y et altitude NGF</li>
+          <li>Adresse normalisée et zonage PLU</li>
+        </ul>
+      </div>
+      <div class="carte">
+        <span class="num">03</span>
+        <h3>Qualification et notation</h3>
+        <p>Chaque foncier reçoit une note de 0 à 100 combinant la proximité des ZAC et des
+          ronds-points, le zonage et le niveau d'antécédents de pollution.</p>
+        <ul>
+          <li>Prioritaire, à étudier ou secondaire</li>
+          <li>Occupation du sol et typologie du site</li>
+          <li>Référence de prix issue des mutations DVF</li>
+        </ul>
+      </div>
+    </div>
+    <figure class="capture large">
+      <picture>
+        <source media="(max-width: 700px)" srcset="./assets/img/foncier-scan/carte-mobile.jpg">
+        <img src="./assets/img/foncier-scan/carte.jpg" width="2228" height="1105" loading="lazy"
+        alt="Carte IGN de l'agglomération de Niort : parcelles notées, zones d'activité et ronds-points d'entrée">
+      </picture>
+      <figcaption>Chaque parcelle retenue est pointée sur le fond IGN avec sa note : en vert les
+        fonciers prioritaires, en ocre ceux à étudier, en bleu les zones d'activité et en gris les
+        ronds-points d'entrée d'agglomération.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- --------------------------------------------------------------- fonctions -->
+<section id="fonctions">
+  <div class="enveloppe">
+    <div class="duo">
+      <div>
+        <p class="sur-titre">Fiche foncier</p>
+        <h2>Tout ce qu'il faut pour décider d'un contact.</h2>
+        <p>La fiche ouvre sur l'orthophotographie IGN de la parcelle, contour cadastral superposé,
+          puis qualifie le site et son environnement. Quand le foncier est une friche ou porte un
+          antécédent de pollution en secteur SIS, un bouton conduit directement au rapport
+          Géorisques de l'adresse.</p>
+        <ul class="liste-plate">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span>Photo aérienne et contour de parcelle, lien Géoportail</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span>Occupation du sol : friche, ancienne station-service, garage, site industriel,
+              dépôt, bâtiment commercial — bâti BD TOPO à l'appui</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span>Antécédents ICPE, BASIAS, CASIAS, BASOL et secteurs SIS, avec accès Géorisques</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span>Propriétaire présumé : SCI, foncière, société de patrimoine, dirigeants et SIREN</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span>Statut de mise en vente, contact, prix vendeur et référence DVF du secteur</span></li>
+        </ul>
+      </div>
+      <figure class="capture">
+        <img src="./assets/img/foncier-scan/fiche.jpg" width="1120" height="1560" loading="lazy"
+          alt="Fiche d'un foncier : photo aérienne de la parcelle, nature du site et bouton Géorisques">
+        <figcaption>Friche en bordure de zone d'activité : photo aérienne, qualification du site
+          et accès direct au rapport de pollution des sols.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="enveloppe">
+    <div class="mono">
+      <div>
+        <p class="sur-titre">Portefeuille</p>
+        <h2>Du repérage au dossier de prospection.</h2>
+        <p>Les résultats se filtrent par niveau, commune et niveau d'antécédents, puis s'exportent
+          en Excel, CSV ou JSON avec l'ensemble des colonnes techniques. Les annonces déjà
+          collectées s'importent depuis un modèle Excel et se rattachent automatiquement au
+          cadastre, ce qui ramène chaque annonce à une parcelle réelle.</p>
+        <ul class="liste-plate">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span>Export Excel à deux feuilles : fonciers qualifiés et sources</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span>Import d'annonces et rattachement au parcellaire</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span>Fiches de suivi : statut de prospection, contact, prix, notes</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span>Cartographie France entière et vue secteur, parcelles pointées et notées</span></li>
+        </ul>
+      </div>
+    </div>
+    <figure class="capture large">
+      <picture>
+        <source media="(max-width: 700px)" srcset="./assets/img/foncier-scan/tableau-mobile.jpg">
+        <img src="./assets/img/foncier-scan/tableau.jpg" width="2438" height="1200" loading="lazy"
+        alt="Tableau des fonciers qualifiés avec score, parcelle, surface, PLU, distances, pollution, statut de vente et propriétaire">
+      </picture>
+      <figcaption>Tableau des fonciers qualifiés : score, référence cadastrale, surface, zonage PLU,
+        distance à la ZAC et au rond-point, niveau d'antécédents, statut de vente, référence DVF et
+        prix estimé. Les colonnes suivantes donnent le propriétaire présumé et son contact.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="enveloppe">
+    <div class="tete">
+      <p class="sur-titre">Sources</p>
+      <h2>Des données publiques, à la source, en direct.</h2>
+      <p class="chapeau">Aucune base revendue ni figée : le logiciel interroge les services
+        officiels au moment de la recherche.</p>
+    </div>
+    <div class="cartes">
+      <div class="carte"><h3>Foncier et bâti</h3>
+        <p>Cadastre et orthophotographies IGN, BD TOPO (bâtiments, ronds-points, zones d'activité),
+          RGE ALTI pour l'altitude NGF, Base Adresse Nationale.</p></div>
+      <div class="carte"><h3>Urbanisme et prix</h3>
+        <p>Géoportail de l'urbanisme pour le zonage PLU et les zones d'aménagement, Demandes de
+          valeurs foncières (DVF) pour les références de prix au m².</p></div>
+      <div class="carte"><h3>Pollution et sociétés</h3>
+        <p>Géorisques : installations classées ICPE, inventaire historique BASIAS/CASIAS, sites
+          BASOL, secteurs d'information sur les sols. Annuaire des entreprises SIRENE et RNE.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------------- tarif -->
+<section id="tarif" class="alt">
+  <div class="enveloppe">
+    <div class="tete">
+      <p class="sur-titre">Tarif</p>
+      <h2>Un abonnement annuel, sans coût caché.</h2>
+    </div>
+    <div class="prix">
+      <div class="gauche">
+        <div class="montant"><b>2 500 €</b><span>HT par an et par poste</span></div>
+        <p class="ttc">Soit 3 000 € TTC (TVA 20 %). Abonnement de douze mois, reconductible.
+          Facturation à la commande, par virement ou carte.</p>
+        <h3>Compris dans l'abonnement</h3>
+        <ul class="liste-plate">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span>Recherches illimitées sur toutes les agglomérations françaises</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span>Mises à jour de la version pendant toute la période</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span>Exports Excel, CSV et JSON sans limitation</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span>Assistance par courriel et prise en main à distance</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            <span>Modèle d'import des annonces et notice d'utilisation fournis</span></li>
+        </ul>
+      </div>
+      <div class="droite">
+        <h3>Essai puis souscription</h3>
+        <ul>
+          <li>Accès nominatif, non cessible, un poste par abonnement souscrit.</li>
+          <li>Ouverture immédiate depuis votre compte, sans installation ni clé à saisir.</li>
+          <li><b>Essai gratuit de 14 jours</b> : toutes fonctions et exports compris, sans carte
+            bancaire, sans engagement ni reconduction automatique.</li>
+          <li>Paiement en ligne sécurisé, facture avec TVA établie automatiquement.</li>
+        </ul>
+        <a class="btn clair" href="https://app.gmep-france.eu/#/subscribe-foncier-scan">Souscrire l'abonnement annuel</a>
+        <a class="btn fantome-clair" href="mailto:gmep.france@gmail.com?subject=FONCIER-SCAN%20%E2%80%94%20demande%20de%20devis&amp;body=Soci%C3%A9t%C3%A9%20%3A%0ANom%20et%20fonction%20%3A%0AT%C3%A9l%C3%A9phone%20%3A%0ANombre%20de%20postes%20%3A%0AAgglom%C3%A9rations%20de%20prospection%20%3A%0A">Demander un devis pour plusieurs postes</a>
+      </div>
+    </div>
+    <p class="avis">Au-delà de trois postes, ou pour une facturation sur bon de commande, adressez
+      votre demande à gmep.france@gmail.com : un devis est établi en retour.</p>
+  </div>
+</section>
+
+
+<!-- -------------------------------------------------------------------- essai -->
+<section id="acces" class="alt">
+  <div class="enveloppe">
+    <div class="tete">
+      <p class="sur-titre">Accès</p>
+      <h2>Rien à installer : l'application s'ouvre depuis votre compte.</h2>
+      <p class="chapeau">FONCIER-SCAN est une application en ligne, hébergée par G.M.E.P. Vous créez
+        un compte, vous ouvrez l'outil depuis votre navigateur, et vous travaillez. Aucun logiciel à
+        déployer, aucun droit administrateur, aucune intervention de votre service informatique.</p>
+    </div>
+    <div class="cartes">
+      <div class="carte">
+        <span class="num">Étape 1</span>
+        <h3>Création du compte</h3>
+        <p>Nom, adresse professionnelle et mot de passe. Aucune carte bancaire n'est demandée pour
+          l'essai.</p>
+      </div>
+      <div class="carte">
+        <span class="num">Étape 2</span>
+        <h3>Essai de 14 jours</h3>
+        <p>L'intégralité des fonctions est ouverte pendant quatorze jours calendaires : recherches
+          illimitées, cartographie, fiches et exports, sur autant d'agglomérations que souhaité.</p>
+      </div>
+      <div class="carte">
+        <span class="num">Étape 3</span>
+        <h3>Abonnement</h3>
+        <p>À l'échéance, l'abonnement annuel s'active en ligne par paiement sécurisé. Aucun
+          prélèvement n'a lieu tant que vous n'avez pas souscrit, aucune reconduction surprise.</p>
+      </div>
+    </div>
+    <div class="actions" style="margin-top:30px">
+      <a class="btn" href="https://app.gmep-france.eu/#/subscribe-foncier-scan">Créer mon compte et démarrer l'essai</a>
+      <a class="btn fantome" href="https://app.gmep-france.eu/#/login">J'ai déjà un compte</a>
+    </div>
+    <p class="note-action">L'accès est nominatif, un poste par abonnement. Les recherches que vous
+      menez ne sont pas exploitées à d'autres fins que le fonctionnement du service.</p>
+  </div>
+</section>
+
+<!-- --------------------------------------------------------------- questions -->
+<section id="questions">
+  <div class="enveloppe">
+    <div class="tete">
+      <p class="sur-titre">Questions fréquentes</p>
+      <h2>Ce qu'il faut savoir avant de souscrire.</h2>
+    </div>
+    <details open>
+      <summary>Le logiciel indique-t-il si le terrain est réellement en vente ?</summary>
+      <p>Il distingue deux situations. Les fonciers issus d'annonces importées sont marqués
+        « en vente » avec leur prix, leur contact et le lien de l'annonce. Les fonciers détectés
+        par analyse cadastrale sont marqués « à qualifier » : ce sont des fonciers mutables, pas
+        nécessairement commercialisés — c'est précisément l'intérêt d'aller les chercher avant
+        publication. Le statut est modifiable au fil de la prospection.</p>
+    </details>
+    <details>
+      <summary>Le nom du propriétaire est-il fourni ?</summary>
+      <p>Le logiciel identifie les sociétés géolocalisées sur la parcelle et à proximité immédiate
+        via l'annuaire des entreprises, et signale comme propriétaire présumé une SCI, une foncière
+        ou une société de patrimoine implantée sur l'emprise. Les dirigeants et le SIREN sont
+        restitués. Il s'agit d'un faisceau d'indices : les noms des propriétaires particuliers ne
+        sont pas diffusés en données ouvertes, et le titulaire cadastral s'obtient par relevé de
+        propriété auprès du service du cadastre ou par un notaire.</p>
+    </details>
+    <details>
+      <summary>Le prix affiché est-il le prix demandé par le vendeur ?</summary>
+      <p>Non. Le prix au m² provient des mutations DVF de la section cadastrale : c'est une
+        référence de marché servant à estimer un ordre de grandeur. Le prix vendeur n'existe que
+        lorsqu'il provient d'une annonce ou d'un contact, et se saisit dans la fiche.</p>
+    </details>
+    <details>
+      <summary>Le repérage de pollution remplace-t-il une étude de sols ?</summary>
+      <p>Non. Le logiciel restitue les antécédents recensés — ICPE, BASIAS, CASIAS, BASOL,
+        secteurs d'information sur les sols — et conduit au rapport Géorisques de l'adresse. C'est
+        un outil de tri en amont ; l'appréciation d'un site pollué relève d'un diagnostic de sols
+        selon la méthodologie nationale.</p>
+    </details>
+    <details>
+      <summary>Comment fonctionne l'essai de 14 jours ?</summary>
+      <p>Vous créez un compte sur app.gmep-france.eu et l'accès s'ouvre immédiatement, pour
+        14 jours calendaires. Toutes les fonctions sont ouvertes, exports compris. Aucun moyen de
+        paiement n'est demandé et il n'y a aucune reconduction automatique : à l'échéance, l'outil
+        propose la souscription. Une période d'essai par compte, réservée à une évaluation
+        interne.</p>
+    </details>
+    <details>
+      <summary>Faut-il installer un logiciel ou mobiliser le service informatique ?</summary>
+      <p>Non. FONCIER-SCAN s'ouvre dans votre navigateur depuis votre compte G.M.E.P : aucun
+        déploiement, aucun droit administrateur, aucun serveur à administrer. Un navigateur à jour
+        et une connexion internet suffisent, sur Windows comme sur macOS.</p>
+    </details>
+    <details>
+      <summary>Mes données de prospection sont-elles envoyées quelque part ?</summary>
+      <p>Les critères et les fiches que vous produisez servent uniquement à l'exécution de vos
+        recherches ; les données interrogées sont celles des bases publiques officielles. G.M.E.P
+        conserve les informations d'identification du titulaire du compte pour la gestion de
+        l'abonnement, et n'exploite pas vos recherches à d'autres fins.</p>
+    </details>
+    <details>
+      <summary>FONCIER-SCAN est-il compris dans l'abonnement à la suite SSP et hydrologie ?</summary>
+      <p>Non. FONCIER-SCAN est un produit distinct, destiné aux services développement des
+        promoteurs, aménageurs et enseignes, et non aux bureaux d'études. Son abonnement est
+        indépendant de celui de la suite SSP et hydrologie de G.M.E.P, et n'est pas compris dans
+        l'abonnement groupé de cette suite.</p>
+    </details>
+  </div>
+</section>
+
+<!-- -------------------------------------------------------------------- pied -->
+<footer>
+  <div class="enveloppe">
+    <div class="grille">
+      <div>
+        <a class="marque" href="#" style="margin-bottom:14px">
+          <svg viewBox="0 0 32 32" aria-label="Logo FONCIER-SCAN" fill="none">
+            <rect x="1.2" y="1.2" width="29.6" height="29.6" rx="6" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M5.5 23.5 12 12.5l4.6 6.4 3.2-4.3 6.7 8.9z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            <circle cx="21.5" cy="9.5" r="3.4" stroke="currentColor" stroke-width="1.6"/>
+          </svg>
+          <span><b>FONCIER-SCAN</b><span>PROSPECTION FONCIÈRE &amp; RISQUE POLLUTION</span></span>
+        </a>
+        <p>Logiciel d'identification et de qualification de fonciers pour les opérations de
+          logements, résidences et locaux commerciaux.</p>
+        <p class="editeur-baseline">Outils de gestion développés par G.M.E.P<br>
+          Éditeur de logiciels SSP et hydrologie</p>
+      </div>
+      <div>
+        <h4>Le logiciel</h4>
+        <ul>
+          <li><a href="#programmes">Programmes</a></li>
+          <li><a href="#methode">Méthode</a></li>
+          <li><a href="#fonctions">Fonctions</a></li>
+          <li><a href="#origine">Origine de l'outil</a></li>
+          <li><a href="#tarif">Tarif et souscription</a></li>
+          <li><a href="#acces">Accès et essai de 14 jours</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact pour renseignements</h4>
+        <ul class="coordonnees">
+          <li><b>Eric Azulay</b><br>responsable conception et modélisation</li>
+          <li>SARL G.M.E.P<br>9 rue de la Marne<br>79400 Saint-Maixent-l'École</li>
+          <li><a href="tel:+33606637233">06 06 63 72 33</a> &nbsp;·&nbsp; <a href="tel:+33549168382">05 49 16 83 82</a></li>
+          <li><a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a></li>
+          <li><a href="https://www.gmep-france.eu" target="_blank" rel="noopener">gmep-france.eu</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="mentions">Sources de données : IGN — Géoplateforme (cadastre, BD TOPO, RGE ALTI,
+      orthophotographies), Géoportail de l'urbanisme, Géorisques (ICPE, BASIAS/CASIAS, BASOL, SIS),
+      DVF — Etalab, Base Adresse Nationale, Annuaire des entreprises (SIRENE, RNE), API Découpage
+      administratif. Les résultats constituent une aide à la prospection et ne valent ni garantie
+      de disponibilité du foncier, ni titre de propriété, ni diagnostic de pollution.
+      Essai gratuit de 14 jours sans carte bancaire, puis abonnement annuel 2 500 € HT par poste, TVA en sus. Éditeur : SARL G.M.E.P, 9 rue de la Marne, 79400 Saint-Maixent-l'École — SIREN 753 097 625 — outils de gestion développés par G.M.E.P, éditeur de logiciels SSP et hydrologie. Contact : Eric Azulay, responsable conception et modélisation — 06 06 63 72 33 · 05 49 16 83 82 — gmep.france@gmail.com.</p>
+  </div>
+</footer>
+
+</body>
+</html>
