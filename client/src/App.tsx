@@ -15,6 +15,8 @@ import DashboardPage from "@/pages/dashboard";
 import ToolPage from "@/pages/tool";
 import TsnPage from "@/pages/tsn";
 import SubscribeTsnPage from "@/pages/subscribe-tsn";
+import FoncierScanPage from "@/pages/foncier-scan";
+import SubscribeFoncierScanPage from "@/pages/subscribe-foncier-scan";
 import SubscribeDomenicoPage from "@/pages/subscribe-domenico";
 import RabattementPage from "@/pages/rabattement";
 import SubscribeRabattementPage from "@/pages/subscribe-rabattement";
@@ -76,6 +78,9 @@ function AppRouter() {
       <Route path="/forgot-password" component={ForgotPasswordPage} />
       <Route path="/dashboard" component={DashboardPage} />
       <Route path="/app" component={ToolPage} />
+      {/* FONCIER-SCAN — produit dissocie, destine aux services developpement */}
+      <Route path="/foncier-scan" component={FoncierScanPage} />
+      <Route path="/subscribe-foncier-scan" component={SubscribeFoncierScanPage} />
       <Route path="/tsn" component={TsnPage} />
       <Route path="/subscribe-tsn" component={SubscribeTsnPage} />
       <Route path="/subscribe-domenico" component={SubscribeDomenicoPage} />

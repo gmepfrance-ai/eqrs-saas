@@ -1,0 +1,2230 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FONCIER-SCAN — recherche de fonciers et risque pollution | G.M.E.P</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+/* FONCIER-SCAN — design system */
+:root{
+  --ink:#0d1b24; --ink-2:#162c3a; --panel:#ffffff; --bg:#eef1f0;
+  --line:#d3dad9; --line-2:#e5e9e8;
+  --txt:#12242e; --txt-2:#4d6270; --txt-3:#7b8d97;
+  --accent:#b4622b;       /* terre / ocre */
+  --accent-2:#1f6b5b;     /* vert géo */
+  --accent-3:#2b6f9e;     /* bleu eau */
+  --warn:#a8451f; --ok:#1f6b5b; --neutral:#8a7b5f;
+  --r:10px; --r-s:6px;
+  --sh:0 1px 2px rgba(13,27,36,.06), 0 8px 24px -16px rgba(13,27,36,.25);
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --sans:"Inter","Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--txt);font-family:var(--sans);font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;font-weight:650;letter-spacing:-.015em}
+a{color:var(--accent-3)}
+button{font:inherit}
+
+/* layout */
+.app{display:flex;flex-direction:column;min-height:100vh}
+header.top{display:flex;align-items:center;gap:18px;padding:12px 20px;background:var(--ink);
+  color:#f3f6f5;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.02em}
+.brand svg{width:28px;height:28px;color:#e2a35e}
+.brand small{display:block;font-weight:400;font-size:11px;color:#9fb3bd;letter-spacing:.06em;
+  text-transform:uppercase}
+.tabs{display:flex;gap:4px;margin-left:auto}
+.tabs button{background:transparent;border:1px solid transparent;color:#b9c9d1;padding:7px 14px;
+  border-radius:var(--r-s);cursor:pointer}
+.tabs button:hover{color:#fff;background:#1d3948}
+.tabs button[aria-selected=true]{background:#f3f6f5;color:var(--ink);font-weight:600}
+
+main{flex:1;display:grid;grid-template-columns:330px minmax(0,1fr);gap:16px;padding:16px;align-items:start}
+main>section{min-width:0}
+@media (max-width:1000px){main{grid-template-columns:1fr}}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
+.card>h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--txt-2);
+  padding:13px 16px;border-bottom:1px solid var(--line-2)}
+.card .body{padding:16px}
+aside{position:sticky;top:72px;display:flex;flex-direction:column;gap:14px}
+
+label{display:block;font-size:12px;font-weight:600;color:var(--txt-2);margin-bottom:5px}
+input[type=text],input[type=number],select{width:100%;padding:9px 11px;border:1px solid var(--line);
+  border-radius:var(--r-s);background:#fff;color:var(--txt);font-size:14px}
+input:focus,select:focus{outline:2px solid #bfd6cf;border-color:var(--accent-2)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{margin-bottom:13px}
+.hint{font-size:11.5px;color:var(--txt-3);margin-top:4px}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--txt-2);font-weight:500}
+.check input{margin-top:3px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 14px;
+  background:var(--accent);color:#fff;border:0;border-radius:var(--r-s);font-weight:650;cursor:pointer}
+.btn:hover{background:#9d5424}
+.btn:disabled{background:#c7ccca;cursor:not-allowed}
+.btn.ghost{background:#fff;color:var(--txt);border:1px solid var(--line);width:auto;padding:8px 12px;
+  font-weight:550}
+.btn.ghost:hover{background:#f4f7f6}
+.btn.sm{width:auto;padding:6px 10px;font-size:12.5px}
+
+/* autocomplete */
+.ac{position:relative}
+.ac-list{position:absolute;z-index:40;left:0;right:0;top:calc(100% + 4px);background:#fff;
+  border:1px solid var(--line);border-radius:var(--r-s);box-shadow:var(--sh);max-height:270px;
+  overflow:auto}
+.ac-list button{display:block;width:100%;text-align:left;background:none;border:0;padding:9px 12px;
+  cursor:pointer;border-bottom:1px solid var(--line-2)}
+.ac-list button:hover{background:#f2f6f5}
+.ac-list b{display:block;font-size:13.5px}
+.ac-list span{font-size:11.5px;color:var(--txt-3)}
+
+/* progression */
+.prog{height:6px;background:#e3e8e7;border-radius:99px;overflow:hidden;margin:4px 0 10px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--accent-2),var(--accent-3));
+  transition:width .4s ease}
+.log{font-family:var(--mono);font-size:11.5px;color:var(--txt-2);max-height:160px;overflow:auto;
+  background:#f6f8f8;border:1px solid var(--line-2);border-radius:var(--r-s);padding:9px}
+.log div{padding:1px 0}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:10px;margin-bottom:14px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:13px 15px}
+.kpi b{display:block;font-size:21px;font-weight:680;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi span{font-size:11.5px;color:var(--txt-3);text-transform:uppercase;letter-spacing:.06em}
+
+/* table */
+.tablewrap{overflow:auto;max-height:62vh}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--line-2);white-space:nowrap}
+th{position:sticky;top:0;background:#f7f9f9;font-size:11.5px;text-transform:uppercase;
+  letter-spacing:.05em;color:var(--txt-2);cursor:pointer;z-index:5}
+th:hover{color:var(--accent)}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:#f4f8f7}
+tbody tr.sel{background:#eef4f2;box-shadow:inset 3px 0 0 var(--accent)}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11.5px;font-weight:600}
+.tag.p{background:#e4efe9;color:#12543f}
+.tag.e{background:#fdf0e2;color:#8a4c18}
+.tag.s{background:#eceff1;color:#4d6270}
+.dot{display:inline-block;width:8px;height:8px;border-radius:99px;margin-right:6px}
+
+#map{height:430px;border-radius:var(--r);border:1px solid var(--line);z-index:1}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--txt-2);padding:10px 2px 0}
+
+/* fiche */
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:#fff;z-index:120;
+  box-shadow:-18px 0 40px -24px rgba(13,27,36,.5);transform:translateX(100%);
+  transition:transform .28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+.drawer.open{transform:none}
+.drawer header{display:flex;align-items:flex-start;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line);
+  background:var(--ink);color:#fff}
+.drawer header h3{font-size:17px}
+.drawer header p{margin:3px 0 0;font-size:12.5px;color:#a9bcc5}
+.drawer .content{padding:18px;overflow:auto}
+.drawer .close{margin-left:auto;background:#1d3948;border:0;color:#cfe0e7;border-radius:var(--r-s);
+  padding:6px 10px;cursor:pointer}
+.sect{margin-bottom:20px}
+.sect h4{margin:0 0 9px;font-size:11.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--accent);
+  border-bottom:1px solid var(--line-2);padding-bottom:5px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;font-size:13px}
+.kv dt{color:var(--txt-2);font-weight:550}
+.kv dd{margin:0;font-variant-numeric:tabular-nums}
+.pol{font-size:12.5px;border:1px solid var(--line-2);border-radius:var(--r-s);padding:9px 11px;
+  margin-bottom:7px;background:#fbfcfc}
+.pol b{color:var(--ink-2)}
+.empty{padding:34px 20px;text-align:center;color:var(--txt-3)}
+.skel{height:14px;background:linear-gradient(90deg,#eceff0,#f6f8f8,#eceff0);background-size:200% 100%;
+  animation:sk 1.2s infinite;border-radius:4px;margin:8px 0}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.err{background:#fdeee9;border:1px solid #f0c6b6;color:#8a2f13;padding:10px 12px;border-radius:var(--r-s);
+  font-size:13px}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.bar .grow{flex:1}
+.filters{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--txt-2)}
+.filters select,.filters input{width:auto;padding:6px 9px;font-size:13px}
+.src{font-size:11.5px;color:var(--txt-3);line-height:1.7}
+.src a{color:var(--txt-2)}
+@media print{header.top,aside,.tabs,#map,.bar{display:none}.drawer{position:static;transform:none;width:100%}}
+
+[hidden]{display:none !important}
+
+/* --- Affichage sur petits écrans (tablette et téléphone) --- */
+@media (max-width:760px){
+  header.top{flex-direction:column;align-items:stretch;gap:10px;padding:10px 14px}
+  .brand{font-size:15px}
+  .brand small{display:none}
+  .tabs{margin-left:0;overflow-x:auto;gap:6px;-webkit-overflow-scrolling:touch}
+  .tabs button{white-space:nowrap;flex:0 0 auto;font-size:13px;padding:7px 11px}
+  main{padding:12px;gap:12px}
+  .kpis{grid-template-columns:repeat(auto-fit,minmax(45%,1fr))}
+  #map{height:300px}
+  .drawer{width:100%}
+}
+
+/* Indicateur de mode de fonctionnement du moteur */
+.mode{
+  margin-left:auto;font-size:11.5px;letter-spacing:.02em;color:var(--txt-2);
+  border:1px solid var(--bord);border-radius:999px;padding:4px 11px;background:var(--surf-2);
+  white-space:nowrap;cursor:help;
+}
+@media (max-width:760px){ .mode{display:none} }
+
+/* Pastilles de localisation des parcelles, visibles à toutes les échelles */
+.pin{background:none;border:none}
+.pin span{
+  display:flex;align-items:center;justify-content:center;
+  width:26px;height:26px;border-radius:50% 50% 50% 4px;transform:rotate(45deg);
+  background:var(--c);color:#fff;
+  box-shadow:0 2px 6px rgba(12,26,34,.35);border:1.5px solid rgba(255,255,255,.9);
+}
+.pin i{transform:rotate(-45deg);font-style:normal;font:600 11px/1 var(--mono)}
+.card > h2{display:flex;align-items:center;gap:10px}
+
+/* Photo aérienne de la parcelle dans la fiche */
+figure.ortho{margin:0;position:relative;border:1px solid var(--bord);border-radius:8px;overflow:hidden;background:#dfe6ea}
+figure.ortho img{display:block;width:100%;height:auto}
+figure.ortho svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+figure.ortho figcaption{padding:7px 10px;font-size:11.5px;color:var(--txt-3);background:var(--surf-2);border-top:1px solid var(--bord)}
+figure.ortho figcaption a{color:var(--accent-3)}
+
+/* Accès au rapport Géorisques, à droite de la description du site */
+.pol-geo{display:flow-root}
+.btn-geo{float:right;margin:0 0 6px 12px;display:inline-block;padding:7px 12px;border-radius:7px;
+  background:var(--accent);color:#fff;font-size:12px;font-weight:600;text-decoration:none;
+  line-height:1.3;max-width:200px;border:1px solid transparent}
+.btn-geo:hover{filter:brightness(1.08)}
+.btn-geo.discret{background:#fff;color:var(--txt-2);border-color:var(--line);font-weight:500}
+.btn-geo.discret:hover{border-color:var(--accent);color:var(--accent);filter:none}
+@media (max-width:520px){.btn-geo{float:none;display:block;max-width:none;text-align:center;margin:0 0 8px}}
+
+/* --- Programmes prédéfinis (plages de surface) --- */
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.preset{flex:1 1 128px;text-align:left;padding:7px 9px;background:#fff;color:var(--txt);
+  border:1px solid var(--line);border-radius:var(--r-s);font-size:11.5px;font-weight:650;
+  line-height:1.25;cursor:pointer;transition:border-color .12s,background .12s}
+.preset span{display:block;font-weight:500;font-size:10.5px;color:var(--txt-3);margin-top:2px;
+  font-variant-numeric:tabular-nums}
+.preset:hover{border-color:var(--accent)}
+.preset.actif{border-color:var(--accent);background:#fbf1e9;color:var(--accent)}
+.preset.actif span{color:var(--accent)}
+
+/* ------------------------------------------- baseline éditeur G.M.E.P */
+.top .editeur {
+  margin-left: 8px; padding-left: 16px; font-size: 10.5px; line-height: 1.45;
+  letter-spacing: .03em; color: #9fb3bd; font-weight: 400;
+  border-left: 1px solid rgba(255, 255, 255, .18);
+}
+@media (max-width: 1280px) { .top .editeur { display: none; } }
+
+</style>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230d1b24'/%3E%3Cpath d='M7 22l6-11 5 7 3-4 4 8z' fill='none' stroke='%23e2a35e' stroke-width='2'/%3E%3C/svg%3E">
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="brand">
+    <svg viewBox="0 0 32 32" aria-label="Logo Foncier-Scan" fill="none">
+      <rect x="1.2" y="1.2" width="29.6" height="29.6" rx="6" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M5.5 23.5 12 12.5l4.6 6.4 3.2-4.3 6.7 8.9z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <circle cx="21.5" cy="9.5" r="3.4" stroke="currentColor" stroke-width="1.6"/>
+    </svg>
+    <div>FONCIER-SCAN<small>Prospection foncière &amp; risque pollution</small></div>
+    <span class="editeur">Outils de gestion développés par G.M.E.P<br>Éditeur de logiciels SSP et hydrologie</span>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-onglet="recherche" aria-selected="true">Recherche foncière</button>
+    <button role="tab" data-onglet="annonces" aria-selected="false">Annonces &amp; portefeuille</button>
+    <button role="tab" data-onglet="methode" aria-selected="false">Méthode &amp; sources</button>
+  </nav>
+  <span class="mode" id="mode-moteur">Initialisation du moteur…</span>
+</header>
+
+<main>
+  <!-- ======================= PANNEAU CRITÈRES ======================= -->
+  <aside>
+    <section class="card" id="panneau-criteres">
+      <h2>Critères de recherche</h2>
+      <div class="body">
+        <div class="field ac">
+          <label for="agglo">Agglomération</label>
+          <input type="text" id="agglo" placeholder="Niort, Poitiers, La Rochelle…" autocomplete="off">
+          <div class="hint" id="agglo-info">Plus de 20 000 habitants (commune ou intercommunalité).</div>
+          <div class="ac-list" id="ac-list" hidden></div>
+        </div>
+        <div class="field">
+          <label>Programme recherché</label>
+          <div class="presets" id="presets">
+            <button type="button" class="preset actif" data-min="3000" data-max="4000"
+              data-cible="Logements, résidences et locaux commerciaux — 3 000 à 4 000 m²">
+              Logements &amp; résidences<span>3 000 – 4 000 m²</span></button>
+            <button type="button" class="preset" data-min="2000" data-max="5000"
+              data-cible="Restauration rapide (McDonald's, KFC, Burger King) — 2 000 à 5 000 m²">
+              Restauration rapide<span>2 000 – 5 000 m²</span></button>
+            <button type="button" class="preset" data-min="5000" data-max="10000"
+              data-cible="Commerce alimentaire (Grand Frais, Lidl, Aldi) — 5 000 à 10 000 m²">
+              Commerce alimentaire<span>5 000 – 10 000 m²</span></button>
+          </div>
+          <div class="hint" id="preset-info">Logements, résidences et locaux commerciaux — 3 000 à 4 000 m².</div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="smin">Surface min. (m²)</label>
+            <input type="number" id="smin" value="3000" step="100" min="200">
+          </div>
+          <div class="field">
+            <label for="smax">Surface max. (m²)</label>
+            <input type="number" id="smax" value="4000" step="100" min="300" max="20000">
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="rpoi">Rayon autour des ZAC / ronds-points (m)</label>
+            <input type="number" id="rpoi" value="500" step="50" min="100" max="1500">
+          </div>
+          <div class="field">
+            <label for="rpol">Rayon d'analyse pollution (m)</label>
+            <input type="number" id="rpol" value="500" step="100" min="200" max="2000">
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="ncom">Communes analysées</label>
+            <input type="number" id="ncom" value="4" min="1" max="12">
+          </div>
+          <div class="field">
+            <label for="nfonc">Fonciers max.</label>
+            <input type="number" id="nfonc" value="40" min="5" max="120">
+          </div>
+        </div>
+        <div class="field">
+          <label class="check"><input type="checkbox" id="peri" checked>
+            <span>Inclure les communes périphériques de l'agglomération (entrées d'agglomération, ZAC de périphérie)</span></label>
+        </div>
+        <button class="btn" id="lancer">Lancer la recherche</button>
+        <div class="hint">Analyse : cadastre, PLU, BD TOPO, Géorisques, DVF, RGE ALTI. Comptez 1 à 4 minutes.</div>
+      </div>
+    </section>
+
+    <section class="card" id="panneau-progress" hidden>
+      <h2>Progression</h2>
+      <div class="body">
+        <div class="prog"><i id="prog-bar" style="width:0%"></i></div>
+        <div class="log" id="log"></div>
+      </div>
+    </section>
+
+    <section class="card" id="panneau-annonces-outils" hidden>
+      <h2>Alimenter le portefeuille</h2>
+      <div class="body">
+        <div class="field">
+          <label for="fichier">Import d'annonces (CSV ou Excel)</label>
+          <input type="file" id="fichier" accept=".csv,.xlsx,.xlsm">
+          <div class="hint">Colonnes reconnues : commune, adresse, surface_m2, prix, contact, url, lon, lat, idu, source.</div>
+        </div>
+        <button class="btn" id="importer">Importer</button>
+        <div style="height:10px"></div>
+        <button class="btn ghost" id="enrichir" style="width:100%">Rattacher au cadastre et enrichir</button>
+        <div style="height:8px"></div>
+        <button class="btn ghost" id="export-annonces" style="width:100%">Exporter le portefeuille (Excel)</button>
+        <div class="hint">Chaque annonce est reliée à sa parcelle, puis enrichie (Lambert 93, NGF, ICPE, BASIAS/CASIAS, SIS, DVF).</div>
+      </div>
+    </section>
+  </aside>
+
+  <!-- ======================= CONTENU ======================= -->
+  <section>
+    <div id="vue-recherche">
+      <div class="kpis" id="kpis" hidden></div>
+      <div class="bar" id="barre" hidden>
+        <div class="filters">
+          <span>Niveau</span>
+          <select id="f-niveau"><option value="">Tous</option><option>Prioritaire</option>
+            <option>À étudier</option><option>Secondaire</option></select>
+          <span>Pollution</span>
+          <select id="f-pol"><option value="">Tous</option><option value="vierge">Sans antécédent</option>
+            <option value="leger">Antécédents limités</option><option value="sensible">Contexte sensible</option></select>
+          <span>Commune</span>
+          <select id="f-com"><option value="">Toutes</option></select>
+        </div>
+        <span class="grow"></span>
+        <button class="btn ghost sm" id="exp-xlsx">Export Excel</button>
+        <button class="btn ghost sm" id="exp-csv">CSV</button>
+        <button class="btn ghost sm" id="exp-json">JSON</button>
+      </div>
+
+      <div class="card" style="margin-bottom:14px">
+        <h2>Cartographie des fonciers
+          <span style="margin-left:auto;display:flex;gap:6px">
+            <button class="btn ghost sm" id="vue-france" title="Afficher tous les fonciers point&eacute;s sur la carte de France">Vue France</button>
+            <button class="btn ghost sm" id="vue-secteur" title="Recentrer sur les fonciers trouv&eacute;s">Vue secteur</button>
+          </span></h2>
+        <div class="body"><div id="map"></div>
+          <div class="legend">
+            <span><i class="dot" style="background:#1f6b5b"></i>Foncier prioritaire</span>
+            <span><i class="dot" style="background:#b4622b"></i>À étudier</span>
+            <span><i class="dot" style="background:#7b8d97"></i>Secondaire</span>
+            <span><i class="dot" style="background:#2b6f9e"></i>ZAC / zone d'activité</span>
+            <span><i class="dot" style="background:#8a7b5f"></i>Rond-point d'entrée</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Fonciers qualifiés <span id="compte" style="color:var(--txt-3)"></span></h2>
+        <div class="tablewrap">
+          <table id="tbl">
+            <thead><tr>
+              <th data-tri="score">Score</th><th data-tri="commune">Commune</th>
+              <th data-tri="idu">Parcelle</th><th data-tri="surface_m2">Surface m²</th>
+              <th data-tri="adresse">Adresse</th><th data-tri="zonage_plu">PLU</th>
+              <th data-tri="distance_zac_m">ZAC (m)</th><th data-tri="distance_rond_point_m">Rond-pt (m)</th>
+              <th data-tri="pollution">Pollution</th><th data-tri="statut_vente">Vente</th><th data-tri="dvf_prix_median_m2">DVF €/m²</th>
+              <th data-tri="prix_vente_estime_eur">Prix estimé</th>
+              <th data-tri="proprietaire">Propriétaire / SCI</th><th data-tri="contact">Contact</th>
+            </tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div class="empty" id="vide">Choisissez une agglomération et un programme, puis lancez la
+          recherche pour afficher les fonciers <span id="vide-plage">de 3 000 à 4 000 m²</span>
+          situés dans ou à proximité immédiate des ZAC et des ronds-points d'entrée
+          d'agglomération.</div>
+      </div>
+    </div>
+
+    <div id="vue-annonces" hidden>
+      <div class="card">
+        <h2>Portefeuille d'annonces et de fonciers suivis</h2>
+        <div class="tablewrap">
+          <table><thead><tr><th>Source</th><th>Titre</th><th>Commune</th><th>Surface m²</th>
+            <th>Prix</th><th>€/m²</th><th>Contact</th><th>Lien</th></tr></thead>
+            <tbody id="tbody-annonces"></tbody></table>
+        </div>
+        <div class="empty" id="vide-annonces">Aucune annonce. Importez un fichier CSV/Excel, ou utilisez
+          le collecteur <span style="font-family:var(--mono)">collecte_annonces.py</span> pour alimenter
+          automatiquement le portefeuille.</div>
+      </div>
+      <div style="height:14px"></div>
+      <div class="card"><h2>Annonces enrichies (cadastre + pollution)</h2>
+        <div class="tablewrap"><table><thead><tr><th>Score</th><th>Commune</th><th>Parcelle</th>
+          <th>Surface m²</th><th>Prix annonce</th><th>€/m² annonce</th><th>DVF €/m²</th>
+          <th>Pollution</th><th>Contact</th></tr></thead><tbody id="tbody-enr"></tbody></table></div>
+        <div class="empty" id="vide-enr">Lancez « Rattacher au cadastre et enrichir ».</div>
+      </div>
+    </div>
+
+    <div id="vue-methode" hidden>
+      <div class="card"><h2>Méthode de sélection</h2><div class="body">
+        <p style="margin-top:0">Le moteur ne se limite pas aux annonces : il raisonne sur le foncier
+          <b>mutable et stratégiquement situé</b>, puis confronte chaque parcelle aux données
+          réglementaires et environnementales.</p>
+        <ol style="padding-left:18px;color:var(--txt-2)">
+          <li><b>Filtre agglomération</b> — la commune ou son intercommunalité doit dépasser 20 000 habitants.</li>
+          <li><b>Secteurs de prospection</b> — ronds-points d'entrée d'agglomération (croisement ronds-points
+            BD TOPO × routes numérotées) puis ZAC, zones d'activité, parcs commerciaux et industriels.</li>
+          <li><b>Extraction cadastrale</b> — toutes les parcelles dont la contenance est comprise dans la
+            fourchette demandée (programme choisi : 3 000 à 4 000 m², 2 000 à 5 000 m² pour la restauration rapide, 5 000 à 10 000 m² pour le commerce alimentaire) dans le rayon retenu.</li>
+          <li><b>Qualification</b> — numéro de parcelle et section, coordonnées Lambert 93 X/Y, altitude NGF,
+            adresse BAN, zonage PLU, ICPE, CASIAS/BASIAS, SIS, conclusions BASOL/SUP, prix DVF.</li>
+          <li><b>Notation</b> — score sur 100 combinant situation (ZAC, rond-point, entrée d'agglomération),
+            constructibilité PLU et niveau d'antécédents de pollution.</li>
+        </ol>
+        <h3 style="font-size:14px;margin:18px 0 8px">Sources de données (toutes officielles)</h3>
+        <div class="src">
+          Cadastre, parcelles et contenances — <a href="https://apicarto.ign.fr/api/doc/cadastre" target="_blank" rel="noopener noreferrer">IGN API Carto Cadastre</a><br>
+          Zonage PLU, ZAC — <a href="https://www.geoportail-urbanisme.gouv.fr/" target="_blank" rel="noopener noreferrer">Géoportail de l'urbanisme</a> via API Carto GPU<br>
+          Ronds-points, zones d'activité — <a href="https://geoservices.ign.fr/bdtopo" target="_blank" rel="noopener noreferrer">IGN BD TOPO</a> (WFS Géoplateforme)<br>
+          Altitude NGF — <a href="https://geoservices.ign.fr/rgealti" target="_blank" rel="noopener noreferrer">IGN RGE ALTI</a><br>
+          Adresse — <a href="https://adresse.data.gouv.fr/" target="_blank" rel="noopener noreferrer">Base Adresse Nationale</a><br>
+          ICPE, CASIAS/BASIAS, SIS, BASOL — <a href="https://www.georisques.gouv.fr/" target="_blank" rel="noopener noreferrer">Géorisques</a><br>
+          Prix de référence — <a href="https://app.dvf.etalab.gouv.fr/" target="_blank" rel="noopener noreferrer">DVF, demandes de valeurs foncières</a><br>
+          Populations et périmètres — <a href="https://geo.api.gouv.fr/" target="_blank" rel="noopener noreferrer">API Géo (INSEE)</a>
+        </div>
+        <h3 style="font-size:14px;margin:18px 0 8px">Limites à connaître</h3>
+        <p style="color:var(--txt-2);margin:0">Le prix affiché est un <b>prix de référence de marché</b> issu des
+          mutations DVF de la section cadastrale : ce n'est pas un prix vendeur. Le prix réel de vente et le
+          contact propriétaire se saisissent dans la fiche, ou proviennent des annonces importées. L'absence
+          d'antécédent dans CASIAS/BASIAS ne dispense jamais d'une étude historique et documentaire (norme
+          NF X31-620) avant acquisition.</p>
+      </div></div>
+      <div class="card"><h2>Éditeur et contact</h2><div class="body">
+        <p style="margin-top:0;font-weight:600;color:var(--txt-1)">Outils de gestion développés par
+          G.M.E.P — Éditeur de logiciels SSP et hydrologie</p>
+        <p style="color:var(--txt-2);margin:0;line-height:1.75">
+          <b>Contact pour renseignements</b><br>
+          Eric Azulay — responsable conception et modélisation<br>
+          SARL G.M.E.P — 9 rue de la Marne, 79400 Saint-Maixent-l'École<br>
+          Téléphone : 06 06 63 72 33 · 05 49 16 83 82<br>
+          Courriel : <a href="mailto:gmep.france@gmail.com">gmep.france@gmail.com</a> ·
+          <a href="https://www.gmep-france.eu" target="_blank" rel="noopener noreferrer">gmep-france.eu</a>
+        </p>
+      </div></div>
+    </div>
+  </section>
+</main>
+</div>
+
+<!-- ======================= FICHE FONCIER ======================= -->
+<div class="drawer" id="drawer" aria-hidden="true">
+  <header>
+    <div><h3 id="d-titre">Fiche foncier</h3><p id="d-sous"></p></div>
+    <button class="close" id="d-close">Fermer</button>
+  </header>
+  <div class="content" id="d-content"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+/* ===========================================================================
+   FONCIER-SCAN — moteur de recherche foncière exécuté dans le navigateur
+   ---------------------------------------------------------------------------
+   Portage intégral du moteur Python : toutes les données sont interrogées
+   directement auprès des services publics, sans serveur intermédiaire.
+
+     geo.api.gouv.fr .................. communes, EPCI, populations, contours
+     apicarto.ign.fr/api/cadastre ..... parcelles (n° parcelle, section, contenance)
+     apicarto.ign.fr/api/gpu .......... zonage PLU / zone-urba (ZAC, U, AU)
+     data.geopf.fr/wfs (BD TOPO) ...... ronds-points, axes numérotés, zones d'activité
+     data.geopf.fr/altimetrie ......... altitude NGF (RGE ALTI)
+     api-adresse.data.gouv.fr ......... adresse (Base Adresse Nationale)
+     georisques.gouv.fr/api/v1 ........ ICPE, BASIAS/CASIAS, SIS, BASOL (SUP)
+     app.dvf.etalab.gouv.fr ........... prix de mutation (DVF)
+   =========================================================================== */
+
+const MOTEUR = (() => {
+  const GEO = 'https://geo.api.gouv.fr';
+  const CADASTRE = 'https://apicarto.ign.fr/api/cadastre';
+  const GPU = 'https://apicarto.ign.fr/api/gpu';
+  const WFS = 'https://data.geopf.fr/wfs/ows';
+  const ALTI = 'https://data.geopf.fr/altimetrie/1.0/calcul/alti/rest/elevation.json';
+  const BAN = 'https://api-adresse.data.gouv.fr';
+  const RISQ = 'https://www.georisques.gouv.fr/api/v1';
+  const DVF = 'https://app.dvf.etalab.gouv.fr/api';
+
+  const cache = new Map();
+  const TTL = 12 * 3600 * 1000;
+
+  /* ------------------------------------------------------------ réseau */
+  async function jsonGet(url, { timeout = 60000, essais = 2, cacheable = true } = {}) {
+    if (cacheable) {
+      const c = cache.get(url);
+      if (c && Date.now() - c.t < TTL) return c.d;
+    }
+    let dernier;
+    for (let i = 0; i < essais; i++) {
+      const ctrl = new AbortController();
+      const tm = setTimeout(() => ctrl.abort(), timeout);
+      try {
+        const r = await fetch(url, { signal: ctrl.signal, headers: { Accept: 'application/json' } });
+        clearTimeout(tm);
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const d = await r.json();
+        if (cacheable) cache.set(url, { t: Date.now(), d });
+        return d;
+      } catch (e) {
+        clearTimeout(tm);
+        dernier = e;
+        await pause(500 * (i + 1));
+      }
+    }
+    throw new Error(`${url.slice(0, 80)} → ${dernier && dernier.message}`);
+  }
+
+  const sur = async (fn, defaut = null) => { try { return await fn(); } catch { return defaut; } };
+  const pause = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  /** Exécution en parallèle bornée (évite de saturer les services publics). */
+  async function enLots(items, n, fn, apres) {
+    const res = [];
+    let i = 0;
+    const travail = async () => {
+      while (i < items.length) {
+        const k = i++;
+        res[k] = await fn(items[k], k);
+        if (apres) apres(res[k], k, items.length);
+      }
+    };
+    await Promise.all(Array.from({ length: Math.min(n, items.length) }, travail));
+    return res;
+  }
+
+  /* ---------------------------------------------------------- géométrie */
+  /** WGS 84 → RGF93 / Lambert 93 (EPSG:2154), calcul local au centimètre. */
+  function lambert93(lon, lat) {
+    const d = Math.PI / 180, e = 0.08181919104281579, n = 0.7256077650532670,
+      C = 11754255.426096, Xs = 700000, Ys = 12655612.049876, l0 = 3 * d;
+    const phi = lat * d, lam = lon * d;
+    const L = Math.log(Math.tan(Math.PI / 4 + phi / 2)
+      * Math.pow((1 - e * Math.sin(phi)) / (1 + e * Math.sin(phi)), e / 2));
+    const R = C * Math.exp(-n * L), g = n * (lam - l0);
+    return [Math.round((Xs + R * Math.sin(g)) * 100) / 100,
+      Math.round((Ys - R * Math.cos(g)) * 100) / 100];
+  }
+
+  function distM(lon1, lat1, lon2, lat2) {
+    const dx = (lon2 - lon1) * 111320 * Math.cos(((lat1 + lat2) / 2) * Math.PI / 180);
+    const dy = (lat2 - lat1) * 110540;
+    return Math.hypot(dx, dy);
+  }
+
+  function cercle(lon, lat, r, n = 24) {
+    const pts = [];
+    for (let i = 0; i <= n; i++) {
+      const a = 2 * Math.PI * i / n;
+      pts.push([
+        +(lon + r * Math.cos(a) / (111320 * Math.cos(lat * Math.PI / 180))).toFixed(7),
+        +(lat + r * Math.sin(a) / 110540).toFixed(7),
+      ]);
+    }
+    return { type: 'Polygon', coordinates: [pts] };
+  }
+
+  function sommets(geom) {
+    const xs = [], ys = [];
+    (function marche(c) {
+      if (typeof c[0] === 'number') { xs.push(c[0]); ys.push(c[1]); } else c.forEach(marche);
+    })(geom.coordinates);
+    return { xs, ys };
+  }
+
+  function centroide(geom) {
+    const { xs, ys } = sommets(geom);
+    return [xs.reduce((a, b) => a + b, 0) / xs.length, ys.reduce((a, b) => a + b, 0) / ys.length];
+  }
+
+  function bboxDe(geom) {
+    const { xs, ys } = sommets(geom);
+    return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
+  }
+
+
+  /** Point dans polygone (Polygon / MultiPolygon), algorithme du lancer de rayon. */
+  function dansPolygone(lon, lat, geom) {
+    if (!geom) return false;
+    const anneaux = geom.type === 'MultiPolygon'
+      ? geom.coordinates.flat() : geom.coordinates;
+    let dedans = false;
+    anneaux.forEach((r, k) => {
+      let d = false;
+      for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
+        const [xi, yi] = r[i], [xj, yj] = r[j];
+        if (((yi > lat) !== (yj > lat))
+          && (lon < (xj - xi) * (lat - yi) / (yj - yi) + xi)) d = !d;
+      }
+      if (k === 0 || geom.type === 'MultiPolygon') { if (d) dedans = true; }
+      else if (d) dedans = false; /* trou */
+    });
+    return dedans;
+  }
+
+  /** Aire approchée en m² (formule des lacets, projection locale). */
+  function aireM2(geom) {
+    if (!geom) return 0;
+    const anneaux = geom.type === 'MultiPolygon' ? geom.coordinates.flat() : geom.coordinates;
+    const lat0 = centroide(geom)[1];
+    const kx = 111320 * Math.cos(lat0 * Math.PI / 180), ky = 110540;
+    let total = 0;
+    anneaux.forEach((r, k) => {
+      let a = 0;
+      for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
+        a += (r[j][0] * kx) * (r[i][1] * ky) - (r[i][0] * kx) * (r[j][1] * ky);
+      }
+      const aire = Math.abs(a / 2);
+      total += (k === 0 || geom.type === 'MultiPolygon') ? aire : -aire;
+    });
+    return Math.round(total);
+  }
+
+  /** Photo aérienne IGN (orthophotographie) cadrée sur la parcelle. */
+  function photoAerienneUrl(geom, { largeur = 760, hauteur = 520, marge = 1.9 } = {}) {
+    const b = bboxDe(geom);
+    const cx = (b[0] + b[2]) / 2, cy = (b[1] + b[3]) / 2;
+    const ratio = largeur / hauteur;
+    let dx = Math.max((b[2] - b[0]) * marge, 0.0009);
+    let dy = Math.max((b[3] - b[1]) * marge, 0.0006);
+    const lat = Math.cos(cy * Math.PI / 180);
+    if (dx / lat / dy < ratio) dx = ratio * dy * lat; else dy = dx / lat / ratio;
+    const cadre = [cx - dx / 2, cy - dy / 2, cx + dx / 2, cy + dy / 2];
+    return {
+      url: `https://data.geopf.fr/wms-r/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap`
+        + `&LAYERS=HR.ORTHOIMAGERY.ORTHOPHOTOS&STYLES=&CRS=CRS:84&FORMAT=image/jpeg`
+        + `&BBOX=${cadre.join(',')}&WIDTH=${largeur}&HEIGHT=${hauteur}`,
+      bbox: cadre, largeur, hauteur,
+    };
+  }
+
+  /* ----------------------------------------------------- agglomérations */
+  async function agglos(nom, seuil = 20000) {
+    const q = encodeURIComponent(nom);
+    const communes = await sur(() => jsonGet(
+      `${GEO}/communes?nom=${q}&fields=nom,code,population,centre,codeEpci,departement&limit=12`), []) || [];
+    const out = [];
+    await enLots(communes, 6, async (c) => {
+      let epci = null;
+      if (c.codeEpci) {
+        epci = await sur(() => jsonGet(`${GEO}/epcis/${c.codeEpci}?fields=nom,code,population`));
+      }
+      const pop = Math.max(c.population || 0, (epci && epci.population) || 0);
+      if (pop < seuil) return;
+      out.push({
+        type: 'commune',
+        nom: c.nom,
+        code_insee: c.code,
+        population_commune: c.population,
+        epci: epci && epci.nom,
+        code_epci: c.codeEpci,
+        population_agglo: pop,
+        departement: c.departement && c.departement.nom,
+        centre: c.centre && c.centre.coordinates,
+      });
+    });
+    out.sort((a, b) => (b.population_commune || 0) - (a.population_commune || 0));
+    return out;
+  }
+
+  const communesEpci = (codeEpci) => sur(() => jsonGet(
+    `${GEO}/epcis/${codeEpci}/communes?fields=nom,code,population,centre`), []);
+
+  const contourCommune = async (insee) => {
+    const d = await sur(() => jsonGet(`${GEO}/communes/${insee}?fields=contour`));
+    return d && d.contour;
+  };
+
+  /* --------------------------------------- ronds-points, axes et ZAC */
+  async function wfs(typename, cql, count = 400) {
+    const url = `${WFS}?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature`
+      + `&outputFormat=application/json&SRSNAME=CRS:84&TYPENAMES=${typename}`
+      + `&count=${count}&CQL_FILTER=${encodeURIComponent(cql)}`;
+    const d = await sur(() => jsonGet(url, { timeout: 90000 }), { features: [] });
+    return (d && d.features) || [];
+  }
+
+  const bboxCql = ([minx, miny, maxx, maxy]) => `BBOX(geometrie,${miny},${minx},${maxy},${maxx})`;
+
+  async function axesStructurants(bbox) {
+    const feats = await wfs('BDTOPO_V3:route_numerotee_ou_nommee', bboxCql(bbox), 300);
+    return feats.filter((f) => f.geometry).map((f) => {
+      const [lon, lat] = centroide(f.geometry);
+      return { lon, lat, num: f.properties.numero || f.properties.nom_collaboratif_gauche || '' };
+    });
+  }
+
+  async function rondsPoints(bbox, axes) {
+    const feats = await wfs('BDTOPO_V3:troncon_de_route',
+      `nature='Rond-point' AND ${bboxCql(bbox)}`);
+    const groupes = [];
+    feats.forEach((f) => {
+      if (!f.geometry) return;
+      const [lon, lat] = centroide(f.geometry);
+      if (groupes.some((g) => distM(lon, lat, g.lon, g.lat) < 90)) return;
+      groupes.push({
+        type: 'rond-point', lon, lat,
+        nom: f.properties.nom_1_gauche || 'Rond-point',
+      });
+    });
+    if (axes && axes.length) {
+      groupes.forEach((g) => {
+        const near = axes.filter((a) => distM(g.lon, g.lat, a.lon, a.lat) < 400);
+        if (near.length) {
+          g.entree_agglo = true;
+          g.axe = [...new Set(near.map((a) => a.num).filter(Boolean))].sort().slice(0, 3).join(', ');
+        }
+      });
+    }
+    return groupes;
+  }
+
+  const MOTS_ZAC = ['zac', "zone d'activité", "zone d'activites", 'industri', 'commercial',
+    'artisan', 'économ', 'econom', "parc d'activ", 'science et technique', 'administratif'];
+
+  async function zonesActivite(bbox) {
+    const feats = await wfs('BDTOPO_V3:zone_d_activite_ou_d_interet', bboxCql(bbox), 400);
+    const out = [];
+    feats.forEach((f) => {
+      if (!f.geometry) return;
+      const p = f.properties;
+      const cat = `${p.categorie || ''} ${p.nature || ''}`;
+      const nom = p.toponyme || p.nom || '';
+      const txt = `${cat} ${nom}`.toLowerCase();
+      if (!MOTS_ZAC.some((k) => txt.includes(k))) return;
+      const [lon, lat] = centroide(f.geometry);
+      out.push({
+        type: "ZAC / zone d'activité", nom: nom || cat.trim(),
+        categorie: p.categorie, nature: p.nature, lon, lat,
+      });
+    });
+    return out;
+  }
+
+  /* ------------------------------------------------------------ parcelles */
+  async function parcellesDans(lon, lat, rayon, smin, smax) {
+    const geom = encodeURIComponent(JSON.stringify(cercle(lon, lat, rayon)));
+    const d = await sur(() => jsonGet(`${CADASTRE}/parcelle?geom=${geom}`, { timeout: 90000 }),
+      { features: [] });
+    const res = [];
+    ((d && d.features) || []).forEach((f) => {
+      const p = f.properties;
+      const s = p.contenance || 0;
+      if (s < smin || s > smax || !f.geometry) return;
+      const [clon, clat] = centroide(f.geometry);
+      res.push({
+        idu: p.idu, code_insee: p.code_insee, commune: p.nom_com,
+        section: p.section, numero: p.numero, com_abs: p.com_abs || '000',
+        surface_m2: s, lon: +clon.toFixed(7), lat: +clat.toFixed(7), geometry: f.geometry,
+      });
+    });
+    return res;
+  }
+
+  /* ------------------------------------------------------- enrichissement */
+  async function altitudeNgf(lon, lat) {
+    const d = await sur(() => jsonGet(
+      `${ALTI}?lon=${lon}&lat=${lat}&resource=ign_rge_alti_wld&zonly=false`, { timeout: 40000 }));
+    const z = d && d.elevations && d.elevations[0] && d.elevations[0].z;
+    return (z && z > -1000) ? Math.round(z * 100) / 100 : null;
+  }
+
+  async function adresseBan(lon, lat) {
+    const d = await sur(() => jsonGet(`${BAN}/reverse/?lon=${lon}&lat=${lat}`, { timeout: 30000 }), {});
+    const p = (((d && d.features) || [{}])[0] || {}).properties || {};
+    return { adresse: p.label || null, code_postal: p.postcode || null, voie: p.street || null };
+  }
+
+  async function zonagePlu(lon, lat) {
+    const geom = encodeURIComponent(JSON.stringify({ type: 'Point', coordinates: [lon, lat] }));
+    const d = await sur(() => jsonGet(`${GPU}/zone-urba?geom=${geom}`, { timeout: 60000 }),
+      { features: [] });
+    const feats = (d && d.features) || [];
+    if (!feats.length) return { zonage_plu: null, libelle_zonage: null, zac_plu: false };
+    const p = feats[0].properties;
+    const lib = `${p.libelle || ''} ${p.libelong || ''} ${p.destdomi || ''}`.toLowerCase();
+    return {
+      zonage_plu: p.libelle || p.typezone || null,
+      libelle_zonage: (p.libelong || '').slice(0, 180) || null,
+      typezone: p.typezone || null,
+      zac_plu: lib.includes('zac'),
+    };
+  }
+
+  async function pollution(lon, lat, insee, rayon = 500) {
+    const out = { icpe: [], casias: [], sis: [], basol_sup: [] };
+    const [ssp, icpe] = await Promise.all([
+      sur(() => jsonGet(`${RISQ}/ssp?latlon=${lon},${lat}&rayon=${rayon}&page_size=50`,
+        { timeout: 60000 }), {}),
+      sur(() => jsonGet(`${RISQ}/installations_classees?code_insee=${insee}&page_size=100`,
+        { timeout: 60000 }), {}),
+    ]);
+    const bloc = (k) => (((ssp || {})[k] || {}).data) || [];
+    bloc('casias').forEach((f) => out.casias.push({
+      id: f.identifiant_casias, nom: f.nom_etablissement,
+      activite: f.activite_principale || f.libelle_activite,
+      adresse: f.adresse, statut: f.statut, lon: f.longitude, lat: f.latitude,
+    }));
+    bloc('conclusions_sis').forEach((f) => out.sis.push({
+      id: f.identifiant_sis || f.identifiant_ssp,
+      nom: f.nom_site || f.nom_etablissement, adresse: f.adresse, commune: f.nom_commune,
+    }));
+    bloc('conclusions_sup').forEach((f) => out.basol_sup.push({
+      id: f.identifiant_ssp, nom: f.nom_site || f.nom_etablissement, adresse: f.adresse,
+    }));
+    ((icpe && icpe.data) || []).forEach((f) => {
+      if (!f.longitude || !f.latitude) return;
+      const d = distM(lon, lat, f.longitude, f.latitude);
+      if (d > rayon * 3) return;
+      out.icpe.push({
+        nom: f.raisonSociale, adresse: f.adresse1,
+        regime: f.regime || f.statutSeveso, seveso: f.statutSeveso, etat: f.etatActivite,
+        distance_m: Math.round(d), lon: f.longitude, lat: f.latitude,
+      });
+    });
+    out.icpe.sort((a, b) => a.distance_m - b.distance_m);
+    out.icpe = out.icpe.slice(0, 12);
+    ['casias', 'sis', 'basol_sup'].forEach((k) => {
+      out[k].forEach((it) => {
+        if (it.lon && it.lat) it.distance_m = Math.round(distM(lon, lat, it.lon, it.lat));
+      });
+      out[k] = out[k].sort((a, b) => (a.distance_m ?? 9e9) - (b.distance_m ?? 9e9)).slice(0, 12);
+    });
+    return out;
+  }
+
+  const nb = (v) => {
+    const t = String(v ?? '').trim().toLowerCase();
+    if (!t || t === 'none' || t === 'nan' || t === 'null') return 0;
+    const x = parseFloat(t);
+    return Number.isFinite(x) ? x : 0;
+  };
+
+  async function dvfReference(insee, comAbs, section) {
+    const sec = (comAbs || '000') + (section || '');
+    const d = await sur(() => jsonGet(`${DVF}/mutations3/${insee}/${sec}`, { timeout: 45000 }),
+      { mutations: [] });
+    const groupes = new Map();
+    ((d && d.mutations) || []).forEach((m) => {
+      if ((m.nature_mutation || '') !== 'Vente') return;
+      const gid = m.id_mutation || `${m.date_mutation}-${m.valeur_fonciere}`;
+      if (!groupes.has(gid)) {
+        groupes.set(gid, {
+          date: m.date_mutation, valeur_fonciere: nb(m.valeur_fonciere),
+          surface_terrain: 0, surface_bati: 0, types: new Set(),
+        });
+      }
+      const g = groupes.get(gid);
+      g.surface_terrain += nb(m.surface_terrain);
+      g.surface_bati += nb(m.surface_reelle_bati);
+      if (m.type_local && m.type_local !== 'None') g.types.add(m.type_local);
+    });
+    const ventes = [], terrains = [];
+    groupes.forEach((g) => {
+      const { valeur_fonciere: vf, surface_terrain: st, surface_bati: ba } = g;
+      if (vf <= 0) return;
+      ventes.push({
+        date: g.date, valeur_fonciere: vf, surface_terrain: st, surface_bati: ba,
+        type: [...g.types].sort().join(', ') || 'Terrain nu',
+        prix_m2_terrain: (st > 0 && ba <= 0) ? Math.round((vf / st) * 10) / 10 : null,
+      });
+      if (st >= 500 && ba <= 0) terrains.push(Math.round((vf / st) * 10) / 10);
+    });
+    terrains.sort((a, b) => a - b);
+    ventes.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+    return {
+      dvf_prix_median_m2: terrains.length ? terrains[Math.floor(terrains.length / 2)] : null,
+      dvf_nb_ventes_terrain: terrains.length,
+      dvf_dernieres_ventes: ventes.slice(0, 5),
+    };
+  }
+
+
+
+
+  /**
+   * Lien profond vers le rapport Géorisques « Connaître les risques près de chez moi »
+   * centré sur la parcelle (rubrique Pollution des sols : CASIAS, BASOL, SIS, ICPE).
+   */
+  function georisquesUrl(p) {
+    const q = new URLSearchParams({
+      'form-adresse': 'true', isCadastre: 'false', typeForm: 'adresse', type: 'housenumber',
+      propertiesType: 'housenumber', city: p.commune || '', codeInsee: p.code_insee || '',
+      lon: String(p.lon != null ? p.lon : ''), lat: String(p.lat != null ? p.lat : ''),
+      adresse: p.adresse || `${p.commune || ''}`,
+    });
+    return 'https://www.georisques.gouv.fr/mes-risques/connaitre-les-risques-pres-de-chez-moi/rapport2?'
+      + q.toString();
+  }
+
+  /* --------------------------------- propriétaires présumés (SIRENE / RNE) */
+  const RECH_ENT = 'https://recherche-entreprises.api.gouv.fr';
+  const NATURES = {
+    1000: 'Entrepreneur individuel', 5202: 'Société en nom collectif', 5307: 'Société en commandite',
+    5385: "Société d'exercice libéral", 5410: 'SARL', 5415: 'SARL', 5426: 'SARL',
+    5498: 'SARL unipersonnelle', 5499: 'SARL', 5599: 'Société anonyme', 5699: 'Société anonyme',
+    5710: 'SAS', 5720: 'SASU (SAS unipersonnelle)', 6316: 'Coopérative', 6521: 'SCPI',
+    6532: 'Société civile de placement immobilier', 6533: 'GAEC', 6540: 'SCI (société civile immobilière)',
+    6541: 'SCI de construction-vente (SCCV)', 6599: 'Société civile', 7210: 'Commune',
+    7220: 'Département', 7230: 'Région', 7346: "Établissement public local (aménagement)",
+    7361: 'Établissement public communal', 9220: 'Association',
+  };
+  const libelleNature = (c) => NATURES[+c]
+    || (String(c).startsWith('65') ? 'Société civile' : (c ? `Forme juridique ${c}` : null));
+
+  const NAF_IMMO = ['68.20', '68.10', '68.31', '68.32', '41.10', '64.20'];
+  const MOTS_IMMO = ['sci ', ' sci', 'sci-', 'sccv', 'fonciere', 'immobilier', 'immobiliere',
+    'patrimoine', 'domaine', 'promotion', 'amenagement', 'lotissement', 'sarl de famille'];
+
+  /**
+   * Sociétés implantées sur la parcelle ou dans son environnement immédiat
+   * (annuaire des entreprises : SIRENE + RNE). Les sociétés civiles immobilières,
+   * foncières et sociétés de gestion de patrimoine sont signalées comme
+   * propriétaires présumés du foncier.
+   */
+  async function societesAutour(lon, lat, geom, rayonKm = 0.2) {
+    const d = await sur(() => jsonGet(
+      `${RECH_ENT}/near_point?lat=${lat}&long=${lon}&radius=${rayonKm}&per_page=25`,
+      { timeout: 45000 }), null);
+    const res = [];
+    ((d && d.results) || []).forEach((e) => {
+      const etabs = (e.matching_etablissements || []).filter((t) => t.latitude && t.longitude);
+      const etab = etabs.map((t) => ({
+        t, dist: distM(lon, lat, +t.longitude, +t.latitude),
+        dedans: geom ? dansPolygone(+t.longitude, +t.latitude, geom) : false,
+      })).sort((a, b) => (b.dedans - a.dedans) || (a.dist - b.dist))[0];
+      if (!etab) return;
+      const nom = String(e.nom_complet || e.nom_raison_sociale || '');
+      const norme = nom.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      const naf = String(e.activite_principale || etab.t.activite_principale || '');
+      const immo = NAF_IMMO.some((c) => naf.startsWith(c))
+        || MOTS_IMMO.some((m) => norme.includes(m))
+        || String(e.nature_juridique || '').startsWith('654');
+      res.push({
+        denomination: nom,
+        siren: e.siren,
+        siret: etab.t.siret || null,
+        forme_juridique: libelleNature(e.nature_juridique),
+        activite: etab.t.libelle_activite_principale || e.libelle_activite_principale || naf || null,
+        code_naf: naf || null,
+        adresse: etab.t.adresse || (e.siege && e.siege.adresse) || null,
+        etat: (etab.t.etat_administratif === 'F' || e.etat_administratif === 'C')
+          ? 'Fermé / cessé' : 'En activité',
+        date_creation: e.date_creation || null,
+        dirigeants: (e.dirigeants || []).slice(0, 4).map((g) => (g.type_dirigeant === 'personne morale'
+          ? `${g.denomination} (${g.qualite || 'personne morale'})`
+          : `${[g.prenoms, g.nom].filter(Boolean).join(' ')} — ${g.qualite || ''}`.trim())),
+        distance_m: Math.round(etab.dist),
+        sur_parcelle: etab.dedans,
+        proprietaire_presume: immo && (etab.dedans || etab.dist <= 80),
+        societe_immobiliere: immo,
+        role: (immo && (etab.dedans || etab.dist <= 80))
+          ? 'Propriétaire présumé (société immobilière, SCI ou foncière)'
+          : (etab.dedans ? 'Occupant / exploitant du site'
+            : (immo ? "Société immobilière de l'environnement immédiat"
+              : "Société de l'environnement immédiat")),
+        annuaire: `https://annuaire-entreprises.data.gouv.fr/entreprise/${e.siren}`,
+      });
+    });
+    res.sort((a, b) => (b.sur_parcelle - a.sur_parcelle)
+      || (b.proprietaire_presume - a.proprietaire_presume) || (a.distance_m - b.distance_m));
+    return res.slice(0, 12);
+  }
+
+  /* ------------------------------------------------- typologie du site */
+  const MOTS = {
+    'Ancienne station-service / distribution de carburants':
+      ['carburant', 'station-service', 'station service', 'essence', 'petrolier', 'pétrolier',
+       'liquides inflammables', 'hydrocarbure'],
+    'Garage, réparation ou carrosserie automobile':
+      ['garage', 'reparation de vehicule', 'réparation de véhicule', 'carrosserie', 'automobile',
+       'mecanique generale', 'mécanique générale', 'casse auto'],
+    'Ancien site industriel':
+      ['industri', 'usine', 'metall', 'métall', 'fonderie', 'chimi', 'scierie', 'menuiserie',
+       'traitement de surface', 'galvanisation', 'papeterie', 'textile', 'agroalimentaire'],
+    'Dépôt, stockage ou site de déchets':
+      ['depot', 'dépôt', 'stockage', 'dechet', 'déchet', 'decharge', 'décharge', 'ferraille',
+       'recuperation', 'récupération'],
+    'Pressing, blanchisserie ou teinturerie':
+      ['pressing', 'blanchisserie', 'teinturerie', 'nettoyage a sec', 'nettoyage à sec'],
+    'Bâtiment commercial ou de services':
+      ['commerce', 'magasin', 'supermarche', 'supermarché', 'grande surface', 'entrepot commercial',
+       'centre commercial', 'concession'],
+    'Activité agricole ou coopérative':
+      ['agricole', 'cooperative', 'coopérative', 'silo', 'engrais', 'phytosanitaire'],
+  };
+
+  /** Bâti BD TOPO présent sur l'emprise de la parcelle. */
+  async function batimentsParcelle(geom) {
+    const b = bboxDe(geom);
+    const feats = await wfs('BDTOPO_V3:batiment',
+      `BBOX(geometrie,${b[1]},${b[0]},${b[3]},${b[2]})`, 60);
+    return feats.filter((f) => {
+      if (!f.geometry) return false;
+      const [lo, la] = centroide(f.geometry);
+      return dansPolygone(lo, la, geom);
+    }).map((f) => ({
+      nature: f.properties.nature || null,
+      usage: f.properties.usage_1 || null,
+      etat: f.properties.etat_de_l_objet || null,
+      hauteur: f.properties.hauteur || null,
+      leger: !!f.properties.construction_legere,
+      emprise_m2: aireM2(f.geometry),
+    }));
+  }
+
+  /**
+   * Qualification de l'occupation du sol : friche, ancienne station-service, garage,
+   * bâtiment commercial ou industriel en zone d'activité, terrain nu.
+   */
+  function typologieSite(p, batiments) {
+    const bat = batiments || [];
+    const emprise = bat.reduce((a, b) => a + (b.emprise_m2 || 0), 0);
+    const pol = p.pollution || {};
+    const norm = (t) => String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    /* Antécédents situés sur la parcelle ou en limite (100 m) : ils qualifient le site.
+       Au-delà, ils ne qualifient que l'environnement. */
+    const surSite = [
+      ...(pol.casias || []).filter((c) => (c.distance_m ?? 999) <= 100)
+        .map((c) => `${c.activite || ''} ${c.nom || ''} ${c.statut || ''}`),
+      ...(pol.icpe || []).filter((i) => (i.distance_m ?? 999) <= 100)
+        .map((i) => `${i.nom || ''} ${i.regime || ''} ${i.etat || ''}`),
+      ...(pol.sis || []).filter((x) => (x.distance_m ?? 999) <= 100).map((x) => `${x.nom || ''}`),
+    ];
+    const aProximite = [
+      ...(pol.casias || []).filter((c) => (c.distance_m ?? 999) > 100 && (c.distance_m ?? 999) <= 500)
+        .map((c) => `${c.activite || ''} ${c.nom || ''}`),
+    ];
+    const corpus = norm(surSite.join(' | '));
+    const corpusProche = norm(aProximite.join(' | '));
+    const types = [], typesProches = [];
+    Object.entries(MOTS).forEach(([libelle, mots]) => {
+      if (mots.some((m) => corpus.includes(norm(m)))) types.push(libelle);
+      else if (mots.some((m) => corpusProche.includes(norm(m)))) typesProches.push(libelle);
+    });
+    bat.forEach((b) => {
+      const u = norm(`${b.nature || ''} ${b.usage || ''}`);
+      if ((u.includes('commercial') || u.includes('service'))
+        && !types.includes('Bâtiment commercial ou de services')) {
+        types.push('Bâtiment commercial ou de services');
+      }
+      if (u.includes('industriel') && !types.includes('Bâtiment industriel, agricole ou commercial')) {
+        types.push('Bâtiment industriel, agricole ou commercial');
+      }
+    });
+
+    const activiteTerminee = (pol.casias || []).some((c) => (c.distance_m ?? 999) <= 100
+      && /termin|cess|ancien/.test(norm(c.statut)))
+      || (pol.icpe || []).some((i) => (i.distance_m ?? 999) <= 100 && /cess/.test(norm(i.etat)));
+    const batEnService = bat.some((b) => /en service/.test(norm(b.etat)));
+    const batRuine = bat.length > 0 && bat.every((b) => /ruine|detruit|démoli|demoli/.test(norm(b.etat)));
+
+    let occupation, friche = false;
+    if (bat.length === 0) {
+      occupation = surSite.length
+        ? "Terrain nu portant un antécédent d'activité — friche potentielle à requalifier"
+        : 'Terrain nu — aucun bâti recensé sur la parcelle';
+      friche = surSite.length > 0;
+    } else if (batRuine || (activiteTerminee && !batEnService)) {
+      occupation = `Site bâti dont l'activité est terminée — friche à requalifier `
+        + `(${bat.length} bâtiment(s), ${emprise.toLocaleString('fr-FR')} m² d'emprise)`;
+      friche = true;
+    } else {
+      const quoi = types.find((t) => /station-service|Garage|industriel|commercial/i.test(t));
+      occupation = `Parcelle bâtie en activité — ${quoi ? quoi.toLowerCase() : 'bâti existant'} `
+        + `(${bat.length} bâtiment(s), ${emprise.toLocaleString('fr-FR')} m² d'emprise)`;
+      if (activiteTerminee) {
+        occupation += " — antécédent d'activité cessée recensé sur l'emprise";
+      }
+    }
+
+    const dansZone = p.zac_plu || (p.distance_zac_m != null && p.distance_zac_m <= 0);
+    const zone = dansZone
+      ? "située dans une zone d'activité commerciale et industrielle"
+      : (p.distance_zac_m != null && p.distance_zac_m < 500
+        ? "en bordure immédiate d'une zone d'activité commerciale et industrielle" : null);
+
+    return {
+      batiments: bat,
+      nb_batiments: bat.length,
+      emprise_batie_m2: emprise,
+      taux_emprise: p.surface_m2 ? Math.round((emprise / p.surface_m2) * 1000) / 10 : null,
+      friche,
+      typologies: types,
+      typologies_voisinage: typesProches,
+      occupation_sol: occupation,
+      contexte_zone: zone,
+      typologie_libelle: [occupation, types.join(' ; '), zone].filter(Boolean).join(' · '),
+    };
+  }
+
+  /* --------------------------------------------------------------- score */
+  function scoreFoncier(f) {
+    let s = 0;
+    const notes = [];
+    const dz = f.distance_zac_m;
+    if (dz != null) {
+      if (dz <= 0) { s += 30; notes.push("dans une ZAC / zone d'activité"); }
+      else if (dz < 300) { s += 26; notes.push('contiguë à une ZAC'); }
+      else if (dz < 800) { s += 18; notes.push('proximité immédiate de ZAC'); }
+      else if (dz < 2000) s += 8;
+    }
+    const dr = f.distance_rond_point_m;
+    if (dr != null) {
+      if (dr < 200) { s += 25; notes.push('sur un rond-point'); }
+      else if (dr < 500) { s += 18; notes.push("à moins de 500 m d'un rond-point"); }
+      else if (dr < 1000) s += 9;
+    }
+    if (f.rond_point_entree_agglo) { s += 12; notes.push("rond-point d'entrée d'agglomération"); }
+    const p = f.pollution_synthese || {};
+    const np = (p.nb_casias || 0) + (p.nb_icpe_500m || 0) * 2 + (p.nb_sis || 0) * 4;
+    if (np === 0) { s += 20; notes.push('aucun antécédent de pollution recensé'); }
+    else if (np <= 2) { s += 12; notes.push('antécédents limités'); }
+    else if (np <= 6) { s += 5; notes.push('antécédents à vérifier (étude historique recommandée)'); }
+    else notes.push('contexte de pollution sensible — ESH/diagnostic obligatoire');
+    const z = (f.zonage_plu || '').toUpperCase();
+    if (f.zac_plu) s += 8;
+    if (z.startsWith('U') || z.startsWith('AU')) { s += 7; notes.push(`zonage PLU ${z} constructible`); }
+    f.score = Math.min(100, s);
+    f.score_notes = notes;
+    f.niveau = s >= 70 ? 'Prioritaire' : s >= 50 ? 'À étudier' : 'Secondaire';
+    return f;
+  }
+
+  async function enrichirParcelle(p, pois, rayonPollution = 500, avecDvf = true) {
+    const { lon, lat } = p;
+    [p.lambert93_x, p.lambert93_y] = lambert93(lon, lat);
+    const [alt, adr, plu, pol, dvf] = await Promise.all([
+      altitudeNgf(lon, lat),
+      adresseBan(lon, lat),
+      zonagePlu(lon, lat),
+      pollution(lon, lat, p.code_insee, rayonPollution),
+      avecDvf ? dvfReference(p.code_insee, p.com_abs, p.section) : Promise.resolve({}),
+    ]);
+    p.altitude_ngf = alt;
+    Object.assign(p, adr, plu, dvf);
+    p.pollution = pol;
+    p.photo_aerienne = photoAerienneUrl(p.geometry || cercle(lon, lat, 60));
+    p.batiments = await sur(() => batimentsParcelle(p.geometry), []) || [];
+    p.societes = await sur(() => societesAutour(lon, lat, p.geometry), []) || [];
+    const prop = p.societes.filter((x) => x.proprietaire_presume);
+    const occSite = p.societes.filter((x) => x.sur_parcelle);
+    p.proprietaire_presume = prop.length
+      ? `${prop[0].denomination}${prop[0].forme_juridique ? ' — ' + prop[0].forme_juridique : ''}`
+      : null;
+    p.siren_proprietaire = prop.length ? prop[0].siren : null;
+    p.occupant = (occSite.find((x) => !x.proprietaire_presume) || {}).denomination || null;
+    p.fiabilite_proprietaire = prop.length
+      ? (prop[0].sur_parcelle ? 'Établissement géolocalisé sur la parcelle'
+        : `Établissement à ${prop[0].distance_m} m de la parcelle`)
+      : null;
+    p.pollution_synthese = {
+      nb_icpe_500m: pol.icpe.filter((i) => i.distance_m <= 500).length,
+      nb_icpe_1500m: pol.icpe.length,
+      nb_casias: pol.casias.length,
+      nb_sis: pol.sis.length,
+      nb_basol_sup: pol.basol_sup.length,
+      activites: [
+        ...pol.icpe.slice(0, 3).map((i) => `ICPE : ${i.nom} (${i.distance_m} m)`),
+        ...pol.casias.slice(0, 3).map((c) => `CASIAS/BASIAS : ${c.nom}`),
+        ...pol.sis.slice(0, 2).map((s) => `SIS : ${s.nom}`),
+      ].filter(Boolean).join(' ; ')
+        || "Aucune activité ICPE/BASIAS/SIS recensée dans le rayon d'analyse",
+    };
+    const zacs = pois.filter((q) => q.type.startsWith('ZAC'));
+    const rps = pois.filter((q) => q.type === 'rond-point');
+    if (zacs.length) {
+      const z = zacs.reduce((a, b) => (distM(lon, lat, a.lon, a.lat) <= distM(lon, lat, b.lon, b.lat) ? a : b));
+      p.zac_proche = z.nom;
+      p.distance_zac_m = Math.round(distM(lon, lat, z.lon, z.lat));
+    }
+    if (rps.length) {
+      const r = rps.reduce((a, b) => (distM(lon, lat, a.lon, a.lat) <= distM(lon, lat, b.lon, b.lat) ? a : b));
+      p.rond_point_proche = r.nom || 'Rond-point';
+      p.distance_rond_point_m = Math.round(distM(lon, lat, r.lon, r.lat));
+      p.rond_point_entree_agglo = !!r.entree_agglo;
+      p.axe_entree = r.axe || null;
+    }
+    p.prix_vente_estime_eur = p.dvf_prix_median_m2
+      ? Math.round(p.dvf_prix_median_m2 * p.surface_m2) : null;
+    p.site = typologieSite(p, p.batiments);
+    const derniere = (p.dvf_dernieres_ventes || [])[0];
+    p.derniere_mutation = derniere ? `${derniere.date} — ${derniere.type}` : null;
+    if (p.statut_vente === undefined) p.statut_vente = 'Non renseigné';
+    p.georisques_url = georisquesUrl(p);
+    const pl = p.pollution || {};
+    p.site_pollue_connu = !!(p.site.friche || (pl.sis || []).length
+      || (pl.casias || []).some((c) => (c.distance_m ?? 999) <= 100)
+      || (pl.icpe || []).some((i) => (i.distance_m ?? 999) <= 100));
+    p.typologie_site = p.site.typologie_libelle;
+    p.friche = p.site.friche;
+    p.source_prix = p.dvf_prix_median_m2
+      ? 'DVF (référence marché, section cadastrale)' : null;
+    return scoreFoncier(p);
+  }
+
+  /* ------------------------------------------------- recherche complète */
+  /**
+   * Recherche foncière complète.
+   * @param {object} o critères : { agglo, code_insee, code_epci, surface_min, surface_max,
+   *   rayon_poi, rayon_pollution, max_communes, max_pois, max_fonciers, peripherie, seuil }
+   * @param {function} log rapporteur de progression (message, pourcentage)
+   */
+  async function rechercher(o, log = () => {}) {
+    const dire = (m, pct) => log(m, pct);
+    const seuil = o.seuil || 20000;
+    const smin = o.surface_min || 3000;
+    const smax = o.surface_max || 4000;
+    const rayonPoi = o.rayon_poi || 500;
+    const rayonPol = o.rayon_pollution || 500;
+    const maxCommunes = o.max_communes || 4;
+    const maxPois = o.max_pois || 14;
+    const maxFonciers = o.max_fonciers || 40;
+
+    dire(`Identification de l'agglomération « ${o.agglo} »…`, 3);
+    const liste = await agglos(o.agglo, seuil);
+    let a = liste.find((x) => x.code_insee === o.code_insee) || liste[0];
+    if (!a) throw new Error(`Aucune agglomération de plus de ${seuil} habitants pour « ${o.agglo} ».`);
+    dire(`${a.nom} — ${(a.population_agglo || 0).toLocaleString('fr-FR')} habitants`
+      + `${a.epci ? ` (${a.epci})` : ''}.`, 6);
+
+    let communes = [{ nom: a.nom, code: a.code_insee, population: a.population_commune, centre: { coordinates: a.centre } }];
+    if (o.peripherie !== false && a.code_epci) {
+      const membres = await communesEpci(a.code_epci) || [];
+      const autres = membres.filter((m) => m.code !== a.code_insee)
+        .sort((x, y) => (y.population || 0) - (x.population || 0));
+      communes = communes.concat(autres);
+    }
+    communes = communes.slice(0, maxCommunes);
+    dire(`${communes.length} commune(s) analysée(s) : ${communes.map((c) => c.nom).join(', ')}.`, 9);
+
+    /* --- secteurs de prospection : ronds-points d'entrée + ZAC --- */
+    let pois = [];
+    await enLots(communes, 2, async (c) => {
+      const contour = await contourCommune(c.code);
+      const bbox = contour ? bboxDe(contour)
+        : (() => {
+          const [lo, la] = (c.centre && c.centre.coordinates) || [a.centre[0], a.centre[1]];
+          return bboxDe(cercle(lo, la, 4000));
+        })();
+      const axes = await axesStructurants(bbox);
+      const [rps, zacs] = await Promise.all([rondsPoints(bbox, axes), zonesActivite(bbox)]);
+      rps.forEach((r) => { r.commune = c.nom; r.code_insee = c.code; });
+      zacs.forEach((z) => { z.commune = c.nom; z.code_insee = c.code; });
+      pois = pois.concat(rps, zacs);
+      dire(`${c.nom} : ${rps.length} rond(s)-point(s) dont `
+        + `${rps.filter((r) => r.entree_agglo).length} en entrée d'agglomération, `
+        + `${zacs.length} zone(s) d'activité.`, null);
+    });
+
+    const zacs = pois.filter((q) => q.type.startsWith('ZAC'));
+    const rps = pois.filter((q) => q.type === 'rond-point');
+    dire(`${rps.length} rond(s)-point(s) et ${zacs.length} zone(s) d'activité recensés.`, 22);
+
+    /* Secteurs retenus : ronds-points d'entrée d'abord, puis ZAC, puis autres ronds-points */
+    const priorite = (q) => (q.entree_agglo ? 0 : q.type.startsWith('ZAC') ? 1 : 2);
+    const secteurs = [...pois].sort((x, y) => priorite(x) - priorite(y)).slice(0, maxPois);
+    if (!secteurs.length) throw new Error("Aucun rond-point ni zone d'activité trouvé sur ce périmètre.");
+    dire(`${secteurs.length} secteur(s) de prospection retenu(s).`, 25);
+
+    /* --- parcelles --- */
+    dire(`Extraction des parcelles cadastrales de ${smin} à ${smax} m²…`, 28);
+    const vues = new Set();
+    let parcelles = [];
+    await enLots(secteurs, 3, async (s) => {
+      const lot = await parcellesDans(s.lon, s.lat, rayonPoi, smin, smax);
+      lot.forEach((p) => {
+        if (p.idu && !vues.has(p.idu)) { vues.add(p.idu); parcelles.push(p); }
+      });
+    }, (_r, k, n) => dire(null, 28 + Math.round(22 * (k + 1) / n)));
+
+    dire(`${parcelles.length} parcelle(s) répondant au critère de surface.`, 50);
+    if (!parcelles.length) return { agglo: a, pois, resultats: [] };
+
+    /* Priorisation avant enrichissement : proximité des secteurs prioritaires */
+    parcelles.forEach((p) => {
+      const dRp = rps.length ? Math.min(...rps.map((r) => distM(p.lon, p.lat, r.lon, r.lat))) : 9e9;
+      const dZac = zacs.length ? Math.min(...zacs.map((z) => distM(p.lon, p.lat, z.lon, z.lat))) : 9e9;
+      const entree = rps.some((r) => r.entree_agglo && distM(p.lon, p.lat, r.lon, r.lat) < 600);
+      p._pre = (entree ? -3000 : 0) + Math.min(dRp, 3000) + Math.min(dZac, 3000) * 0.6;
+    });
+    parcelles.sort((x, y) => x._pre - y._pre);
+    parcelles = parcelles.slice(0, maxFonciers);
+
+    dire(`Enrichissement de ${parcelles.length} foncier(s) `
+      + '(Lambert 93, NGF, adresse, PLU, ICPE, BASIAS/CASIAS, SIS, DVF)…', 55);
+    const resultats = await enLots(parcelles, 3,
+      (p) => enrichirParcelle(p, pois, rayonPol, true),
+      (_r, k, n) => dire(null, 55 + Math.round(42 * (k + 1) / n)));
+
+    resultats.forEach((p) => delete p._pre);
+    resultats.sort((x, y) => (y.score - x.score) || (x.distance_rond_point_m ?? 9e9) - (y.distance_rond_point_m ?? 9e9));
+    dire(`Recherche terminée : ${resultats.length} foncier(s) qualifié(s).`, 100);
+    return { agglo: a, pois, resultats };
+  }
+
+  return {
+    agglos, rechercher, enrichirParcelle, photoAerienneUrl, typologieSite, societesAutour, georisquesUrl,
+    batimentsParcelle, dansPolygone, aireM2, parcellesDans, lambert93, distM, cercle,
+    centroide, bboxDe, contourCommune, communesEpci, rondsPoints, zonesActivite,
+    axesStructurants, altitudeNgf, adresseBan, zonagePlu, pollution, dvfReference,
+    scoreFoncier, jsonGet, sur, enLots,
+  };
+})();
+
+window.MOTEUR = MOTEUR;
+
+</script>
+<script>
+/* FONCIER-SCAN — interface */
+const API = '__PORT_8000__'.startsWith('__') ? 'http://localhost:8000' : '__PORT_8000__';
+const $ = (s) => document.querySelector(s);
+const fmt = (n, d = 0) => (n === null || n === undefined || n === '' ? '—'
+  : Number(n).toLocaleString('fr-FR', { minimumFractionDigits: d, maximumFractionDigits: d }));
+const eur = (n) => (n ? fmt(n) + ' €' : '—');
+
+let ETAT = {
+  job: null, resultats: [], agglo: null, pois: [], tri: 'score', sens: -1, sel: null,
+  annonces: [], serveur: false,
+};
+
+/* ----------------------------------------------------------------
+   Mode de fonctionnement
+   Le moteur s'exécute dans le navigateur (moteur.js) et interroge
+   directement les services publics : l'application fonctionne donc sans
+   serveur. Si l'API locale est joignable, elle sert en complément pour la
+   persistance des fiches et des annonces (base SQLite).
+   ---------------------------------------------------------------- */
+async function sonderServeur() {
+  try {
+    const c = new AbortController();
+    const t = setTimeout(() => c.abort(), 4000);
+    const r = await fetch(`${API}/api/sante`, { signal: c.signal });
+    clearTimeout(t);
+    ETAT.serveur = r.ok;
+  } catch { ETAT.serveur = false; }
+  const b = $('#mode-moteur');
+  if (b) {
+    b.textContent = ETAT.serveur
+      ? 'Moteur navigateur + base locale connectée'
+      : 'Moteur autonome (navigateur)';
+    b.title = ETAT.serveur
+      ? "Les recherches sont calculées dans le navigateur ; l'API locale assure la persistance des fiches et des annonces."
+      : "Toutes les recherches sont calculées dans le navigateur directement auprès des services publics. Les fiches et annonces restent en mémoire de session et s'exportent en Excel, CSV ou JSON.";
+  }
+  return ETAT.serveur;
+}
+
+/* Chargement à la demande de SheetJS pour les exports/imports Excel */
+let sheetjs;
+function chargerSheetJs() {
+  if (window.XLSX) return Promise.resolve(window.XLSX);
+  if (!sheetjs) {
+    sheetjs = new Promise((ok, ko) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+      s.onload = () => ok(window.XLSX); s.onerror = () => ko(new Error('SheetJS indisponible'));
+      document.head.appendChild(s);
+    });
+  }
+  return sheetjs;
+}
+const telecharger = (blob, nom) => {
+  const u = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = u; a.download = nom; document.body.appendChild(a); a.click();
+  a.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000);
+};
+
+/* ---------------------------------------------------------------- carte */
+let map, coucheParcelles, couchePois, couchePoints;
+function initCarte() {
+  map = L.map('map', { scrollWheelZoom: true }).setView([46.6, 1.9], 6);
+  const plan = L.tileLayer(
+    'https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',
+    { maxZoom: 19, attribution: '© IGN — Géoplateforme' }).addTo(map);
+  const ortho = L.tileLayer(
+    'https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',
+    { maxZoom: 19, attribution: '© IGN — Orthophotos' });
+  L.control.layers({ 'Plan IGN': plan, 'Photo aérienne': ortho }, {}, { position: 'topright' }).addTo(map);
+  coucheParcelles = L.layerGroup().addTo(map);
+  couchePois = L.layerGroup().addTo(map);
+  couchePoints = L.layerGroup().addTo(map);
+}
+const couleur = (f) => f.niveau === 'Prioritaire' ? '#1f6b5b' : f.niveau === 'À étudier' ? '#b4622b' : '#7b8d97';
+
+function pastille(f) {
+  const c = couleur(f);
+  return L.divIcon({
+    className: 'pin',
+    html: `<span style="--c:${c}"><i>${f.score}</i></span>`,
+    iconSize: [26, 26], iconAnchor: [13, 13],
+  });
+}
+
+function dessiner(res) {
+  coucheParcelles.clearLayers(); couchePois.clearLayers(); couchePoints.clearLayers();
+  (ETAT.pois || []).forEach((p) => {
+    const zac = p.type !== 'rond-point';
+    if (!zac && !p.entree_agglo) return;
+    L.circleMarker([p.lat, p.lon], {
+      radius: zac ? 6 : 5, color: zac ? '#2b6f9e' : '#8a7b5f', weight: 2,
+      fillOpacity: .25, fillColor: zac ? '#2b6f9e' : '#8a7b5f',
+    }).bindTooltip(zac ? `ZAC / zone d'activité : ${p.nom || ''}`
+      : `Rond-point d'entrée${p.axe ? ' — ' + p.axe : ''}`).addTo(couchePois);
+  });
+  ETAT.bornes = null;
+  const bornes = [];
+  res.forEach((f) => {
+    const c = couleur(f);
+    const infobulle = `<b>${f.commune} — ${f.section} ${f.numero}</b><br>`
+      + `${fmt(f.surface_m2)} m² · score ${f.score}/100 · ${f.niveau}<br>`
+      + `${f.adresse || ''}${f.distance_rond_point_m != null ? `<br>Rond-point : ${fmt(f.distance_rond_point_m)} m` : ''}`
+      + `${f.distance_zac_m != null ? ` · ZAC : ${fmt(f.distance_zac_m)} m` : ''}`;
+    /* Point toujours visible, y compris à l'échelle de la France */
+    if (f.lat != null && f.lon != null) {
+      L.marker([f.lat, f.lon], { icon: pastille(f), riseOnHover: true })
+        .bindTooltip(infobulle).on('click', () => ouvrirFiche(f.idu)).addTo(couchePoints);
+      bornes.push(L.latLngBounds([[f.lat, f.lon], [f.lat, f.lon]]));
+    }
+    /* Contour cadastral, lisible en vue rapprochée */
+    if (f.geometry) {
+      const l = L.geoJSON(f.geometry, { style: { color: c, weight: 2, fillColor: c, fillOpacity: .32 } })
+        .bindTooltip(infobulle).on('click', () => ouvrirFiche(f.idu));
+      l.addTo(coucheParcelles);
+      bornes.push(l.getBounds());
+    }
+  });
+  if (bornes.length) {
+    ETAT.bornes = bornes.reduce((a, b) => a.extend(b));
+    vueSecteur();
+  }
+}
+
+/* Vues de la carte */
+function vueSecteur() {
+  if (ETAT.bornes) map.fitBounds(ETAT.bornes, { padding: [30, 30], maxZoom: 16 });
+}
+function vueFrance() {
+  map.setView([46.6, 2.4], 6);
+}
+$('#vue-secteur').onclick = vueSecteur;
+$('#vue-france').onclick = vueFrance;
+
+/* ---------------------------------------------------------------- autocomplétion */
+let acTimer;
+$('#agglo').addEventListener('input', (e) => {
+  clearTimeout(acTimer);
+  const q = e.target.value.trim();
+  if (q.length < 2) { $('#ac-list').hidden = true; return; }
+  acTimer = setTimeout(async () => {
+    try {
+      const l = await MOTEUR.agglos(q, 20000);
+      const box = $('#ac-list');
+      if (!l.length) {
+        box.innerHTML = `<button disabled style="color:var(--txt-3)">Aucune agglomération de plus de 20 000 habitants</button>`;
+        box.hidden = false; return;
+      }
+      box.innerHTML = l.map((c) => `<button data-insee="${c.code_insee}">
+        <b>${c.nom} <span style="color:var(--txt-3);font-weight:400">(${c.departement || ''})</span></b>
+        <span>${fmt(c.population_commune)} hab. · ${c.epci || 'commune'} : ${fmt(c.population_agglo)} hab.</span></button>`).join('');
+      box.hidden = false;
+      box.querySelectorAll('button[data-insee]').forEach((b, i) => b.onclick = () => {
+        ETAT.agglo = l[i]; $('#agglo').value = l[i].nom; box.hidden = true;
+        $('#agglo-info').innerHTML = `<b>${l[i].epci || l[i].nom}</b> — ${fmt(l[i].population_agglo)} habitants`;
+      });
+    } catch (err) { console.error(err); }
+  }, 260);
+});
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.ac')) $('#ac-list').hidden = true;
+});
+
+/* ---------------------------------------------------------------- recherche */
+function log(msg) {
+  const d = document.createElement('div'); d.textContent = '› ' + msg;
+  $('#log').appendChild(d); $('#log').scrollTop = 1e6;
+}
+
+/* --- Programmes prédéfinis : plages de surface par type d'opérateur --- */
+let PROGRAMME = 'Logements, résidences et locaux commerciaux — 3 000 à 4 000 m²';
+function majPresets() {
+  const mn = +$('#smin').value; const mx = +$('#smax').value;
+  let trouve = null;
+  document.querySelectorAll('#presets .preset').forEach((b) => {
+    const ok = +b.dataset.min === mn && +b.dataset.max === mx;
+    b.classList.toggle('actif', ok);
+    if (ok) trouve = b.dataset.cible;
+  });
+  PROGRAMME = trouve || `Plage personnalisée — ${mn.toLocaleString('fr-FR')} à ${mx.toLocaleString('fr-FR')} m²`;
+  $('#preset-info').textContent = PROGRAMME + '.';
+  const zp = document.querySelector('#vide-plage');
+  if (zp) zp.textContent = `de ${mn.toLocaleString('fr-FR')} à ${mx.toLocaleString('fr-FR')} m²`;
+}
+document.querySelectorAll('#presets .preset').forEach((b) => {
+  b.addEventListener('click', () => {
+    $('#smin').value = b.dataset.min;
+    $('#smax').value = b.dataset.max;
+    majPresets();
+  });
+});
+$('#smin').addEventListener('input', majPresets);
+$('#smax').addEventListener('input', majPresets);
+majPresets();
+
+$('#lancer').addEventListener('click', async () => {
+  const nom = $('#agglo').value.trim();
+  if (!nom) { $('#agglo').focus(); return; }
+  const criteres = {
+    agglo: nom,
+    code_insee: (ETAT.agglo && ETAT.agglo.nom && ETAT.agglo.nom.toLowerCase() === nom.toLowerCase())
+      ? ETAT.agglo.code_insee : null,
+    surface_min: +$('#smin').value, surface_max: +$('#smax').value,
+    programme: PROGRAMME,
+    rayon_poi: +$('#rpoi').value, rayon_pollution: +$('#rpol').value,
+    peripherie: $('#peri').checked,
+    max_communes: +$('#ncom').value, max_fonciers: +$('#nfonc').value,
+  };
+  $('#lancer').disabled = true; $('#lancer').textContent = 'Recherche en cours…';
+  $('#panneau-progress').hidden = false; $('#log').innerHTML = ''; $('#prog-bar').style.width = '2%';
+  $('#vide').innerHTML = '<div class="skel" style="width:70%;margin:auto"></div><div class="skel" style="width:50%;margin:auto"></div><div class="skel" style="width:60%;margin:auto"></div>';
+  $('#vide').hidden = false; $('#tbody').innerHTML = '';
+  ETAT.job = 'local-' + Date.now();
+  try {
+    const r = await MOTEUR.rechercher(criteres, (msg, pct) => {
+      if (msg) log(msg);
+      if (pct != null) $('#prog-bar').style.width = Math.max(2, pct) + '%';
+    });
+    ETAT.resultats = r.resultats || []; ETAT.agglo = r.agglo; ETAT.pois = r.pois || [];
+    if (!ETAT.resultats.length) {
+      $('#vide').innerHTML = '<div class="err">Aucune parcelle de la surface demandée sur les secteurs analysés. '
+        + "Élargissez la fourchette de surface, le rayon autour des secteurs ou le nombre de communes.</div>";
+    }
+    rendre();
+  } catch (e) {
+    $('#prog-bar').style.width = '100%';
+    $('#vide').innerHTML = `<div class="err">Recherche interrompue : ${e.message}</div>`;
+  } finally {
+    $('#lancer').disabled = false; $('#lancer').textContent = 'Lancer la recherche';
+  }
+});
+
+/* ---------------------------------------------------------------- rendu */
+function niveauPol(f) {
+  const p = f.pollution_synthese || {};
+  const n = (p.nb_casias || 0) + (p.nb_icpe_500m || 0) * 2 + (p.nb_sis || 0) * 4;
+  return n === 0 ? 'vierge' : n <= 2 ? 'leger' : 'sensible';
+}
+const libPol = { vierge: 'Sans antécédent', leger: 'Antécédents limités', sensible: 'Contexte sensible' };
+
+function filtres(res) {
+  const n = $('#f-niveau').value, p = $('#f-pol').value, c = $('#f-com').value;
+  return res.filter((f) => (!n || f.niveau === n) && (!p || niveauPol(f) === p) && (!c || f.commune === c));
+}
+
+function rendre() {
+  const res = ETAT.resultats;
+  $('#barre').hidden = !res.length; $('#kpis').hidden = !res.length;
+  const coms = [...new Set(res.map((f) => f.commune))].sort();
+  $('#f-com').innerHTML = '<option value="">Toutes</option>' + coms.map((c) => `<option>${c}</option>`).join('');
+  const vierges = res.filter((f) => niveauPol(f) === 'vierge').length;
+  const prix = res.map((f) => f.dvf_prix_median_m2).filter(Boolean).sort((a, b) => a - b);
+  $('#kpis').innerHTML = [
+    [res.length, 'Fonciers qualifiés'],
+    [res.filter((f) => f.niveau === 'Prioritaire').length, 'Prioritaires'],
+    [res.filter((f) => f.rond_point_entree_agglo).length, "Sur rond-point d'entrée"],
+    [vierges, 'Sans antécédent pollution'],
+    [prix.length ? fmt(prix[Math.floor(prix.length / 2)]) + ' €' : '—', 'DVF médian / m²'],
+    [ETAT.agglo ? fmt(ETAT.agglo.population_agglo) : '—', 'Habitants agglomération'],
+  ].map(([v, l]) => `<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join('');
+  tableau();
+}
+
+function tableau() {
+  const res = filtres(ETAT.resultats).slice().sort((a, b) => {
+    const k = ETAT.tri;
+    let x = k === 'pollution' ? niveauPol(a) : a[k], y = k === 'pollution' ? niveauPol(b) : b[k];
+    x = x ?? -Infinity; y = y ?? -Infinity;
+    return (typeof x === 'number' && typeof y === 'number') ? (x - y) * ETAT.sens
+      : String(x).localeCompare(String(y), 'fr') * ETAT.sens;
+  });
+  $('#compte').textContent = res.length ? `— ${res.length} résultat(s)` : '';
+  $('#vide').hidden = res.length > 0;
+  if (!res.length && ETAT.resultats.length) $('#vide').textContent = 'Aucun foncier ne correspond aux filtres.';
+  $('#tbody').innerHTML = res.map((f) => {
+    const pn = niveauPol(f);
+    const tp = pn === 'vierge' ? 'p' : pn === 'leger' ? 'e' : 's';
+    return `<tr data-idu="${f.idu}" class="${ETAT.sel === f.idu ? 'sel' : ''}">
+      <td><span class="tag ${f.niveau === 'Prioritaire' ? 'p' : f.niveau === 'À étudier' ? 'e' : 's'}">${f.score}</span></td>
+      <td>${f.commune || '—'}</td>
+      <td style="font-family:var(--mono);font-size:12px">${f.section || ''} ${f.numero || ''}</td>
+      <td class="num">${fmt(f.surface_m2)}</td>
+      <td style="max-width:230px;overflow:hidden;text-overflow:ellipsis">${f.adresse || '—'}</td>
+      <td>${f.zonage_plu || '—'}</td>
+      <td class="num">${fmt(f.distance_zac_m)}</td>
+      <td class="num">${fmt(f.distance_rond_point_m)}${f.rond_point_entree_agglo ? ' ★' : ''}</td>
+      <td><span class="tag ${tp}">${libPol[pn]}</span></td>
+      <td>${pastilleVente(statutVente(f))}</td>
+      <td class="num">${f.dvf_prix_median_m2 ? fmt(f.dvf_prix_median_m2, 1) : '—'}</td>
+      <td class="num">${eur(f.prix_vendeur || f.prix_vente_estime_eur)}</td>
+      <td>${f.proprietaire || f.proprietaire_presume || '—'}</td>
+      <td>${f.contact || '—'}</td></tr>`;
+  }).join('');
+  $('#tbody').querySelectorAll('tr').forEach((tr) => tr.onclick = () => ouvrirFiche(tr.dataset.idu));
+  dessiner(res);
+}
+
+document.querySelectorAll('#tbl th').forEach((th) => th.onclick = () => {
+  const k = th.dataset.tri;
+  ETAT.sens = (ETAT.tri === k) ? -ETAT.sens : (['commune', 'adresse', 'idu', 'zonage_plu', 'contact'].includes(k) ? 1 : -1);
+  ETAT.tri = k; tableau();
+});
+['#f-niveau', '#f-pol', '#f-com'].forEach((s) => $(s).onchange = tableau);
+
+/* ---------------------------------------------------------------- fiche */
+function ligne(t, v) { return `<dt>${t}</dt><dd>${v ?? '—'}</dd>`; }
+
+/* Rapprochement automatique avec les annonces importées : commune + surface */
+const cleCom = (t) => String(t || '').toLowerCase().normalize('NFD')
+  .replace(/[\u0300-\u036f]/g, '').replace(/[^a-z]/g, '');
+function annoncePour(f) {
+  return (ETAT.annonces || []).find((a) => {
+    if (!a.commune || cleCom(a.commune) !== cleCom(f.commune)) return false;
+    if (!a.surface_m2 || !f.surface_m2) return false;
+    return Math.abs(a.surface_m2 - f.surface_m2) / f.surface_m2 <= 0.12;
+  }) || null;
+}
+const STATUTS_VENTE = ['Non renseigné', 'En vente (annonce)', 'En vente (contact direct)',
+  'Sous promesse', 'Pas en vente', 'Vendu'];
+function statutVente(f) {
+  if (f.statut_vente && f.statut_vente !== 'Non renseigné') return f.statut_vente;
+  const a = annoncePour(f);
+  if (a) {
+    f.annonce = a;
+    if (!f.prix_vendeur) f.prix_vendeur = a.prix || null;
+    if (!f.contact) f.contact = a.contact || null;
+    return 'En vente (annonce)';
+  }
+  return f.statut_vente || 'Non renseigné';
+}
+const pastilleVente = (v) => {
+  const t = v.startsWith('En vente') ? 'p' : (v === 'Sous promesse' ? 'e' : 's');
+  return `<span class="tag ${t}">${v === 'Non renseigné' ? 'À qualifier' : v}</span>`;
+};
+
+/* Propriétaire présumé, occupants et sociétés identifiées */
+function blocProprietaire(f) {
+  const l = f.societes || [];
+  const carte = (x) => `<div class="pol">
+    <b>${x.denomination}</b>${x.sur_parcelle ? ' <span class="tag p">sur la parcelle</span>' : ''}
+    ${x.proprietaire_presume ? ' <span class="tag e">propriétaire présumé</span>' : ''}<br>
+    ${x.role}<br>
+    ${[x.forme_juridique, x.activite, x.etat].filter(Boolean).join(' · ')}<br>
+    ${x.adresse || ''}${x.distance_m != null ? ` · ${fmt(x.distance_m)} m` : ''}<br>
+    ${x.dirigeants && x.dirigeants.length ? `Dirigeants : ${x.dirigeants.join(' ; ')}<br>` : ''}
+    <span style="font-family:var(--mono);font-size:11px">SIREN ${x.siren}${x.siret ? ' · SIRET ' + x.siret : ''}</span>
+    · <a href="${x.annuaire}" target="_blank" rel="noopener noreferrer">fiche entreprise et dirigeants</a>
+  </div>`;
+  return `<div class="sect"><h4>Propriétaire présumé et sociétés identifiées</h4>
+    ${f.proprietaire_presume ? `<dl class="kv">
+      ${ligne('Propriétaire présumé', f.proprietaire_presume)}
+      ${ligne('SIREN', f.siren_proprietaire)}
+      ${ligne('Fiabilité du rapprochement', f.fiabilite_proprietaire)}
+      ${ligne('Occupant du site', f.occupant)}
+    </dl>` : ''}
+    ${l.length ? l.map(carte).join('')
+      : '<div class="pol">Aucune société géolocalisée sur la parcelle ou à proximité immédiate.</div>'}
+    <div class="hint">Identification issue de l’annuaire des entreprises (SIRENE et registre national
+      des entreprises) par géolocalisation des établissements : elle désigne un propriétaire
+      <b>présumé</b> ou l’exploitant du site. Le titulaire cadastral s’obtient auprès du service
+      du cadastre (relevé de propriété, formulaire n° 11565) ou d’un notaire.</div></div>`;
+}
+
+/* Photo aérienne IGN avec contour de la parcelle superposé */
+function blocPhoto(f) {
+  const ph = f.photo_aerienne;
+  if (!ph || !ph.url) return '';
+  const [x0, y0, x1, y1] = ph.bbox;
+  const anneaux = f.geometry
+    ? (f.geometry.type === 'MultiPolygon' ? f.geometry.coordinates.flat() : f.geometry.coordinates)
+    : [];
+  const traces = anneaux.map((r) => r
+    .map(([lo, la]) => `${((lo - x0) / (x1 - x0) * 100).toFixed(3)},${((y1 - la) / (y1 - y0) * 100).toFixed(3)}`)
+    .join(' ')).map((pts) => `<polygon points="${pts}" fill="rgba(255,196,60,.18)"
+      stroke="#ffc43c" stroke-width=".5" vector-effect="non-scaling-stroke"/>`).join('');
+  return `<div class="sect"><h4>Photo aérienne de la parcelle</h4>
+    <figure class="ortho">
+      <img src="${ph.url}" width="${ph.largeur}" height="${ph.hauteur}" loading="lazy"
+        alt="Photographie aérienne de la parcelle ${f.section || ''} ${f.numero || ''} à ${f.commune || ''}">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${traces}</svg>
+      <figcaption>Orthophotographie IGN — contour cadastral de la parcelle en jaune.
+        <a href="https://www.geoportail.gouv.fr/carte?c=${f.lon},${f.lat}&z=18&l0=ORTHOIMAGERY.ORTHOPHOTOS::GEOPORTAIL:OGC:WMTS(1)&l1=CADASTRALPARCELS.PARCELLAIRE_EXPRESS::GEOPORTAIL:OGC:WMTS(1)&permalink=yes"
+          target="_blank" rel="noopener noreferrer">Ouvrir dans le Géoportail</a></figcaption>
+    </figure></div>`;
+}
+
+/* Occupation du sol : friche, station-service, garage, bâtiment commercial ou industriel */
+function blocSite(f) {
+  const s = f.site;
+  if (!s) return '';
+  const puces = (s.typologies || []).map((t) => `<li>${t}</li>`).join('');
+  const bats = (s.batiments || []).map((b) => `<div class="pol">
+    <b>${b.nature || 'Bâtiment'}</b>${b.usage ? ' — ' + b.usage : ''}<br>
+    Emprise : ${fmt(b.emprise_m2)} m²${b.hauteur ? ' · hauteur ' + fmt(b.hauteur, 1) + ' m' : ''}
+    ${b.etat ? ' · ' + b.etat : ''}${b.leger ? ' · construction légère' : ''}</div>`).join('');
+  const alerte = !!f.site_pollue_connu;
+  const bouton = `<a class="btn-geo${alerte ? '' : ' discret'}" href="${f.georisques_url}"
+      target="_blank" rel="noopener noreferrer"
+      title="Rapport Géorisques : pollution des sols (CASIAS, BASOL, SIS), ICPE et risques à l\u2019adresse">
+      ${alerte ? 'Pollution des sols sur Géorisques \u2197' : 'Vérifier sur Géorisques \u2197'}</a>`;
+  return `<div class="sect"><h4>Nature du site et occupation du sol</h4>
+    <div class="pol pol-geo" style="${s.friche ? 'border-color:#d9b38a;background:#fdf6ec' : 'border-color:#bcd8ce;background:#f2f8f5'}">
+      ${bouton}
+      <b>${s.friche ? 'Friche / site à requalifier' : 'Occupation actuelle'}</b><br>${s.occupation_sol}
+      ${s.contexte_zone ? '<br>Parcelle ' + s.contexte_zone + '.' : ''}</div>
+    <dl class="kv">
+      ${ligne('Bâtiments sur la parcelle', s.nb_batiments)}
+      ${ligne('Emprise bâtie', fmt(s.emprise_batie_m2) + ' m²')}
+      ${ligne('Taux d\u2019emprise', s.taux_emprise != null ? fmt(s.taux_emprise, 1) + ' %' : '—')}
+    </dl>
+    ${(s.typologies_voisinage || []).length ? `<div class="pol" style="margin-top:6px">
+      <b>Environnement immédiat (moins de 500 m)</b><br>${s.typologies_voisinage.join(' ; ')}</div>` : ''}
+    ${puces ? `<div style="margin-top:6px"><b style="font-size:12.5px">Typologies identifiées sur l\u2019emprise</b>
+      <ul style="margin:4px 0 0;padding-left:18px;color:var(--txt-2);font-size:13px">${puces}</ul></div>` : ''}
+    ${bats}</div>`;
+}
+
+function ouvrirFiche(idu) {
+  const f = ETAT.resultats.concat(ETAT.enrichies || []).find((x) => x.idu === idu);
+  if (!f) return;
+  ETAT.sel = idu; tableau();
+  $('#d-titre').textContent = `${f.commune} — parcelle ${f.section} ${f.numero}`;
+  $('#d-sous').textContent = `${fmt(f.surface_m2)} m² · score ${f.score}/100 · ${f.niveau}`;
+  const p = f.pollution || {}, s = f.pollution_synthese || {};
+  const bloc = (titre, arr, rendu) => !arr || !arr.length ? '' :
+    `<div class="sect"><h4>${titre} (${arr.length})</h4>${arr.map(rendu).join('')}</div>`;
+  $('#d-content').innerHTML = `
+  ${blocPhoto(f)}
+  ${blocSite(f)}
+  ${blocProprietaire(f)}
+  <div class="sect"><h4>Identification du foncier</h4><dl class="kv">
+    ${ligne('Identifiant parcelle (IDU)', `<span style="font-family:var(--mono)">${f.idu || '—'}</span>`)}
+    ${ligne('Section / numéro', `${f.section || '—'} / ${f.numero || '—'}`)}
+    ${ligne('Surface cadastrale', fmt(f.surface_m2) + ' m²')}
+    ${ligne('Adresse', f.adresse)}
+    ${ligne('Code postal / commune', `${f.code_postal || '—'} ${f.commune || ''}`)}
+    ${ligne('Code INSEE', f.code_insee)}
+  </dl></div>
+  <div class="sect"><h4>Géoréférencement</h4><dl class="kv">
+    ${ligne('Lambert 93 X', fmt(f.lambert93_x, 2) + ' m')}
+    ${ligne('Lambert 93 Y', fmt(f.lambert93_y, 2) + ' m')}
+    ${ligne('Altitude NGF', f.altitude_ngf ? fmt(f.altitude_ngf, 2) + ' m' : '—')}
+    ${ligne('WGS 84', `${f.lat?.toFixed(6)} , ${f.lon?.toFixed(6)}`)}
+  </dl></div>
+  <div class="sect"><h4>Situation et urbanisme</h4><dl class="kv">
+    ${ligne('Zonage PLU', f.zonage_plu)}
+    ${ligne('Libellé de zone', f.libelle_zonage)}
+    ${ligne('ZAC / zone d\'activité', f.zac_proche)}
+    ${ligne('Distance à la ZAC', f.distance_zac_m != null ? fmt(f.distance_zac_m) + ' m' : '—')}
+    ${ligne('Rond-point le plus proche', `${f.rond_point_proche || '—'}${f.distance_rond_point_m != null ? ' — ' + fmt(f.distance_rond_point_m) + ' m' : ''}`)}
+    ${ligne("Entrée d'agglomération", f.rond_point_entree_agglo ? 'Oui' + (f.axe_entree ? ' — axe ' + f.axe_entree : '') : 'Non')}
+  </dl></div>
+  <div class="sect"><h4>Nature des activités actuelles ou passées</h4>
+    <dl class="kv">
+      ${ligne('ICPE < 500 m', s.nb_icpe_500m)}
+      ${ligne('ICPE < 1 500 m', s.nb_icpe_1500m)}
+      ${ligne('CASIAS / BASIAS', s.nb_casias)}
+      ${ligne('SIS', s.nb_sis)}
+      ${ligne('BASOL / servitudes', s.nb_basol_sup)}
+    </dl></div>
+  ${bloc('Installations classées (ICPE)', p.icpe, (i) => `<div class="pol"><b>${i.nom || '—'}</b><br>
+    ${i.adresse || ''} · ${i.regime || ''} ${i.seveso && i.seveso !== 'Non Seveso' ? '· Seveso ' + i.seveso : ''}
+    <br>Distance : ${fmt(i.distance_m)} m ${i.etat ? '· ' + i.etat : ''}</div>`)}
+  ${bloc('Anciens sites industriels (CASIAS / BASIAS)', p.casias, (c) => `<div class="pol"><b>${c.nom || '—'}</b><br>
+    ${c.activite || ''}${c.adresse ? ' · ' + c.adresse : ''}${c.statut ? ' · ' + c.statut : ''}
+    ${c.distance_m != null ? '<br>Distance : ' + fmt(c.distance_m) + ' m' : ''}
+    ${c.id ? `<br><span style="font-family:var(--mono);font-size:11px">${c.id}</span>` : ''}</div>`)}
+  ${bloc("Secteurs d'information sur les sols (SIS)", p.sis, (x) => `<div class="pol"><b>${x.nom || x.id || '—'}</b><br>
+    ${x.adresse || ''} ${x.commune || ''}</div>`)}
+  ${bloc('BASOL / conclusions et servitudes', p.basol_sup, (x) => `<div class="pol"><b>${x.nom || x.id || '—'}</b><br>${x.adresse || ''}</div>`)}
+  ${!s.nb_icpe_500m && !s.nb_casias && !s.nb_sis ? `<div class="sect"><div class="pol" style="border-color:#bcd8ce;background:#f2f8f5">
+      Aucun antécédent ICPE, BASIAS/CASIAS ou SIS recensé dans le rayon d'analyse. Une étude historique
+      et documentaire (NF X31-620) reste nécessaire avant acquisition.</div></div>` : ''}
+  <div class="sect"><h4>Prix du foncier</h4><dl class="kv">
+    ${ligne('Prix DVF médian (terrain nu, section)', f.dvf_prix_median_m2 ? fmt(f.dvf_prix_median_m2, 1) + ' €/m²' : 'Aucune mutation de terrain nu')}
+    ${ligne('Mutations de référence', f.dvf_nb_ventes_terrain)}
+    ${ligne('Valorisation estimée de la parcelle', eur(f.prix_vente_estime_eur))}
+    ${f.prix_annonce_m2 ? ligne("Prix de l'annonce", fmt(f.prix_annonce_m2, 1) + ' €/m²') : ''}
+  </dl>
+  ${(f.dvf_dernieres_ventes || []).length ? `<div style="margin-top:9px">${f.dvf_dernieres_ventes.map((v) =>
+    `<div class="pol">${v.date} · ${eur(v.valeur_fonciere)} · ${fmt(v.surface_terrain)} m² terrain
+    ${v.prix_m2_terrain ? '· <b>' + fmt(v.prix_m2_terrain, 1) + ' €/m²</b>' : ''}<br>
+    <span style="color:var(--txt-3)">${v.type}</span></div>`).join('')}</div>` : ''}</div>
+  <div class="sect"><h4>Mise en vente, propriétaire et contact</h4>
+    <div class="row"><div class="field"><label>Le foncier est-il en vente ?</label>
+      <select id="d-vente">${STATUTS_VENTE.map((o) => `<option ${statutVente(f) === o ? 'selected' : ''}>${o}</option>`).join('')}</select></div>
+      <div class="field"><label>Dernière mutation connue (DVF, section)</label>
+        <input type="text" value="${f.derniere_mutation || 'Aucune mutation recensée'}" readonly></div></div>
+    ${f.annonce ? `<div class="pol" style="border-color:#bcd8ce;background:#f2f8f5">
+      <b>Annonce rapprochée automatiquement</b><br>${f.annonce.titre || ''}<br>
+      ${f.annonce.source || ''}${f.annonce.prix ? ' · ' + eur(f.annonce.prix) : ''}
+      ${f.annonce.surface_m2 ? ' · ' + fmt(f.annonce.surface_m2) + ' m²' : ''}
+      ${f.annonce.url ? `<br><a href="${f.annonce.url}" target="_blank" rel="noopener noreferrer">voir l'annonce</a>` : ''}</div>` : ''}
+    <div class="field"><label>Propriétaire / foncière / SCI (titulaire ou présumé)</label>
+      <input type="text" id="d-proprio" value="${(f.proprietaire || f.proprietaire_presume || '').replace(/"/g, '&quot;')}" placeholder="Dénomination, SIREN, notaire"></div>
+    <div class="field"><label>Contact (propriétaire, notaire, aménageur, agence)</label>
+      <input type="text" id="d-contact" value="${(f.contact || '').replace(/"/g, '&quot;')}" placeholder="Nom, téléphone, e-mail"></div>
+    <div class="row"><div class="field"><label>Prix de vente demandé (€)</label>
+      <input type="number" id="d-prix" value="${f.prix_vendeur || ''}" step="1000"></div>
+      <div class="field"><label>Statut</label><select id="d-statut">
+        ${['', 'À contacter', 'Contact établi', 'Négociation', 'Sous promesse', 'Écarté']
+          .map((o) => `<option ${f.statut === o ? 'selected' : ''}>${o}</option>`).join('')}
+      </select></div></div>
+    <div class="field"><label>Notes de prospection</label>
+      <input type="text" id="d-notes" value="${(f.notes || '').replace(/"/g, '&quot;')}" placeholder="Accès, réseaux, contraintes, RDV…"></div>
+    <button class="btn" id="d-save">Enregistrer la fiche</button>
+    <div class="hint" id="d-msg"></div></div>
+  <div class="sect"><h4>Justification du score (${f.score}/100)</h4>
+    <ul style="margin:0;padding-left:18px;color:var(--txt-2);font-size:13px">
+      ${(f.score_notes || []).map((n) => `<li>${n}</li>`).join('') || '<li>—</li>'}</ul></div>
+  <div class="sect"><h4>Liens</h4><div class="src">
+    <a href="https://www.geoportail-urbanisme.gouv.fr/map/#tile=1&lon=${f.lon}&lat=${f.lat}&zoom=17" target="_blank" rel="noopener noreferrer">Géoportail de l'urbanisme</a> ·
+    <a href="https://www.georisques.gouv.fr/mes-risques/connaitre-les-risques-pres-de-chez-moi/rapport?city=${encodeURIComponent(f.commune || '')}&codeInsee=${f.code_insee}" target="_blank" rel="noopener noreferrer">Rapport Géorisques</a> ·
+    <a href="https://app.dvf.etalab.gouv.fr/?lat=${f.lat}&lon=${f.lon}&zoom=17" target="_blank" rel="noopener noreferrer">DVF</a> ·
+    <a href="https://www.cadastre.gouv.fr/" target="_blank" rel="noopener noreferrer">Cadastre</a>
+  </div></div>`;
+  $('#drawer').classList.add('open'); $('#drawer').setAttribute('aria-hidden', 'false');
+  $('#d-save').onclick = async () => {
+    const corps = {
+      idu: f.idu, contact: $('#d-contact').value, prix_vendeur: +$('#d-prix').value || null,
+      statut: $('#d-statut').value, notes: $('#d-notes').value,
+      statut_vente: $('#d-vente').value, proprietaire: $('#d-proprio').value,
+    };
+    Object.assign(f, corps); tableau();
+    let enregistre = false;
+    if (ETAT.serveur) {
+      try {
+        const r = await fetch(`${API}/api/fiche`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corps),
+        });
+        enregistre = r.ok;
+      } catch { enregistre = false; }
+    }
+    $('#d-msg').textContent = enregistre
+      ? 'Fiche enregistrée dans la base locale.'
+      : 'Fiche enregistrée pour la session — exportez en Excel, CSV ou JSON pour la conserver.';
+  };
+}
+$('#d-close').onclick = () => {
+  $('#drawer').classList.remove('open'); $('#drawer').setAttribute('aria-hidden', 'true');
+  ETAT.sel = null; tableau();
+};
+
+/* ---------------------------------------------------------------- exports */
+const SOURCES = [
+  ['Cadastre (parcelles, sections, contenances)', 'API Carto IGN — module cadastre', 'https://apicarto.ign.fr/api/doc/cadastre'],
+  ['Communes, EPCI, populations, contours', 'API Géo (État)', 'https://geo.api.gouv.fr/decoupage-administratif'],
+  ["Zonage PLU / ZAC (zone-urba)", "Géoportail de l'urbanisme — API Carto GPU", 'https://apicarto.ign.fr/api/doc/gpu'],
+  ["Ronds-points, axes numérotés, zones d'activité", 'IGN BD TOPO® via WFS Géoplateforme', 'https://data.geopf.fr/wfs/ows'],
+  ['Altitude NGF', 'IGN RGE ALTI® — service de calcul altimétrique', 'https://data.geopf.fr/altimetrie/'],
+  ['Adresses', 'Base Adresse Nationale', 'https://api-adresse.data.gouv.fr/'],
+  ['ICPE (installations classées)', 'Géorisques — API installations_classees', 'https://www.georisques.gouv.fr/doc-api'],
+  ['CASIAS/BASIAS, SIS, BASOL (servitudes)', 'Géorisques — API sites et sols pollués (ssp)', 'https://www.georisques.gouv.fr/doc-api'],
+  ['Prix de mutation (référence marché)', 'DVF — Demandes de valeurs foncières (Etalab)', 'https://app.dvf.etalab.gouv.fr/'],
+];
+
+const COLONNES = [
+  ['Score', (f) => f.score], ['Niveau', (f) => f.niveau],
+  ['Commune', (f) => f.commune], ['Code INSEE', (f) => f.code_insee],
+  ['Section', (f) => f.section], ['N° parcelle', (f) => f.numero],
+  ['Identifiant parcelle (IDU)', (f) => f.idu],
+  ['Surface cadastrale (m²)', (f) => f.surface_m2],
+  ['Lambert 93 X (m)', (f) => f.lambert93_x], ['Lambert 93 Y (m)', (f) => f.lambert93_y],
+  ['Altitude NGF (m)', (f) => f.altitude_ngf],
+  ['Longitude WGS 84', (f) => f.lon], ['Latitude WGS 84', (f) => f.lat],
+  ['Adresse', (f) => f.adresse], ['Code postal', (f) => f.code_postal],
+  ['Zonage PLU', (f) => f.zonage_plu], ['Libellé de zone', (f) => f.libelle_zonage],
+  ['ZAC / zone d\u2019activité', (f) => f.zac_proche], ['Distance ZAC (m)', (f) => f.distance_zac_m],
+  ['Rond-point', (f) => f.rond_point_proche], ['Distance rond-point (m)', (f) => f.distance_rond_point_m],
+  ["Entrée d\u2019agglomération", (f) => (f.rond_point_entree_agglo ? 'Oui' : 'Non')],
+  ['Axe d\u2019entrée', (f) => f.axe_entree],
+  ['ICPE < 500 m', (f) => (f.pollution_synthese || {}).nb_icpe_500m],
+  ['CASIAS / BASIAS', (f) => (f.pollution_synthese || {}).nb_casias],
+  ['SIS', (f) => (f.pollution_synthese || {}).nb_sis],
+  ['BASOL / servitudes', (f) => (f.pollution_synthese || {}).nb_basol_sup],
+  ['Activités actuelles ou passées', (f) => (f.pollution_synthese || {}).activites],
+  ['Occupation du sol / typologie', (f) => (f.site || {}).typologie_libelle],
+  ['Friche', (f) => ((f.site || {}).friche ? 'Oui' : 'Non')],
+  ['Bâtiments sur la parcelle', (f) => (f.site || {}).nb_batiments],
+  ['Emprise bâtie (m²)', (f) => (f.site || {}).emprise_batie_m2],
+  ['Rapport Géorisques (pollution des sols)', (f) => f.georisques_url],
+  ['Photo aérienne (IGN)', (f) => (f.photo_aerienne || {}).url],
+  ['DVF médian terrain (€/m²)', (f) => f.dvf_prix_median_m2],
+  ['Valorisation DVF de la parcelle (€)', (f) => f.prix_vente_estime_eur],
+  ['Prix de vente vendeur (€)', (f) => f.prix_vendeur],
+  ['Foncier en vente', (f) => statutVente(f)],
+  ['Annonce (source)', (f) => (f.annonce || {}).source],
+  ['Annonce (lien)', (f) => (f.annonce || {}).url],
+  ['Dernière mutation DVF (section)', (f) => f.derniere_mutation],
+  ['Propriétaire / foncière / SCI', (f) => f.proprietaire || f.proprietaire_presume],
+  ['SIREN propriétaire présumé', (f) => f.siren_proprietaire],
+  ['Occupant du site', (f) => f.occupant],
+  ['Contact', (f) => f.contact], ['Statut de prospection', (f) => f.statut], ['Notes', (f) => f.notes],
+];
+
+const horodatage = () => new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '');
+const nomFichier = (ext) => `foncier-scan_${(ETAT.agglo && ETAT.agglo.nom ? ETAT.agglo.nom : 'export')
+  .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9]+/g, '-')}_${horodatage()}.${ext}`;
+
+const lignesExport = () => filtres(ETAT.resultats).map((f) => COLONNES.map(([, g]) => {
+  const v = g(f);
+  return v === undefined || v === null ? '' : v;
+}));
+
+function exporterCsv() {
+  const sep = ';';
+  const ech = (v) => {
+    const s = String(v).replace(/"/g, '""');
+    return /[;\n"]/.test(s) ? `"${s}"` : s;
+  };
+  const corps = [COLONNES.map(([t]) => t), ...lignesExport()]
+    .map((l) => l.map(ech).join(sep)).join('\r\n');
+  telecharger(new Blob(['\ufeff' + corps, ''], { type: 'text/csv;charset=utf-8' }), nomFichier('csv'));
+}
+
+function exporterJson() {
+  const doc = {
+    logiciel: 'FONCIER-SCAN', genere_le: new Date().toISOString(),
+    agglomeration: ETAT.agglo, programme_recherche: PROGRAMME,
+    nb_fonciers: filtres(ETAT.resultats).length,
+    sources: SOURCES.map(([donnee, source, url]) => ({ donnee, source, url })),
+    fonciers: filtres(ETAT.resultats),
+  };
+  telecharger(new Blob([JSON.stringify(doc, null, 2)], { type: 'application/json' }), nomFichier('json'));
+}
+
+async function exporterXlsx() {
+  const XLSX = await chargerSheetJs();
+  const cl = XLSX.utils.book_new();
+  const f1 = XLSX.utils.aoa_to_sheet([COLONNES.map(([t]) => t), ...lignesExport()]);
+  f1['!cols'] = COLONNES.map(([t], i) => ({ wch: i === 27 ? 60 : Math.max(12, Math.min(34, t.length + 4)) }));
+  f1['!freeze'] = { xSplit: 0, ySplit: 1 };
+  XLSX.utils.book_append_sheet(cl, f1, 'Fonciers qualifiés');
+  const f2 = XLSX.utils.aoa_to_sheet([
+    ['FONCIER-SCAN — sources de données publiques'], [],
+    ['Programme recherché', PROGRAMME], [],
+    ['Donnée', 'Source', 'Référence'], ...SOURCES, [],
+    ["Le prix indiqué est une référence de marché issue des mutations DVF de la section cadastrale ; "
+      + "il ne constitue pas un prix vendeur. Le prix demandé et le contact proviennent de la fiche de "
+      + "prospection ou des annonces importées."], [],
+    [`Export généré le ${new Date().toLocaleString('fr-FR')}`],
+  ]);
+  f2['!cols'] = [{ wch: 48 }, { wch: 48 }, { wch: 60 }];
+  XLSX.utils.book_append_sheet(cl, f2, 'Sources');
+  const buf = XLSX.write(cl, { bookType: 'xlsx', type: 'array' });
+  telecharger(new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }),
+    nomFichier('xlsx'));
+}
+
+function avecResultats(fn, bouton) {
+  return async () => {
+    if (!filtres(ETAT.resultats).length) { log('Aucun résultat à exporter.'); return; }
+    const b = $(bouton), t = b.textContent;
+    b.disabled = true; b.textContent = 'Préparation…';
+    try { await fn(); } catch (e) { log(`Échec de l'export : ${e.message}`); }
+    b.disabled = false; b.textContent = t;
+  };
+}
+$('#exp-xlsx').onclick = avecResultats(exporterXlsx, '#exp-xlsx');
+$('#exp-csv').onclick = avecResultats(exporterCsv, '#exp-csv');
+$('#exp-json').onclick = avecResultats(exporterJson, '#exp-json');
+
+/* ---------------------------------------------------------------- annonces */
+/* Les annonces sont conservées en mémoire de session et, si la base locale est
+   connectée, également enregistrées côté serveur. */
+function rendreAnnonces() {
+  const l = ETAT.annonces;
+  $('#vide-annonces').hidden = l.length > 0;
+  $('#tbody-annonces').innerHTML = l.map((a) => `<tr>
+    <td>${a.source || '—'}</td><td style="max-width:280px;overflow:hidden;text-overflow:ellipsis">${a.titre || '—'}</td>
+    <td>${a.commune || '—'}</td><td class="num">${fmt(a.surface_m2)}</td><td class="num">${eur(a.prix)}</td>
+    <td class="num">${a.prix && a.surface_m2 ? fmt(a.prix / a.surface_m2, 1) : '—'}</td>
+    <td>${a.contact || '—'}</td>
+    <td>${a.url ? `<a href="${a.url}" target="_blank" rel="noopener noreferrer">voir</a>` : '—'}</td></tr>`).join('');
+}
+
+async function chargerAnnonces() {
+  if (ETAT.serveur) {
+    try {
+      const l = await (await fetch(`${API}/api/annonces`)).json();
+      if (Array.isArray(l) && l.length) ETAT.annonces = l;
+    } catch { /* base indisponible : on garde les annonces de la session */ }
+  }
+  rendreAnnonces();
+}
+
+/* Correspondance souple des en-têtes du modèle d'import */
+const CHAMPS = {
+  source: ['source', 'portail', 'site'],
+  titre: ['titre', 'intitule', 'intitulé', 'libelle', 'libellé', 'designation'],
+  commune: ['commune', 'ville', 'localite', 'localité'],
+  code_postal: ['code postal', 'cp', 'codepostal'],
+  adresse: ['adresse', 'localisation'],
+  surface_m2: ['surface', 'surface m2', 'surface (m²)', 'surface_m2', 'surface terrain'],
+  prix: ['prix', 'prix (€)', 'prix de vente', 'prix_vente', 'montant'],
+  contact: ['contact', 'vendeur', 'agence', 'telephone', 'téléphone', 'email', 'e-mail'],
+  url: ['url', 'lien', 'annonce'],
+  notes: ['notes', 'commentaire', 'commentaires', 'observations'],
+};
+const cle = (s) => String(s || '').trim().toLowerCase()
+  .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+function mapper(lignes) {
+  return lignes.map((o) => {
+    const a = {};
+    Object.entries(CHAMPS).forEach(([champ, alias]) => {
+      const trouve = Object.keys(o).find((k) => alias.includes(cle(k)));
+      if (trouve !== undefined) a[champ] = o[trouve];
+    });
+    const num = (v) => {
+      const x = parseFloat(String(v ?? '').replace(/[^0-9,.\-]/g, '').replace(',', '.'));
+      return Number.isFinite(x) ? x : null;
+    };
+    a.surface_m2 = num(a.surface_m2); a.prix = num(a.prix);
+    ['source', 'titre', 'commune', 'adresse', 'contact', 'url', 'notes', 'code_postal']
+      .forEach((k) => { if (a[k] != null) a[k] = String(a[k]).trim(); });
+    return a;
+  }).filter((a) => a.titre || a.commune || a.surface_m2);
+}
+
+function lireCsv(texte) {
+  const lignes = texte.replace(/^\ufeff/, '').split(/\r?\n/).filter((l) => l.trim());
+  if (!lignes.length) return [];
+  const sep = (lignes[0].match(/;/g) || []).length >= (lignes[0].match(/,/g) || []).length ? ';' : ',';
+  const decouper = (l) => {
+    const out = []; let cur = '', dans = false;
+    for (let i = 0; i < l.length; i++) {
+      const c = l[i];
+      if (c === '"') { if (dans && l[i + 1] === '"') { cur += '"'; i++; } else dans = !dans; }
+      else if (c === sep && !dans) { out.push(cur); cur = ''; }
+      else cur += c;
+    }
+    out.push(cur); return out;
+  };
+  const tete = decouper(lignes[0]);
+  return lignes.slice(1).map((l) => {
+    const v = decouper(l), o = {};
+    tete.forEach((t, i) => { o[t] = (v[i] || '').trim(); });
+    return o;
+  });
+}
+
+$('#importer').onclick = async () => {
+  const f = $('#fichier').files[0];
+  if (!f) return;
+  const b = $('#importer');
+  b.disabled = true; b.textContent = 'Import…';
+  try {
+    let lignes;
+    if (/\.(xlsx|xlsm|xls)$/i.test(f.name)) {
+      const XLSX = await chargerSheetJs();
+      const cl = XLSX.read(await f.arrayBuffer(), { type: 'array' });
+      const nom = cl.SheetNames.find((n) => cle(n).includes('annonce')) || cl.SheetNames[0];
+      lignes = XLSX.utils.sheet_to_json(cl.Sheets[nom], { defval: '' });
+    } else {
+      lignes = lireCsv(await f.text());
+    }
+    const nouvelles = mapper(lignes);
+    const vues = new Set(ETAT.annonces.map((a) => `${a.url || ''}|${a.titre || ''}|${a.commune || ''}`));
+    nouvelles.forEach((a) => {
+      const k = `${a.url || ''}|${a.titre || ''}|${a.commune || ''}`;
+      if (!vues.has(k)) { vues.add(k); ETAT.annonces.push(a); }
+    });
+    rendreAnnonces();
+    if (ETAT.serveur) {
+      const fd = new FormData(); fd.append('fichier', f);
+      await fetch(`${API}/api/annonces/import`, { method: 'POST', body: fd }).catch(() => {});
+    }
+    b.textContent = `${nouvelles.length} annonce(s) importée(s)`;
+  } catch (e) {
+    b.textContent = "Échec de l'import";
+    console.error(e);
+  }
+  setTimeout(() => { b.disabled = false; b.textContent = 'Importer'; }, 2600);
+};
+
+const COL_ANNONCES = [
+  ['Source', 'source'], ['Titre', 'titre'], ['Commune', 'commune'], ['Code postal', 'code_postal'],
+  ['Adresse', 'adresse'], ['Surface (m²)', 'surface_m2'], ['Prix (€)', 'prix'],
+  ['Prix au m² (€)', null], ['Contact', 'contact'], ['URL', 'url'], ['Notes', 'notes'],
+];
+$('#export-annonces').onclick = async () => {
+  if (!ETAT.annonces.length) return;
+  const b = $('#export-annonces'), t = b.textContent;
+  b.disabled = true; b.textContent = 'Préparation…';
+  try {
+    const XLSX = await chargerSheetJs();
+    const lignes = ETAT.annonces.map((a) => COL_ANNONCES.map(([, k]) => (k
+      ? (a[k] ?? '')
+      : (a.prix && a.surface_m2 ? Math.round((a.prix / a.surface_m2) * 10) / 10 : ''))));
+    const cl = XLSX.utils.book_new();
+    const f1 = XLSX.utils.aoa_to_sheet([COL_ANNONCES.map(([n]) => n), ...lignes]);
+    f1['!cols'] = [{ wch: 14 }, { wch: 46 }, { wch: 20 }, { wch: 12 }, { wch: 34 },
+      { wch: 13 }, { wch: 14 }, { wch: 14 }, { wch: 28 }, { wch: 46 }, { wch: 34 }];
+    XLSX.utils.book_append_sheet(cl, f1, 'Annonces');
+    const f2 = XLSX.utils.aoa_to_sheet([['Donnée', 'Source', 'Référence'], ...SOURCES]);
+    f2['!cols'] = [{ wch: 48 }, { wch: 48 }, { wch: 60 }];
+    XLSX.utils.book_append_sheet(cl, f2, 'Sources');
+    const buf = XLSX.write(cl, { bookType: 'xlsx', type: 'array' });
+    telecharger(new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }),
+      `foncier-scan_annonces_${horodatage()}.xlsx`);
+  } catch (e) { console.error(e); }
+  b.disabled = false; b.textContent = t;
+};
+
+/* Rattachement des annonces au cadastre, calculé dans le navigateur */
+const poisCommune = new Map();
+async function poisAutour(lon, lat, nomCommune) {
+  const k = nomCommune || `${lon.toFixed(2)},${lat.toFixed(2)}`;
+  if (poisCommune.has(k)) return poisCommune.get(k);
+  const bbox = MOTEUR.bboxDe(MOTEUR.cercle(lon, lat, 3500));
+  const axes = await MOTEUR.axesStructurants(bbox);
+  const [rps, zacs] = await Promise.all([MOTEUR.rondsPoints(bbox, axes), MOTEUR.zonesActivite(bbox)]);
+  const pois = rps.concat(zacs);
+  poisCommune.set(k, pois);
+  return pois;
+}
+
+$('#enrichir').onclick = async () => {
+  const b = $('#enrichir'), t = b.textContent;
+  if (!ETAT.annonces.length) { $('#vide-enr').textContent = "Importez d'abord des annonces."; return; }
+  b.disabled = true; b.textContent = 'Enrichissement en cours…';
+  $('#vide-enr').hidden = false; $('#vide-enr').textContent = 'Rattachement au cadastre…';
+  try {
+    const res = [];
+    await MOTEUR.enLots(ETAT.annonces, 2, async (a) => {
+      const q = [a.adresse, a.code_postal, a.commune].filter(Boolean).join(' ');
+      if (!q) return;
+      const g = await MOTEUR.sur(() => MOTEUR.jsonGet(
+        `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(q)}&limit=1`), null);
+      const pt = g && g.features && g.features[0];
+      if (!pt) return;
+      const [lon, lat] = pt.geometry.coordinates;
+      const s = a.surface_m2 || 0;
+      const lot = await MOTEUR.parcellesDans(lon, lat, 220,
+        s ? Math.max(200, s * 0.8) : 1000, s ? s * 1.25 : 60000);
+      if (!lot.length) return;
+      const p = s
+        ? lot.reduce((x, y) => (Math.abs(x.surface_m2 - s) <= Math.abs(y.surface_m2 - s) ? x : y))
+        : lot[0];
+      const pois = await poisAutour(lon, lat, p.commune);
+      const f = await MOTEUR.enrichirParcelle(p, pois, 500, true);
+      f.prix_vendeur = a.prix || null;
+      f.contact = a.contact || null;
+      f.source_annonce = a.source || null;
+      f.url_annonce = a.url || null;
+      f.titre_annonce = a.titre || null;
+      f.prix_annonce_m2 = (a.prix && f.surface_m2) ? Math.round((a.prix / f.surface_m2) * 10) / 10 : null;
+      res.push(f);
+    });
+    res.sort((x, y) => y.score - x.score);
+    ETAT.enrichies = res;
+    $('#vide-enr').hidden = res.length > 0;
+    if (!res.length) $('#vide-enr').textContent = 'Aucune annonce n’a pu être rattachée à une parcelle cadastrale.';
+    $('#tbody-enr').innerHTML = res.map((f) => `<tr data-idu="${f.idu}">
+      <td><span class="tag ${f.niveau === 'Prioritaire' ? 'p' : f.niveau === 'À étudier' ? 'e' : 's'}">${f.score}</span></td>
+      <td>${f.commune || '—'}</td><td style="font-family:var(--mono);font-size:12px">${f.section || ''} ${f.numero || ''}</td>
+      <td class="num">${fmt(f.surface_m2)}</td><td class="num">${eur(f.prix_vendeur)}</td>
+      <td class="num">${f.prix_annonce_m2 ? fmt(f.prix_annonce_m2, 1) : '—'}</td>
+      <td class="num">${f.dvf_prix_median_m2 ? fmt(f.dvf_prix_median_m2, 1) : '—'}</td>
+      <td><span class="tag ${niveauPol(f) === 'vierge' ? 'p' : niveauPol(f) === 'leger' ? 'e' : 's'}">${libPol[niveauPol(f)]}</span></td>
+      <td>${f.contact || '—'}</td></tr>`).join('');
+    $('#tbody-enr').querySelectorAll('tr').forEach((tr) => tr.onclick = () => ouvrirFiche(tr.dataset.idu));
+  } catch (e) {
+    $('#vide-enr').hidden = false;
+    $('#vide-enr').innerHTML = `<div class="err">${e.message}</div>`;
+  }
+  b.disabled = false; b.textContent = t;
+};
+
+/* ---------------------------------------------------------------- onglets */
+document.querySelectorAll('.tabs button').forEach((b) => b.onclick = () => {
+  document.querySelectorAll('.tabs button').forEach((x) => x.setAttribute('aria-selected', x === b));
+  const o = b.dataset.onglet;
+  $('#vue-recherche').hidden = o !== 'recherche';
+  $('#vue-annonces').hidden = o !== 'annonces';
+  $('#vue-methode').hidden = o !== 'methode';
+  $('#panneau-criteres').hidden = o !== 'recherche';
+  $('#panneau-annonces-outils').hidden = o !== 'annonces';
+  if (o === 'annonces') chargerAnnonces();
+  if (o === 'recherche' && map) setTimeout(() => map.invalidateSize(), 60);
+});
+
+initCarte();
+sonderServeur();
+
+</script>
+</body>
+</html>
