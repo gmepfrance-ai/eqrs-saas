@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { navigateTo } from "@/lib/navigation";
 import { useAuth } from "@/lib/auth";
 import { apiRequest } from "@/lib/queryClient";
@@ -28,6 +28,11 @@ export default function SubscribeFoncierScanPage() {
   const [chargement, setChargement] = useState(false);
   const [essaiEnCours, setEssaiEnCours] = useState(false);
   const [erreur, setErreur] = useState("");
+
+  useEffect(() => {
+    document.title =
+      "FONCIER-SCAN — licence annuelle et abonnement | G.M.E.P";
+  }, []);
 
   async function demarrerEssai() {
     if (!user || !token) {

@@ -409,11 +409,11 @@ export default function FoncierScanPage() {
             </p>
             <p className="mt-3 text-[12px]" style={{ color: "#6f879a" }}>
               SIREN 753 097 625 ·{" "}
-              <a href="#/mentions-legales" className="hover:text-white underline">
+              <a href="/mentions-legales" className="hover:text-white underline">
                 Mentions légales
               </a>{" "}
               ·{" "}
-              <a href="#/cgv" className="hover:text-white underline">
+              <a href="/cgv" className="hover:text-white underline">
                 CGV
               </a>
             </p>
