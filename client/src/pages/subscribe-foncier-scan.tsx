@@ -182,7 +182,7 @@ export default function SubscribeFoncierScanPage() {
             onClick={demarrerEssai}
           >
             {essaiEnCours ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-            {user ? "Essai gratuit 8 jours" : "S'inscrire + essai gratuit 8 jours"}
+            {user ? "Essai gratuit 14 jours" : "S'inscrire + essai gratuit 14 jours"}
           </button>
 
           {!user && (

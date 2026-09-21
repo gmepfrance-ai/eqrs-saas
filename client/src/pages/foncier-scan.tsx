@@ -195,7 +195,7 @@ export default function FoncierScanPage() {
               ) : (
                 <ArrowRight className="w-4 h-4" />
               )}
-              {user ? "Démarrer l'essai de 8 jours" : "Créer un compte et essayer 8 jours"}
+              {user ? "Démarrer l'essai de 14 jours" : "Créer un compte et essayer 14 jours"}
             </button>
             <button
               onClick={() => navigateTo("/subscribe-foncier-scan")}
@@ -345,7 +345,7 @@ export default function FoncierScanPage() {
               Essayer l'outil sur votre propre secteur
             </h2>
             <p className="mt-3 text-[14.5px]" style={{ color: "#b8cbd8" }}>
-              Huit jours d'accès complet, sans carte bancaire. Rien à installer :
+              Quatorze jours d'accès complet, sans carte bancaire. Rien à installer :
               l'outil s'ouvre depuis votre compte.
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-3">
@@ -360,7 +360,7 @@ export default function FoncierScanPage() {
                 ) : (
                   <ArrowRight className="w-4 h-4" />
                 )}
-                Démarrer l'essai de 8 jours
+                Démarrer l'essai de 14 jours
               </button>
               <button
                 onClick={() => navigateTo("/subscribe-foncier-scan")}

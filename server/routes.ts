@@ -428,7 +428,7 @@ async function requireFoncierScanSubscription(
     if (new Date(fsSub.currentPeriodEnd) < new Date()) {
       try { await storage.updateSubscription(fsSub.id, { status: "expired" }); } catch {}
       res.setHeader("Content-Type", "text/html; charset=utf-8");
-      return res.status(403).send(trialExpiredHtml("/#/subscribe-foncier-scan", "FONCIER-SCAN", 8));
+      return res.status(403).send(trialExpiredHtml("/#/subscribe-foncier-scan", "FONCIER-SCAN", 14));
     }
   }
   next();
@@ -2632,7 +2632,7 @@ export async function registerRoutes(
     }
   );
 
-  // ── FONCIER-SCAN : activer l'essai de 8 jours ──────────────────────────
+  // ── FONCIER-SCAN : activer l'essai de 14 jours ─────────────────────────
   app.post(
     "/api/foncier-scan-trial/activate",
     requireAuth as any,
@@ -2644,7 +2644,7 @@ export async function registerRoutes(
           return res.status(409).json({ message: "Vous avez déjà un accès FONCIER-SCAN actif ou en cours d'essai." });
         }
         const trialEnd = new Date();
-        trialEnd.setDate(trialEnd.getDate() + 8);
+        trialEnd.setDate(trialEnd.getDate() + 14);
         let sub;
         if (existing) {
           sub = await storage.updateSubscription(existing.id, {
@@ -2661,7 +2661,7 @@ export async function registerRoutes(
             currentPeriodEnd: trialEnd.toISOString(),
           });
         }
-        return res.json({ message: "Essai FONCIER-SCAN activé (8 jours)", subscription: sub });
+        return res.json({ message: "Essai FONCIER-SCAN activé (14 jours)", subscription: sub });
       } catch (err: any) {
         return res.status(500).json({ message: err.message });
       }
