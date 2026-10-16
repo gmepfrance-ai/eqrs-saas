@@ -25,9 +25,19 @@ if (fs.existsSync(marketingRoot)) {
       '/outils/eqrs-v8-ecotox-humain.html': '/outils/eqrs-v9-ecotox-humain.html',
       '/outils/eqrs-v31-05-ecotox.html':   '/outils/eqrs-v9-ecotox.html',
     };
+    // SEO — domaine nu → www (une seule version du site pour Google)
+    if (host === "gmep-france.eu") {
+      return res.redirect(301, "https://www.gmep-france.eu" + req.originalUrl);
+    }
     const redirectTarget = PERMANENT_REDIRECTS[req.path];
     if (redirectTarget) {
       return res.redirect(301, redirectTarget);
+    }
+    // SEO — doublons « /dossier/index.html » → URL canonique « /dossier/ »
+    // (le blog conserve /blog/index.html, qui est son URL canonique déclarée)
+    if (/(^|\/)index\.html$/.test(req.path) && !/^\/(en\/|es\/)?blog\/index\.html$/.test(req.path)) {
+      const qs = req.originalUrl.slice(req.path.length);
+      return res.redirect(301, req.path.slice(0, -"index.html".length) + qs);
     }
 
     return express.static(marketingRoot, {
