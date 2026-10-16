@@ -1,195 +1,819 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <!-- Page d'accueil -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://www.gmep-france.eu/</loc>
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/"/>
     <priority>1.0</priority>
   </url>
-
-  <!-- Catalogue outils -->
-  <url>
-    <loc>https://www.gmep-france.eu/outils/</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Pages outils -->
-  <url>
-    <loc>https://www.gmep-france.eu/outils/msp.html</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://www.gmep-france.eu/outils/piezometres.html</loc>
-    <lastmod>2026-09-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://www.gmep-france.eu/outils/anc-assainissement.html</loc>
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://www.gmep-france.eu/outils/3d-ssp.html</loc>
-    <lastmod>2026-07-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://www.gmep-france.eu/outils/eaux-pluviales-dle-gep.html</loc>
-    <lastmod>2026-07-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://www.gmep-france.eu/outils/porchet-essai-permeabilite.html</loc>
-    <lastmod>2026-07-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://www.gmep-france.eu/outils/eqrs-v9-ecotox.html</loc>
-    <lastmod>2026-06-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://www.gmep-france.eu/outils/eqrs-v9-ecotox-humain.html</loc>
-    <lastmod>2026-06-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://www.gmep-france.eu/outils/eqrs-je.html</loc>
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.gmep-france.eu/outils/rabattement/</loc>
-    <lastmod>2026-06-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.gmep-france.eu/outils/tsn-transfert-sol-nappe.html</loc>
-    <lastmod>2026-06-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.gmep-france.eu/outils/domenico.html</loc>
-    <lastmod>2026-06-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.gmep-france.eu/outils/schema-conceptuel.html</loc>
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Blog / cluster de contenu -->
-  <url>
-    <loc>https://www.gmep-france.eu/blog/index.html</loc>
-    <lastmod>2026-07-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.gmep-france.eu/blog/eqrs-calcul-qd-eri.html</loc>
-    <lastmod>2026-07-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.gmep-france.eu/blog/modele-johnson-ettinger-intrusion-vapeurs.html</loc>
-    <lastmod>2026-07-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html</loc>
-    <lastmod>2026-07-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.gmep-france.eu/blog/iem-arr-eqrs-differences.html</loc>
-    <lastmod>2026-07-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Page expertise / auteur -->
-  <url>
-    <loc>https://www.gmep-france.eu/expertise.html</loc>
-    <lastmod>2026-07-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Pages institutionnelles -->
-  <url>
-    <loc>https://www.gmep-france.eu/tarifs.html</loc>
-    <lastmod>2026-06-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.gmep-france.eu/contact.html</loc>
-    <lastmod>2026-06-30</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://www.gmep-france.eu/mentions-legales.html</loc>
-    <lastmod>2026-06-30</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <url>
-    <loc>https://www.gmep-france.eu/cgv.html</loc>
-    <lastmod>2026-06-30</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <url>
-    <loc>https://www.gmep-france.eu/guide-11-outils/</loc>
-    <lastmod>2026-07-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
   <url>
     <loc>https://www.gmep-france.eu/foncier-scan.html</loc>
     <lastmod>2026-09-21</lastmod>
-    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/outils/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/outils/3d-ssp.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/3d-ssp.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/3d-ssp.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/3d-ssp.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/3d-ssp.html"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/outils/anc-assainissement.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/anc-assainissement.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/anc-assainissement.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/anc-assainissement.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/anc-assainissement.html"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/outils/domenico.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/domenico.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/domenico.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/domenico.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/domenico.html"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/outils/eaux-pluviales-dle-gep.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/eaux-pluviales-dle-gep.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/eaux-pluviales-dle-gep.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/eaux-pluviales-dle-gep.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/eaux-pluviales-dle-gep.html"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/outils/eqrs-je.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/eqrs-je.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/eqrs-je.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/eqrs-je.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/eqrs-je.html"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/outils/eqrs-v9-ecotox.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/eqrs-v9-ecotox.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/eqrs-v9-ecotox.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/eqrs-v9-ecotox.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/eqrs-v9-ecotox.html"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/outils/eqrs-v9-ecotox-humain.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/eqrs-v9-ecotox-humain.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/eqrs-v9-ecotox-humain.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/eqrs-v9-ecotox-humain.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/eqrs-v9-ecotox-humain.html"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/outils/msp.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/msp.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/msp.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/msp.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/msp.html"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/outils/piezometres.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/piezometres.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/piezometres.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/piezometres.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/piezometres.html"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/outils/porchet-essai-permeabilite.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/porchet-essai-permeabilite.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/porchet-essai-permeabilite.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/porchet-essai-permeabilite.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/porchet-essai-permeabilite.html"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/outils/rabattement-v15-85.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/rabattement-v15-85.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/rabattement-v15-85.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/rabattement-v15-85.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/rabattement-v15-85.html"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/outils/rabattement-v15-87.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/rabattement-v15-87.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/rabattement-v15-87.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/rabattement-v15-87.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/rabattement-v15-87.html"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/outils/rabattement/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/rabattement/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/rabattement/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/rabattement/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/rabattement/"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/outils/schema-conceptuel.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/schema-conceptuel.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/schema-conceptuel.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/schema-conceptuel.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/schema-conceptuel.html"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/outils/tsn-transfert-sol-nappe.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/tsn-transfert-sol-nappe.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/tsn-transfert-sol-nappe.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/tsn-transfert-sol-nappe.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/tsn-transfert-sol-nappe.html"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/tarifs.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/tarifs.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/tarifs.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/tarifs.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/tarifs.html"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/blog/eqrs-calcul-qd-eri.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/eqrs-calcul-qd-eri.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/eqrs-calcul-qd-eri.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/eqrs-calcul-qd-eri.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/eqrs-calcul-qd-eri.html"/>
     <priority>0.8</priority>
   </url>
-
+  <url>
+    <loc>https://www.gmep-france.eu/blog/iem-arr-eqrs-differences.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/iem-arr-eqrs-differences.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/iem-arr-eqrs-differences.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/iem-arr-eqrs-differences.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/iem-arr-eqrs-differences.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/blog/index.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/index.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/index.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/index.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/index.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/blog/modele-johnson-ettinger-intrusion-vapeurs.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/modele-johnson-ettinger-intrusion-vapeurs.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/modele-johnson-ettinger-intrusion-vapeurs.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/modele-johnson-ettinger-intrusion-vapeurs.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/modele-johnson-ettinger-intrusion-vapeurs.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/rabattement-nappe-calcul-debit.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/rabattement-nappe-calcul-debit.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/contact.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/contact.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/expertise.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/expertise.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/expertise.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/expertise.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/expertise.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/guide-11-outils/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/guide-11-outils/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/guide-11-outils/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/guide-11-outils/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/guide-11-outils/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/lexique.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/lexique.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/lexique.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/lexique.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/lexique.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/plaquette/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/plaquette/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/plaquette/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/plaquette/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/plaquette/"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/cgv.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/cgv.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/cgv.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/cgv.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/cgv.html"/>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/mentions-legales.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/mentions-legales.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/mentions-legales.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/mentions-legales.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/mentions-legales.html"/>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/outils/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/outils/3d-ssp.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/3d-ssp.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/3d-ssp.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/3d-ssp.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/3d-ssp.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/outils/anc-assainissement.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/anc-assainissement.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/anc-assainissement.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/anc-assainissement.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/anc-assainissement.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/outils/domenico.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/domenico.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/domenico.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/domenico.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/domenico.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/outils/eaux-pluviales-dle-gep.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/eaux-pluviales-dle-gep.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/eaux-pluviales-dle-gep.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/eaux-pluviales-dle-gep.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/eaux-pluviales-dle-gep.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/outils/eqrs-je.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/eqrs-je.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/eqrs-je.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/eqrs-je.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/eqrs-je.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/outils/eqrs-v9-ecotox-humain.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/eqrs-v9-ecotox-humain.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/eqrs-v9-ecotox-humain.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/eqrs-v9-ecotox-humain.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/eqrs-v9-ecotox-humain.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/outils/eqrs-v9-ecotox.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/eqrs-v9-ecotox.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/eqrs-v9-ecotox.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/eqrs-v9-ecotox.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/eqrs-v9-ecotox.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/outils/msp.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/msp.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/msp.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/msp.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/msp.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/outils/piezometres.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/piezometres.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/piezometres.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/piezometres.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/piezometres.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/outils/porchet-essai-permeabilite.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/porchet-essai-permeabilite.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/porchet-essai-permeabilite.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/porchet-essai-permeabilite.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/porchet-essai-permeabilite.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/outils/rabattement-v15-85.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/rabattement-v15-85.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/rabattement-v15-85.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/rabattement-v15-85.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/rabattement-v15-85.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/outils/rabattement-v15-87.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/rabattement-v15-87.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/rabattement-v15-87.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/rabattement-v15-87.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/rabattement-v15-87.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/outils/rabattement/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/rabattement/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/rabattement/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/rabattement/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/rabattement/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/outils/schema-conceptuel.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/schema-conceptuel.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/schema-conceptuel.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/schema-conceptuel.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/schema-conceptuel.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/outils/tsn-transfert-sol-nappe.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/tsn-transfert-sol-nappe.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/tsn-transfert-sol-nappe.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/tsn-transfert-sol-nappe.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/tsn-transfert-sol-nappe.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/tarifs.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/tarifs.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/tarifs.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/tarifs.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/tarifs.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/blog/eqrs-calcul-qd-eri.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/eqrs-calcul-qd-eri.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/eqrs-calcul-qd-eri.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/eqrs-calcul-qd-eri.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/eqrs-calcul-qd-eri.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/blog/iem-arr-eqrs-differences.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/iem-arr-eqrs-differences.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/iem-arr-eqrs-differences.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/iem-arr-eqrs-differences.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/iem-arr-eqrs-differences.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/blog/index.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/index.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/index.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/index.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/index.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/blog/modele-johnson-ettinger-intrusion-vapeurs.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/modele-johnson-ettinger-intrusion-vapeurs.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/modele-johnson-ettinger-intrusion-vapeurs.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/modele-johnson-ettinger-intrusion-vapeurs.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/modele-johnson-ettinger-intrusion-vapeurs.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/blog/rabattement-nappe-calcul-debit.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/rabattement-nappe-calcul-debit.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/rabattement-nappe-calcul-debit.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/contact.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/contact.html"/>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/expertise.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/expertise.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/expertise.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/expertise.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/expertise.html"/>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/guide-11-outils/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/guide-11-outils/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/guide-11-outils/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/guide-11-outils/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/guide-11-outils/"/>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/lexique.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/lexique.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/lexique.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/lexique.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/lexique.html"/>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/plaquette/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/plaquette/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/plaquette/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/plaquette/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/plaquette/"/>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/cgv.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/cgv.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/cgv.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/cgv.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/cgv.html"/>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/en/mentions-legales.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/mentions-legales.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/mentions-legales.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/mentions-legales.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/mentions-legales.html"/>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/"/>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/outils/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/outils/3d-ssp.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/3d-ssp.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/3d-ssp.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/3d-ssp.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/3d-ssp.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/outils/anc-assainissement.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/anc-assainissement.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/anc-assainissement.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/anc-assainissement.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/anc-assainissement.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/outils/domenico.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/domenico.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/domenico.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/domenico.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/domenico.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/outils/eaux-pluviales-dle-gep.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/eaux-pluviales-dle-gep.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/eaux-pluviales-dle-gep.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/eaux-pluviales-dle-gep.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/eaux-pluviales-dle-gep.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/outils/eqrs-je.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/eqrs-je.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/eqrs-je.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/eqrs-je.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/eqrs-je.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/outils/eqrs-v9-ecotox-humain.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/eqrs-v9-ecotox-humain.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/eqrs-v9-ecotox-humain.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/eqrs-v9-ecotox-humain.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/eqrs-v9-ecotox-humain.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/outils/eqrs-v9-ecotox.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/eqrs-v9-ecotox.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/eqrs-v9-ecotox.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/eqrs-v9-ecotox.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/eqrs-v9-ecotox.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/outils/msp.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/msp.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/msp.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/msp.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/msp.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/outils/piezometres.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/piezometres.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/piezometres.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/piezometres.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/piezometres.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/outils/porchet-essai-permeabilite.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/porchet-essai-permeabilite.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/porchet-essai-permeabilite.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/porchet-essai-permeabilite.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/porchet-essai-permeabilite.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/outils/rabattement-v15-85.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/rabattement-v15-85.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/rabattement-v15-85.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/rabattement-v15-85.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/rabattement-v15-85.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/outils/rabattement-v15-87.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/rabattement-v15-87.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/rabattement-v15-87.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/rabattement-v15-87.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/rabattement-v15-87.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/outils/rabattement/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/rabattement/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/rabattement/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/rabattement/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/rabattement/"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/outils/schema-conceptuel.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/schema-conceptuel.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/schema-conceptuel.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/schema-conceptuel.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/schema-conceptuel.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/outils/tsn-transfert-sol-nappe.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/outils/tsn-transfert-sol-nappe.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/outils/tsn-transfert-sol-nappe.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/outils/tsn-transfert-sol-nappe.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/tsn-transfert-sol-nappe.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/tarifs.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/tarifs.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/tarifs.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/tarifs.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/tarifs.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/blog/eqrs-calcul-qd-eri.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/eqrs-calcul-qd-eri.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/eqrs-calcul-qd-eri.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/eqrs-calcul-qd-eri.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/eqrs-calcul-qd-eri.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/blog/iem-arr-eqrs-differences.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/iem-arr-eqrs-differences.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/iem-arr-eqrs-differences.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/iem-arr-eqrs-differences.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/iem-arr-eqrs-differences.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/blog/index.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/index.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/index.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/index.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/index.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/blog/modele-johnson-ettinger-intrusion-vapeurs.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/modele-johnson-ettinger-intrusion-vapeurs.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/modele-johnson-ettinger-intrusion-vapeurs.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/modele-johnson-ettinger-intrusion-vapeurs.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/modele-johnson-ettinger-intrusion-vapeurs.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/blog/rabattement-nappe-calcul-debit.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/blog/rabattement-nappe-calcul-debit.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/blog/rabattement-nappe-calcul-debit.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html"/>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/contact.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/contact.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/contact.html"/>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/expertise.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/expertise.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/expertise.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/expertise.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/expertise.html"/>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/guide-11-outils/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/guide-11-outils/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/guide-11-outils/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/guide-11-outils/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/guide-11-outils/"/>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/lexique.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/lexique.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/lexique.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/lexique.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/lexique.html"/>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/plaquette/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/plaquette/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/plaquette/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/plaquette/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/plaquette/"/>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/cgv.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/cgv.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/cgv.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/cgv.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/cgv.html"/>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://www.gmep-france.eu/es/mentions-legales.html</loc>
+    <lastmod>2026-09-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gmep-france.eu/mentions-legales.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gmep-france.eu/en/mentions-legales.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.gmep-france.eu/es/mentions-legales.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/mentions-legales.html"/>
+    <priority>0.2</priority>
+  </url>
 </urlset>

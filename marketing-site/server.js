@@ -101,6 +101,12 @@ app.use(function (req, res, next) {
   if (target) {
     return res.redirect(301, target);
   }
+  // SEO — doublons « /dossier/index.html » → URL canonique « /dossier/ »
+  // (le blog conserve /blog/index.html, qui est son URL canonique déclarée)
+  if (/(^|\/)index\.html$/.test(req.path) && !/^\/(en\/|es\/)?blog\/index\.html$/.test(req.path)) {
+    const qs = req.originalUrl.slice(req.path.length);
+    return res.redirect(301, req.path.slice(0, -'index.html'.length) + qs);
+  }
   next();
 });
 
