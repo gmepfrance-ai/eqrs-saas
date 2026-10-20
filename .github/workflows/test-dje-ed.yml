@@ -8,6 +8,7 @@ on:
       - "eqrs-v31-ecotox-tool.html"
       - "eqrs-v8-humain-tool.html"
       - "test_dje_ed.py"
+      - "test_organes_cibles.py"
   pull_request:
     branches: [main]
     paths:
@@ -15,6 +16,7 @@ on:
       - "eqrs-v31-ecotox-tool.html"
       - "eqrs-v8-humain-tool.html"
       - "test_dje_ed.py"
+      - "test_organes_cibles.py"
 
 jobs:
   test-dje:
@@ -29,6 +31,9 @@ jobs:
 
       - name: Run DJE tests (42 vérifications)
         run: python3 test_dje_ed.py
+
+      - name: Run organ-target tests (effets cumulés par organe et par catégorie)
+        run: python3 test_organes_cibles.py
 
       - name: Fail if ED (exposure duration) is missing
         if: failure()

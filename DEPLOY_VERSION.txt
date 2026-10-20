@@ -1,4 +1,4 @@
-ECOTOX V8 — Extension Tier 3 Voie Alimentaire Humaine
-Deployé le 2026-06-29 07:56:14
-Module: Tier3 PFAS/PCB/HAP/métaux — 5 voies alimentaires
-Commit: feat(ecotox): add Tier 3 Module Voie Alimentaire Humaine
+EQRS V7 / V9 ECOTOX / V9 Humain Tier 3 — Correctif organes cibles et VTR ANSES
+Deployé le 2026-10-20
+Module: Mélange organe par catégorie (adultes, enfants, salariés), ERI par site de cancer, hiérarchie VTR note DGS/DGPR 31/10/2014, cumul gaz du sol + nappe, alpha par substance
+Commit: fix(eqrs): effets cumulés par organe cible et par catégorie d'individus + VTR ANSES prioritaires

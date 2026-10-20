@@ -749,12 +749,12 @@ const VTR_SEUIL = {
   "Vanadium": {orale:0.005,inhal:null,cutanee:null,org:"US EPA",effet:null},
   "Thallium": {orale:1e-05,inhal:null,cutanee:null,org:"US EPA",effet:"Alopécie / neurotoxicité"},
   "Cyanures libres": {orale:0.02,inhal:null,cutanee:null,org:"US EPA",effet:"Effets thyroïdiens"},
-  "Trichloroéthylène (TCE)": {orale:0.0005,inhal:0.002,cutanee:0.0005,org:"US EPA IRIS",effet:"Immunotoxicité / Effet rénal"},
+  "Trichloroéthylène (TCE)": {orale:0.0005,inhal:0.002,cutanee:0.0005,org:"US EPA IRIS",effet:"Immunotoxicité / Toxicité pour le développement (cœur fœtal)"},
   "Tétrachloroéthylène (PCE)": {orale:0.006,inhal:0.04,cutanee:0.006,org:"US EPA IRIS",effet:"Neurotoxicité (visuelle)"},
   "Chlorure de vinyle": {orale:0.003,inhal:0.1,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
   "1,1-Dichloroéthylène": {orale:0.05,inhal:0.2,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
   "cis-1,2-Dichloroéthylène": {orale:0.002,inhal:null,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
-  "trans-1,2-Dichloroéthylène": {orale:0.02,inhal:null,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
+  "trans-1,2-Dichloroéthylène": {orale:0.02, inhal:0.04, cutanee:null, org:"US EPA IRIS (orale) ; US EPA PPRTV 2010 (inhal., valeur de criblage)", effet:"Immunotoxicité"},
   "1,1,1-Trichloroéthane": {orale:2.0,inhal:null,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
   "1,1,2-Trichloroéthane": {orale:0.004,inhal:null,cutanee:0.004,org:"US EPA",effet:"Hépatotoxicité"},
   "Tétrachlorure de carbone": {orale:0.004,inhal:0.19,cutanee:null,org:"US EPA",effet:"Hépatotoxicité"},
@@ -1221,17 +1221,32 @@ function computeModeleJE() {
   state.modeleJE = m;
 }
 
+// Coefficient d'atténuation propre à chaque substance (Dair, Deau, H' de PROPRIETES) — correctif GMEP 2026-10
+function alphaPourSubstance(name) {
+  const pr = PROPRIETES[name];
+  if (!pr || !(pr.Dair > 0) || !(pr.H > 0)) return null;
+  const b = state.bat, save = { Da: b.Da, Dw: b.Dw, Hprime: b.Hprime }, saveM = state.modeleJE;
+  try {
+    b.Da = pr.Dair; b.Dw = pr.Deau || 0; b.Hprime = pr.H;
+    computeModeleJE();
+    return { alpha: state.modeleJE.alpha_eff || 0, H: pr.H };
+  } catch (e) { return null; }
+  finally { b.Da = save.Da; b.Dw = save.Dw; b.Hprime = save.Hprime; state.modeleJE = saveM; }
+}
 function computeCindoor() {
-  const alpha = state.modeleJE.alpha_eff || 0;
-  const Hprime = state.bat.Hprime;
+  const alpha0 = state.modeleJE.alpha_eff || 0;
+  const H0 = state.bat.Hprime;
   const ci = {};
   SUBSTANCES.forEach(s => {
     const c = state.concentrations[s.name];
     const solGaz = c.solGaz || 0;
     const eau = c.eau || 0;
+    let alpha = alpha0, H = H0;
+    if (solGaz > 0 || eau > 0) { const a = alphaPourSubstance(s.name); if (a) { alpha = a.alpha; H = a.H; } }
     ci[s.name] = {
+      alpha: alpha,
       solGaz: alpha * solGaz,
-      nappe: alpha * Hprime * eau * 1000
+      nappe: alpha * H * eau * 1000
     };
   });
   state.cindoor = ci;
@@ -1275,7 +1290,7 @@ function computeDJEInhalation() {
       const c = state.concentrations[s.name];
       const Cair = c.air || 0;
       const ci = state.cindoor[s.name] || {solGaz:0, nappe:0};
-      const CairJE = Math.max(ci.solGaz, ci.nappe);
+      const CairJE = ci.solGaz + ci.nappe; // correctif GMEP 2026-10 : cumul des sources gaz du sol + nappe (et non maximum)
 
       // CI = Cair × Fi × EF/365 × ED/AT
       const ci_seuil = Cair * p.Fi * (p.EF / 365) * (p.ED / p.AT_seuil);
@@ -1738,7 +1753,7 @@ sheetRenderers.parametres = function() {
 // --- VTR Seuil ---
 sheetRenderers.vtr_seuil = function() {
   let h = '<div class="sheet-title">Valeurs Toxicologiques de Référence — Effets à seuil</div>';
-  h += '<div class="sheet-subtitle">Données de référence (non modifiables)</div>';
+  h += '<div class="sheet-subtitle">Données de référence (non modifiables)</div>' + vtrSelectorHtml();
   h += '<div class="table-wrap"><table class="data-table"><thead><tr>';
   h += '<th>Substance</th><th>VTR Orale (mg/kg/j)</th><th>VTR Inhal. (mg/m³)</th><th>VTR Cutanée (mg/kg/j)</th><th>Organisme</th><th>Effet critique</th>';
   h += '</tr></thead><tbody>';
@@ -1771,7 +1786,7 @@ sheetRenderers.vtr_seuil = function() {
 // --- VTR Sans Seuil ---
 sheetRenderers.vtr_sansseuil = function() {
   let h = '<div class="sheet-title">Excès de Risque Unitaire (ERU) — Effets sans seuil</div>';
-  h += '<div class="sheet-subtitle">Substances cancérogènes — Données de référence (non modifiables)</div>';
+  h += '<div class="sheet-subtitle">Substances cancérogènes — Données de référence (non modifiables)</div>' + vtrSelectorHtml();
   h += '<div class="table-wrap"><table class="data-table"><thead><tr>';
   h += '<th>Substance</th><th>ERU Oral ((mg/kg/j)⁻¹)</th><th>ERU Inhal. ((µg/m³)⁻¹)</th><th>Organisme</th><th>Type de cancer</th>';
   h += '</tr></thead><tbody>';
@@ -2131,7 +2146,7 @@ sheetRenderers.modele_je = function() {
       h += `<td style="font-weight:500">${s.name}</td>`;
       h += `<td class="computed">${fmt(c.solGaz)}</td>`;
       h += `<td class="computed">${fmt(c.eau)}</td>`;
-      h += `<td class="computed">${fmtSci(m.alpha_eff)}</td>`;
+      h += `<td class="computed">${fmtSci(ci.alpha !== undefined ? ci.alpha : m.alpha_eff)}</td>`;
       h += `<td class="computed">${fmtSci(ci.solGaz)}</td>`;
       h += `<td class="computed">${fmtSci(ci.nappe)}</td>`;
       h += '</tr>';
@@ -2582,37 +2597,210 @@ state.v7 = {
 // ============================================================
 // MAPPING SUBSTANCE → ORGANES CIBLES (US EPA IRIS / ATSDR / EFSA)
 // ============================================================
-const ORGANES_CIBLES = {
-  'Benzène':                  ['Sang/Moelle osseuse','Système immunitaire'],
-  'Toluène':                  ['Système nerveux','Système reproducteur'],
-  'Éthylbenzène':             ['Foie','Rein'],
-  'Xylènes (mélange)':        ['Système nerveux','—'],
-  'Styrène':                  ['Système nerveux','Système auditif'],
-  'Cumène':                   ['Rein','—'],
-  'Naphtalène':               ['Système respiratoire','—'],
-  'Acénaphtène':              ['Foie','—'],
-  'Anthracène':               ['Foie','—'],
-  'Fluoranthène':             ['Foie','Rein'],
-  'Pyrène':                   ['Rein','—'],
-  'Benzo(a)pyrène':           ['Cancer cutané/poumon','—'],
-  'Plomb':                    ['Système nerveux','Sang/Moelle osseuse'],
-  'Arsenic (inorganique)':    ['Peau','Système cardiovasculaire'],
-  'Cadmium':                  ['Rein','Os'],
-  'Chrome VI':                ['Tractus digestif','—'],
-  'Mercure inorganique':      ['Rein','Système nerveux'],
-  'Méthylmercure':            ['Système nerveux','Système reproducteur'],
-  'Nickel':                   ['Rein','Système respiratoire'],
-  'Trichloroéthylène':        ['Rein','Foie'],
-  'Tétrachloroéthylène':      ['Foie','Système nerveux'],
-  'Chlorure de vinyle':       ['Foie','—'],
-  'Dichlorométhane':          ['Foie','Système respiratoire'],
-  'Chloroforme':              ['Foie','Rein'],
-  'Tétrachlorure de carbone': ['Foie','—'],
-  '1,2-Dichloroéthane':       ['Foie','Système immunitaire'],
-  'MTBE':                     ['Rein','Foie'],
-  'Formaldéhyde':             ['Système respiratoire','—'],
-  'Acétone':                  ['Rein','—']
+// ============================================================
+// EFFETS CUMULÉS PAR ORGANE CIBLE — correctif GMEP 2026-10 (v2)
+// Organes = effet critique de la VTR retenue dans la base, par voie
+// (US EPA IRIS / PPRTV, ATSDR, ANSES, EFSA, TPHCWG). Calcul par
+// catégorie d'individus : adulte, enfant, salarié.
+// ============================================================
+const ORGANES_LIBELLES = {
+  NERV:'Système nerveux', DEV:'Développement (fœtus, enfant)', IMMU:'Système immunitaire',
+  FOIE:'Foie', REIN:'Rein', SANG:'Sang / hématopoïèse', RESP:'Appareil respiratoire',
+  DIG:'Appareil digestif', PEAU:'Peau / phanères', CARDIO:'Système cardiovasculaire',
+  ENDO:'Thyroïde / glandes endocrines', REPRO:'Reproduction', GEN:'Poids corporel / effets généraux'
 };
+// {inhal:[...], orale:[...]} — la voie cutanée utilise les organes de la voie orale
+const ORGANES_CIBLES = {
+  'Benzène':{inhal:['SANG','IMMU'],orale:['SANG','IMMU']},
+  'Toluène':{inhal:['NERV'],orale:['REIN']},
+  'Éthylbenzène':{inhal:['DEV'],orale:['FOIE','REIN']},
+  'Xylènes (mélange)':{inhal:['NERV'],orale:['GEN']},
+  'Styrène':{inhal:['NERV'],orale:['SANG','FOIE']},
+  'Cumène (isopropylbenzène)':{inhal:['REIN','ENDO'],orale:['REIN']},
+  'Naphtalène':{inhal:['RESP'],orale:['GEN']},
+  'Acénaphtène':{inhal:[],orale:['FOIE']},
+  'Fluorène':{inhal:[],orale:['SANG']},
+  'Anthracène':{inhal:[],orale:['GEN']},
+  'Fluoranthène':{inhal:[],orale:['REIN','FOIE','SANG']},
+  'Pyrène':{inhal:[],orale:['REIN']},
+  'Benzo(a)pyrène':{inhal:['DEV'],orale:['DEV','NERV']},
+  'Plomb':{inhal:['NERV','DEV'],orale:['NERV','DEV']},
+  'Arsenic inorganique':{inhal:['NERV','DEV'],orale:['PEAU','CARDIO']},
+  'Cadmium':{inhal:['REIN'],orale:['REIN']},
+  'Chrome VI':{inhal:['RESP'],orale:['DIG']},
+  'Chrome III':{inhal:[],orale:['GEN']},
+  'Mercure inorganique':{inhal:['NERV'],orale:['REIN']},
+  'Méthylmercure':{inhal:[],orale:['DEV','NERV']},
+  'Nickel':{inhal:['RESP'],orale:['GEN']},
+  'Cuivre':{inhal:[],orale:['DIG']},
+  'Zinc':{inhal:[],orale:['SANG']},
+  'Antimoine':{inhal:['RESP'],orale:['GEN']},
+  'Sélénium':{inhal:[],orale:['PEAU','NERV']},
+  'Baryum':{inhal:['DEV'],orale:['REIN']},
+  'Cobalt':{inhal:['RESP'],orale:['ENDO']},
+  'Vanadium':{inhal:[],orale:['PEAU']},
+  'Thallium':{inhal:[],orale:['PEAU','NERV']},
+  'Cyanures libres':{inhal:[],orale:['ENDO','NERV']},
+  'Trichloroéthylène (TCE)':{inhal:['DEV','IMMU'],orale:['DEV','IMMU']},
+  'Tétrachloroéthylène (PCE)':{inhal:['NERV'],orale:['NERV']},
+  'Chlorure de vinyle':{inhal:['FOIE'],orale:['FOIE']},
+  '1,1-Dichloroéthylène':{inhal:['FOIE'],orale:['FOIE']},
+  'cis-1,2-Dichloroéthylène':{inhal:[],orale:['REIN']},
+  'trans-1,2-Dichloroéthylène':{inhal:['IMMU'],orale:['IMMU']},
+  '1,1,1-Trichloroéthane':{inhal:['NERV'],orale:['GEN']},
+  '1,1,2-Trichloroéthane':{inhal:[],orale:['FOIE']},
+  'Tétrachlorure de carbone':{inhal:['FOIE'],orale:['FOIE']},
+  'Chloroforme':{inhal:['FOIE'],orale:['FOIE']},
+  'Dichlorométhane':{inhal:['FOIE'],orale:['FOIE']},
+  '1,2-Dichloroéthane':{inhal:['FOIE'],orale:['FOIE']},
+  'MTBE (méthyl tert-butyl éther)':{inhal:['REIN','FOIE'],orale:['REIN','FOIE']},
+  'Acétone':{inhal:['NERV'],orale:['REIN']},
+  'Formaldéhyde':{inhal:['RESP'],orale:['DIG']},
+  'HCT C5-C8 aliphatiques':{inhal:['NERV'],orale:['NERV']},
+  'HCT C9-C16 aliphatiques':{inhal:['FOIE','SANG'],orale:['FOIE','SANG']},
+  'HCT C17-C35 aliphatiques':{inhal:[],orale:['FOIE']},
+  'HCT C9-C10 aromatiques':{inhal:['GEN'],orale:['GEN']},
+  'HCT C10-C12 aromatiques':{inhal:['GEN'],orale:['GEN']},
+  'HCT C12-C16 aromatiques':{inhal:['GEN'],orale:['GEN']},
+  'Atrazine':{inhal:[],orale:['GEN']},
+  'Lindane (gamma-HCH)':{inhal:[],orale:['FOIE','REIN']},
+  'DDT / DDE / DDD':{inhal:[],orale:['FOIE']},
+  'Aldrine':{inhal:[],orale:['FOIE']},
+  'Dieldrine':{inhal:[],orale:['FOIE']},
+  'HCB (hexachlorobenzène)':{inhal:[],orale:['FOIE']},
+  'Pentachlorophénol (PCP)':{inhal:[],orale:['FOIE']},
+  'PCB (Aroclor 1254)':{inhal:[],orale:['IMMU','PEAU']},
+  'PCB (Aroclor 1260)':{inhal:[],orale:['IMMU','PEAU']},
+  'PCB (dioxin-like, TEQ)':{inhal:[],orale:['REPRO','DEV']},
+  'PFOS':{inhal:[],orale:['DEV']},
+  'PFOA':{inhal:[],orale:['DEV']},
+  'PCDD/F (TEQ)':{inhal:[],orale:['REPRO','DEV']}
+};
+const RECEPTEURS_ORG = [['adulte','Adultes'],['enfant','Enfants'],['salarie','Salariés']];
+function _orgNorm(n){ return String(n||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\(.*?\)/g,'').replace(/[^a-z0-9]+/g,' ').trim(); }
+function organesPour(name, voie){
+  let e = ORGANES_CIBLES[name];
+  if (!e) { const k = Object.keys(ORGANES_CIBLES).find(x => _orgNorm(x) === _orgNorm(name) || _orgNorm(name).startsWith(_orgNorm(x)+' ') || _orgNorm(x).startsWith(_orgNorm(name)+' ')); if (k) e = ORGANES_CIBLES[k]; }
+  if (!e) return null;
+  return (voie === 'inhal' ? e.inhal : e.orale) || [];
+}
+// Sites de cancer (effets sans seuil) — ERI cumulés par organe, par voie
+const CANCERS_LIBELLES = {
+  SANG:'Sang (leucémie, lymphome)', FOIE:'Foie', REIN:'Rein', RESP:'Poumon / voies respiratoires',
+  DIG:'Tube digestif', PEAU:'Peau', VESSIE:'Vessie', VADS:'Voies aérodigestives supérieures',
+  VASC:'Vaisseaux (hémangiosarcome)', THYR:'Thyroïde'
+};
+const CANCERS_CIBLES = {
+  'Benzène':{inhal:['SANG'],orale:['SANG']},
+  'Benzo(a)pyrène':{inhal:['RESP'],orale:['DIG','PEAU']},
+  'Benzo(a)anthracène':{inhal:['RESP'],orale:['DIG']}, 'Chrysène':{inhal:['RESP'],orale:['DIG']},
+  'Benzo(b)fluoranthène':{inhal:['RESP'],orale:['DIG']}, 'Benzo(k)fluoranthène':{inhal:['RESP'],orale:['DIG']},
+  'Dibenz(a,h)anthracène':{inhal:['RESP'],orale:['DIG']}, 'Indéno(1,2,3-cd)pyrène':{inhal:['RESP'],orale:['DIG']},
+  'Naphtalène':{inhal:['RESP'],orale:['RESP']},
+  'Arsenic inorganique':{inhal:['RESP'],orale:['PEAU','VESSIE','RESP']},
+  'Cadmium':{inhal:['RESP'],orale:['RESP']}, 'Chrome VI':{inhal:['RESP'],orale:['DIG']},
+  'Nickel (composés)':{inhal:['RESP'],orale:['RESP']}, 'Plomb':{inhal:['REIN'],orale:['REIN']},
+  'Chlorure de vinyle':{inhal:['FOIE'],orale:['FOIE']},
+  'Trichloroéthylène (TCE)':{inhal:['REIN','FOIE','SANG'],orale:['REIN','FOIE','SANG']},
+  'Tétrachloroéthylène (PCE)':{inhal:['FOIE'],orale:['FOIE']},
+  'Tétrachlorure de carbone':{inhal:['FOIE'],orale:['FOIE']}, 'Chloroforme':{inhal:['FOIE'],orale:['FOIE']},
+  'Dichlorométhane':{inhal:['FOIE','RESP'],orale:['FOIE','RESP']},
+  '1,2-Dichloroéthane':{inhal:['VASC'],orale:['VASC']}, '1,1,2-Trichloroéthane':{inhal:['FOIE'],orale:['FOIE']},
+  '1,2-Dichloropropane':{inhal:['FOIE'],orale:['FOIE']}, 'Formaldéhyde':{inhal:['VADS'],orale:['VADS']},
+  'Acrylamide':{inhal:['THYR'],orale:['THYR']},
+  'Lindane (gamma-HCH)':{inhal:['FOIE'],orale:['FOIE']}, 'DDT / DDE / DDD':{inhal:['FOIE'],orale:['FOIE']},
+  'Aldrine':{inhal:['FOIE'],orale:['FOIE']}, 'Dieldrine':{inhal:['FOIE'],orale:['FOIE']},
+  'HCB (hexachlorobenzène)':{inhal:['FOIE'],orale:['FOIE']}, 'Pentachlorophénol (PCP)':{inhal:['FOIE'],orale:['FOIE']},
+  'PCB (Aroclor 1254)':{inhal:['FOIE'],orale:['FOIE']}, 'PCB (Aroclor 1260)':{inhal:['FOIE'],orale:['FOIE']}
+};
+
+// ============================================================
+// HIÉRARCHIE DES VTR — note d'information DGS/EA1/DGPR/2014/307 du 31/10/2014
+// 1) VTR construites par l'ANSES ; 2) VTR sélectionnées par l'ANSES lors d'une expertise ;
+// 3) à défaut, VTR de la base d'origine (US EPA en général, ATSDR, OEHHA, OMS…).
+// Source : base des VTR de l'ANSES, mise à jour du 30/06/2025. Correctif GMEP 2026-10.
+// Unités de l'outil : inhal. mg/m³ ; orale mg/kg/j ; ERU inhal. (µg/m³)⁻¹ ; ERU orale (mg/kg/j)⁻¹.
+// ============================================================
+const VTR_ANSES = {
+  seuil: {
+    'Trichloroéthylène (TCE)': { inhal:[3.2,'ANSES 2018 (rein)'], orale:[0.00146,'OMS 2005, sélection ANSES 2016'] },
+    'Tétrachloroéthylène (PCE)': { inhal:[0.4,'ANSES 2017'], orale:[0.014,'OMS 2011, sélection ANSES 2016'] },
+    'Toluène': { inhal:[19,'ANSES 2017'] },
+    'Éthylbenzène': { inhal:[1.5,'ANSES 2016 (ototoxicité)'] },
+    'Xylènes (mélange)': { inhal:[0.1,'US EPA 2003, sélection ANSES 2020'] },
+    'Benzène': { inhal:[0.0097,'ATSDR 2007, sélection ANSES 2024'] },
+    'Naphtalène': { inhal:[0.037,'ANSES 2013'] },
+    'Formaldéhyde': { inhal:[0.123,'ANSES 2017'] },
+    'Chloroforme': { inhal:[0.063,'ANSES 2008'] },
+    'Cadmium': { inhal:[0.00045,'ANSES 2012'], orale:[0.00035,'ANSES 2019'] },
+    'Nickel': { inhal:[0.00023,'TCEQ 2011, sélection ANSES'], orale:[0.0028,'EFSA 2015, sélection ANSES'] },
+    'Chrome VI': { orale:[0.001,'ATSDR 2008, sélection ANSES'] },
+    'Chrome III': { orale:[0.3,'EFSA 2014, sélection ANSES'] },
+    'Mercure inorganique': { orale:[0.000571,'EFSA 2012 (4 µg/kg/sem.), sélection ANSES'] },
+    'Méthylmercure': { orale:[0.000186,'EFSA 2012 (1,3 µg/kg/sem.), sélection ANSES'] },
+    'Antimoine': { orale:[0.006,'OMS 2003, sélection ANSES'] },
+    'Cobalt': { orale:[0.0015,'Afssa 2010'] },
+    'Cyanures libres': { orale:[0.015,'ANSES 2010 (HCN)'] },
+    'HCB (hexachlorobenzène)': { orale:[0.00007,'ATSDR 2015, sélection ANSES'] },
+    'Benzo(a)pyrène': { orale:[0.0003,'US EPA 2017, sélection ANSES'] }
+  },
+  sansseuil: {
+    'Trichloroéthylène (TCE)': { eruInhal:[1e-6,'ANSES 2018 (cancer du rein)'], eruOral:[0.00078,'OMS 2005, sélection ANSES 2016'] },
+    'Tétrachloroéthylène (PCE)': { eruInhal:[2.6e-7,'ANSES 2017'], eruOral:[0.002,'US EPA 2012, sélection ANSES 2016'] },
+    'Chlorure de vinyle': { eruInhal:[3.8e-6,'ANSES 2012'], eruOral:[0.625,'ANSES 2012'] },
+    'Benzène': { eruInhal:[1.6e-6,'ANSES 2024'] },
+    'Naphtalène': { eruInhal:[5.6e-6,'ANSES 2013'] },
+    '1,2-Dichloroéthane': { eruInhal:[3.4e-6,'ANSES 2009'] },
+    'Arsenic inorganique': { eruInhal:[1.5e-4,'TCEQ 2012, sélection ANSES'] },
+    'Chrome VI': { eruInhal:[0.04,'IPCS 2013, sélection ANSES'] },
+    'Nickel (composés)': { eruInhal:[1.7e-4,'TCEQ 2011, sélection ANSES'] },
+    'HCB (hexachlorobenzène)': { eruOral:[1.8,'OEHHA 2011, sélection ANSES'] },
+    'Benzo(a)pyrène': { eruInhal:[0.0011,'OEHHA 2008, sélection ANSES'], eruOral:[1,'US EPA 2017, sélection ANSES'] }
+  },
+  // organes cibles correspondant aux effets critiques des VTR ANSES (remplacent ceux de la base d'origine)
+  organes: {
+    'Trichloroéthylène (TCE)': { inhal:['REIN'], orale:['DEV'] },
+    'Éthylbenzène': { inhal:['AUDI'] },
+    'Nickel': { orale:['DEV','REPRO'] },
+    'Méthylmercure': { orale:['DEV','NERV'] },
+    'Chrome III': { orale:['GEN'] }
+  }
+};
+ORGANES_LIBELLES.AUDI = 'Système auditif';
+const _VTR_ORIG = JSON.parse(JSON.stringify({ s: VTR_SEUIL, ss: VTR_SANSSEUIL, o: ORGANES_CIBLES }));
+function appliquerHierarchieVTR(mode) {
+  mode = (mode === 'base') ? 'base' : 'anses';
+  Object.keys(_VTR_ORIG.s).forEach(k => { VTR_SEUIL[k] = Object.assign({}, _VTR_ORIG.s[k]); });
+  Object.keys(_VTR_ORIG.ss).forEach(k => { VTR_SANSSEUIL[k] = Object.assign({}, _VTR_ORIG.ss[k]); });
+  Object.keys(_VTR_ORIG.o).forEach(k => { ORGANES_CIBLES[k] = JSON.parse(JSON.stringify(_VTR_ORIG.o[k])); });
+  if (mode === 'anses') {
+    Object.entries(VTR_ANSES.seuil).forEach(([n, o]) => {
+      const v = VTR_SEUIL[n] || (VTR_SEUIL[n] = { orale:null, inhal:null, cutanee:null, org:'', effet:'' });
+      const src = [];
+      if (o.inhal) { v.inhal = o.inhal[0]; src.push('inhal. : ' + o.inhal[1]); } else if (v.inhal != null) src.push('inhal. : ' + (_VTR_ORIG.s[n] || {}).org);
+      if (o.orale) { v.orale = o.orale[0]; src.push('orale : ' + o.orale[1]); } else if (v.orale != null) src.push('orale : ' + (_VTR_ORIG.s[n] || {}).org);
+      v.org = src.join(' ; ');
+    });
+    Object.entries(VTR_ANSES.sansseuil).forEach(([n, o]) => {
+      const v = VTR_SANSSEUIL[n]; if (!v) return;
+      const src = [];
+      if (o.eruInhal) { v.eruInhal = o.eruInhal[0]; src.push('inhal. : ' + o.eruInhal[1]); } else if (v.eruInhal != null) src.push('inhal. : ' + (_VTR_ORIG.ss[n] || {}).org);
+      if (o.eruOral) { v.eruOral = o.eruOral[0]; src.push('orale : ' + o.eruOral[1]); } else if (v.eruOral != null) src.push('orale : ' + (_VTR_ORIG.ss[n] || {}).org);
+      v.org = src.join(' ; ');
+    });
+    Object.entries(VTR_ANSES.organes).forEach(([n, o]) => { ORGANES_CIBLES[n] = Object.assign({}, ORGANES_CIBLES[n] || { inhal:[], orale:[] }, o); });
+  }
+  state.vtrMode = mode;
+  try { localStorage.setItem('gmep_vtr_mode', mode); } catch (e) {}
+}
+function vtrSelectorHtml() {
+  const m = state.vtrMode || 'anses';
+  return `<div class="info-box" style="margin:6px 0;font-size:12px;"><strong>Base de VTR :</strong> <select onchange="appliquerHierarchieVTR(this.value);recalculate();renderActiveSheet();">`
+    + `<option value="anses"${m === 'anses' ? ' selected' : ''}>ANSES en priorité, puis autres organismes (note DGS/DGPR du 31/10/2014 — recommandé)</option>`
+    + `<option value="base"${m === 'base' ? ' selected' : ''}>Base d'origine (US EPA en général)</option></select>`
+    + ` <span style="color:#555">Hiérarchie : VTR construites par l'ANSES, puis VTR sélectionnées par l'ANSES, puis à défaut US EPA, ATSDR, OEHHA, OMS (base ANSES du 30/06/2025).</span></div>`;
+}
+(function () { let m = 'anses'; try { m = localStorage.getItem('gmep_vtr_mode') || 'anses'; } catch (e) {} appliquerHierarchieVTR(m); })();
 
 // ============================================================
 // COEFFICIENTS DE BIODÉGRADATION 1ER ORDRE (DeVaull 2007, EPA)
@@ -2871,35 +3059,70 @@ function computeTrophique() {
 // EFFET DE MÉLANGE PAR ORGANE CIBLE (US EPA Mixture Risk 2000)
 // ============================================================
 function computeMelangeOrgane() {
-  const qdSubs = state.resultatsQD || {};
-  const organes = {};
-
-  Object.keys(qdSubs).forEach(name => {
-    const orgList = ORGANES_CIBLES[name] || ['—','—'];
-    const r = qdSubs[name];
-    // Somme tous QD: ingestion sol+eau, inhalation directe + J&E, contact
-    const qdTotal = (r.qd_ing_sol_ad || 0) + (r.qd_ing_eau_ad || 0)
-                  + (r.qd_inhal_ad || 0) + (r.qd_inhal_je_ad || 0)
-                  + (r.qd_contact_ad || 0);
-    if (qdTotal <= 0) return;
-    orgList.forEach(org => {
-      if (!org || org === '—') return;
-      if (!organes[org]) organes[org] = { hi: 0, substances: [] };
-      organes[org].hi += qdTotal;
-      organes[org].substances.push(name);
+  // state.resultatsQD = { adulte:{substance:{ingSol,ingEau,inhal,cutane,jeInhal,total}}, enfant:{...}, salarie:{...} }
+  const RQ = state.resultatsQD || {};
+  const out = { recepteurs:{}, non_attribues:[], HI_max:0, SumQD_global:0, organes:{} };
+  const nonAttr = new Set();
+  RECEPTEURS_ORG.forEach(([rec, lab]) => {
+    const R = RQ[rec] || {};
+    const org = {}; let sumQD = 0;
+    const add = (o, name, voie, v) => {
+      if (!(v > 0)) return;
+      if (!org[o]) org[o] = { hi:0, substances:{} };
+      org[o].hi += v;
+      const s = org[o].substances[name] || (org[o].substances[name] = { qd:0, voies:[] });
+      s.qd += v; if (!s.voies.includes(voie)) s.voies.push(voie);
+    };
+    Object.entries(R).forEach(([name, q]) => {
+      if (!q) return;
+      const qOral = (q.ingSol||0) + (q.ingEau||0) + (q.cutane||0);
+      const qInh  = (q.inhal||0) + (q.jeInhal||0);
+      sumQD += qOral + qInh;
+      [['orale', qOral], ['inhal', qInh]].forEach(([voie, v]) => {
+        if (!(v > 0)) return;
+        const L = organesPour(name, voie);
+        if (!L || L.length === 0) { add('NA', name, voie, v); nonAttr.add(name); return; }
+        L.forEach(o => add(o, name, voie, v));   // une substance compte dans chacun de ses organes, sans double compte dans un même organe
+      });
     });
+    // Option : voie alimentaire Tier 3 (module Humain Tier 3), affectée selon le profil
+    try {
+      const t3 = state.v8 && state.v8.tier3;
+      if (state.v7.org_inclT3 && t3 && t3.QD > 0) {
+        const recT3 = (t3.profil === 'enfant') ? 'enfant' : 'adulte';
+        if (recT3 === rec) {
+          const L = organesPour(t3.substance, 'orale');
+          sumQD += t3.QD;
+          if (!L || L.length === 0) { add('NA', t3.substance + ' (Tier 3)', 'aliment.', t3.QD); nonAttr.add(t3.substance); }
+          else L.forEach(o => add(o, t3.substance + ' (Tier 3)', 'aliment.', t3.QD));
+        }
+      }
+    } catch(e) {}
+    // ERI cumulés par site de cancer (une substance multi-sites est comptée dans chaque site : majorant)
+    const RE = (state.resultatsERI || {})[rec] || {};
+    const can = {}; let eriTot = 0;
+    Object.entries(RE).forEach(([name, e]) => {
+      if (!e) return;
+      const eOral = (e.ingestion||0) + (e.cutane||0), eInh = (e.inhalation||0) + (e.jeInhal||0);
+      eriTot += (e.total !== undefined ? e.total : eOral + eInh);
+      const map = CANCERS_CIBLES[name];
+      [['orale', eOral], ['inhal', eInh]].forEach(([voie, v]) => {
+        if (!(v > 0)) return;
+        const L = map ? (map[voie] || []) : [];
+        (L.length ? L : ['NA']).forEach(c => { if (!can[c]) can[c] = { eri:0, substances:{} }; can[c].eri += v; can[c].substances[name] = (can[c].substances[name]||0) + v; });
+      });
+    });
+    let HImax = 0, orgMax = '—';
+    Object.entries(org).forEach(([o, d]) => { if (o !== 'NA' && d.hi > HImax) { HImax = d.hi; orgMax = o; } });
+    out.recepteurs[rec] = { label: lab, organes: org, HI_max: HImax, organe_max: orgMax, SumQD: sumQD, cancers: can, ERI_total: eriTot };
+    if (HImax > out.HI_max) out.HI_max = HImax;
+    if (sumQD > out.SumQD_global) out.SumQD_global = sumQD;
   });
-
-  let HI_max = 0, SumQD_global = 0;
-  Object.values(organes).forEach(o => { HI_max = Math.max(HI_max, o.hi); });
-  Object.keys(qdSubs).forEach(name => {
-    const r = qdSubs[name];
-    SumQD_global += (r.qd_ing_sol_ad || 0) + (r.qd_ing_eau_ad || 0)
-                  + (r.qd_inhal_ad || 0) + (r.qd_inhal_je_ad || 0)
-                  + (r.qd_contact_ad || 0);
-  });
-
-  state.v7.org_results = { organes, HI_max, SumQD_global };
+  out.non_attribues = Array.from(nonAttr);
+  // compatibilité : organes de l'adulte
+  const ad = out.recepteurs.adulte || { organes:{} };
+  Object.entries(ad.organes).forEach(([o, d]) => { out.organes[ORGANES_LIBELLES[o] || 'Non attribué'] = { hi: d.hi, substances: Object.keys(d.substances) }; });
+  state.v7.org_results = out;
 }
 
 // ============================================================
@@ -3345,56 +3568,62 @@ sheetRenderers.trophique = function() {
 
 // --- Mélange par organe ---
 sheetRenderers.melange_organe = function() {
+  if (state.v7.org_inclT3 === undefined) state.v7.org_inclT3 = false;
   computeMelangeOrgane();
   const r = state.v7.org_results;
-
-  let h = '<div class="sheet-title">Effet de mélange par organe cible</div>';
-  h += '<div class="sheet-subtitle">Index de Danger (HI) par organe selon US EPA Mixture Risk Assessment (2000)</div>';
-
-  h += '<div class="info-box"><h3>Principe</h3>';
-  h += 'Selon l\'US EPA, les QD doivent être sommés <strong>uniquement pour les substances ciblant le même organe</strong>. ';
-  h += 'La somme classique des QD (mode EQRS standard) est conservative mais surestime le risque si différents organes sont ciblés. ';
-  h += 'Cette table calcule un HI par organe à partir des données de votre site.';
-  h += '<br><br><code>HI_organe = Σ QD_i pour les substances i ciblant cet organe</code> · Critère : <strong>HI < 1 par organe</strong>';
+  const recs = RECEPTEURS_ORG;
+  const col = v => v >= 1 ? '#9c0006' : (v >= 0.2 ? 'var(--orange-text)' : '#1e7b34');
+  const bg  = v => v >= 1 ? 'background:#ffc7ce;' : '';
+  let h = '<div class="card"><h3>Effets cumulés par organe cible — Index de danger (HI) par catégorie d\'individus</h3>' + vtrSelectorHtml();
+  h += '<p style="font-size:12px;color:#555;">HI<sub>organe</sub> = Σ QD des substances dont la VTR retenue a pour effet critique cet organe, toutes voies confondues (ingestion de sol et d\'eau, contact cutané, inhalation d\'air et transfert de vapeurs Johnson-Ettinger). Calcul séparé pour les adultes, les enfants et les salariés, avec leurs propres paramètres d\'exposition. Une substance ayant plusieurs organes cibles est comptée dans chacun d\'eux. Critère : HI ≤ 1 pour chaque organe et chaque catégorie. Méthode : US EPA, Supplementary Guidance for Conducting Health Risk Assessment of Chemical Mixtures (2000) ; ministère chargé de l\'environnement, méthodologie nationale de gestion des sites et sols pollués (2017).</p>';
+  const hasAny = recs.some(([k]) => r.recepteurs[k] && Object.keys(r.recepteurs[k].organes).length);
+  if (!hasAny) { h += '<p style="color:#888;font-style:italic;">Aucun QD calculé : saisissez des concentrations dans les onglets Sol, Eau, Air ou Gaz du sol.</p></div>'; return h; }
+  // synthèse par catégorie
+  h += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0;">';
+  recs.forEach(([k, lab]) => {
+    const d = r.recepteurs[k];
+    h += `<div style="border:1px solid #ddd;border-radius:6px;padding:8px;"><div style="font-weight:700">${lab}</div>`;
+    h += `<div>HI max par organe : <strong style="color:${col(d.HI_max)}">${fmt(d.HI_max,3)}</strong> (${ORGANES_LIBELLES[d.organe_max]||'—'})</div>`;
+    h += `<div>Σ QD toutes substances : <strong style="color:${col(d.SumQD)}">${fmt(d.SumQD,3)}</strong></div>`;
+    h += `<div style="font-weight:700;color:${col(d.HI_max)}">${d.HI_max >= 1 ? 'Risque non acceptable (HI > 1)' : 'Risque acceptable (HI ≤ 1 pour chaque organe)'}</div></div>`;
+  });
   h += '</div>';
-
-  const organesArr = Object.entries(r.organes || {}).sort((a, b) => b[1].hi - a[1].hi);
-
-  if (organesArr.length === 0) {
-    h += '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-style:italic">Aucun QD calculé. Saisir des concentrations dans l\'onglet "Concentrations" pour activer ce module.</div>';
-    return h;
+  // tableau organes × catégories
+  const orgs = Object.keys(ORGANES_LIBELLES).filter(o => recs.some(([k]) => (r.recepteurs[k].organes[o] || {}).hi > 0));
+  if (recs.some(([k]) => r.recepteurs[k].organes.NA)) orgs.push('NA');
+  orgs.sort((a, b) => ((r.recepteurs.adulte.organes[b]||{}).hi||0) - ((r.recepteurs.adulte.organes[a]||{}).hi||0));
+  h += '<table class="data-table"><thead><tr><th>Organe cible</th>' + recs.map(([k, lab]) => `<th>HI ${lab}</th>`).join('') + '<th>Substances contributrices (QD adulte ; voies)</th></tr></thead><tbody>';
+  orgs.forEach(o => {
+    h += `<tr><td style="font-weight:600">${o === 'NA' ? 'Non attribué (organe à documenter)' : ORGANES_LIBELLES[o]}</td>`;
+    recs.forEach(([k]) => { const v = (r.recepteurs[k].organes[o] || {}).hi || 0; h += `<td class="computed" style="${bg(v)}color:${col(v)};font-weight:600">${v ? fmt(v,3) : '—'}</td>`; });
+    const subs = Object.entries(((r.recepteurs.adulte.organes[o] || r.recepteurs.enfant.organes[o] || r.recepteurs.salarie.organes[o] || {}).substances) || {}).sort((a,b)=>b[1].qd-a[1].qd);
+    h += `<td style="font-size:11px">${subs.map(([n, s]) => `${n} (${fmt(s.qd,3)} ; ${s.voies.join(', ')})`).join(' ; ')}</td></tr>`;
+  });
+  h += '<tr class="sum-row"><td><strong>HI MAX par organe</strong></td>' + recs.map(([k]) => `<td class="computed" style="color:${col(r.recepteurs[k].HI_max)}"><strong>${fmt(r.recepteurs[k].HI_max,3)}</strong></td>`).join('') + '<td>—</td></tr>';
+  h += '<tr><td><strong>Σ QD (additivité totale, majorante)</strong></td>' + recs.map(([k]) => `<td class="computed">${fmt(r.recepteurs[k].SumQD,3)}</td>`).join('') + '<td>Approche de dépistage : si Σ QD ≤ 1, tous les HI par organe sont ≤ 1</td></tr>';
+  h += '</tbody></table>';
+  // ERI par site de cancer
+  const cans = Object.keys(CANCERS_LIBELLES).filter(c => recs.some(([k]) => ((r.recepteurs[k].cancers||{})[c]||{}).eri > 0));
+  if (recs.some(([k]) => (r.recepteurs[k].cancers||{}).NA)) cans.push('NA');
+  if (cans.length) {
+    const ce = v => v >= 1e-5 ? '#9c0006' : (v >= 1e-6 ? 'var(--orange-text)' : '#1e7b34');
+    h += '<h4 style="margin-top:14px">Effets sans seuil — ERI cumulés par site de cancer</h4>';
+    h += '<table class="data-table"><thead><tr><th>Site de cancer</th>' + recs.map(([k, lab]) => `<th>ERI ${lab}</th>`).join('') + '<th>Substances contributrices</th></tr></thead><tbody>';
+    cans.forEach(c => {
+      h += `<tr><td style="font-weight:600">${c === 'NA' ? 'Site non attribué' : CANCERS_LIBELLES[c]}</td>`;
+      recs.forEach(([k]) => { const v = ((r.recepteurs[k].cancers||{})[c] || {}).eri || 0; h += `<td class="computed" style="color:${ce(v)};font-weight:600">${v ? fmtSci(v) : '—'}</td>`; });
+      const sb = Object.keys((((r.recepteurs.adulte.cancers||{})[c]) || {}).substances || {});
+      h += `<td style="font-size:11px">${sb.join(', ')}</td></tr>`;
+    });
+    h += '<tr class="sum-row"><td><strong>ERI total (toutes substances)</strong></td>' + recs.map(([k]) => `<td class="computed" style="color:${ce(r.recepteurs[k].ERI_total)}"><strong>${fmtSci(r.recepteurs[k].ERI_total)}</strong></td>`).join('') + '<td>Critère : ERI total ≤ 10<sup>-5</sup> par catégorie</td></tr></tbody></table>';
+    h += '<p style="font-size:11px;color:#555;">Une substance cancérogène pour plusieurs organes (TCE : rein, foie, lymphomes) est comptée dans chacun : le tableau par site est majorant ; le critère d\'acceptabilité reste l\'ERI total.</p>';
   }
-
-  // KPI
-  h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1rem 0">';
-  [
-    ['HI max par organe', fmt(r.HI_max, 3), '#9c0006'],
-    ['Σ QD globale (EQRS std)', fmt(r.SumQD_global, 3), 'var(--blue-dark)'],
-    ['Différence (sur-estim.)', fmt(r.SumQD_global - r.HI_max, 3), 'var(--orange-text)']
-  ].forEach(([lbl, val, col]) => {
-    h += `<div style="background:#fff;border:1px solid var(--border);border-top:4px solid ${col};border-radius:6px;padding:1rem;text-align:center">`;
-    h += `<div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">${lbl}</div>`;
-    h += `<div style="font-size:1.3rem;font-weight:700;color:${col};margin-top:4px">${val}</div></div>`;
-  });
+  if (r.non_attribues.length) h += `<div class="alert" style="background:#fff3cd;padding:8px;margin-top:8px;border-radius:4px;font-size:12px;"><strong>Substances sans organe cible documenté :</strong> ${r.non_attribues.join(', ')}. Leurs QD sont conservés dans la ligne « Non attribué » et dans Σ QD ; documenter l\'effet critique de la VTR avant conclusion.</div>`;
+  if (typeof T3_TRANSFER !== 'undefined') {
+    h += `<label style="display:block;margin-top:8px;font-size:12px;"><input type="checkbox" ${state.v7.org_inclT3?'checked':''} onchange="state.v7.org_inclT3=this.checked;renderActiveSheet()"> Inclure la voie alimentaire Tier 3 (substance et profil de l\'onglet Tier 3 ; profil « enfant » affecté aux enfants, autres profils aux adultes)</label>`;
+  }
+  h += '<div class="info-box" style="margin-top:8px;font-size:11px;color:#555;"><strong>Notes.</strong> (1) Les enfants ont la même durée de moyennage que leur durée d\'exposition (effets à seuil) : leur HI par inhalation est égal à celui des adultes à paramètres égaux ; il diffère pour les voies dépendant du poids corporel. (2) Les effets sur le développement (TCE, éthylbenzène, plomb, méthylmercure…) concernent aussi les femmes enceintes parmi les adultes et les salariées : une exposition de quelques semaines au-dessus de la VTR peut suffire, la moyenne annuelle ne protège pas complètement. (3) Le HI par organe ne remplace pas le calcul des ERI (effets sans seuil), présenté séparément.</div>';
   h += '</div>';
-
-  h += '<div class="table-wrap"><table class="data-table"><thead><tr>';
-  h += '<th>Organe-cible</th><th>HI (Σ QD)</th><th>Nb substances</th><th>Critère</th><th>Statut</th><th>Substances contributrices</th></tr></thead><tbody>';
-
-  organesArr.forEach(([org, data]) => {
-    h += `<tr><td><strong>${org}</strong></td>`;
-    h += `<td class="computed">${fmt(data.hi, 4)}</td>`;
-    h += `<td>${data.substances.length}</td>`;
-    h += '<td>HI < 1</td>';
-    h += `<td>${_verdict(data.hi, null)}</td>`;
-    h += `<td style="font-size:0.74rem">${data.substances.join(', ')}</td></tr>`;
-  });
-  h += `<tr class="sum-row"><td><strong>HI MAX</strong></td><td class="computed"><strong>${fmt(r.HI_max, 3)}</strong></td><td colspan="4">—</td></tr>`;
-  h += `<tr><td><strong>Σ QD globale (EQRS standard)</strong></td><td class="computed">${fmt(r.SumQD_global, 3)}</td><td colspan="4" style="font-style:italic;color:var(--text-muted)">Comparaison : sur-estimation par rapport à l'approche par organe</td></tr>`;
-  h += '</tbody></table></div>';
-
-  h += '<div class="info-box" style="background:#fff8e5;border-left:4px solid #d4a017"><strong>Interprétation :</strong> si <code>HI max < 1</code> mais <code>Σ QD globale > 1</code>, cela signifie que l\'approche EQRS standard surestime le risque réel. L\'approche par organe (US EPA 2000) est scientifiquement plus défendable et peut éviter des actions de dépollution déraisonnables.</div>';
-
   return h;
 };
 
@@ -5462,6 +5691,77 @@ function exportPDF() {
   doc.setTextColor(0,0,0);
 
   addFooter(doc, pageNum);
+
+
+  // ========================================================
+  // PAGE 6 bis — EFFETS CUMULÉS PAR ORGANE CIBLE (Landscape) — correctif GMEP 2026-10
+  // ========================================================
+  try {
+    computeMelangeOrgane();
+    const ro = state.v7.org_results;
+    doc.addPage('a4', 'landscape');
+    pageNum++;
+    W = doc.internal.pageSize.getWidth();
+    y = addLandscapeHeader(doc, 'Effets cumules par organe cible — Adultes, enfants, salaries');
+    y = secTitle(doc, y, 'INDEX DE DANGER (HI) PAR ORGANE CIBLE ET PAR CATEGORIE D\'INDIVIDUS', W, margin);
+    const recsO = RECEPTEURS_ORG;
+    const orgsO = Object.keys(ORGANES_LIBELLES).filter(o => recsO.some(([k]) => ((ro.recepteurs[k] || {organes:{}}).organes[o] || {}).hi > 0));
+    if (recsO.some(([k]) => (ro.recepteurs[k] || {organes:{}}).organes.NA)) orgsO.push('NA');
+    const rowsO = orgsO.map(o => {
+      const subsO = Object.entries(((ro.recepteurs.adulte.organes[o] || ro.recepteurs.enfant.organes[o] || ro.recepteurs.salarie.organes[o] || {}).substances) || {}).sort((a,b)=>b[1].qd-a[1].qd).map(([n]) => n).join(', ');
+      return [o === 'NA' ? 'Non attribue' : ORGANES_LIBELLES[o]].concat(recsO.map(([k]) => { const v = (ro.recepteurs[k].organes[o] || {}).hi || 0; return v ? _s(v) : '—'; })).concat([subsO]);
+    });
+    rowsO.push(['HI MAX par organe'].concat(recsO.map(([k]) => _s(ro.recepteurs[k].HI_max))).concat(['—']));
+    rowsO.push(['Somme QD (majorant)'].concat(recsO.map(([k]) => _s(ro.recepteurs[k].SumQD))).concat(['—']));
+    doc.autoTable({
+      startY: y,
+      head: [['Organe cible', 'HI Adultes', 'HI Enfants', 'HI Salaries', 'Substances contributrices']],
+      body: rowsO, theme: 'grid',
+      styles: { fontSize: 7, cellPadding: 1.2 },
+      headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 7 },
+      columnStyles: { 4: { cellWidth: 120 } },
+      margin: { left: margin, right: margin },
+      didParseCell: function(data) {
+        if (data.section === 'body' && [1,2,3].includes(data.column.index)) {
+          const val = parseFloat(data.cell.raw);
+          if (!isNaN(val)) { if (val >= 1) { data.cell.styles.textColor = RED; data.cell.styles.fontStyle = 'bold'; } else if (val > 0) { data.cell.styles.textColor = GREEN; } }
+        }
+      }
+    });
+    let yO = doc.lastAutoTable.finalY + 5;
+    doc.setFontSize(8); doc.setFont('helvetica', 'bold');
+    recsO.forEach(([k, lab], i) => {
+      const d = ro.recepteurs[k];
+      doc.setTextColor(...(d.HI_max >= 1 ? RED : GREEN));
+      doc.text(lab + ' : HI max = ' + _s(d.HI_max) + (d.HI_max >= 1 ? '  > 1 — INACCEPTABLE' : '  <= 1 — Acceptable'), margin, yO + i * 5);
+    });
+    doc.setFont('helvetica', 'normal'); doc.setTextColor(0,0,0); doc.setFontSize(7);
+    doc.text('HI organe = somme des QD des substances dont la VTR a pour effet critique cet organe (toutes voies). Ref. : US EPA (2000) Chemical Mixtures ; methodologie nationale SSP (2017).', margin, yO + 18);
+    doc.text('Base de VTR : ' + ((state.vtrMode||'anses') === 'anses' ? 'ANSES en priorite, puis autres organismes (note DGS/DGPR du 31/10/2014)' : 'base d\'origine (US EPA en general)'), margin, yO + 13);
+    if (ro.non_attribues.length) doc.text('Substances sans organe documente : ' + ro.non_attribues.join(', '), margin, yO + 23);
+    // ERI par site de cancer
+    const cansO = Object.keys(CANCERS_LIBELLES).filter(c => recsO.some(([k]) => ((ro.recepteurs[k].cancers||{})[c]||{}).eri > 0));
+    if (cansO.length) {
+      const rowsC = cansO.map(c => [CANCERS_LIBELLES[c]].concat(recsO.map(([k]) => { const v = ((ro.recepteurs[k].cancers||{})[c]||{}).eri || 0; return v ? _s(v) : '—'; })).concat([Object.keys((((ro.recepteurs.adulte.cancers||{})[c])||{}).substances||{}).join(', ')]));
+      rowsC.push(['ERI total'].concat(recsO.map(([k]) => _s(ro.recepteurs[k].ERI_total))).concat(['Critere : ERI total <= 1e-5']));
+      doc.autoTable({
+        startY: yO + 28,
+        head: [['Site de cancer', 'ERI Adultes', 'ERI Enfants', 'ERI Salaries', 'Substances contributrices']],
+        body: rowsC, theme: 'grid',
+        styles: { fontSize: 7, cellPadding: 1.2 },
+        headStyles: { fillColor: BLUE, textColor: [255,255,255], fontStyle: 'bold', fontSize: 7 },
+        columnStyles: { 4: { cellWidth: 120 } },
+        margin: { left: margin, right: margin },
+        didParseCell: function(data) {
+          if (data.section === 'body' && [1,2,3].includes(data.column.index)) {
+            const val = parseFloat(data.cell.raw);
+            if (!isNaN(val)) { if (val >= 1e-5) { data.cell.styles.textColor = RED; data.cell.styles.fontStyle = 'bold'; } else if (val > 0) { data.cell.styles.textColor = GREEN; } }
+          }
+        }
+      });
+    }
+    addFooter(doc, pageNum);
+  } catch (e) { console.error('PDF organes', e); }
 
   // ========================================================
   // PAGE 7 — GRAPHIQUE QD (Landscape)
