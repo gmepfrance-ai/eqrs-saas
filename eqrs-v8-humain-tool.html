@@ -695,6 +695,9 @@ const SUBSTANCES = [
   {idx:71,row:85,name:"PFOS"},
   {idx:72,row:87,name:"PFOA"},
   {idx:73,row:88,name:"PCDD/F (TEQ)"},
+  {idx:74,row:90,name:"1,2,4-Triméthylbenzène"},
+  {idx:75,row:91,name:"Mésitylène"},
+  {idx:76,row:92,name:"CFC-11"},
 ];
 
 const SECTIONS = [
@@ -707,9 +710,13 @@ const SECTIONS = [
   {row:74,name:"PESTICIDES / PHYTOSANITAIRES"},
   {row:82,name:"PCB"},
   {row:86,name:"PFAS"},
+  {row:89,name:"AUTRES COV (compléments GMEP 2026)"},
 ];
 
 const VTR_SEUIL = {
+  "1,2,4-Triméthylbenzène": {orale:0.01,inhal:0.06,cutanee:0.01,org:"US EPA IRIS 2016",effet:"Neurotoxicité (sensibilité à la douleur)"},
+  "Mésitylène": {orale:0.01,inhal:0.06,cutanee:0.01,org:"US EPA IRIS 2016",effet:"Neurotoxicité (sensibilité à la douleur)"},
+  "CFC-11": {orale:0.3,inhal:0.7,cutanee:0.3,org:"US EPA IRIS (RfD) / HEAST (RfC)",effet:"Effets systémiques généraux"},
   "Benzène": {orale:0.004,inhal:0.03,cutanee:0.004,org:"US EPA",effet:"Hématotoxicité"},
   "Toluène": {orale:0.08,inhal:5.0,cutanee:0.08,org:"US EPA",effet:"Neurotoxicité"},
   "Éthylbenzène": {orale:0.1,inhal:1.0,cutanee:0.1,org:"US EPA",effet:"Hépatotoxicité"},
@@ -787,6 +794,7 @@ const VTR_SEUIL = {
 };
 
 const VTR_SANSSEUIL = {
+  "Éthylbenzène": {eruOral:0.011,eruInhal:2.5e-06,org:"OEHHA 2007 (choix INERIS 2017)",cancer:"Rein (rat mâle, NTP 1999)"}, // correctif GMEP 2026-10-21b
   "Benzène": {eruOral:0.055,eruInhal:7.8e-06,org:"US EPA IRIS",cancer:"Leucémie"},
   "Benzo(a)pyrène": {eruOral:1.0,eruInhal:0.0011,org:"US EPA / OEHHA",cancer:"Cancer cutané / poumon"},
   "Benzo(a)anthracène": {eruOral:0.1,eruInhal:0.00011,org:"US EPA (FET=0.1×BaP)",cancer:"Cancer (FET)"},
@@ -822,9 +830,12 @@ const VTR_SANSSEUIL = {
   "PCB (Aroclor 1260)": {eruOral:2.0,eruInhal:0.00057,org:"US EPA IRIS",cancer:"Cancer foie"},
 };
 
-const ERI_SUBSTANCES = ["Benzène", "Benzo(a)pyrène", "Benzo(a)anthracène", "Chrysène", "Benzo(b)fluoranthène", "Benzo(k)fluoranthène", "Dibenz(a,h)anthracène", "Indéno(1,2,3-cd)pyrène", "Naphtalène", "Arsenic inorganique", "Cadmium", "Chrome VI", "Nickel (composés)", "Plomb", "Chlorure de vinyle", "Trichloroéthylène (TCE)", "Tétrachloroéthylène (PCE)", "Tétrachlorure de carbone", "Chloroforme", "Dichlorométhane", "1,2-Dichloroéthane", "1,1,2-Trichloroéthane", "1,2-Dichloropropane", "Formaldéhyde", "Acrylamide", "Lindane (gamma-HCH)", "DDT / DDE / DDD", "Aldrine", "Dieldrine", "HCB (hexachlorobenzène)", "Pentachlorophénol (PCP)", "PCB (Aroclor 1254)", "PCB (Aroclor 1260)"];
+const ERI_SUBSTANCES = ["Benzène", "Éthylbenzène", "Benzo(a)pyrène", "Benzo(a)anthracène", "Chrysène", "Benzo(b)fluoranthène", "Benzo(k)fluoranthène", "Dibenz(a,h)anthracène", "Indéno(1,2,3-cd)pyrène", "Naphtalène", "Arsenic inorganique", "Cadmium", "Chrome VI", "Nickel (composés)", "Plomb", "Chlorure de vinyle", "Trichloroéthylène (TCE)", "Tétrachloroéthylène (PCE)", "Tétrachlorure de carbone", "Chloroforme", "Dichlorométhane", "1,2-Dichloroéthane", "1,1,2-Trichloroéthane", "1,2-Dichloropropane", "Formaldéhyde", "Acrylamide", "Lindane (gamma-HCH)", "DDT / DDE / DDD", "Aldrine", "Dieldrine", "HCB (hexachlorobenzène)", "Pentachlorophénol (PCP)", "PCB (Aroclor 1254)", "PCB (Aroclor 1260)"];
 
 const PROPRIETES = {
+  "1,2,4-Triméthylbenzène": {M:120.19,Pv:280.0,S:57.0,H:0.252,logKow:3.63,Koc:614.0,Dair:6.06e-06,Deau:7.9e-10,vol:"Volatil",Teb:169.4,Kd:6.14,cas:"95-63-6"},
+  "Mésitylène": {M:120.19,Pv:325.0,S:48.2,H:0.359,logKow:3.42,Koc:602.0,Dair:6.02e-06,Deau:8.7e-10,vol:"Volatil",Teb:164.7,Kd:6.02,cas:"108-67-8"},
+  "CFC-11": {M:137.37,Pv:106000.0,S:1100.0,H:3.97,logKow:2.53,Koc:43.9,Dair:8.7e-06,Deau:9.7e-10,vol:"Volatil",Teb:23.8,Kd:0.439,cas:"75-69-4"},
   "Benzène": {M:78.11,Pv:12700.0,S:1750.0,H:0.228,logKow:2.13,Koc:59.0,Dair:8.8e-06,Deau:9.8e-10,vol:"Très volatil",Teb:80.1,Kd:0.59,cas:"71-43-2"},
   "Toluène": {M:92.14,Pv:3790.0,S:526.0,H:0.272,logKow:2.73,Koc:182.0,Dair:8.7e-06,Deau:8.6e-10,vol:"Très volatil",Teb:110.6,Kd:1.82,cas:"108-88-3"},
   "Éthylbenzène": {M:106.17,Pv:1270.0,S:169.0,H:0.323,logKow:3.15,Koc:363.0,Dair:7.5e-06,Deau:7.8e-10,vol:"Volatil",Teb:136.2,Kd:3.63,cas:"100-41-4"},
@@ -943,14 +954,16 @@ const BAT_DEFAULTS = {
   n: 0.35, theta_w: 0.15, rho_b: 1.7,
   kv: 1e-12, foc: 0.006, LT: 2, dP: 4,
   mu: 1.81e-5, Ts: 15, LH: 0, Lsource: 1,
+  // correctif GMEP 2026-10-21b : coupe multicouche sous dallage (épaisseur 0 = couche inactive ; au-delà, sol de base n / θw) et épaisseur propre à la voie nappe (0 = LT)
+  c1_ep: 0, c1_n: 0.35, c1_tw: 0.15, c2_ep: 0, c2_n: 0.35, c2_tw: 0.15, c3_ep: 0, c3_n: 0.35, c3_tw: 0.15, LT_nappe: 0,
   Da: 8.8e-6, Dw: 9.8e-10, Hprime: 0.228,
   substance_select: "Benzène"
 };
 
 const PARAMS_DEFAULTS = {
-  adulte:  {P:70, ED:30, EF:350, AT_seuil:30, AT_sansseuil:70, IRs:3e-5, IRw:2, IRa:20, Scut:5700, AF:0.07, ABS:0.1, Fi:0.8},
-  enfant:  {P:15, ED:6,  EF:350, AT_seuil:6,  AT_sansseuil:70, IRs:1e-4, IRw:1, IRa:10, Scut:2800, AF:0.2,  ABS:0.1, Fi:0.8},
-  salarie: {P:70, ED:25, EF:220, AT_seuil:25, AT_sansseuil:70, IRs:5e-5, IRw:1, IRa:20, Scut:3300, AF:0.07, ABS:0.1, Fi:1.0}
+  adulte:  {age0:18, P:70, ED:30, EF:350, AT_seuil:30, AT_sansseuil:70, IRs:3e-5, IRw:2, IRa:20, Scut:5700, AF:0.07, ABS:0.1, Fi:0.8},
+  enfant:  {age0:0, P:15, ED:6,  EF:350, AT_seuil:6,  AT_sansseuil:70, IRs:1e-4, IRw:1, IRa:10, Scut:2800, AF:0.2,  ABS:0.1, Fi:0.8},
+  salarie: {age0:18, P:70, ED:25, EF:220, AT_seuil:25, AT_sansseuil:70, IRs:5e-5, IRw:1, IRa:20, Scut:3300, AF:0.07, ABS:0.1, Fi:1.0}
 };
 
 const SENSITIVITY_LTS = [0.5, 1, 1.5, 2, 3, 4, 5, 7, 10, 15];
@@ -1152,6 +1165,15 @@ function computeModeleJE() {
     m.Deff = 0;
   } else {
     m.Deff = Da * Math.pow(theta_a, 10/3) / (n * n) + Dw * Math.pow(b.theta_w, 10/3) / (n * n) / Hprime;
+    // correctif GMEP 2026-10-21b : D_eff global d'une coupe multicouche, L_T / Σ (L_i / D_eff,i) (US EPA 2004)
+    const mq = (nn, tw) => { const ta = Math.max(nn - tw, 0); return nn > 0 ? Da * Math.pow(ta, 10/3) / (nn * nn) + Dw * Math.pow(tw, 10/3) / (nn * nn) / Hprime : 0; };
+    const couches = [1, 2, 3].map(i => ({ ep: +b['c' + i + '_ep'] || 0, n: +b['c' + i + '_n'] || n, tw: (b['c' + i + '_tw'] !== undefined ? +b['c' + i + '_tw'] : b.theta_w) })).filter(c => c.ep > 0);
+    if (couches.length && b.LT > 0) {
+      let reste = b.LT, somme = 0; const det = [];
+      couches.forEach(c => { if (reste <= 0) return; const L = Math.min(c.ep, reste), D = mq(c.n, c.tw); if (D > 0) { somme += L / D; det.push({ L: L, n: c.n, tw: c.tw, Deff: D }); } reste -= L; });
+      if (reste > 1e-9) { const D = mq(n, b.theta_w); if (D > 0) { somme += reste / D; det.push({ L: reste, n: n, tw: b.theta_w, Deff: D }); } }
+      if (somme > 0) { m.Deff = b.LT / somme; m.couches = det; }
+    }
   }
   m.Deff_crack = m.Deff;
 
@@ -1222,16 +1244,16 @@ function computeModeleJE() {
 }
 
 // Coefficient d'atténuation propre à chaque substance (Dair, Deau, H' de PROPRIETES) — correctif GMEP 2026-10
-function alphaPourSubstance(name) {
+function alphaPourSubstance(name, LTopt) {
   const pr = PROPRIETES[name];
   if (!pr || !(pr.Dair > 0) || !(pr.H > 0)) return null;
-  const b = state.bat, save = { Da: b.Da, Dw: b.Dw, Hprime: b.Hprime }, saveM = state.modeleJE;
+  const b = state.bat, save = { Da: b.Da, Dw: b.Dw, Hprime: b.Hprime, LT: b.LT }, saveM = state.modeleJE;
   try {
-    b.Da = pr.Dair; b.Dw = pr.Deau || 0; b.Hprime = pr.H;
+    b.Da = pr.Dair; b.Dw = pr.Deau || 0; b.Hprime = pr.H; if (LTopt > 0) b.LT = LTopt;
     computeModeleJE();
     return { alpha: state.modeleJE.alpha_eff || 0, H: pr.H };
   } catch (e) { return null; }
-  finally { b.Da = save.Da; b.Dw = save.Dw; b.Hprime = save.Hprime; state.modeleJE = saveM; }
+  finally { b.Da = save.Da; b.Dw = save.Dw; b.Hprime = save.Hprime; b.LT = save.LT; state.modeleJE = saveM; }
 }
 function computeCindoor() {
   const alpha0 = state.modeleJE.alpha_eff || 0;
@@ -1241,12 +1263,15 @@ function computeCindoor() {
     const c = state.concentrations[s.name];
     const solGaz = c.solGaz || 0;
     const eau = c.eau || 0;
-    let alpha = alpha0, H = H0;
-    if (solGaz > 0 || eau > 0) { const a = alphaPourSubstance(s.name); if (a) { alpha = a.alpha; H = a.H; } }
+    let alpha = alpha0, H = H0, alphaN = alpha0;
+    if (solGaz > 0 || eau > 0) { const a = alphaPourSubstance(s.name); if (a) { alpha = a.alpha; H = a.H; alphaN = a.alpha; } }
+    // correctif GMEP 2026-10-21b : la voie nappe utilise sa propre épaisseur de transfert (toit de nappe → dallage)
+    if (eau > 0 && state.bat.LT_nappe > 0 && state.bat.LT_nappe !== state.bat.LT) { const an = alphaPourSubstance(s.name, state.bat.LT_nappe); if (an) alphaN = an.alpha; }
     ci[s.name] = {
       alpha: alpha,
       solGaz: alpha * solGaz,
-      nappe: alpha * H * eau * 1000
+      alphaNappe: alphaN,
+      nappe: alphaN * H * eau * 1000
     };
   });
   state.cindoor = ci;
@@ -1368,13 +1393,25 @@ function computeResultatsQD() {
 function computeResultatsERI() {
   const res = {};
   // ADAF = Age-Dependent Adjustment Factor (US EPA 2005, Supplemental Guidance)
-  // Enfants 2-6 ans : ADAF = 3 (susceptibilité accrue aux cancérigènes)
+  // (ancienne règle : ADAF = 3 sur toute l'enfance, remplacée)
   // Adultes / Salariés : ADAF = 1
-  const ADAF = { adulte: 1, enfant: 3, salarie: 1 };
+  // correctif GMEP 2026-10-21b : ADAF de l'US EPA (2005) appliqués aux seules substances à mode d'action mutagène,
+  // pondérés par l'âge sur la fenêtre d'exposition : 10 avant 2 ans, 3 de 2 à 16 ans, 1 au-delà.
+  const ADAF = { adulte: 1, enfant: 1, salarie: 1 };
+  const adafPondere = (rec) => { const p = state.params[rec] || {}; const a0 = (p.age0 !== undefined && p.age0 !== '') ? +p.age0 : (rec === 'enfant' ? 0 : 18); const ed = +p.ED || 0; if (!(ed > 0)) return 1; let s = 0; [[0, 2, 10], [2, 16, 3], [16, 200, 1]].forEach(([lo, hi, v]) => { s += Math.max(0, Math.min(hi, a0 + ed) - Math.max(lo, a0)) * v; }); return s / ed; };
+  const MUTAGENES = ['Benzo(a)pyrène','Benzo(a)anthracène','Chrysène','Benzo(b)fluoranthène','Benzo(k)fluoranthène','Dibenz(a,h)anthracène','Indéno(1,2,3-cd)pyrène','Chrome VI','Dichlorométhane','Acrylamide','Trichloroéthylène (TCE)'];
+  const facteurADAF = (name, rec, eru) => {
+    if (name === 'Chlorure de vinyle') return (adafPondere(rec) > 1 + 1e-9) ? 2 : 1;   // US EPA IRIS : ERU doublé pour une exposition dès l'enfance
+    if (MUTAGENES.indexOf(name) < 0) return 1;
+    const A = adafPondere(rec);
+    if (name === 'Trichloroéthylène (TCE)') { const f = (eru > 0) ? Math.min(1, 1.0e-6 / eru) : 1; return (1 - f) + f * A; } // US EPA : ADAF sur la part « rein » (1×10⁻⁶) de l'ERU
+    return A;
+  };
+  state.adaf = {};
 
   ['adulte', 'enfant', 'salarie'].forEach(receptor => {
     res[receptor] = {};
-    const adaf = ADAF[receptor];
+    const adafRec = ADAF[receptor];
     ERI_SUBSTANCES.forEach(eriName => {
       const concName = ERI_NAME_MAP[eriName] || eriName;
       const vtr = VTR_SANSSEUIL[eriName];
@@ -1390,6 +1427,8 @@ function computeResultatsERI() {
       const con = sObj ? state.djeContact[receptor][concName] : null;
 
       const eri = {};
+      const adaf = adafRec * facteurADAF(eriName, receptor, vtr.eruInhal || 0);
+      if (!state.adaf[receptor]) state.adaf[receptor] = {}; state.adaf[receptor][eriName] = adaf;
       // ERI ingestion = (DJE_sol_ss + DJE_eau_ss) × ERU_oral × ADAF
       if (vtr.eruOral && ing) {
         eri.ingestion = (ing.djeSol_ss + ing.djeEau_ss) * vtr.eruOral * adaf;
@@ -1716,7 +1755,7 @@ sheetRenderers.parametres = function() {
   let h = '<div class="sheet-title">Paramètres d\'exposition humaine</div>';
   h += '<div class="sheet-subtitle">Valeurs par défaut selon les recommandations INERIS / SPF. Modifiables.</div>';
   h += '<div class="table-wrap"><table class="data-table"><thead><tr>';
-  h += '<th style="min-width:250px">Paramètre</th><th>Adulte</th><th>Enfant (2-6 ans)</th><th>Salarié</th><th>Unité</th>';
+  h += '<th style="min-width:250px">Paramètre</th><th>Adulte</th><th>Enfant (0-6 ans)</th><th>Salarié</th><th>Unité</th>';
   h += '</tr></thead><tbody>';
 
   const rows = [
@@ -1732,6 +1771,7 @@ sheetRenderers.parametres = function() {
     ['AF', 'Facteur adhérence sol (AF)', 'mg/cm²'],
     ['ABS', 'Fraction absorption cutanée (ABS)', '—'],
     ['Fi', 'Fraction temps intérieur (Fi)', '—'],
+    ['age0', "Âge au début de l'exposition (ADAF)", 'ans'],
   ];
 
   rows.forEach(([key, label, unit]) => {
@@ -1901,6 +1941,13 @@ sheetRenderers.batiment = function() {
   h += paramRow('Perméabilité intrinsèque (kv)', 'bat.kv', b.kv, 'm²');
   h += paramRow('Fraction carbone organique (foc)', 'bat.foc', b.foc, 'kg/kg');
   h += paramRow('Distance source → dalle (LT)', 'bat.LT', b.LT, 'm');
+  h += paramRow('Distance toit de nappe → dalle (LT nappe, 0 = LT)', 'bat.LT_nappe', b.LT_nappe || 0, 'm');
+  [1, 2, 3].forEach(i => {
+    h += paramRow('Couche ' + i + ' sous dallage : épaisseur (0 = inactive)', 'bat.c' + i + '_ep', b['c' + i + '_ep'] || 0, 'm');
+    h += paramRow('Couche ' + i + ' : porosité n', 'bat.c' + i + '_n', b['c' + i + '_n'] !== undefined ? b['c' + i + '_n'] : b.n, 'm³/m³');
+    h += paramRow('Couche ' + i + ' : teneur en eau θw', 'bat.c' + i + '_tw', b['c' + i + '_tw'] !== undefined ? b['c' + i + '_tw'] : b.theta_w, 'm³/m³');
+  });
+  if (state.modeleJE && state.modeleJE.couches) h += computedRow('D_eff global de la coupe', state.modeleJE.Deff, 'm²/s');
   h += paramRow('Pression différentielle (ΔP)', 'bat.dP', b.dP, 'Pa');
   h += paramRow("Viscosité dynamique air (μ)", 'bat.mu', b.mu, 'Pa·s');
   h += paramRow('Température du sol (Ts)', 'bat.Ts', b.Ts, '°C');
@@ -2611,6 +2658,7 @@ const ORGANES_LIBELLES = {
 };
 // {inhal:[...], orale:[...]} — la voie cutanée utilise les organes de la voie orale
 const ORGANES_CIBLES = {
+  '1,2,4-Triméthylbenzène':{inhal:['NERV'],orale:['NERV']}, 'Mésitylène':{inhal:['NERV'],orale:['NERV']}, 'CFC-11':{inhal:['GEN'],orale:['GEN']},
   'Benzène':{inhal:['SANG','IMMU'],orale:['SANG','IMMU']},
   'Toluène':{inhal:['NERV'],orale:['REIN']},
   'Éthylbenzène':{inhal:['DEV'],orale:['FOIE','REIN']},
@@ -2691,6 +2739,7 @@ const CANCERS_LIBELLES = {
   VASC:'Vaisseaux (hémangiosarcome)', THYR:'Thyroïde'
 };
 const CANCERS_CIBLES = {
+  'Éthylbenzène':{inhal:['REIN'],orale:['REIN']},
   'Benzène':{inhal:['SANG'],orale:['SANG']},
   'Benzo(a)pyrène':{inhal:['RESP'],orale:['DIG','PEAU']},
   'Benzo(a)anthracène':{inhal:['RESP'],orale:['DIG']}, 'Chrysène':{inhal:['RESP'],orale:['DIG']},

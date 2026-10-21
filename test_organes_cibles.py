@@ -21,7 +21,7 @@ CHECKS = [
     ("Fonction organesPour (voie)", r"function organesPour\(name, voie\)", True),
     ("ERI par site de cancer", r"const CANCERS_CIBLES = \{", True),
     ("Cumul des sources gaz du sol + nappe", r"const CairJE = ci\.solGaz \+ ci\.nappe;", True),
-    ("Alpha propre à chaque substance", r"function alphaPourSubstance\(name\)", True),
+    ("Alpha propre à chaque substance", r"function alphaPourSubstance\(name(, LTopt)?\)", True),
     ("Hiérarchie VTR ANSES (note DGS 2014)", r"function appliquerHierarchieVTR\(mode\)", True),
     ("VTR ANSES TCE 3,2 mg/m³", r'"Trichloroéthylène \(TCE\)":\{"inhal":\{"valeur":3\.2,', True),
     ("ANSES par défaut", r"localStorage\.getItem\('gmep_vtr_mode'\) \|\| 'anses'", True),
