@@ -1,0 +1,70 @@
+name: VTR ANSES — mise à jour automatique
+
+# Lit chaque lundi le site de l'ANSES (page « Liste des VTR » et base Excel des VTR construites et choisies),
+# met à jour vtr/vtr-anses.json, la table intégrée aux 3 logiciels EQRS et la copie du site www,
+# puis publie sur main (déploiement Railway automatique). Une « issue » GitHub résume chaque changement.
+on:
+  schedule:
+    - cron: '17 5 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: vtr-anses-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Dépendances
+        run: pip install --quiet openpyxl beautifulsoup4
+
+      - name: Lecture du site de l'ANSES
+        id: sync
+        run: |
+          set +e
+          python3 scripts/vtr_sync/sync_vtr_anses.py
+          rc=$?
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          if [ "$rc" = "1" ]; then exit 1; fi
+          exit 0
+
+      - name: Intégration dans les logiciels et contrôles
+        if: steps.sync.outputs.rc == '10'
+        run: |
+          python3 scripts/vtr_sync/integrer_dans_outils.py
+          python3 test_vtr_anses.py
+          python3 test_organes_cibles.py
+          python3 test_dje_ed.py
+
+      - name: Publication
+        if: steps.sync.outputs.rc == '10'
+        run: |
+          BASE=$(python3 -c "import json;d=json.load(open('vtr/vtr-anses.json'));print(d.get('base_anses_date'),'/ page',d.get('page_anses_maj'))")
+          git config user.name "GMEP – mise à jour VTR"
+          git config user.email "gmep.france@gmail.com"
+          git add vtr/vtr-anses.json vtr/dernier-rapport.md marketing-site/vtr/vtr-anses.json eqrs-tool.html eqrs-v31-ecotox-tool.html eqrs-v8-humain-tool.html
+          git commit -m "VTR ANSES : mise à jour automatique (base $BASE)"
+          git push origin HEAD:main
+          gh issue create --title "VTR ANSES mises à jour automatiquement – base $BASE" --body-file vtr/dernier-rapport.md
+
+      - name: Signalement d'échec
+        if: failure()
+        run: |
+          T="Échec de la mise à jour automatique des VTR ANSES"
+          if [ -z "$(gh issue list --state open --search "$T in:title" --json number --jq '.[].number')" ]; then
+            gh issue create --title "$T" --body "La tâche planifiée n'a pas pu lire ou valider la base de l'ANSES (journal : ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). Les logiciels continuent d'utiliser la dernière table publiée."
+          fi

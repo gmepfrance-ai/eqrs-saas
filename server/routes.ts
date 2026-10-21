@@ -872,6 +872,26 @@ export async function registerRoutes(
     }
   });
 
+  // ─── VTR ANSES : table publiée pour les logiciels EQRS (mise à jour automatique) ───
+  // Fichier vtr/vtr-anses.json, régénéré chaque semaine par .github/workflows/vtr-anses-sync.yml
+  // à partir du site de l'ANSES. Public (aucune donnée personnelle), lisible par les versions
+  // locales des logiciels (CORS ouvert en lecture).
+  app.options("/api/vtr/anses", (_req: Request, res: Response) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+    res.sendStatus(204);
+  });
+  app.get("/api/vtr/anses", (_req: Request, res: Response) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Cache-Control", "public, max-age=900");
+    try {
+      const txt = fs.readFileSync(path.resolve(process.cwd(), "vtr", "vtr-anses.json"), "utf-8");
+      res.type("application/json").send(txt);
+    } catch (e) {
+      res.status(503).json({ message: "Table des VTR ANSES indisponible" });
+    }
+  });
+
   // Health check
   app.get("/api/health", async (req: Request, res: Response) => {
     try {

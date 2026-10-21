@@ -9,6 +9,9 @@ on:
       - "eqrs-v8-humain-tool.html"
       - "test_dje_ed.py"
       - "test_organes_cibles.py"
+      - "test_vtr_anses.py"
+      - "vtr/**"
+      - "scripts/vtr_sync/**"
   pull_request:
     branches: [main]
     paths:
@@ -17,6 +20,9 @@ on:
       - "eqrs-v8-humain-tool.html"
       - "test_dje_ed.py"
       - "test_organes_cibles.py"
+      - "test_vtr_anses.py"
+      - "vtr/**"
+      - "scripts/vtr_sync/**"
 
 jobs:
   test-dje:
@@ -34,6 +40,11 @@ jobs:
 
       - name: Run organ-target tests (effets cumulés par organe et par catégorie)
         run: python3 test_organes_cibles.py
+
+      - name: Run VTR ANSES tests (mise à jour automatique)
+        run: |
+          pip install --quiet openpyxl beautifulsoup4
+          python3 test_vtr_anses.py
 
       - name: Fail if ED (exposure duration) is missing
         if: failure()

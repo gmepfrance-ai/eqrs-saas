@@ -1,4 +1,3 @@
-EQRS V7 / V9 ECOTOX / V9 Humain Tier 3 — Correctif organes cibles et VTR ANSES
-Deployé le 2026-10-20
-Module: Mélange organe par catégorie (adultes, enfants, salariés), ERI par site de cancer, hiérarchie VTR note DGS/DGPR 31/10/2014, cumul gaz du sol + nappe, alpha par substance
-Commit: fix(eqrs): effets cumulés par organe cible et par catégorie d'individus + VTR ANSES prioritaires
+EQRS V7 / V9 ECOTOX / V9 Humain Tier 3 — Mise à jour automatique des VTR ANSES
+Déployé le 2026-10-21
+Module: table vtr/vtr-anses.json régénérée chaque lundi depuis le site de l'ANSES (page des VTR construites + base Excel), servie par /api/vtr/anses et www/vtr/vtr-anses.json, chargée par les logiciels au démarrage (cache hors connexion, table intégrée de secours)

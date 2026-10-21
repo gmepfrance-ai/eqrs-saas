@@ -1,0 +1,29 @@
+{
+  "_lisez_moi": "Corrections GMEP appliquées automatiquement à chaque lecture de la base des VTR de l'ANSES. Chaque correction indique son motif. Les alias permettent de retrouver une substance quand le n° CAS de la base ANSES est erroné (ex. TCE saisi 79-01-7 à 79-01-10, benzène 71-43-3 dans la base du 30/06/2025).",
+  "alias": {
+    "Trichloroéthylène (TCE)": ["trichloroethylene", "tce"],
+    "Tétrachloroéthylène (PCE)": ["tetrachloroethylene", "perchloroethylene", "pce"],
+    "Xylènes (mélange)": ["xylenes", "xylene"],
+    "Cyanures libres": ["acide cyanhydrique", "cyanures", "cyanure d'hydrogene"],
+    "Arsenic inorganique": ["arsenic", "arsenic inorganique"],
+    "Cadmium": ["cadmium", "cadmium et composes"],
+    "Nickel": ["nickel", "nickel et composes"],
+    "Nickel (composés)": ["nickel", "nickel et composes"],
+    "Chrome VI": ["chrome vi", "chrome hexavalent"],
+    "Chrome III": ["chrome iii", "chrome trivalent"],
+    "Benzo(a)pyrène": ["benzo[a]pyrene", "benzo(a)pyrene", "bap"],
+    "HCB (hexachlorobenzène)": ["hexachlorobenzene", "hcb"],
+    "Plomb": ["plomb"],
+    "Chlorure de vinyle": ["chlorure de vinyle", "chlorure de vinyle monomere"],
+    "Formaldéhyde": ["formaldehyde"],
+    "Éthylbenzène": ["ethylbenzene"],
+    "Lindane (gamma-HCH)": ["lindane", "gamma-hch"],
+    "Pentachlorophénol (PCP)": ["pentachlorophenol"],
+    "MTBE (méthyl tert-butyl éther)": ["mtbe", "methyl tert-butyl ether", "methyl tertio-butyl ether"]
+  },
+  "unite": [
+    {"cas": "18540-29-9", "voie": "orale", "type": "sansseuil", "de": "(µg/kg pc/j)-1", "vers": "(mg/kg pc/j)-1",
+     "motif": "Base ANSES du 30/06/2025 : ERU oral OEHHA 2011 du chrome VI saisi 0,5 (µg/kg pc/j)-1 ; la valeur source de l'OEHHA est 0,5 (mg/kg/j)-1."}
+  ],
+  "exclure": []
+}

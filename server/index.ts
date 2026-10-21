@@ -46,6 +46,10 @@ if (fs.existsSync(marketingRoot)) {
         if (filePath.endsWith(".html")) {
           resx.setHeader("Cache-Control", "no-cache, must-revalidate");
         }
+        if (/[\\/]vtr[\\/][^\\/]+\.json$/.test(filePath)) {
+          resx.setHeader("Access-Control-Allow-Origin", "*");
+          resx.setHeader("Cache-Control", "no-cache, must-revalidate");
+        }
       },
     })(req, res, () => {
       if (req.path.startsWith("/api/")) return next();

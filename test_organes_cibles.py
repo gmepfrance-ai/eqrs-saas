@@ -23,7 +23,7 @@ CHECKS = [
     ("Cumul des sources gaz du sol + nappe", r"const CairJE = ci\.solGaz \+ ci\.nappe;", True),
     ("Alpha propre à chaque substance", r"function alphaPourSubstance\(name\)", True),
     ("Hiérarchie VTR ANSES (note DGS 2014)", r"function appliquerHierarchieVTR\(mode\)", True),
-    ("VTR ANSES TCE 3,2 mg/m³", r"'Trichloroéthylène \(TCE\)': \{ inhal:\[3\.2,", True),
+    ("VTR ANSES TCE 3,2 mg/m³", r'"Trichloroéthylène \(TCE\)":\{"inhal":\{"valeur":3\.2,', True),
     ("ANSES par défaut", r"localStorage\.getItem\('gmep_vtr_mode'\) \|\| 'anses'", True),
     ("Page PDF organes", r"INDEX DE DANGER \(HI\) PAR ORGANE CIBLE ET PAR CATEGORIE", True),
     ("Ancien bug : maximum des sources", r"const CairJE = Math\.max\(ci\.solGaz, ci\.nappe\);", False),

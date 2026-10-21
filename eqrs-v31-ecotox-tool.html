@@ -2721,60 +2721,52 @@ const CANCERS_CIBLES = {
 // Source : base des VTR de l'ANSES, mise à jour du 30/06/2025. Correctif GMEP 2026-10.
 // Unités de l'outil : inhal. mg/m³ ; orale mg/kg/j ; ERU inhal. (µg/m³)⁻¹ ; ERU orale (mg/kg/j)⁻¹.
 // ============================================================
-const VTR_ANSES = {
-  seuil: {
-    'Trichloroéthylène (TCE)': { inhal:[3.2,'ANSES 2018 (rein)'], orale:[0.00146,'OMS 2005, sélection ANSES 2016'] },
-    'Tétrachloroéthylène (PCE)': { inhal:[0.4,'ANSES 2017'], orale:[0.014,'OMS 2011, sélection ANSES 2016'] },
-    'Toluène': { inhal:[19,'ANSES 2017'] },
-    'Éthylbenzène': { inhal:[1.5,'ANSES 2016 (ototoxicité)'] },
-    'Xylènes (mélange)': { inhal:[0.1,'US EPA 2003, sélection ANSES 2020'] },
-    'Benzène': { inhal:[0.0097,'ATSDR 2007, sélection ANSES 2024'] },
-    'Naphtalène': { inhal:[0.037,'ANSES 2013'] },
-    'Formaldéhyde': { inhal:[0.123,'ANSES 2017'] },
-    'Chloroforme': { inhal:[0.063,'ANSES 2008'] },
-    'Cadmium': { inhal:[0.00045,'ANSES 2012'], orale:[0.00035,'ANSES 2019'] },
-    'Nickel': { inhal:[0.00023,'TCEQ 2011, sélection ANSES'], orale:[0.0028,'EFSA 2015, sélection ANSES'] },
-    'Chrome VI': { orale:[0.001,'ATSDR 2008, sélection ANSES'] },
-    'Chrome III': { orale:[0.3,'EFSA 2014, sélection ANSES'] },
-    'Mercure inorganique': { orale:[0.000571,'EFSA 2012 (4 µg/kg/sem.), sélection ANSES'] },
-    'Méthylmercure': { orale:[0.000186,'EFSA 2012 (1,3 µg/kg/sem.), sélection ANSES'] },
-    'Antimoine': { orale:[0.006,'OMS 2003, sélection ANSES'] },
-    'Cobalt': { orale:[0.0015,'Afssa 2010'] },
-    'Cyanures libres': { orale:[0.015,'ANSES 2010 (HCN)'] },
-    'HCB (hexachlorobenzène)': { orale:[0.00007,'ATSDR 2015, sélection ANSES'] },
-    'Benzo(a)pyrène': { orale:[0.0003,'US EPA 2017, sélection ANSES'] }
-  },
-  sansseuil: {
-    'Trichloroéthylène (TCE)': { eruInhal:[1e-6,'ANSES 2018 (cancer du rein)'], eruOral:[0.00078,'OMS 2005, sélection ANSES 2016'] },
-    'Tétrachloroéthylène (PCE)': { eruInhal:[2.6e-7,'ANSES 2017'], eruOral:[0.002,'US EPA 2012, sélection ANSES 2016'] },
-    'Chlorure de vinyle': { eruInhal:[3.8e-6,'ANSES 2012'], eruOral:[0.625,'ANSES 2012'] },
-    'Benzène': { eruInhal:[1.6e-6,'ANSES 2024'] },
-    'Naphtalène': { eruInhal:[5.6e-6,'ANSES 2013'] },
-    '1,2-Dichloroéthane': { eruInhal:[3.4e-6,'ANSES 2009'] },
-    'Arsenic inorganique': { eruInhal:[1.5e-4,'TCEQ 2012, sélection ANSES'] },
-    'Chrome VI': { eruInhal:[0.04,'IPCS 2013, sélection ANSES'] },
-    'Nickel (composés)': { eruInhal:[1.7e-4,'TCEQ 2011, sélection ANSES'] },
-    'HCB (hexachlorobenzène)': { eruOral:[1.8,'OEHHA 2011, sélection ANSES'] },
-    'Benzo(a)pyrène': { eruInhal:[0.0011,'OEHHA 2008, sélection ANSES'], eruOral:[1,'US EPA 2017, sélection ANSES'] }
-  },
-  // organes cibles correspondant aux effets critiques des VTR ANSES (remplacent ceux de la base d'origine)
-  organes: {
+
+// ============================================================
+// HIÉRARCHIE DES VTR — note d'information DGS/EA1/DGPR/2014/307 du 31/10/2014
+// 1) VTR construites par l'ANSES ; 2) VTR sélectionnées par l'ANSES ; 3) à défaut, base d'origine (US EPA, ATSDR, OEHHA, OMS…).
+// MISE À JOUR AUTOMATIQUE : la table des VTR de l'ANSES est publiée par le serveur GMEP (lue chaque semaine sur le site
+// de l'ANSES : page « Liste des VTR » et base Excel). Le logiciel la charge à chaque démarrage ; hors connexion, il utilise
+// la dernière table reçue (mémoire du navigateur) ou, à défaut, la table intégrée ci-dessous.
+// Unités : inhal. mg/m³ ; orale mg/kg/j ; ERU inhal. (µg/m³)⁻¹ ; ERU orale (mg/kg/j)⁻¹.
+// ============================================================
+const VTR_ANSES_EMBARQUEE = {"schema":1,"unites":{"inhal":"mg/m3","orale":"mg/kg/j","eruInhal":"(µg/m3)-1","eruOral":"(mg/kg/j)-1"},"base_anses_date":"2025-06-30","page_anses_maj":"Avril 2026","genere_le":"2026-10-21T06:47:26Z","base_anses_sha256":"a7b7b887b3cc3a64208f1231a61f3e99613acd84ce7541b24638eb19592e43d0","alertes":[],"substances":{"Benzène":{"inhal":{"valeur":0.0097,"unite":"mg/m3","source":"Anses 2024","valide_gmep":true},"eruInhal":{"valeur":1.6e-06,"unite":"(µg/m3)-1","source":"Anses 2024","valide_gmep":true}},"Toluène":{"inhal":{"valeur":19.0,"unite":"mg/m3","source":"Anses 2017","valide_gmep":true}},"Éthylbenzène":{"inhal":{"valeur":1.5,"unite":"mg/m3","source":"Anses 2016","valide_gmep":true}},"Xylènes (mélange)":{"inhal":{"valeur":0.1,"unite":"mg/m3","source":"Anses 2020","valide_gmep":true}},"Naphtalène":{"inhal":{"valeur":0.037,"unite":"mg/m3","source":"Anses 2013","valide_gmep":true},"eruInhal":{"valeur":5.6e-06,"unite":"(µg/m3)-1","source":"Anses 2013","valide_gmep":true}},"Benzo(a)pyrène":{"eruInhal":{"valeur":0.0011,"unite":"(µg/m3)-1","source":"OEHHA 2008, sélection ANSES","valide_gmep":true},"eruOral":{"valeur":1.0,"unite":"(mg/kg/j)-1","source":"US EPA 2017, sélection ANSES","valide_gmep":true},"orale":{"valeur":0.0003,"unite":"mg/kg/j","source":"US EPA 2017, sélection ANSES","valide_gmep":true}},"Arsenic inorganique":{"eruInhal":{"valeur":0.00015,"unite":"(µg/m3)-1","source":"TCEQ 2012, sélection ANSES","valide_gmep":true}},"Cadmium":{"orale":{"valeur":0.00035,"unite":"mg/kg/j","source":"Anses 2019","valide_gmep":true},"inhal":{"valeur":0.00045,"unite":"mg/m3","source":"Anses 2012","valide_gmep":true}},"Chrome VI":{"orale":{"valeur":0.001,"unite":"mg/kg/j","source":"ATSDR 2008, sélection ANSES","valide_gmep":true},"eruOral":{"valeur":0.5,"unite":"(mg/kg/j)-1","source":"OEHHA 2011, sélection ANSES","valide_gmep":false},"eruInhal":{"valeur":0.04,"unite":"(µg/m3)-1","source":"IPCS 2013, sélection ANSES","valide_gmep":true}},"Chrome III":{"orale":{"valeur":0.3,"unite":"mg/kg/j","source":"EFSA 2014, sélection ANSES","valide_gmep":true}},"Mercure inorganique":{"orale":{"valeur":0.000571429,"unite":"mg/kg/j","source":"EFSA 2012, sélection ANSES","valide_gmep":true}},"Méthylmercure":{"orale":{"valeur":0.000185714,"unite":"mg/kg/j","source":"EFSA 2012, sélection ANSES","valide_gmep":true}},"Nickel":{"inhal":{"valeur":0.00023,"unite":"mg/m3","source":"TCEQ 2011, sélection ANSES","valide_gmep":true},"eruInhal":{"valeur":0.00017,"unite":"(µg/m3)-1","source":"TCEQ 2011, sélection ANSES","valide_gmep":true},"orale":{"valeur":0.0028,"unite":"mg/kg/j","source":"EFSA 2015, sélection ANSES","valide_gmep":true}},"Antimoine":{"orale":{"valeur":0.006,"unite":"mg/kg/j","source":"OMS 2003, sélection ANSES","valide_gmep":true}},"Baryum":{"orale":{"valeur":0.2,"unite":"mg/kg/j","source":"US EPA 2005, sélection ANSES","valide_gmep":false},"inhal":{"valeur":0.001,"unite":"mg/m3","source":"RIVM 2000, sélection ANSES","valide_gmep":false}},"Cobalt":{"orale":{"valeur":0.0015,"unite":"mg/kg/j","source":"Afssa 2010","valide_gmep":true}},"Cyanures libres":{"orale":{"valeur":0.015,"unite":"mg/kg/j","source":"Anses 2010","valide_gmep":true}},"Trichloroéthylène (TCE)":{"inhal":{"valeur":3.2,"unite":"mg/m3","source":"Anses 2018","valide_gmep":true},"eruInhal":{"valeur":1e-06,"unite":"(µg/m3)-1","source":"Anses 2018","valide_gmep":true},"eruOral":{"valeur":0.00078,"unite":"(mg/kg/j)-1","source":"OMS 2005, sélection ANSES","valide_gmep":true},"orale":{"valeur":0.00146,"unite":"mg/kg/j","source":"OMS 2005, sélection ANSES","valide_gmep":true}},"Tétrachloroéthylène (PCE)":{"inhal":{"valeur":0.4,"unite":"mg/m3","source":"Anses 2018","valide_gmep":true},"eruInhal":{"valeur":2.6e-07,"unite":"(µg/m3)-1","source":"Anses 2018","valide_gmep":true},"orale":{"valeur":0.014,"unite":"mg/kg/j","source":"OMS 2011, sélection ANSES","valide_gmep":true},"eruOral":{"valeur":0.002,"unite":"(mg/kg/j)-1","source":"US EPA 2012, sélection ANSES","valide_gmep":true}},"Chlorure de vinyle":{"eruOral":{"valeur":0.625,"unite":"(mg/kg/j)-1","source":"Anses 2012","valide_gmep":true},"eruInhal":{"valeur":3.8e-06,"unite":"(µg/m3)-1","source":"Anses 2012","valide_gmep":true}},"Tétrachlorure de carbone":{"inhal":{"valeur":0.11,"unite":"mg/m3","source":"Anses 2017","valide_gmep":false}},"Chloroforme":{"inhal":{"valeur":0.063,"unite":"mg/m3","source":"Anses 2008","valide_gmep":true}},"1,2-Dichloroéthane":{"eruInhal":{"valeur":3.4e-06,"unite":"(µg/m3)-1","source":"Anses 2009","valide_gmep":true}},"Formaldéhyde":{"inhal":{"valeur":0.123,"unite":"mg/m3","source":"Anses 2017","valide_gmep":true},"orale":{"valeur":0.15,"unite":"mg/kg/j","source":"OMS-IPCS 2005, sélection ANSES","valide_gmep":false}},"Atrazine":{"orale":{"valeur":0.02,"unite":"mg/kg/j","source":"OMS - JMPR 2007, sélection ANSES","valide_gmep":false}},"Lindane (gamma-HCH)":{"orale":{"valeur":1e-05,"unite":"mg/kg/j","source":"ATSDR 2005, sélection ANSES","valide_gmep":false},"eruOral":{"valeur":1.1,"unite":"(mg/kg/j)-1","source":"OEHHA 2009, sélection ANSES","valide_gmep":false}},"HCB (hexachlorobenzène)":{"orale":{"valeur":7e-05,"unite":"mg/kg/j","source":"ATSDR 2015, sélection ANSES","valide_gmep":true},"eruOral":{"valeur":1.8,"unite":"(mg/kg/j)-1","source":"OEHHA 2011, sélection ANSES","valide_gmep":true}},"Nickel (composés)":{"inhal":{"valeur":0.00023,"unite":"mg/m3","source":"TCEQ 2011, sélection ANSES","valide_gmep":true},"eruInhal":{"valeur":0.00017,"unite":"(µg/m3)-1","source":"TCEQ 2011, sélection ANSES","valide_gmep":true},"orale":{"valeur":0.0028,"unite":"mg/kg/j","source":"EFSA 2015, sélection ANSES","valide_gmep":true}},"Acrylamide":{"orale":{"valeur":0.002,"unite":"mg/kg/j","source":"US EPA 2010, sélection ANSES","valide_gmep":false}}}};
+const VTR_ANSES_SOURCES = ['/api/vtr/anses', 'https://app.gmep-france.eu/api/vtr/anses', 'https://www.gmep-france.eu/vtr/vtr-anses.json'];
+const VTR_ANSES = { seuil: {}, sansseuil: {}, a_verifier: {}, organes: {
     'Trichloroéthylène (TCE)': { inhal:['REIN'], orale:['DEV'] },
     'Éthylbenzène': { inhal:['AUDI'] },
     'Nickel': { orale:['DEV','REPRO'] },
     'Méthylmercure': { orale:['DEV','NERV'] },
     'Chrome III': { orale:['GEN'] }
-  }
-};
+  } };
+let VTR_ANSES_INFO = { origine: 'intégrée au logiciel', base: null, page: null, genere: null, charge_le: null, sha: null, nb: 0, alertes: [] };
+function chargerTableANSES(js, origine) {
+  if (!js || js.schema !== 1 || !js.substances || !js.unites) return false;
+  const U = js.unites;
+  if (U.inhal !== 'mg/m3' || U.orale !== 'mg/kg/j' || U.eruInhal !== '(µg/m3)-1' || U.eruOral !== '(mg/kg/j)-1') return false;
+  const seuil = {}, ss = {}, av = {}; let nb = 0;
+  Object.entries(js.substances).forEach(([n, o]) => {
+    ['inhal', 'orale'].forEach(c => { const e = o[c]; if (e && isFinite(e.valeur) && e.valeur > 0) { (seuil[n] = seuil[n] || {})[c] = [e.valeur, e.source]; nb++; if (!e.valide_gmep || e.a_verifier) (av[n] = av[n] || []).push(c); } });
+    ['eruInhal', 'eruOral'].forEach(c => { const e = o[c]; if (e && isFinite(e.valeur) && e.valeur > 0) { (ss[n] = ss[n] || {})[c] = [e.valeur, e.source]; nb++; if (!e.valide_gmep || e.a_verifier) (av[n] = av[n] || []).push(c); } });
+  });
+  if (nb < 10) return false;
+  VTR_ANSES.seuil = seuil; VTR_ANSES.sansseuil = ss; VTR_ANSES.a_verifier = av;
+  VTR_ANSES_INFO = { origine: origine, base: js.base_anses_date || null, page: js.page_anses_maj || null, genere: js.genere_le || null,
+    charge_le: new Date().toISOString(), sha: js.base_anses_sha256 || null, nb: nb, alertes: js.alertes || [] };
+  return true;
+}
 ORGANES_LIBELLES.AUDI = 'Système auditif';
 const _VTR_ORIG = JSON.parse(JSON.stringify({ s: VTR_SEUIL, ss: VTR_SANSSEUIL, o: ORGANES_CIBLES }));
 function appliquerHierarchieVTR(mode) {
   mode = (mode === 'base') ? 'base' : 'anses';
   Object.keys(_VTR_ORIG.s).forEach(k => { VTR_SEUIL[k] = Object.assign({}, _VTR_ORIG.s[k]); });
   Object.keys(_VTR_ORIG.ss).forEach(k => { VTR_SANSSEUIL[k] = Object.assign({}, _VTR_ORIG.ss[k]); });
+  Object.keys(VTR_SANSSEUIL).forEach(k => { if (!(k in _VTR_ORIG.ss)) delete VTR_SANSSEUIL[k]; });
+  Object.keys(VTR_SEUIL).forEach(k => { if (!(k in _VTR_ORIG.s)) delete VTR_SEUIL[k]; });
   Object.keys(_VTR_ORIG.o).forEach(k => { ORGANES_CIBLES[k] = JSON.parse(JSON.stringify(_VTR_ORIG.o[k])); });
   if (mode === 'anses') {
     Object.entries(VTR_ANSES.seuil).forEach(([n, o]) => {
+      if (!VTR_SEUIL[n] && !(typeof PROPRIETES !== 'undefined' && PROPRIETES[n])) return;
       const v = VTR_SEUIL[n] || (VTR_SEUIL[n] = { orale:null, inhal:null, cutanee:null, org:'', effet:'' });
       const src = [];
       if (o.inhal) { v.inhal = o.inhal[0]; src.push('inhal. : ' + o.inhal[1]); } else if (v.inhal != null) src.push('inhal. : ' + (_VTR_ORIG.s[n] || {}).org);
@@ -2782,25 +2774,67 @@ function appliquerHierarchieVTR(mode) {
       v.org = src.join(' ; ');
     });
     Object.entries(VTR_ANSES.sansseuil).forEach(([n, o]) => {
-      const v = VTR_SANSSEUIL[n]; if (!v) return;
+      if (!VTR_SANSSEUIL[n]) { if (!VTR_SEUIL[n] && !(typeof PROPRIETES !== 'undefined' && PROPRIETES[n])) return; VTR_SANSSEUIL[n] = { eruOral: null, eruInhal: null, org: '', cancer: '(VTR ANSES)' }; }
+      const v = VTR_SANSSEUIL[n];
       const src = [];
       if (o.eruInhal) { v.eruInhal = o.eruInhal[0]; src.push('inhal. : ' + o.eruInhal[1]); } else if (v.eruInhal != null) src.push('inhal. : ' + (_VTR_ORIG.ss[n] || {}).org);
       if (o.eruOral) { v.eruOral = o.eruOral[0]; src.push('orale : ' + o.eruOral[1]); } else if (v.eruOral != null) src.push('orale : ' + (_VTR_ORIG.ss[n] || {}).org);
       v.org = src.join(' ; ');
     });
     Object.entries(VTR_ANSES.organes).forEach(([n, o]) => { ORGANES_CIBLES[n] = Object.assign({}, ORGANES_CIBLES[n] || { inhal:[], orale:[] }, o); });
+    Object.entries(VTR_ANSES.a_verifier).forEach(([n, ch]) => { if (VTR_SEUIL[n]) VTR_SEUIL[n].org += ' [organe cible à vérifier]'; else if (VTR_SANSSEUIL[n]) VTR_SANSSEUIL[n].org += ' [à vérifier]'; });
   }
   state.vtrMode = mode;
   try { localStorage.setItem('gmep_vtr_mode', mode); } catch (e) {}
 }
+function vtrDateFr(iso) { if (!iso) return '?'; const d = new Date(iso); if (isNaN(d)) return String(iso); return d.toLocaleDateString('fr-FR') + (String(iso).length > 10 ? ' ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : ''); }
+function vtrStatutTexte() {
+  const I = VTR_ANSES_INFO;
+  return 'Base ANSES : page des VTR construites (mise à jour ' + (I.page || '?') + ') et base Excel du ' + vtrDateFr(I.base) + ' ; table GMEP du ' + vtrDateFr(I.genere) + ' – ' + I.origine + (I.origine === 'serveur GMEP' ? ' le ' + vtrDateFr(I.charge_le) : '');
+}
 function vtrSelectorHtml() {
   const m = state.vtrMode || 'anses';
+  const av = Object.entries(VTR_ANSES.a_verifier).map(([n, c]) => n + ' (' + c.join(', ') + ')');
   return `<div class="info-box" style="margin:6px 0;font-size:12px;"><strong>Base de VTR :</strong> <select onchange="appliquerHierarchieVTR(this.value);recalculate();renderActiveSheet();">`
     + `<option value="anses"${m === 'anses' ? ' selected' : ''}>ANSES en priorité, puis autres organismes (note DGS/DGPR du 31/10/2014 — recommandé)</option>`
     + `<option value="base"${m === 'base' ? ' selected' : ''}>Base d'origine (US EPA en général)</option></select>`
-    + ` <span style="color:#555">Hiérarchie : VTR construites par l'ANSES, puis VTR sélectionnées par l'ANSES, puis à défaut US EPA, ATSDR, OEHHA, OMS (base ANSES du 30/06/2025).</span></div>`;
+    + ` <span style="color:#555">Hiérarchie : VTR construites par l'ANSES, puis VTR sélectionnées par l'ANSES, puis à défaut US EPA, ATSDR, OEHHA, OMS.</span>`
+    + `<div style="margin-top:4px;color:#0f766e"><strong>Mise à jour automatique :</strong> ${vtrStatutTexte()} – ${VTR_ANSES_INFO.nb} VTR ANSES. <button type="button" onclick="majVTRAnsesEnLigne(true)" style="font-size:11px">Vérifier maintenant</button></div>`
+    + (av.length ? `<div style="margin-top:3px;color:#b45309">Organe cible à vérifier (VTR nouvelle ou modifiée) : ${av.join(' ; ')}</div>` : '')
+    + (VTR_ANSES_INFO.alertes && VTR_ANSES_INFO.alertes.length ? `<div style="margin-top:3px;color:#b91c1c">Valeurs signalées par la mise à jour : ${VTR_ANSES_INFO.alertes.map(x => x.substance + ' – ' + x.motif).join(' ; ')}</div>` : '')
+    + `</div>`;
 }
+async function majVTRAnsesEnLigne(manuel) {
+  const urls = VTR_ANSES_SOURCES.filter(u => !(u.startsWith('/') && !/^https?:$/.test(location.protocol)));
+  for (const u of urls) {
+    try {
+      const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      const t = ctl ? setTimeout(() => ctl.abort(), 8000) : null;
+      const r = await fetch(u, { cache: 'no-store', signal: ctl ? ctl.signal : undefined });
+      if (t) clearTimeout(t);
+      if (!r.ok) continue;
+      const js = await r.json();
+      const nouveau = !VTR_ANSES_INFO.sha || js.base_anses_sha256 !== VTR_ANSES_INFO.sha || js.genere_le !== VTR_ANSES_INFO.genere;
+      if (!chargerTableANSES(js, 'serveur GMEP')) continue;
+      try { localStorage.setItem('gmep_vtr_anses_cache', JSON.stringify(js)); } catch (e) {}
+      appliquerHierarchieVTR(state.vtrMode || 'anses');
+      if (typeof recalculate === 'function') { try { recalculate(); } catch (e) {} }
+      if (typeof renderActiveSheet === 'function') { try { renderActiveSheet(); } catch (e) {} }
+      if (manuel || nouveau) console.info('[GMEP] VTR ANSES mises à jour depuis ' + u);
+      return true;
+    } catch (e) { /* source suivante */ }
+  }
+  if (manuel) alert('Serveur GMEP injoignable : le logiciel conserve la table des VTR ANSES ' + VTR_ANSES_INFO.origine + '.');
+  return false;
+}
+(function () {
+  let ok = false;
+  try { const c = JSON.parse(localStorage.getItem('gmep_vtr_anses_cache') || 'null');
+        if (c && VTR_ANSES_EMBARQUEE && String(c.genere_le || '') >= String(VTR_ANSES_EMBARQUEE.genere_le || '')) ok = chargerTableANSES(c, 'dernière table reçue (hors connexion)'); } catch (e) {}
+  if (!ok) chargerTableANSES(VTR_ANSES_EMBARQUEE, 'intégrée au logiciel');
+})();
 (function () { let m = 'anses'; try { m = localStorage.getItem('gmep_vtr_mode') || 'anses'; } catch (e) {} appliquerHierarchieVTR(m); })();
+if (typeof window !== 'undefined' && typeof fetch === 'function') window.addEventListener('load', () => { setTimeout(() => majVTRAnsesEnLigne(false), 300); });
 
 // ============================================================
 // COEFFICIENTS DE BIODÉGRADATION 1ER ORDRE (DeVaull 2007, EPA)
@@ -5737,7 +5771,7 @@ function exportPDF() {
     });
     doc.setFont('helvetica', 'normal'); doc.setTextColor(0,0,0); doc.setFontSize(7);
     doc.text('HI organe = somme des QD des substances dont la VTR a pour effet critique cet organe (toutes voies). Ref. : US EPA (2000) Chemical Mixtures ; methodologie nationale SSP (2017).', margin, yO + 18);
-    doc.text('Base de VTR : ' + ((state.vtrMode||'anses') === 'anses' ? 'ANSES en priorite, puis autres organismes (note DGS/DGPR du 31/10/2014)' : 'base d\'origine (US EPA en general)'), margin, yO + 13);
+    doc.text('Base de VTR : ' + ((state.vtrMode||'anses') === 'anses' ? 'ANSES en priorite, puis autres organismes (note DGS/DGPR du 31/10/2014) - table ANSES du ' + vtrDateFr(VTR_ANSES_INFO.genere) + ' (base Excel ' + vtrDateFr(VTR_ANSES_INFO.base) + ', page ' + (VTR_ANSES_INFO.page||'?') + ')' : 'base d\'origine (US EPA en general)'), margin, yO + 13);
     if (ro.non_attribues.length) doc.text('Substances sans organe documente : ' + ro.non_attribues.join(', '), margin, yO + 23);
     // ERI par site de cancer
     const cansO = Object.keys(CANCERS_LIBELLES).filter(c => recsO.some(([k]) => ((ro.recepteurs[k].cancers||{})[c]||{}).eri > 0));

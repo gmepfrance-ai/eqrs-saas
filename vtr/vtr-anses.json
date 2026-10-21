@@ -1,0 +1,595 @@
+{
+ "schema": 1,
+ "titre": "VTR de l'ANSES retenues par les logiciels EQRS GMEP (hiérarchie de la note DGS/DGPR du 31/10/2014)",
+ "base_anses_date": "2025-06-30",
+ "base_anses_url": "https://www.anses.fr/sites/default/files/BDD-VTR-Anses-juin2025.xlsx",
+ "base_anses_sha256": "a7b7b887b3cc3a64208f1231a61f3e99613acd84ce7541b24638eb19592e43d0",
+ "page_anses": "https://www.anses.fr/fr/content/liste-des-valeurs-toxicologiques-de-reference-vtr",
+ "page_anses_maj": "Avril 2026",
+ "nb_vtr_page": 78,
+ "unites": {
+  "inhal": "mg/m3",
+  "orale": "mg/kg/j",
+  "eruInhal": "(µg/m3)-1",
+  "eruOral": "(mg/kg/j)-1"
+ },
+ "substances": {
+  "Benzène": {
+   "inhal": {
+    "valeur": 0.0097,
+    "unite": "mg/m3",
+    "source": "Anses 2024",
+    "organisme": "Anses",
+    "annee": "2024",
+    "construite_anses": true,
+    "expertise": "Page ANSES « Liste des VTR » (Avril 2026)",
+    "valide_gmep": true
+   },
+   "eruInhal": {
+    "valeur": 1.6e-06,
+    "unite": "(µg/m3)-1",
+    "source": "Anses 2024",
+    "organisme": "Anses",
+    "annee": "2024",
+    "construite_anses": true,
+    "expertise": "VTR court, moyen et long termes par voie respiratoire pour le benzène (CAS n°71-43-2) (2024)",
+    "valide_gmep": true
+   }
+  },
+  "Toluène": {
+   "inhal": {
+    "valeur": 19.0,
+    "unite": "mg/m3",
+    "source": "Anses 2017",
+    "organisme": "Anses",
+    "annee": "2017",
+    "construite_anses": true,
+    "expertise": "Elaboration de VTR par voie respiratoire pour le toluène (2017)",
+    "valide_gmep": true
+   }
+  },
+  "Éthylbenzène": {
+   "inhal": {
+    "valeur": 1.5,
+    "unite": "mg/m3",
+    "source": "Anses 2016",
+    "organisme": "Anses",
+    "annee": "2016",
+    "construite_anses": true,
+    "expertise": "Elaboration de VTR aigue et chronique par voie respiratoire pour l’éthylbenzène (2016)",
+    "valide_gmep": true
+   }
+  },
+  "Xylènes (mélange)": {
+   "inhal": {
+    "valeur": 0.1,
+    "unite": "mg/m3",
+    "source": "Anses 2020",
+    "organisme": "Anses",
+    "annee": "2020",
+    "construite_anses": true,
+    "expertise": "Page ANSES « Liste des VTR » (Avril 2026)",
+    "valide_gmep": true
+   }
+  },
+  "Naphtalène": {
+   "inhal": {
+    "valeur": 0.037,
+    "unite": "mg/m3",
+    "source": "Anses 2013",
+    "organisme": "Anses",
+    "annee": "2013",
+    "construite_anses": true,
+    "expertise": "Valeur toxicologique de référence par inhalation pour le naphtalène (2013)",
+    "valide_gmep": true
+   },
+   "eruInhal": {
+    "valeur": 5.6e-06,
+    "unite": "(µg/m3)-1",
+    "source": "Anses 2013",
+    "organisme": "Anses",
+    "annee": "2013",
+    "construite_anses": true,
+    "expertise": "Valeur toxicologique de référence par inhalation pour le naphtalène (2013)",
+    "valide_gmep": true
+   }
+  },
+  "Benzo(a)pyrène": {
+   "eruInhal": {
+    "valeur": 0.0011,
+    "unite": "(µg/m3)-1",
+    "source": "OEHHA 2008, sélection ANSES",
+    "organisme": "OEHHA",
+    "annee": "2008",
+    "construite_anses": false,
+    "expertise": "Activités professionnelles et qualité de l’air des parcs de stationnement couverts (2010)",
+    "valide_gmep": true
+   },
+   "eruOral": {
+    "valeur": 1.0,
+    "unite": "(mg/kg/j)-1",
+    "source": "US EPA 2017, sélection ANSES",
+    "organisme": "US EPA",
+    "annee": "2017",
+    "construite_anses": false,
+    "expertise": "Sécurité des couches pour bébé (2019)",
+    "valide_gmep": true
+   },
+   "orale": {
+    "valeur": 0.0003,
+    "unite": "mg/kg/j",
+    "source": "US EPA 2017, sélection ANSES",
+    "organisme": "US EPA",
+    "annee": "2017",
+    "construite_anses": false,
+    "expertise": "Sécurité des couches pour bébé (2019)",
+    "valide_gmep": true
+   }
+  },
+  "Arsenic inorganique": {
+   "eruInhal": {
+    "valeur": 0.00015,
+    "unite": "(µg/m3)-1",
+    "source": "TCEQ 2012, sélection ANSES",
+    "organisme": "TCEQ",
+    "annee": "2012",
+    "construite_anses": false,
+    "expertise": "Pollution chimique de l'air des enceintes de transports ferroviaires souterrains et risques sanitaires associés chez les travailleurs (2015)",
+    "valide_gmep": true
+   }
+  },
+  "Cadmium": {
+   "orale": {
+    "valeur": 0.00035,
+    "unite": "mg/kg/j",
+    "source": "Anses 2019",
+    "organisme": "Anses",
+    "annee": "2019",
+    "construite_anses": true,
+    "expertise": "Propositions de valeurs toxicologiques de référence par ingestion, de valeurs sanitaires repères dans les milieux biologiques (sang, urines, …)",
+    "valide_gmep": true
+   },
+   "inhal": {
+    "valeur": 0.00045,
+    "unite": "mg/m3",
+    "source": "Anses 2012",
+    "organisme": "Anses",
+    "annee": "2012",
+    "construite_anses": true,
+    "expertise": "Valeur toxicologique de référence pour le cadmium et ses composés (2012)",
+    "valide_gmep": true
+   }
+  },
+  "Chrome VI": {
+   "orale": {
+    "valeur": 0.001,
+    "unite": "mg/kg/j",
+    "source": "ATSDR 2008, sélection ANSES",
+    "organisme": "ATSDR",
+    "annee": "2008",
+    "construite_anses": false,
+    "expertise": "Evaluation des risques sanitaires liés aux dépassements de la limite de qualité du chrome dans les eaux destinées à la consommation humaine (2012)",
+    "valide_gmep": true
+   },
+   "eruOral": {
+    "valeur": 0.5,
+    "unite": "(mg/kg/j)-1",
+    "source": "OEHHA 2011, sélection ANSES",
+    "organisme": "OEHHA",
+    "annee": "2011",
+    "construite_anses": false,
+    "expertise": "Evaluation des risques sanitaires liés aux dépassements de la limite de qualité du chrome dans les eaux destinées à la consommation humaine (2012)",
+    "valide_gmep": false
+   },
+   "eruInhal": {
+    "valeur": 0.04,
+    "unite": "(µg/m3)-1",
+    "source": "IPCS 2013, sélection ANSES",
+    "organisme": "IPCS",
+    "annee": "2013",
+    "construite_anses": false,
+    "expertise": "Pollution chimique de l'air des enceintes de transports ferroviaires souterrains et risques sanitaires associés chez les travailleurs (2015)",
+    "valide_gmep": true
+   }
+  },
+  "Chrome III": {
+   "orale": {
+    "valeur": 0.3,
+    "unite": "mg/kg/j",
+    "source": "EFSA 2014, sélection ANSES",
+    "organisme": "EFSA",
+    "annee": "2014",
+    "construite_anses": false,
+    "expertise": "Etude de l’Alimentation Totale Infantile (2016)",
+    "valide_gmep": true
+   }
+  },
+  "Mercure inorganique": {
+   "orale": {
+    "valeur": 0.000571429,
+    "unite": "mg/kg/j",
+    "source": "EFSA 2012, sélection ANSES",
+    "organisme": "EFSA",
+    "annee": "2012",
+    "construite_anses": false,
+    "expertise": "Etude de l’Alimentation Totale Infantile (2016)",
+    "valide_gmep": true
+   }
+  },
+  "Méthylmercure": {
+   "orale": {
+    "valeur": 0.000185714,
+    "unite": "mg/kg/j",
+    "source": "EFSA 2012, sélection ANSES",
+    "organisme": "EFSA",
+    "annee": "2012",
+    "construite_anses": false,
+    "expertise": "Etude de l’Alimentation Totale Infantile (2016)",
+    "valide_gmep": true
+   }
+  },
+  "Nickel": {
+   "inhal": {
+    "valeur": 0.00023,
+    "unite": "mg/m3",
+    "source": "TCEQ 2011, sélection ANSES",
+    "organisme": "TCEQ",
+    "annee": "2011",
+    "construite_anses": false,
+    "expertise": "Pollution chimique de l'air des enceintes de transports ferroviaires souterrains et risques sanitaires associés chez les travailleurs (2015)",
+    "valide_gmep": true
+   },
+   "eruInhal": {
+    "valeur": 0.00017,
+    "unite": "(µg/m3)-1",
+    "source": "TCEQ 2011, sélection ANSES",
+    "organisme": "TCEQ",
+    "annee": "2011",
+    "construite_anses": false,
+    "expertise": "Pollution chimique de l'air des enceintes de transports ferroviaires souterrains et risques sanitaires associés chez les travailleurs (2015)",
+    "valide_gmep": true
+   },
+   "orale": {
+    "valeur": 0.0028,
+    "unite": "mg/kg/j",
+    "source": "EFSA 2015, sélection ANSES",
+    "organisme": "EFSA",
+    "annee": "2015",
+    "construite_anses": false,
+    "expertise": "Etude de l’Alimentation Totale Infantile (2016)",
+    "valide_gmep": true
+   }
+  },
+  "Antimoine": {
+   "orale": {
+    "valeur": 0.006,
+    "unite": "mg/kg/j",
+    "source": "OMS 2003, sélection ANSES",
+    "organisme": "OMS",
+    "annee": "2003",
+    "construite_anses": false,
+    "expertise": "Etude de l’Alimentation Totale Infantile (2016)",
+    "valide_gmep": true
+   }
+  },
+  "Baryum": {
+   "orale": {
+    "valeur": 0.2,
+    "unite": "mg/kg/j",
+    "source": "US EPA 2005, sélection ANSES",
+    "organisme": "US EPA",
+    "annee": "2005",
+    "construite_anses": false,
+    "expertise": "Etude de l’Alimentation Totale Infantile (2016)",
+    "valide_gmep": false
+   },
+   "inhal": {
+    "valeur": 0.001,
+    "unite": "mg/m3",
+    "source": "RIVM 2000, sélection ANSES",
+    "organisme": "RIVM",
+    "annee": "2000",
+    "construite_anses": false,
+    "expertise": "Pollution chimique de l'air des enceintes de transports ferroviaires souterrains et risques sanitaires associés chez les travailleurs (2015)",
+    "valide_gmep": false
+   }
+  },
+  "Cobalt": {
+   "orale": {
+    "valeur": 0.0015,
+    "unite": "mg/kg/j",
+    "source": "Afssa 2010",
+    "organisme": "Afssa",
+    "annee": "2010",
+    "construite_anses": true,
+    "expertise": "Etude de l’Alimentation Totale Infantile (2016)",
+    "valide_gmep": true
+   }
+  },
+  "Cyanures libres": {
+   "orale": {
+    "valeur": 0.015,
+    "unite": "mg/kg/j",
+    "source": "Anses 2010",
+    "organisme": "Anses",
+    "annee": "2010",
+    "construite_anses": true,
+    "expertise": "Contamination de lots de sarrasin et de farines de sarrasin par de l’acide cyanhydrique et à l’établissement d’un seuil d’intervention (2010)",
+    "valide_gmep": true
+   }
+  },
+  "Trichloroéthylène (TCE)": {
+   "inhal": {
+    "valeur": 3.2,
+    "unite": "mg/m3",
+    "source": "Anses 2018",
+    "organisme": "Anses",
+    "annee": "2018",
+    "construite_anses": true,
+    "expertise": "Proposition de VTR par voie respiratoire pour le trichloroéthylène (CAS n° 79-01-6)",
+    "valide_gmep": true
+   },
+   "eruInhal": {
+    "valeur": 1e-06,
+    "unite": "(µg/m3)-1",
+    "source": "Anses 2018",
+    "organisme": "Anses",
+    "annee": "2018",
+    "construite_anses": true,
+    "expertise": "Proposition de VTR par voie respiratoire pour le trichloroéthylène (CAS n° 79-01-6)",
+    "valide_gmep": true
+   },
+   "eruOral": {
+    "valeur": 0.00078,
+    "unite": "(mg/kg/j)-1",
+    "source": "OMS 2005, sélection ANSES",
+    "organisme": "OMS",
+    "annee": "2005",
+    "construite_anses": false,
+    "expertise": "ERS associée aux situations de non-conformités pour tri et le tétrachloroéthylène dans les EDCH (2016)",
+    "valide_gmep": true
+   },
+   "orale": {
+    "valeur": 0.00146,
+    "unite": "mg/kg/j",
+    "source": "OMS 2005, sélection ANSES",
+    "organisme": "OMS",
+    "annee": "2005",
+    "construite_anses": false,
+    "expertise": "ERS associée aux situations de non-conformités pour tri et le tétrachloroéthylène dans les EDCH (2016)",
+    "valide_gmep": true
+   }
+  },
+  "Tétrachloroéthylène (PCE)": {
+   "inhal": {
+    "valeur": 0.4,
+    "unite": "mg/m3",
+    "source": "Anses 2018",
+    "organisme": "Anses",
+    "annee": "2018",
+    "construite_anses": true,
+    "expertise": "Page ANSES « Liste des VTR » (Avril 2026)",
+    "valide_gmep": true
+   },
+   "eruInhal": {
+    "valeur": 2.6e-07,
+    "unite": "(µg/m3)-1",
+    "source": "Anses 2018",
+    "organisme": "Anses",
+    "annee": "2018",
+    "construite_anses": true,
+    "expertise": "Page ANSES « Liste des VTR » (Avril 2026)",
+    "valide_gmep": true
+   },
+   "orale": {
+    "valeur": 0.014,
+    "unite": "mg/kg/j",
+    "source": "OMS 2011, sélection ANSES",
+    "organisme": "OMS",
+    "annee": "2011",
+    "construite_anses": false,
+    "expertise": "ERS associée aux situations de non-conformités pour tri et le tétrachloroéthylène dans les EDCH (2016)",
+    "valide_gmep": true
+   },
+   "eruOral": {
+    "valeur": 0.002,
+    "unite": "(mg/kg/j)-1",
+    "source": "US EPA 2012, sélection ANSES",
+    "organisme": "US EPA",
+    "annee": "2012",
+    "construite_anses": false,
+    "expertise": "ERS associée aux situations de non-conformités pour tri et le tétrachloroéthylène dans les EDCH (2016)",
+    "valide_gmep": true
+   }
+  },
+  "Chlorure de vinyle": {
+   "eruOral": {
+    "valeur": 0.625,
+    "unite": "(mg/kg/j)-1",
+    "source": "Anses 2012",
+    "organisme": "Anses",
+    "annee": "2012",
+    "construite_anses": true,
+    "expertise": "ERS associée aux situations de non-conformités pour le chlorure de vinyle dans les EDCH (2014)",
+    "valide_gmep": true
+   },
+   "eruInhal": {
+    "valeur": 3.8e-06,
+    "unite": "(µg/m3)-1",
+    "source": "Anses 2012",
+    "organisme": "Anses",
+    "annee": "2012",
+    "construite_anses": true,
+    "expertise": "Valeur toxicologique de référence pour le chlorure de vinyle (2012)",
+    "valide_gmep": true
+   }
+  },
+  "Tétrachlorure de carbone": {
+   "inhal": {
+    "valeur": 0.11,
+    "unite": "mg/m3",
+    "source": "Anses 2017",
+    "organisme": "Anses",
+    "annee": "2017",
+    "construite_anses": true,
+    "expertise": "Page ANSES « Liste des VTR » (Avril 2026)",
+    "valide_gmep": false
+   }
+  },
+  "Chloroforme": {
+   "inhal": {
+    "valeur": 0.063,
+    "unite": "mg/m3",
+    "source": "Anses 2008",
+    "organisme": "Anses",
+    "annee": "2008",
+    "construite_anses": true,
+    "expertise": "Élaboration de VTR fondées sur les effets cancérogènes pour le chloroforme, le tétrachlorure de carbone et le 1,2-dichloroéthane (2009)",
+    "valide_gmep": true
+   }
+  },
+  "1,2-Dichloroéthane": {
+   "eruInhal": {
+    "valeur": 3.4e-06,
+    "unite": "(µg/m3)-1",
+    "source": "Anses 2009",
+    "organisme": "Anses",
+    "annee": "2009",
+    "construite_anses": true,
+    "expertise": "Élaboration de VTR fondées sur les effets cancérogènes  pour le chloroforme, le tétrachlorure de carbone et le 1,2-dichloroéthane (2009)",
+    "valide_gmep": true
+   }
+  },
+  "Formaldéhyde": {
+   "inhal": {
+    "valeur": 0.123,
+    "unite": "mg/m3",
+    "source": "Anses 2017",
+    "organisme": "Anses",
+    "annee": "2017",
+    "construite_anses": true,
+    "expertise": "Élaboration de VTR par inhalation pour le formaldéhyde",
+    "valide_gmep": true
+   },
+   "orale": {
+    "valeur": 0.15,
+    "unite": "mg/kg/j",
+    "source": "OMS-IPCS 2005, sélection ANSES",
+    "organisme": "OMS-IPCS",
+    "annee": "2005",
+    "construite_anses": false,
+    "expertise": "Sécurité des couches pour bébé (2019)",
+    "valide_gmep": false
+   }
+  },
+  "Atrazine": {
+   "orale": {
+    "valeur": 0.02,
+    "unite": "mg/kg/j",
+    "source": "OMS - JMPR 2007, sélection ANSES",
+    "organisme": "OMS - JMPR",
+    "annee": "2007",
+    "construite_anses": false,
+    "expertise": "Détermination de valeurs sanitaires maximales (VMAX) de pesticides ou métabolites de pesticides dans les eaux destinées à la consommation humaine (III) (2016)",
+    "valide_gmep": false
+   }
+  },
+  "Lindane (gamma-HCH)": {
+   "orale": {
+    "valeur": 1e-05,
+    "unite": "mg/kg/j",
+    "source": "ATSDR 2005, sélection ANSES",
+    "organisme": "ATSDR",
+    "annee": "2005",
+    "construite_anses": false,
+    "expertise": "Etude de l’Alimentation Totale Infantile (2016)",
+    "valide_gmep": false
+   },
+   "eruOral": {
+    "valeur": 1.1,
+    "unite": "(mg/kg/j)-1",
+    "source": "OEHHA 2009, sélection ANSES",
+    "organisme": "OEHHA",
+    "annee": "2009",
+    "construite_anses": false,
+    "expertise": "Sécurité des protections intimes (2019)",
+    "valide_gmep": false
+   }
+  },
+  "HCB (hexachlorobenzène)": {
+   "orale": {
+    "valeur": 7e-05,
+    "unite": "mg/kg/j",
+    "source": "ATSDR 2015, sélection ANSES",
+    "organisme": "ATSDR",
+    "annee": "2015",
+    "construite_anses": false,
+    "expertise": "Sécurité des couches pour bébé (2019)",
+    "valide_gmep": true
+   },
+   "eruOral": {
+    "valeur": 1.8,
+    "unite": "(mg/kg/j)-1",
+    "source": "OEHHA 2011, sélection ANSES",
+    "organisme": "OEHHA",
+    "annee": "2011",
+    "construite_anses": false,
+    "expertise": "Sécurité des couches pour bébé (2019)",
+    "valide_gmep": true
+   }
+  },
+  "Nickel (composés)": {
+   "inhal": {
+    "valeur": 0.00023,
+    "unite": "mg/m3",
+    "source": "TCEQ 2011, sélection ANSES",
+    "organisme": "TCEQ",
+    "annee": "2011",
+    "construite_anses": false,
+    "expertise": "Pollution chimique de l'air des enceintes de transports ferroviaires souterrains et risques sanitaires associés chez les travailleurs (2015)",
+    "valide_gmep": true
+   },
+   "eruInhal": {
+    "valeur": 0.00017,
+    "unite": "(µg/m3)-1",
+    "source": "TCEQ 2011, sélection ANSES",
+    "organisme": "TCEQ",
+    "annee": "2011",
+    "construite_anses": false,
+    "expertise": "Pollution chimique de l'air des enceintes de transports ferroviaires souterrains et risques sanitaires associés chez les travailleurs (2015)",
+    "valide_gmep": true
+   },
+   "orale": {
+    "valeur": 0.0028,
+    "unite": "mg/kg/j",
+    "source": "EFSA 2015, sélection ANSES",
+    "organisme": "EFSA",
+    "annee": "2015",
+    "construite_anses": false,
+    "expertise": "Etude de l’Alimentation Totale Infantile (2016)",
+    "valide_gmep": true
+   }
+  },
+  "Acrylamide": {
+   "orale": {
+    "valeur": 0.002,
+    "unite": "mg/kg/j",
+    "source": "US EPA 2010, sélection ANSES",
+    "organisme": "US EPA",
+    "annee": "2010",
+    "construite_anses": false,
+    "expertise": "Etude de l’Alimentation Totale Infantile (2016)",
+    "valide_gmep": false
+   }
+  }
+ },
+ "alertes": [],
+ "corrections_appliquees": [
+  {
+   "substance": "Chrome VI",
+   "champ": "eruOral",
+   "correction": "Base ANSES du 30/06/2025 : ERU oral OEHHA 2011 du chrome VI saisi 0,5 (µg/kg pc/j)-1 ; la valeur source de l'OEHHA est 0,5 (mg/kg/j)-1."
+  }
+ ],
+ "genere_le": "2026-10-21T06:47:26Z"
+}
