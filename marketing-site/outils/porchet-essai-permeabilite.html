@@ -4,8 +4,8 @@
 <meta name="google-site-verification" content="Jb57UgLb56M6wCgoUarBvNjvFtL0t7W1Wa_NCO6qlSg" />
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Modélisation Essai de Porchet | GMEP</title>
-<meta name="description" content="Logiciel SaaS de saisie terrain et de calcul du coefficient de perméabilité K par essai Porchet (formule hémisphérique). Comparaison directe avec le dimensionnement du module Modélisation GEP. 550 € HT/an.">
+<title>Essai de Porchet : calcul de la perméabilité K en ligne | GMEP</title>
+<meta name="description" content="Essai de Porchet (test de perméabilité à la tarière) : protocole terrain, saturation, formule de calcul du coefficient K, conversion m/s – mm/h, interprétation pour l'infiltration des eaux pluviales et l'ANC. Logiciel en ligne, fiche PDF.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
@@ -21,7 +21,7 @@
 <link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/outils/porchet-essai-permeabilite.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.gmep-france.eu/outils/porchet-essai-permeabilite.html">
-<meta property="og:title" content="Modélisation Essai de Porchet | GMEP">
+<meta property="og:title" content="Essai de Porchet : calcul de la perméabilité K en ligne | GMEP">
 <meta property="og:description" content="Saisie terrain, calcul automatisé de la perméabilité K (essai Porchet) et comparaison avec le dimensionnement GEP.">
 <meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -30,9 +30,21 @@
 <meta property="og:site_name" content="GMEP">
 <meta property="og:locale" content="fr_FR">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Modélisation Essai de Porchet | GMEP">
+<meta name="twitter:title" content="Essai de Porchet : calcul de la perméabilité K en ligne | GMEP">
 <meta name="twitter:description" content="Calcul automatisé de la perméabilité K par essai Porchet, comparaison directe avec le module GEP.">
 <meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Combien d'essais de Porchet faut-il réaliser ?", "acceptedAnswer": { "@type": "Answer", "text": "Au minimum un essai par zone homogène d'infiltration, et en pratique plusieurs essais répartis sur l'emprise du projet : la perméabilité d'un sol varie souvent d'un ordre de grandeur sur quelques mètres. Le service instructeur (DDT(M), SPANC) peut fixer un nombre minimal." } },
+    { "@type": "Question", "name": "À quelle profondeur réaliser l'essai de Porchet ?", "acceptedAnswer": { "@type": "Answer", "text": "À la profondeur du fond du futur ouvrage d'infiltration (noue, tranchée, puits d'infiltration, épandage), car c'est la perméabilité de cet horizon qui conditionne le fonctionnement de l'ouvrage." } },
+    { "@type": "Question", "name": "Pourquoi saturer le sol avant un essai de Porchet ?", "acceptedAnswer": { "@type": "Answer", "text": "Un sol sec absorbe l'eau par capillarité et surestime la perméabilité. La saturation préalable permet de mesurer la perméabilité du sol saturé, qui correspond aux conditions de fonctionnement d'un ouvrage d'infiltration en période pluvieuse." } },
+    { "@type": "Question", "name": "Le logiciel GMEP produit-il une fiche de rapport d'essai de Porchet ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui : la saisie terrain génère automatiquement le calcul de K et de Kdim, la courbe d'infiltration, la comparaison avec le module Modélisation GEP et une fiche PDF prête à joindre au dossier Loi sur l'Eau ou à l'étude de sol." } }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -57,6 +69,7 @@
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/" role="menuitem"><strong>Tous les outils</strong><span class="nav-mi-desc">Catalogue complet SSP &amp; hydrogéologie</span></a>
           <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modélisation 3D sols / nappe / ouvrages · NOUVEAU</span></a>
           <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modélisation GEP — DLE &amp; Loi sur l'Eau<span class="nav-mi-desc">Dimensionnement EP + dossiers DLE/GEP · NOUVEAU</span></a>
           <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modélisation Essai de Porchet<span class="nav-mi-desc">Calcul K terrain + comparaison GEP · NOUVEAU</span></a>
@@ -100,7 +113,7 @@
     <div class="hero-grid">
       <div>
         <span class="hero-badge" style="background:#20808D;color:#fff;">Essai de perméabilité · Norme terrain</span>
-        <h1>Modélisation <span style="color:#20808D;">Essai de Porchet</span></h1>
+        <h1><span style="color:#20808D;">Essai de Porchet</span> — calcul de la perméabilité K</h1>
         <p class="lead">Saisie terrain des essais de perméabilité, calcul automatisé du coefficient K (formule hémisphérique) et comparaison directe avec le K théorique retenu par le module Modélisation GEP. Fiches de rapport PDF prêtes à joindre au dossier Loi sur l'Eau.</p>
         <div class="hero-cta">
           <a href="../tarifs.html#porchet_annual" class="btn btn-primary" style="background:#20808D;border-color:#20808D;">S'abonner — 550 € HT/an</a>
@@ -187,6 +200,35 @@
       <p style="background:#fff8e1;border-left:4px solid #f5b94d;padding:14px 18px;border-radius:6px;margin-top:18px;">
         <strong>Le logiciel ne se substitue pas à l'expertise de l'ingénieur</strong>, ni aux demandes éventuelles de la DDT(M), de la DREAL, du maître d'ouvrage ou du bureau de contrôle.
       </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ==================================================================== -->
+<!-- SECTION — GUIDE ESSAI PORCHET (protocole, interprétation, FAQ) -->
+<!-- ==================================================================== -->
+<section>
+  <div class="container container-narrow" style="line-height:1.75;">
+    <div class="section-head">
+      <span class="section-eyebrow">Guide pratique</span>
+      <h2>Réaliser un essai de Porchet : protocole terrain</h2>
+    </div>
+    <p>L'<strong>essai de Porchet</strong> (ou test de perméabilité à niveau variable en trou de tarière) est l'essai de terrain le plus courant pour estimer la perméabilité superficielle d'un sol avant un projet d'<a href="eaux-pluviales-dle-gep.html">infiltration des eaux pluviales</a> ou d'<a href="anc-assainissement.html">assainissement non collectif</a>. Il se déroule en quatre temps :</p>
+    <ol>
+      <li><strong>Réalisation du trou</strong> à la tarière, à la profondeur du futur ouvrage d'infiltration (diamètre usuel de l'ordre de 15 cm), parois et fond nettoyés.</li>
+      <li><strong>Saturation du sol</strong> par remplissages successifs, afin que la mesure représente le sol saturé et non l'absorption d'un sol sec (la durée dépend de la nature du terrain ; elle est plus longue dans les sols argileux).</li>
+      <li><strong>Mesure</strong> : versement d'un volume d'eau connu et chronométrage du temps d'infiltration jusqu'à l'assèchement du trou (ou suivi de la baisse du niveau d'eau dans le temps).</li>
+      <li><strong>Répétition</strong> de l'essai sur plusieurs points représentatifs de l'emprise, la perméabilité pouvant varier fortement sur quelques mètres.</li>
+    </ol>
+    <h3>Interpréter le coefficient de perméabilité K</h3>
+    <p>Le coefficient K est exprimé en m/s (hydrogéologie, dimensionnement des ouvrages pluviaux) ou en mm/h (assainissement non collectif) : <strong>1 × 10⁻⁵ m/s = 36 mm/h</strong>. À titre indicatif, une perméabilité inférieure à 10⁻⁶ m/s rend l'infiltration seule rarement suffisante pour gérer les eaux pluviales, et les sols très perméables (au-delà de 10⁻³ m/s) peuvent poser un problème de protection de la nappe. Pour l'ANC, les filières d'épandage par le sol en place sont généralement envisagées pour des perméabilités comprises entre 15 et 500 mm/h. La valeur retenue pour le dimensionnement est minorée par un <strong>coefficient de sécurité</strong> (Kdim = K ÷ Cs).</p>
+    <h3>Questions fréquentes sur l'essai de Porchet</h3>
+    <div class="faq-list">
+      <details><summary>Combien d'essais de Porchet faut-il réaliser ?</summary><p>Au minimum un essai par zone homogène d'infiltration, et en pratique plusieurs essais répartis sur l'emprise du projet : la perméabilité d'un sol varie souvent d'un ordre de grandeur sur quelques mètres. Le service instructeur (DDT(M), SPANC) peut fixer un nombre minimal.</p></details>
+      <details><summary>À quelle profondeur réaliser l'essai ?</summary><p>À la profondeur du fond du futur ouvrage d'infiltration (noue, tranchée, puits d'infiltration, épandage), car c'est la perméabilité de cet horizon qui conditionne le fonctionnement de l'ouvrage.</p></details>
+      <details><summary>Pourquoi saturer le sol avant la mesure ?</summary><p>Un sol sec absorbe l'eau par capillarité et surestime la perméabilité. La saturation préalable permet de mesurer la perméabilité du sol saturé, qui correspond aux conditions de fonctionnement d'un ouvrage d'infiltration en période pluvieuse.</p></details>
+      <details><summary>Le logiciel GMEP produit-il une fiche de rapport ?</summary><p>Oui : la saisie terrain génère automatiquement le calcul de K et de Kdim, la courbe d'infiltration, la comparaison avec le module Modélisation GEP et une fiche PDF prête à joindre au dossier Loi sur l'Eau ou à l'étude de sol.</p></details>
     </div>
   </div>
 </section>

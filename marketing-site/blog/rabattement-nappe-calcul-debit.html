@@ -4,9 +4,9 @@
 <meta name="google-site-verification" content="Jb57UgLb56M6wCgoUarBvNjvFtL0t7W1Wa_NCO6qlSg" />
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rabattement de nappe : calcul du débit (Theis, Dupuit-Thiem) et classification IOTA | GMEP</title>
-<meta name="description" content="Rabattement de nappe calcul : équations de Theis et Dupuit-Thiem, débit de pompage, transmissivité, classification IOTA R.214-1, dossier Loi sur l'Eau.">
-<meta name="keywords" content="rabattement de nappe calcul, débit pompage Theis, Dupuit-Thiem, IOTA R.214-1, Loi sur l'Eau, transmissivité, emmagasinement, rabattement multicouche">
+<title>Rabattement de nappe : procédés, calcul du débit (Theis, Dupuit-Thiem) et IOTA | GMEP</title>
+<meta name="description" content="Rabattement de nappe phréatique : procédés (pointes filtrantes, puits, tranchées drainantes, enceinte en paroi moulée étanche ou non étanche), calcul du débit Theis et Dupuit-Thiem, classification IOTA, dossier Loi sur l'Eau.">
+<meta name="keywords" content="rabattement de nappe, procédé de rabattement de nappe, rabattement de nappe phréatique, pointes filtrantes, paroi moulée, enceinte étanche, rabattement de nappe calcul, débit pompage Theis, Dupuit-Thiem, IOTA R.214-1, Loi sur l'Eau, transmissivité, emmagasinement, rabattement multicouche">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
@@ -22,7 +22,7 @@
 <link rel="alternate" hreflang="x-default" href="https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html">
-<meta property="og:title" content="Rabattement de nappe : calcul du débit (Theis, Dupuit-Thiem) | GMEP">
+<meta property="og:title" content="Rabattement de nappe : procédés et calcul du débit (Theis, Dupuit-Thiem) | GMEP">
 <meta property="og:description" content="Principe du rabattement de nappe, équations de Theis et Dupuit-Thiem, paramètres hydrogéologiques, classification IOTA et dossier Loi sur l'Eau.">
 <meta property="og:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -31,7 +31,7 @@
 <meta property="og:site_name" content="GMEP">
 <meta property="og:locale" content="fr_FR">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Rabattement de nappe : calcul du débit (Theis, Dupuit-Thiem) | GMEP">
+<meta name="twitter:title" content="Rabattement de nappe : procédés et calcul du débit (Theis, Dupuit-Thiem) | GMEP">
 <meta name="twitter:description" content="Principe du rabattement de nappe, équations de Theis et Dupuit-Thiem, paramètres hydrogéologiques, classification IOTA et dossier Loi sur l'Eau.">
 <meta name="twitter:image" content="https://www.gmep-france.eu/assets/img/og-image.png">
 
@@ -42,10 +42,10 @@
     {
       "@type": "TechArticle",
       "@id": "https://www.gmep-france.eu/blog/rabattement-nappe-calcul-debit.html#article",
-      "headline": "Rabattement de nappe : calcul du débit (Theis, Dupuit-Thiem) et classification IOTA",
-      "description": "Rabattement de nappe calcul : équations de Theis et Dupuit-Thiem, débit de pompage, transmissivité, classification IOTA R.214-1, dossier Loi sur l'Eau.",
+      "headline": "Rabattement de nappe : procédés, calcul du débit (Theis, Dupuit-Thiem) et classification IOTA",
+      "description": "Rabattement de nappe phréatique : procédés (pointes filtrantes, puits, tranchées drainantes, enceinte en paroi moulée étanche ou non étanche), calcul du débit Theis et Dupuit-Thiem, classification IOTA, dossier Loi sur l'Eau.",
       "datePublished": "2026-07-03",
-      "dateModified": "2026-07-03",
+      "dateModified": "2026-10-22",
       "inLanguage": "fr-FR",
       "author": {
         "@type": "Person",
@@ -65,6 +65,8 @@
     {
       "@type": "FAQPage",
       "mainEntity": [
+        { "@type": "Question", "name": "Quels sont les principaux procédés de rabattement de nappe ?", "acceptedAnswer": { "@type": "Answer", "text": "Les principaux procédés sont l'épuisement de surface en fond de fouille, les pointes filtrantes (wellpoints) sous dépression, les puits filtrants équipés de pompes immergées et les tranchées ou drains horizontaux. Le choix dépend de la perméabilité des terrains, de la hauteur à rabattre et de la configuration de la fouille (enceinte étanche ou non)." } },
+        { "@type": "Question", "name": "Rabattement de nappe en paroi étanche ou non étanche : quelle différence ?", "acceptedAnswer": { "@type": "Answer", "text": "Avec une paroi étanche (paroi moulée, palplanches) ancrée dans un horizon peu perméable, seuls le volume intérieur et les fuites sont pompés : le débit et l'impact extérieur sont faibles. Avec une paroi non étanche, la nappe est rabattue à l'extérieur de la fouille : les débits sont plus élevés et il faut évaluer les tassements, l'impact sur les captages voisins et le régime IOTA." } },
         { "@type": "Question", "name": "Quelle différence entre l'équation de Theis et celle de Dupuit-Thiem ?", "acceptedAnswer": { "@type": "Answer", "text": "L'équation de Theis s'applique aux nappes captives en régime transitoire et prend en compte le coefficient d'emmagasinement. L'équation de Dupuit-Thiem s'applique aux nappes libres en régime permanent et repose sur l'hypothèse d'écoulement horizontal radial vers le puits de pompage." } },
         { "@type": "Question", "name": "Qu'est-ce que la transmissivité et l'emmagasinement ?", "acceptedAnswer": { "@type": "Answer", "text": "La transmissivité (T) caractérise la capacité de l'aquifère à transmettre l'eau horizontalement, exprimée en m²/s. Le coefficient d'emmagasinement (S) représente le volume d'eau libéré ou stocké par unité de surface pour une variation de charge hydraulique unitaire ; il est sans dimension pour une nappe captive." } },
         { "@type": "Question", "name": "Qu'est-ce que la classification IOTA et la rubrique 2.1.3.0 ?", "acceptedAnswer": { "@type": "Answer", "text": "La classification IOTA (Installations, Ouvrages, Travaux et Activités) du code de l'environnement soumet les prélèvements et rejets d'eau à déclaration ou autorisation selon leur ampleur. La rubrique 2.1.3.0 (ex-1.1.1.0, ex-R.214-1) encadre les ouvrages de prélèvement dans une nappe souterraine selon leur profondeur et leur débit." } },
@@ -100,6 +102,7 @@
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div class="nav-dropdown-menu" role="menu">
+          <a href="../outils/" role="menuitem"><strong>Tous les outils</strong><span class="nav-mi-desc">Catalogue complet SSP &amp; hydrogéologie</span></a>
           <a href="../outils/3d-ssp.html" role="menuitem">3D_SSP<span class="nav-mi-desc">Modélisation 3D sols / nappe / ouvrages · NOUVEAU</span></a>
           <a href="../outils/eaux-pluviales-dle-gep.html" role="menuitem">Modélisation GEP — DLE &amp; Loi sur l&#39;Eau<span class="nav-mi-desc">Dimensionnement EP + dossiers DLE/GEP · NOUVEAU</span></a>
           <a href="../outils/porchet-essai-permeabilite.html" role="menuitem">Modélisation Essai de Porchet<span class="nav-mi-desc">Calcul K terrain + comparaison GEP · NOUVEAU</span></a>
@@ -140,7 +143,7 @@
 <section class="outil-hero">
   <div class="container">
     <span class="hero-badge">Guide technique — Hydrogéologie</span>
-    <h1>Rabattement de nappe calcul : débit de pompage (Theis, Dupuit-Thiem) et classification IOTA</h1>
+    <h1>Rabattement de nappe : procédés, calcul du débit de pompage (Theis, Dupuit-Thiem) et classification IOTA</h1>
     <p class="lead" style="max-width:780px;">
       Le <strong>calcul du rabattement de nappe</strong> conditionne le dimensionnement des ouvrages de pompage et la
       constitution des dossiers réglementaires. Cet article détaille les équations de <strong>Theis</strong> (nappe captive) et de
@@ -153,7 +156,7 @@
 <article>
 <div class="container container-narrow" style="line-height:1.75;">
 
-<p style="font-size:13px;color:var(--text-mute);">Rédigé par <strong>Eric Azulay</strong> — Ingénieur sites et sols pollués, gérant SARL G.M.E.P · Publié le 3 juillet 2026</p>
+<p style="font-size:13px;color:var(--text-mute);">Rédigé par <strong>Eric Azulay</strong> — Ingénieur sites et sols pollués, gérant SARL G.M.E.P · Publié le 3 juillet 2026 · Mis à jour le 22 octobre 2026</p>
 
 <h2>Principe du rabattement de nappe</h2>
 <p>
@@ -168,6 +171,62 @@ captages, zones humides, cours d'eau).
 Deux familles d'équations analytiques dominent la pratique des bureaux d'études hydrogéologiques : l'équation de
 <strong>Theis</strong>, adaptée aux nappes captives en régime transitoire, et l'équation de <strong>Dupuit-Thiem</strong>, adaptée aux nappes
 libres en régime permanent.
+</p>
+
+
+<h2>Procédés de rabattement de nappe</h2>
+<p>
+Le choix du <strong>procédé de rabattement de nappe</strong> dépend de la perméabilité des terrains, de la hauteur d'eau à rabattre,
+de l'emprise du chantier et de la sensibilité de l'environnement (bâtiments voisins sensibles aux tassements, captages,
+zones humides, panache de pollution). On distingue les techniques de pompage elles-mêmes et la configuration de la fouille
+(enceinte étanche ou non étanche), qui conditionne directement le débit d'exhaure.
+</p>
+
+<h3>Épuisement de surface (pompage en fond de fouille)</h3>
+<p>
+L'eau est collectée dans des puisards ou rigoles en fond de fouille puis évacuée par des pompes de chantier. C'est le procédé
+le plus simple, adapté aux faibles venues d'eau, aux terrains peu perméables et aux rabattements de quelques décimètres.
+Il ne permet pas de maîtriser les sous-pressions ni les phénomènes de boulance dans les sables fins.
+</p>
+
+<h3>Pointes filtrantes (wellpoints)</h3>
+<p>
+Des tubes crépinés de faible diamètre sont foncés ou lancés tous les 1 à 2 m environ autour de la fouille et raccordés à un
+collecteur sous dépression. Le procédé convient aux sables et graviers ; la hauteur rabattue par étage est limitée par
+l'aspiration (de l'ordre de 4 à 5 m), d'où le recours à plusieurs étages pour les fouilles profondes.
+</p>
+
+<h3>Puits filtrants équipés de pompes immergées</h3>
+<p>
+Pour les rabattements importants ou les terrains très perméables, des puits de plus gros diamètre, équipés de pompes immergées,
+sont répartis en périphérie de l'emprise. Leur nombre, leur espacement et leur débit unitaire se dimensionnent avec les équations
+de Theis et Dupuit-Thiem présentées ci-dessous, en appliquant le principe de superposition des rabattements.
+</p>
+
+<h3>Tranchées et drains horizontaux</h3>
+<p>
+Les tranchées drainantes, remplies de matériau granulaire et équipées d'un drain, interceptent la nappe sur un linéaire
+(réseaux, tranchées de canalisation, plateformes). Elles sont adaptées aux nappes peu profondes et aux terrains moyennement
+perméables.
+</p>
+
+<h3>Enceinte étanche : paroi moulée, palplanches, rideau injecté</h3>
+<p>
+Lorsque la fouille est fermée par une <strong>paroi étanche</strong> (paroi moulée, rideau de palplanches, paroi en pieux sécants)
+ancrée dans un horizon peu perméable, le pompage ne concerne plus que le volume d'eau contenu dans l'enceinte et les débits de
+fuite (à travers la paroi, par contournement en pied ou par remontée sous le fond de fouille). Le <strong>rabattement de nappe en
+paroi moulée</strong> réduit fortement le débit d'exhaure et l'extension du cône de rabattement à l'extérieur : c'est souvent la
+solution retenue en milieu urbain dense ou à proximité d'un site pollué. La fiche d'ancrage doit être vérifiée vis-à-vis du
+soulèvement du fond de fouille et du renard hydraulique.
+</p>
+
+<h3>Paroi non étanche : rabattement en pleine nappe</h3>
+<p>
+Avec un soutènement <strong>non étanche</strong> (berlinoise, talutage, paroi non ancrée dans un substratum imperméable), le pompage
+abaisse la nappe à l'extérieur de la fouille. Les débits sont nettement plus élevés et le rayon d'influence peut atteindre plusieurs
+centaines de mètres : il faut alors évaluer les tassements induits sur les avoisinants, l'impact sur les captages et zones humides
+et, le cas échéant, la mobilisation d'un panache de polluants. Ces débits conditionnent aussi le régime IOTA (déclaration ou
+autorisation) et les conditions de rejet des eaux d'exhaure.
 </p>
 
 <h2>Équation de Theis — nappe captive, régime transitoire</h2>
@@ -316,8 +375,16 @@ du dispositif et la conformité du dossier réglementaire déposé.
   </p>
 </div>
 
-<h2>FAQ — Rabattement de nappe, calcul du débit et classification IOTA</h2>
+<h2>FAQ — Rabattement de nappe : procédés, calcul du débit et classification IOTA</h2>
 <div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">Quels sont les principaux procédés de rabattement de nappe ?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Les principaux procédés sont l'épuisement de surface en fond de fouille, les pointes filtrantes (wellpoints) sous dépression, les puits filtrants équipés de pompes immergées et les tranchées ou drains horizontaux. Le choix dépend de la perméabilité des terrains, de la hauteur à rabattre et de la configuration de la fouille (enceinte étanche ou non).</p></div>
+  </details>
+  <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+    <summary itemprop="name">Rabattement de nappe en paroi étanche ou non étanche : quelle différence ?</summary>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Avec une paroi étanche (paroi moulée, palplanches) ancrée dans un horizon peu perméable, seuls le volume intérieur et les fuites sont pompés : le débit et l'impact extérieur sont faibles. Avec une paroi non étanche, la nappe est rabattue à l'extérieur de la fouille : les débits sont plus élevés et il faut évaluer les tassements, l'impact sur les captages voisins et le régime IOTA.</p></div>
+  </details>
   <details itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
     <summary itemprop="name">Quelle différence entre l'équation de Theis et celle de Dupuit-Thiem ?</summary>
     <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">L'équation de Theis s'applique aux nappes captives en régime transitoire et prend en compte le coefficient d'emmagasinement. L'équation de Dupuit-Thiem s'applique aux nappes libres en régime permanent et repose sur l'hypothèse d'écoulement horizontal radial vers le puits de pompage.</p></div>

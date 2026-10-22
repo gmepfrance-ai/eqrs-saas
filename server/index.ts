@@ -24,6 +24,8 @@ if (fs.existsSync(marketingRoot)) {
     const PERMANENT_REDIRECTS: Record<string, string> = {
       '/outils/eqrs-v8-ecotox-humain.html': '/outils/eqrs-v9-ecotox-humain.html',
       '/outils/eqrs-v31-05-ecotox.html':   '/outils/eqrs-v9-ecotox.html',
+      // PDF indexé par Google sur www mais hébergé sur l'application
+      '/Rapport_EQRS_Johnson_Ettinger.pdf': 'https://app.gmep-france.eu/Rapport_EQRS_Johnson_Ettinger.pdf',
     };
     // SEO — domaine nu → www (une seule version du site pour Google)
     if (host === "gmep-france.eu") {
