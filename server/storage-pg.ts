@@ -182,22 +182,6 @@ export class PgStorage implements IStorage {
         ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS survey_sent_at TIMESTAMPTZ DEFAULT NULL;
       `);
       console.log("[PgStorage] Tables initialized successfully");
-      // Nettoyage ponctuel : compte de test de vérification du paiement AGRESOL (à retirer après exécution)
-      try {
-        await client.query("BEGIN");
-        const u = await client.query("SELECT id FROM users WHERE email = $1", ["verif.agresol.stripe@example.com"]);
-        for (const row of u.rows) {
-          await client.query("DELETE FROM sessions WHERE user_id = $1", [row.id]);
-          await client.query("DELETE FROM subscriptions WHERE user_id = $1", [row.id]);
-          await client.query("UPDATE trial_codes SET user_id = NULL WHERE user_id = $1", [row.id]);
-          await client.query("DELETE FROM users WHERE id = $1", [row.id]);
-        }
-        await client.query("COMMIT");
-        console.log(`[PgStorage] Compte de test AGRESOL supprimé : ${u.rowCount} ligne(s)`);
-      } catch (e) {
-        await client.query("ROLLBACK").catch(() => {});
-        console.error("[PgStorage] Nettoyage compte de test AGRESOL échoué :", e);
-      }
     } finally {
       client.release();
     }
