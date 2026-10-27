@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AGRESOL — Agressivité des eaux, des gaz du sol et des sols acides sur les fondations | GMEP</title>
-<meta name="description" content="Logiciel SaaS d'évaluation de l'agressivité des eaux souterraines, des gaz du sol (COHV) et des sols acides vis-à-vis des bétons de fondation : classes XA de la NF EN 206+A2/CN et du FD P18-011, gradient d'oxydant, rapport d'étude. 1 250 € HT/an, essai gratuit 14 jours.">
+<meta name="description" content="Logiciel SaaS d'évaluation de l'agressivité des eaux souterraines, des sols et des gaz du sol (pH, CO₂ agressif, sulfates, magnésium, ammonium, sulfures, H₂S, COHV) vis-à-vis des bétons de fondation : classes XA de la NF EN 206+A2/CN et du FD P18-011, gradient d'oxydant, rapport d'étude. 1 250 € HT/an, essai gratuit 14 jours.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
@@ -145,7 +145,7 @@
       <div class="feature-card">
         <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 15l3-4 3 3 4-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <h3>Gaz du sol et COHV</h3>
-        <p>Profils des gaz du sol (PCE, TCE, cis-DCE, CV…), équilibre avec l'eau interstitielle, acidité produite par la dégradation des COHV et pouvoir tampon de la nappe.</p>
+        <p>H₂S, CO₂ et COHV (PCE, TCE, cis-DCE, CV…) : équilibre avec l'eau interstitielle, acide chlorhydrique libéré par la dégradation des COHV et pouvoir tampon de la nappe.</p>
       </div>
       <div class="feature-card">
         <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 20h14M7 20V9l5-5 5 5v11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -155,7 +155,7 @@
       <div class="feature-card">
         <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 16v6M2 12h6M16 12h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <h3>Effets du traitement</h3>
-        <p>Venting et sparging : oxydation des sulfures, minéralisation de la matière organique, stripping du CO₂ et gradient d'oxydant (O₂, potentiel redox) autour des pieux, couche par couche.</p>
+        <p>Venting, sparging et ISCO au persulfate : oxydation des sulfures, sulfates et acidité libérés, minéralisation de la matière organique, stripping du CO₂ et gradient d'oxydant (O₂, potentiel redox) autour des pieux, couche par couche.</p>
       </div>
       <div class="feature-card">
         <div class="feature-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 12h18M3 6h18M3 18h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -170,7 +170,35 @@
     </div>
   </div>
 </section>
-<section class="bg-soft">
+<style>#produits-agressifs .feature-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:980px;margin:0 auto}@media(max-width:720px){#produits-agressifs .feature-grid{grid-template-columns:1fr}}</style>
+<section class="bg-soft" id="produits-agressifs">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Gamme couverte</span>
+      <h2>Produits agressifs pris en compte</h2>
+      <p>AGRESOL rapproche chaque agent mesuré ou calculé des seuils de la norme et indique la classe correspondante au contact de chaque ouvrage.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Eaux souterraines</h3>
+        <p>Acidité (pH), CO₂ agressif, sulfates SO₄²⁻, magnésium Mg²⁺ et ammonium NH₄⁺ (tableau 2 de la NF EN 206+A2/CN). Calcium, TAC et pouvoir tampon de la nappe. Chlorures signalés au-delà de 50 mg/L.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Sols</h3>
+        <p>Sulfates du sol, acidité Baumann-Gully, sulfures, pyrite et soufre réduit (FD P18-011), avec l'acide sulfurique et les sulfates que leur oxydation peut libérer.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Gaz du sol</h3>
+        <p>Hydrogène sulfuré H₂S, dioxyde de carbone CO₂ et COHV chlorés (PCE, TCE, cis-DCE, chlorure de vinyle) : acide chlorhydrique HCl et CO₂ produits par leur dégradation.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Produits issus des traitements</h3>
+        <p>Venting et sparging (oxydation de la pyrite, minéralisation, O₂ et potentiel redox) ; ISCO au persulfate de sodium (sulfates et acidité libérés selon le mode d'activation).</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section>
   <div class="container">
     <div class="section-head">
       <span class="section-eyebrow">Aperçu</span>

@@ -99,7 +99,7 @@ export default function SubscribeAgresolPage() {
           </div>
           <div>
             <h1 className="text-xl font-extrabold text-foreground">AGRESOL</h1>
-            <p className="text-xs text-muted-foreground">Agressivité des eaux, des gaz du sol et des sols acides sur les fondations</p>
+            <p className="text-xs text-muted-foreground">Agressivité des eaux souterraines, des sols et des gaz du sol sur les fondations : pH, CO₂ agressif, sulfates, magnésium, ammonium, sulfures, H₂S, COHV</p>
           </div>
         </div>
 
@@ -115,11 +115,11 @@ export default function SubscribeAgresolPage() {
           <p className="text-xs text-muted-foreground mb-6">Facturation annuelle. Résiliable à l'échéance.</p>
 
           <ul className="space-y-2 mb-6 text-sm">
-            <PricingItem>Chimie de la nappe : pH, CO₂ agressif, NH₄⁺, Mg²⁺, SO₄²⁻ — tableau 2 de la NF EN 206+A2/CN</PricingItem>
+            <PricingItem>Chimie de la nappe : pH, CO₂ agressif, NH₄⁺, Mg²⁺, SO₄²⁻ — tableau 2 de la NF EN 206+A2/CN ; chlorures signalés</PricingItem>
             <PricingItem>Import automatique des rapports de laboratoire (PDF texte, Excel, CSV)</PricingItem>
-            <PricingItem>Gaz du sol et COHV : équilibre avec l'eau interstitielle, acidité produite par la dégradation</PricingItem>
+            <PricingItem>Gaz du sol : H₂S, CO₂ et COHV (PCE, TCE, cis-DCE, CV), acide chlorhydrique produit par la dégradation</PricingItem>
             <PricingItem>Sols acides et sulfures (pyrite, acidité Baumann-Gully, H₂S) — FD P18-011</PricingItem>
-            <PricingItem>Venting, sparging et ISCO : effets sur l'agressivité des eaux</PricingItem>
+            <PricingItem>Venting, sparging et ISCO au persulfate : sulfates et acidité libérés, effets sur l'agressivité des eaux</PricingItem>
             <PricingItem>Gradient d'oxydant (O₂) et potentiel redox autour des ouvrages, réglables par couche</PricingItem>
             <PricingItem>Classe d'exposition au contact de chaque pieu, longrine ou radier</PricingItem>
             <PricingItem>Géolocalisation IGN, cadastre et banque du sous-sol du BRGM</PricingItem>
