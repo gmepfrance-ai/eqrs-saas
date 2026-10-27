@@ -152,6 +152,16 @@ let stripe: Stripe | null = null;
 if (isStripeConfigured) {
   stripe = new Stripe(stripeSecretKey, { apiVersion: "2023-10-16" as any });
 }
+// Nettoyage ponctuel : client Stripe du compte de test AGRESOL (à retirer après exécution)
+if (stripe) {
+  const s0 = stripe;
+  s0.customers.retrieve("cus_VWFETD3XWSdfwP").then(async (c: any) => {
+    if (c && !c.deleted && c.email === "verif.agresol.stripe@example.com") {
+      await s0.customers.del("cus_VWFETD3XWSdfwP");
+      console.log("[Stripe] Client de test AGRESOL supprimé");
+    }
+  }).catch((e: any) => console.error("[Stripe] Nettoyage client de test AGRESOL :", e?.message));
+}
 
 const STRIPE_PRICE_MONTHLY =
   process.env.STRIPE_PRICE_MONTHLY || "price_monthly_placeholder";
