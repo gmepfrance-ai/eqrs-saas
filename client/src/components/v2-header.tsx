@@ -147,6 +147,15 @@ export function V2Header() {
                 {t("nav.tools.piezometres")}
                 <span className="v2-nav-mi-desc">{t("nav.tools.piezometres.desc")}</span>
               </a>
+              <p className="v2-nav-mi-head" role="presentation">{t("nav.tools.groupSols")}</p>
+              <a href="/subscribe-agresol" onClick={() => setDropdownOpen(false)}>
+                AGRESOL
+                <span className="v2-nav-mi-desc">{t("nav.tools.agresol.desc")}</span>
+              </a>
+              <a href="/subscribe-foncier-scan" onClick={() => setDropdownOpen(false)}>
+                FONCIER-SCAN
+                <span className="v2-nav-mi-desc">{t("nav.tools.foncierscan.desc")}</span>
+              </a>
             </div>
           </div>
           <a href="/tarifs">{t("nav.pricing")}</a>

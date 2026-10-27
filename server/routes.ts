@@ -6,6 +6,7 @@ import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 import Stripe from "stripe";
+import { registerAgresolRoutes } from "./agresol";
 
 // Load EQRS tool HTML at startup
 let eqrsToolHtml = "";
@@ -158,6 +159,9 @@ const STRIPE_PRICE_ANNUAL =
   process.env.STRIPE_PRICE_ANNUAL || "price_annual_placeholder";
 const STRIPE_PRICE_FONCIER_SCAN_ANNUAL =
   process.env.STRIPE_PRICE_FONCIER_SCAN_ANNUAL || "";
+// AGRESOL — 1 250 € HT/an (prix Stripe à créer, variable STRIPE_PRICE_AGRESOL_ANNUAL)
+const STRIPE_PRICE_AGRESOL_ANNUAL =
+  process.env.STRIPE_PRICE_AGRESOL_ANNUAL || "";
 const STRIPE_PRICE_TSN_ANNUAL =
   process.env.STRIPE_PRICE_TSN_ANNUAL || "price_1TiYjL3A2g3lkch9lRTAksYc";
 const STRIPE_PRICE_DOMENICO_ANNUAL =
@@ -232,19 +236,19 @@ const PACK_CONFIG: Record<string, PackConfig> = {
     label: "Pack SSP Essentiel",
     priceP1: STRIPE_PRICE_PACK_SSP_ESSENTIEL_P1,
     productId: "prod_VD7nslRVnJMFUQ",
-    tools: ["je", "schema", "ssp3d", "msp", "tsn"],
+    tools: ["je", "schema", "ssp3d", "msp", "tsn", "agresol"],
   },
   pack_ssp_standard: {
     label: "Pack SSP Standard",
     priceP1: STRIPE_PRICE_PACK_SSP_STANDARD_P1,
     productId: "prod_VD7pFlv7n3Xu5U",
-    tools: ["eqrs_v31", "schema", "ssp3d", "msp", "tsn"],
+    tools: ["eqrs_v31", "schema", "ssp3d", "msp", "tsn", "agresol"],
   },
   pack_ssp_premium: {
     label: "Pack SSP Premium",
     priceP1: STRIPE_PRICE_PACK_SSP_PREMIUM_P1,
     productId: "prod_VD7qva42SQQZtz",
-    tools: ["eqrs_v31", "humain", "schema", "ssp3d", "msp", "tsn"],
+    tools: ["eqrs_v31", "humain", "schema", "ssp3d", "msp", "tsn", "agresol"],
   },
   pack_hydro_assain: {
     label: "Pack Hydrogéologie & Assainissement",
@@ -266,6 +270,7 @@ const TOOL_LABELS: Record<string, string> = {
   rabattement: "Rabattement de nappe",
   piezometres: "Piézomètres de Surveillance",
   anc: "Dimensionnement ANC",
+  agresol: "AGRESOL — Agressivité des eaux et des gaz du sol sur les fondations",
 };
 function generatePackLicenseKey(): string {
   const seg = () => Math.random().toString(36).substring(2, 6).toUpperCase();
@@ -359,7 +364,7 @@ async function requireSubscription(
   const allSubs = await storage.getSubscriptionsByUserId(req.user.id);
   // FONCIER-SCAN est un produit dissocie : il ne doit jamais ouvrir l'acces a
   // l'outil EQRS, y compris par la clause de repli ci-dessous.
-  const eligibles = allSubs.filter((s) => s.tool !== "foncier_scan");
+  const eligibles = allSubs.filter((s) => s.tool !== "foncier_scan" && s.tool !== "agresol");
   const sub = eligibles.find(
     (s) => (s.tool === "bundle" || s.tool === "je" || !s.tool) && (s.status === "active" || s.status === "trialing")
   ) || eligibles[0];
@@ -914,6 +919,8 @@ export async function registerRoutes(
         porchetPriceId: process.env.STRIPE_PRICE_PORCHET_ANNUAL || null,
         hasPriceAncAnnual: !!process.env.STRIPE_PRICE_ANC_ANNUAL,
         ancPriceId: process.env.STRIPE_PRICE_ANC_ANNUAL || null,
+        hasPriceAgresolAnnual: !!process.env.STRIPE_PRICE_AGRESOL_ANNUAL,
+        agresolPriceId: process.env.STRIPE_PRICE_AGRESOL_ANNUAL || null,
         hasPriceHumainMonthly: !!process.env.STRIPE_PRICE_HUMAIN_MONTHLY,
         humainMonthlyPriceId: process.env.STRIPE_PRICE_HUMAIN_MONTHLY || null,
         hasPriceHumainAnnual: !!process.env.STRIPE_PRICE_HUMAIN_ANNUAL,
@@ -1657,7 +1664,7 @@ export async function registerRoutes(
   // Site Bis sans tarifs : chaque organisme reçoit un code unique donnant
   // acces a un essai fonctionnel reel de 15 jours sur les 12 outils gates.
 
-  const ALL_GATED_TOOLS = ["je", "eqrs_v31", "tsn", "rabattement", "schema", "piezometres", "msp", "ssp3d", "eaux_pluviales", "porchet", "anc", "humain"];
+  const ALL_GATED_TOOLS = ["je", "eqrs_v31", "tsn", "rabattement", "schema", "piezometres", "msp", "ssp3d", "eaux_pluviales", "porchet", "anc", "humain", "agresol"];
 
   function generateTrialCode(): string {
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -1945,6 +1952,9 @@ export async function registerRoutes(
 
       try {
         const { plan } = req.body;
+        if (plan === "agresol_annual" && !STRIPE_PRICE_AGRESOL_ANNUAL) {
+          return res.status(503).json({ message: "Abonnement AGRESOL en cours de configuration. Contactez G.M.E.P au 06 07 73 72 33." });
+        }
         const priceId =
           plan === "rabattement_annual" ? STRIPE_PRICE_RABATTEMENT_ANNUAL :
           plan === "rabattement_simple_annual" ? STRIPE_PRICE_RABATTEMENT_SIMPLE_ANNUAL :
@@ -1966,6 +1976,7 @@ export async function registerRoutes(
           plan === "eaux_pluviales_annual" ? STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL :
           plan === "porchet_annual" ? STRIPE_PRICE_PORCHET_ANNUAL :
           plan === "anc_annual" ? STRIPE_PRICE_ANC_ANNUAL :
+          plan === "agresol_annual" ? STRIPE_PRICE_AGRESOL_ANNUAL :
           plan === "ssp3d_monthly" ? STRIPE_PRICE_SSP3D_MONTHLY :
           plan === "ssp3d_annual" ? STRIPE_PRICE_SSP3D_ANNUAL :
           plan === "bundle_annual" ? STRIPE_PRICE_BUNDLE_ANNUAL :
@@ -1991,6 +2002,7 @@ export async function registerRoutes(
           plan === "eaux_pluviales_annual" ? "eaux_pluviales" :
           plan === "porchet_annual" ? "porchet" :
           plan === "anc_annual" ? "anc" :
+          plan === "agresol_annual" ? "agresol" :
           plan === "ssp3d_monthly" ? "ssp3d" :
           plan === "ssp3d_annual" ? "ssp3d" :
           plan === "bundle_annual" ? "bundle" :
@@ -2284,6 +2296,7 @@ export async function registerRoutes(
             (STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL && priceIdFromStripe === STRIPE_PRICE_EAUX_PLUVIALES_ANNUAL) ? "eaux_pluviales_annual" :
             (STRIPE_PRICE_PORCHET_ANNUAL && priceIdFromStripe === STRIPE_PRICE_PORCHET_ANNUAL) ? "porchet_annual" :
             (STRIPE_PRICE_ANC_ANNUAL && priceIdFromStripe === STRIPE_PRICE_ANC_ANNUAL) ? "anc_annual" :
+            (STRIPE_PRICE_AGRESOL_ANNUAL && priceIdFromStripe === STRIPE_PRICE_AGRESOL_ANNUAL) ? "agresol_annual" :
             priceIdFromStripe === STRIPE_PRICE_SSP3D_MONTHLY ? "ssp3d_monthly" :
             priceIdFromStripe === STRIPE_PRICE_SSP3D_ANNUAL ? "ssp3d_annual" :
             priceIdFromStripe === STRIPE_PRICE_ANNUAL ? "annual" : "monthly";
@@ -2301,6 +2314,7 @@ export async function registerRoutes(
             plan === "eaux_pluviales_annual" ? "eaux_pluviales" :
             plan === "porchet_annual" ? "porchet" :
             plan === "anc_annual" ? "anc" :
+            plan === "agresol_annual" ? "agresol" :
             (plan === "ssp3d_monthly" || plan === "ssp3d_annual") ? "ssp3d" :
             "je";
 
@@ -2354,6 +2368,7 @@ export async function registerRoutes(
                     tool === "eaux_pluviales" ? "Gestion des eaux pluviales — DLE / GEP v2.1" :
                     tool === "porchet" ? "Modélisation Essai de Porchet — Perméabilité des sols" :
                     tool === "anc" ? "Dimensionnement ANC — Assainissement Individuel & Collectif" :
+                    tool === "agresol" ? "AGRESOL — Agressivité des eaux et des gaz du sol sur les fondations" :
                     tool === "humain" ? "Module HUMAIN — EQRS V9 Tier 3" :
                     tool === "ssp3d" ? "3D_SSP — Superposition 3D pollution sols/nappe" :
                     tool === "eqrs_v31" ? "EQRS V9 + ECOTOX V9" :
@@ -2370,6 +2385,7 @@ export async function registerRoutes(
                     plan === "eaux_pluviales_annual" ? "Annuel — 5 500 € HT/an" :
                     plan === "porchet_annual" ? "Annuel — 550 € HT/an" :
                     plan === "anc_annual" ? "Annuel — 550 € HT/an" :
+                    plan === "agresol_annual" ? "Annuel — 1 250 € HT/an" :
                     plan === "humain_monthly" ? "Mensuel — 550 € HT/mois" :
                     plan === "humain_annual" ? "Annuel — 5 200 € HT/an" :
                     plan === "ssp3d_monthly" ? "Mensuel — 250 € HT/mois" :
@@ -3370,6 +3386,9 @@ export async function registerRoutes(
   // ══════════════════════════════════════════════════════════════════════
   // Modélisation Essai de Porchet — Perméabilité des sols (DLE)
   // ══════════════════════════════════════════════════════════════════════
+
+  // ── AGRESOL : essai, application, rapport, relais BRGM (server/agresol.ts) ──
+  registerAgresolRoutes(app, { requireAuth, storage, isAdminEmail, protectToolHtml, trialExpiredHtml });
 
   // ── Porchet : activation essai 14 jours ────────────────────────────────
   app.post(

@@ -99,6 +99,10 @@ export default function DashboardPage() {
           .then(r => r.json())
           .then(() => { window.location.href = `/api/porchet-tool?token=${token}`; })
           .catch(() => { navigateTo("/subscribe-porchet"); });
+      } else if (plan === "agresol_trial") {
+        fetch(`/api/agresol-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
+          .then(r => { if (r.ok || r.status === 409) window.location.href = `/api/agresol-tool?token=${token}`; else navigateTo("/subscribe-agresol"); })
+          .catch(() => { navigateTo("/subscribe-agresol"); });
       } else if (plan === "ssp3d_trial") {
         fetch(`/api/ssp3d-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
           .then(r => r.json())
@@ -351,6 +355,23 @@ export default function DashboardPage() {
               </button>
             </div>
 
+            {/* AGRESOL — Agressivité des eaux et des gaz du sol sur les fondations */}
+            <div className="bg-white border-2 border-[#0f6e56] rounded-lg p-4 shadow-sm hover:shadow-md transition">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded bg-[#0f6e56] text-white flex items-center justify-center text-[10px] font-bold">AGR</div>
+                <h3 className="text-sm font-bold text-foreground">AGRESOL</h3>
+              </div>
+              <p className="text-xs text-muted-foreground mb-3">Agressivité des eaux, des gaz du sol et des sols acides sur les fondations — NF EN 206+A2/CN, FD P18-011</p>
+              <p className="text-xs mb-3"><span className="text-amber-600 font-semibold">Essai 14 jours</span> — 1 250 € HT/an ensuite</p>
+              <button className="w-full bg-[#0f6e56] text-white py-2 rounded font-semibold text-sm hover:opacity-90"
+                onClick={() => {
+                  fetch(`/api/agresol-trial/activate?token=${token}`, { method: "POST", headers: {"Content-Type":"application/json"} })
+                    .then(r => { if (r.ok || r.status === 409) window.location.href = `/api/agresol-tool?token=${token}`; else navigateTo("/subscribe-agresol"); })
+                    .catch(() => { navigateTo("/subscribe-agresol"); });
+                }}>
+                Accéder →
+              </button>
+            </div>
             {/* Eaux Pluviales DLE/GEP v2.1 */}
             <div className="bg-white border-2 border-[#1A6FB5] rounded-lg p-4 shadow-sm hover:shadow-md transition">
               <div className="flex items-center gap-2 mb-2">

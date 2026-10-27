@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AGRESOL – Agressivité des eaux et gaz du sol sur les fondations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="mark">AGRESOL</span>
+    <span class="sub">Agressivité des eaux souterraines, des gaz du sol et des sols acides sur les fondations · NF EN 206+A2/CN · FD P18-011</span>
+  </div>
+  <nav class="actions">
+    <button id="bExemple" class="btn ghost" title="Recharger le cas Eaubonne">Exemple Eaubonne</button>
+    <button id="bAcide" class="btn ghost" title="Cas de démonstration : sol pyriteux et H₂S (données fictives)">Exemple sol acide</button>
+    <button id="bNouveau" class="btn ghost">Nouveau</button>
+    <label class="btn ghost" title="Ouvrir un projet .json">Ouvrir<input type="file" id="fOpen" accept=".json,application/json" hidden></label>
+    <button id="bSave" class="btn ghost" title="Enregistrer l'étude sous fichier JSON et dans l'index">Enregistrer</button>
+    <button id="bIdx" class="btn ghost" title="Index des études réalisées">Études</button>
+    <button id="bCsv" class="btn ghost">Export CSV</button>
+    <button id="bPrint" class="btn primary" title="Rapport d'étude au format G.M.E.P">Rapport</button>
+  </nav>
+</header>
+<main class="layout">
+  <aside class="panel" aria-label="Données d'entrée">
+    <div class="tabs" role="tablist">
+      <button role="tab" data-tab="projet" class="on">Projet</button>
+      <button role="tab" data-tab="sol">Sol</button>
+      <button role="tab" data-tab="nappe">Nappe</button>
+      <button role="tab" data-tab="gaz">Gaz du sol</button>
+      <button role="tab" data-tab="fond">Fondations</button>
+      <button role="tab" data-tab="trait">Traitement</button>
+      <button role="tab" data-tab="param">Paramètres</button>
+    </div>
+    <div id="forms" class="forms"></div>
+  </aside>
+  <section class="results" aria-label="Résultats">
+    <div id="kpis" class="kpis"></div>
+    <div class="grid2">
+      <figure class="card">
+        <figcaption>Coupe des fondations <span class="muted">(profondeurs à l'échelle, positions schématiques)</span> – <label class="muted" for="selZ">profondeur affichée</label> <select id="selZ"><option value="0">auto</option><option value="1.5">0 – 1,5 m</option><option value="3">0 – 3 m</option><option value="6">0 – 6 m</option></select></figcaption>
+        <div id="coupe" class="svgwrap"></div>
+        <div class="legend" id="legend"></div>
+      </figure>
+      <figure class="card">
+        <figcaption>Profil des gaz du sol – <select id="selPt"></select> <select id="selSub"></select></figcaption>
+        <div id="profil" class="svgwrap"></div>
+      </figure>
+    </div>
+    <figure class="card" id="cardAcid">
+      <figcaption>Acidité produite par la dégradation des COHV – <select id="selAcid" aria-label="Composé"><option value="COHV">Ensemble des COHV</option><option value="PCE">PCE</option><option value="TCE">TCE</option><option value="DCE">cis-DCE</option><option value="CV">Chlorure de vinyle</option></select> <span class="muted">(hypothèse majorante : dégradation complète, système fermé)</span></figcaption>
+      <div id="acid" class="svgwrap acidwrap"><p class="muted">Calcul en cours…</p></div>
+    </figure>
+    <figure class="card" id="cardOx">
+      <figcaption>Gradient d'oxydant (O₂) et potentiel redox autour de l'ouvrage – <select id="selOx" aria-label="Élément"></select> <span class="muted">(régime permanent, O₂ et Eh réglables par couche dans l'onglet Sol)</span></figcaption>
+      <div id="ox" class="svgwrap acidwrap"><p class="muted">Calcul en cours…</p></div>
+    </figure>
+    <div class="card"><div class="cardhead">Écart entre les teneurs du site et les seuils XA1, par composé</div><div id="acidCmp" class="svgwrap acidwrap"></div></div>
+    <div class="card">
+      <div class="cardhead">Classement par élément <span class="muted">– cliquez une ligne pour le détail</span></div>
+      <div class="tablewrap"><table id="tRes" class="res"></table></div>
+    </div>
+    <div class="card" id="detail"></div>
+    <p class="foot">AGRESOL v1.6 – G.M.E.P, Saint-Maixent-l'École. Outil de constat : AGRESOL indique les classes d'exposition correspondant, au sens de la NF EN 206+A2/CN (tableau 2) et du FD P18-011, à la chimie des eaux souterraines et des gaz du sol au contact des fondations. Il ne formule pas de prescription constructive : le choix des classes d'exposition des ouvrages, de la formulation des bétons, des enrobages et des dispositions constructives relève du géotechnicien, du bureau d'études structure et de l'entreprise de génie civil. Les modèles de diffusion dans le béton sont indicatifs et leurs paramètres doivent être calés.</p>
+  </section>
+</main>
+<dialog id="dlgIdx" class="dlg"><div class="dlgh"><b>Index des études réalisées</b> <span id="idxN" class="muted"></span><button class="btn xs" id="idxClose" aria-label="Fermer">Fermer</button></div>
+<div class="dlgbar"><input id="idxQ" type="search" placeholder="Rechercher (référence, projet, commune, parcelle…)"><button class="btn sm" id="idxAdd">Ajouter l'étude en cours</button><button class="btn sm" id="idxDl" title="Liste des études (métadonnées et noms de fichiers)">Télécharger l'index (JSON)</button><button class="btn sm" id="idxDlAll" title="Index et contenu complet de toutes les études, réimportable par « Ouvrir »">Télécharger toutes les études (JSON)</button></div>
+<div class="tablewrap"><table class="res idx"><thead><tr><th>Référence</th><th>Indice</th><th>Projet / site</th><th>Date</th><th>Établi par</th><th>Ouvrages</th><th>Classe max</th><th>Enregistrée le</th><th></th></tr></thead><tbody id="idxBody"></tbody></table></div>
+<p class="hint" id="idxHint">L'index est conservé dans ce navigateur. Pour le transférer sur un autre poste, téléchargez « toutes les études » puis ouvrez ce fichier avec « Ouvrir » sur l'autre poste.</p></dialog>
+<script src="engine.js"></script>
+<script src="formations.js"></script>
+<script src="geo.js"></script>
+<script src="labimport.js"></script>
+<script src="store.js"></script>
+<script src="acidgraph.js"></script>
+<script src="oxgraph.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
