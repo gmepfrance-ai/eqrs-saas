@@ -26,6 +26,9 @@ if (fs.existsSync(marketingRoot)) {
       '/outils/eqrs-v31-05-ecotox.html':   '/outils/eqrs-v9-ecotox.html',
       // PDF indexé par Google sur www mais hébergé sur l'application
       '/Rapport_EQRS_Johnson_Ettinger.pdf': 'https://app.gmep-france.eu/Rapport_EQRS_Johnson_Ettinger.pdf',
+      // Anciens documents du guide (sept. 2026) → guide d'utilisation 2026
+      '/guide-11-outils/Dossier_11_outils_GMEP.pdf': '/guide-11-outils/Guide-utilisation-logiciels-GMEP-2026.pdf',
+      '/guide-11-outils/Note_Technique_GMEP_11_outils.pdf': '/guide-11-outils/Guide-utilisation-logiciels-GMEP-2026.pdf',
     };
     // SEO — domaine nu → www (une seule version du site pour Google)
     if (host === "gmep-france.eu") {
