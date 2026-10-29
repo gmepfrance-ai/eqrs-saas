@@ -190,6 +190,11 @@ app.post('/api/create-checkout-session', async function (req, res) {
 // ─── Service des fichiers statiques (site GMEP) ───
 // Toutes les routes /api/* sont déjà définies au-dessus et passent en priorité.
 const STATIC_ROOT = __dirname;
+// Anciens documents du guide (sept. 2026) remplaces par le guide d'utilisation 2026
+app.get(['/guide-11-outils/Dossier_11_outils_GMEP.pdf', '/guide-11-outils/Note_Technique_GMEP_11_outils.pdf'], function (req, res) {
+  res.redirect(301, '/guide-11-outils/Guide-utilisation-logiciels-GMEP-2026.pdf');
+});
+
 app.use(express.static(STATIC_ROOT, {
   extensions: ['html'],
   setHeaders: function (res, filepath) {
