@@ -212,7 +212,7 @@
 }
 
 /* Compact desktop nav for tablet-landscape / small laptop widths to prevent header overflow */
-@media (min-width: 1025px) and (max-width: 1650px) {
+@media (min-width: 1025px) and (max-width: 2000px) {
   .brand-tag { display: none; }
   .site-header .container { gap: 6px; }
   .nav-center { gap: 2px; }
